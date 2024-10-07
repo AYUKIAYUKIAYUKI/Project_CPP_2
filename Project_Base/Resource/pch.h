@@ -5,13 +5,14 @@
 // 
 //============================================================================
 
-#pragma once	// 二重インクルード防止
+#ifndef _PCH_H_
+#define _PCH_H_	// 二重インクルード防止
 
 //****************************************************
 // インクルードファイル
 //****************************************************
-#include <stdio.h>
 #include <assert.h>
+#include <stdio.h>
 #include <windows.h>	// Windowsアプリケーション動作用
 
 // DirectX9
@@ -22,14 +23,14 @@
 #include <xaudio2.h>				// サウンド動作用
 
 // 標準ライブラリ
-#include <iostream>
 #include <fstream>
-#include <string>
-#include <tuple>
+#include <iomanip>
+#include <iostream>
 #include <list>
 #include <sstream>
+#include <string>
+#include <tuple>
 #include <utility>
-#include <iomanip>
 #include <vector>
 
 // 便利関数
@@ -89,3 +90,5 @@ struct VERTEX_3D
 	D3DCOLOR col;		// 頂点カラー
 	D3DXVECTOR2 tex;	// テクスチャ座標用
 };
+
+#endif	_PCH_H_

@@ -1,6 +1,6 @@
 ﻿//============================================================================
 // 
-// HGS_Autumn_2024、メイン [main.cpp]
+// C++作品制作 - 第二回、メイン [main.cpp]
 // Author : 福田歩希
 // 
 //============================================================================
@@ -22,7 +22,7 @@
 // マクロ定義
 //****************************************************
 #define CLASS_NAME	"WindowClass"		// ウィンドウクラスの名前
-#define WINDOW_NAME	"HGS_Autumn_2024"	// ウィンドウの名前
+#define WINDOW_NAME	"Project_C++_2"		// ウィンドウの名前
 
 // メモリリーク検出用
 #define _CRTDBG_MAP_ALLOC
@@ -44,7 +44,6 @@ void ChangeWindowSize(HWND hWnd);													// ウィンドウサイズの変�
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 	// CRTメモリリーク検出用
-	//_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	WNDCLASSEX wcex =
@@ -63,8 +62,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 		LoadIcon(NULL,IDI_APPLICATION)	// ファイルのアイコン
 	};
 
-	HWND hWnd;	// ウィンドウハンドル(識別子)
-	MSG msg;	// メッセージを格納する変数
+	HWND hWnd{};	// ウィンドウハンドル(識別子)
+	MSG msg{};		// メッセージを格納する変数
 
 	// 画面サイズの設定用
 	RECT rect{ 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
@@ -95,7 +94,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 	ChangeWindowSize(hWnd);			// ウィンドウサイズの変更
 
 	// マネージャーの生成
-	g_pManager = DBG_NEW CManager;
+	g_pManager = DBG_NEW CManager{};
 
 	if (g_pManager == nullptr)
 	{ // 生成失敗
@@ -111,11 +110,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 	timeBeginPeriod(1);
 
 	// FPS計測用
-	int nCountFPS = 0;						// 現在のFPS
-	DWORD dwCurrentTime = 0;				// 現在時刻用
-	DWORD dwFrameCount = 0;					// 最後に処理した時間
-	DWORD dwExecLastTime = timeGetTime();	// フレームカウント格納
-	DWORD dwFPSLastTime = timeGetTime();	// 最後にFPSを計測した時刻格納
+	int nCountFPS{ 0 };						// 現在のFPS
+	DWORD dwCurrentTime{ 0 };				// 現在時刻用
+	DWORD dwFrameCount{ 0 };				// 最後に処理した時間
+	DWORD dwExecLastTime{ timeGetTime() };	// フレームカウント格納
+	DWORD dwFPSLastTime{ timeGetTime() };	// 最後にFPSを計測した時刻格納
 
 	// メッセージループ
 	while (1)
@@ -178,17 +177,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 	timeEndPeriod(1);
 
 	// マネージャーの破棄
-	if (g_pManager != nullptr)
+	if (g_pManager)
 	{
 		g_pManager->Uninit();	// 終了処理
 		delete g_pManager;		// メモリを解放
 		g_pManager = nullptr;	// ポインタを初期化
 	}
 
-	// CRTメモリリーク箇所検出
-	//_CrtSetBreakAlloc();
-
-	return (int)msg.wParam;
+	return static_cast<int>(msg.wParam);
 }
 
 //****************************************************************************
@@ -197,7 +193,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// 返り値格納先
-	int nID;
+	int nID{ 0 };
 
 	switch (uMsg)
 	{
