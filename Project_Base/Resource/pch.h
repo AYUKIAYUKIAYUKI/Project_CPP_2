@@ -66,8 +66,8 @@
 #define FVF_VERTEX_3D	(D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1)
 
 // ウィンドウサイズ
-#define SCREEN_WIDTH	1280	// ウインドウの幅
-#define SCREEN_HEIGHT	720		// ウインドウの高さ
+#define SCREEN_WIDTH	1980	// ウインドウの幅
+#define SCREEN_HEIGHT	1080	// ウインドウの高さ
 
 //****************************************************
 // 2Dポリゴン頂点フォーマットの定義

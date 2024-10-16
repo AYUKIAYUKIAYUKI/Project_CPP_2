@@ -32,8 +32,9 @@ CCamera::CCamera() :
 	m_VecU{ 0.0f, 1.0f, 0.0f },
 	m_fAdjust{ 0.0f }
 {
-	D3DXMatrixIdentity(&m_MtxProjection);	// プロジェクションマトリックス
-	D3DXMatrixIdentity(&m_MtxView);			// ビューマトリックス
+	// 行列を初期化
+	D3DXMatrixIdentity(&m_MtxProjection);	// プロジェクション行列
+	D3DXMatrixIdentity(&m_MtxView);			// ビュー行列
 }
 
 //============================================================================
@@ -81,10 +82,10 @@ void CCamera::Update()
 	// 移動
 	Translation();
 
-	// 視点位置を算出
+	// 視点座標を計算
 	CalcPosV();
 
-	// 注視点位置を算出
+	// 注視点座標を計算
 	CalcPosR();
 
 #ifdef _DEBUG
@@ -103,9 +104,12 @@ void CCamera::SetCamera()
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
 
 	// 画面バッファクリア
-	pDev->Clear(0, nullptr,
+	pDev->Clear(0,
+		nullptr,
 		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
-		D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
+		D3DCOLOR_RGBA(0, 0, 0, 0),
+		1.0f,
+		0);
 
 	// プロジェクション行列を計算
 	CalcMtxProjection();
@@ -117,7 +121,7 @@ void CCamera::SetCamera()
 //============================================================================
 // 座標を取得
 //============================================================================
-D3DXVECTOR3 CCamera::GetPos()
+D3DXVECTOR3 CCamera::GetPos() const
 {
 	return m_Pos;
 }
@@ -133,7 +137,7 @@ void CCamera::SetPos(D3DXVECTOR3 Pos)
 //============================================================================
 // 目標座標を取得
 //============================================================================
-D3DXVECTOR3 CCamera::GetPosTarget()
+D3DXVECTOR3 CCamera::GetPosTarget() const
 {
 	return m_PosTarget;
 }
@@ -149,7 +153,7 @@ void CCamera::SetPosTarget(D3DXVECTOR3 PosTarget)
 //============================================================================
 // 向きを取得
 //============================================================================
-D3DXVECTOR3 CCamera::GetRot()
+D3DXVECTOR3 CCamera::GetRot() const
 {
 	return m_Rot;
 }
@@ -165,7 +169,7 @@ void CCamera::SetRot(D3DXVECTOR3 Rot)
 //============================================================================
 // 目標向きを取得
 //============================================================================
-D3DXVECTOR3 CCamera::GetRotTarget()
+D3DXVECTOR3 CCamera::GetRotTarget() const
 {
 	return m_RotTarget;
 }
@@ -181,7 +185,7 @@ void CCamera::SetRotTarget(D3DXVECTOR3 RotTarget)
 //============================================================================
 // 間距離を取得
 //============================================================================
-float CCamera::GetDistance()
+float CCamera::GetDistance() const
 {
 	return m_fDistance;
 }
@@ -300,7 +304,7 @@ void CCamera::RestrictPitch()
 }
 
 //============================================================================
-// 視点位置を算出
+// 視点座標を計算
 //============================================================================
 void CCamera::CalcPosV()
 {
@@ -314,7 +318,7 @@ void CCamera::CalcPosV()
 }
 
 //============================================================================
-// 注視点位置を算出
+// 注視点座標を計算
 //============================================================================
 void CCamera::CalcPosR()
 {
@@ -368,23 +372,20 @@ void CCamera::CalcMtxView()
 	// デバイスを取得
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
 
-	// ビューマトリックスの初期化
+	// ビュー行列の初期化
 	D3DXMatrixIdentity(&m_MtxView);
 
-	// 視点位置の調整用
+	// 視点座標の調整用
 	D3DXVECTOR3 posV = m_PosV;
 	D3DXVECTOR3 posR = m_PosR;
 
-	// カメラを俯瞰気味に
-	//posV.y += m_fAdjust;
-
-	// ビューマトリックスの生成
+	// ビュー行列の生成
 	D3DXMatrixLookAtLH(&m_MtxView,
 		&posV,
 		&posR,
 		&m_VecU);
 
-	// ビューマトリックスの設定
+	// ビュー行列の設定
 	pDev->SetTransform(D3DTS_VIEW,
 		&m_MtxView);
 }
