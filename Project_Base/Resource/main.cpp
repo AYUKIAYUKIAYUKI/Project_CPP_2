@@ -32,7 +32,7 @@
 //****************************************************
 CManager* g_pManager = nullptr;	// マネージャー管理
 
-//****************************************************
+//***************************************************
 // プロトタイプ宣言
 //****************************************************
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);	// ウィンドウプロシージャ
@@ -62,11 +62,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 		LoadIcon(NULL,IDI_APPLICATION)	// ファイルのアイコン
 	};
 
-	HWND hWnd{};	// ウィンドウハンドル(識別子)
-	MSG msg{};		// メッセージを格納する変数
+	HWND hWnd;	// ウィンドウハンドル(識別子)
+	MSG msg;	// メッセージを格納する変数
 
 	// 画面サイズの設定用
-	RECT rect{ 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	RECT rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 	// ウィンドウクラスの登録
 	RegisterClassEx(&wcex);
@@ -94,7 +94,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 	ChangeWindowSize(hWnd);			// ウィンドウサイズの変更
 
 	// マネージャーの生成
-	g_pManager = DBG_NEW CManager{};
+	g_pManager = DBG_NEW CManager();
 
 	if (g_pManager == nullptr)
 	{ // 生成失敗
@@ -110,11 +110,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 	timeBeginPeriod(1);
 
 	// FPS計測用
-	int nCountFPS{ 0 };						// 現在のFPS
-	DWORD dwCurrentTime{ 0 };				// 現在時刻用
-	DWORD dwFrameCount{ 0 };				// 最後に処理した時間
-	DWORD dwExecLastTime{ timeGetTime() };	// フレームカウント格納
-	DWORD dwFPSLastTime{ timeGetTime() };	// 最後にFPSを計測した時刻格納
+	int nCountFPS = 0;						// 現在のFPS
+	DWORD dwCurrentTime = 0;				// 現在時刻用
+	DWORD dwFrameCount = 0;					// 最後に処理した時間
+	DWORD dwExecLastTime = timeGetTime();	// フレームカウント格納
+	DWORD dwFPSLastTime = timeGetTime();	// 最後にFPSを計測した時刻格納
 
 	// メッセージループ
 	while (1)
@@ -193,7 +193,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// 返り値格納先
-	int nID{ 0 };
+	int nID = 0 ;
 
 	switch (uMsg)
 	{
@@ -258,10 +258,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 void ChangeWindowSize(HWND hWnd)
 {
 	// モード変更フラグ
-	static bool bSetFullScreen{ false };
+	static bool bSetFullScreen = false;
 
 	// ウィンドウサイズ保持用
-	static RECT windowRectHold{ 0, 0, 0, 0 };
+	static RECT windowRectHold = { 0, 0, 0, 0 };
 
 	// 現在のウィンドウスタイルを取得
 	DWORD dwStyle = GetWindowLong(hWnd, GWL_STYLE);
