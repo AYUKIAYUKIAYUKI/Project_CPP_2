@@ -15,7 +15,9 @@
 #include "manager.h"
 
 /* test */
+#include "object_3D.h"
 #include "object_X.h"
+#include "player.h"
 #include "texture_manager.h"
 
 //============================================================================
@@ -42,17 +44,24 @@ HRESULT CGame::Init()
 	// 基底クラスの初期設定
 	HRESULT hr{ CScene::Init() };
 
-	/* 仮 */
+	/* プレイヤーを仮生成 */
+	CPlayer::Create();
+
+	/* ステージの代わりに円状のポチゴンを表示します */
+
 	CObject_X* pTest{ CObject_X::Create() };
-	pTest->BindModel(CModel_X_Manager::TYPE::TEST);
-	pTest->SetPos({ 0.0f, 0.0f, 0.0f });
-	pTest->SetRot({ 1.0f, 2.0f, 3.0f });
+	pTest->BindModel(CModel_X_Manager::TYPE::CYLINDER);
+	pTest->SetPos({ 0.0f, -10.0f, 0.0f });
+	pTest->SetScale(4.25f);
 
-	// 全てのサウンドを停止
-	//CSound::GetInstance()->Stop();
-
-	// BGMをかける
-	//CSound::GetInstance()->Play(CSound::LABEL::TEST);
+	//for (int i{ 0 }; i < 200; i++)
+	//{
+	//	CObject_3D* pTest{ CObject_3D::Create() };
+	//	pTest->BindTex(CTexture_Manager::TYPE::TEST1);
+	//	pTest->SetPos({ 0.0f, -15.0f, 0.0f });
+	//	pTest->SetRot({ 0.0f, 0.0f + 0.1f * i, 0.0f });
+	//	pTest->SetSize({ 150.0f, 5.0f, 0.0f });
+	//}
 
 	return hr;
 }

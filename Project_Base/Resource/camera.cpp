@@ -277,11 +277,11 @@ void CCamera::RestrictYaw()
 {
 	if (m_Rot.y > D3DX_PI)
 	{
-		m_Rot.y = -D3DX_PI;
+		m_Rot.y += -D3DX_PI * 2.0f;
 	}
 	else if (m_Rot.y < -D3DX_PI)
 	{
-		m_Rot.y = D3DX_PI;
+		m_Rot.y += D3DX_PI * 2.0f;
 	}
 }
 

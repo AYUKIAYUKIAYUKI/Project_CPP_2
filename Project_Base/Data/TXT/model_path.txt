@@ -1,1 +1,3 @@
 test.x
+cylinder.x
+samus.x

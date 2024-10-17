@@ -84,6 +84,9 @@ void CObject_X::Draw()
 	// デバイスを取得
 	LPDIRECT3DDEVICE9 pDev{ CRenderer::GetInstance()->GetDeviece() };
 
+	// 頂点法線の自動正規化を有効に
+	pDev->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
+
 	// 現在のマテリアル保存用
 	D3DMATERIAL9 matDef{};
 
@@ -116,6 +119,9 @@ void CObject_X::Draw()
 
 	// 保存していたマテリアルを戻す
 	pDev->SetMaterial(&matDef);
+
+	// 頂点法線の自動正規化を無効に
+	pDev->SetRenderState(D3DRS_NORMALIZENORMALS, FALSE);
 }
 
 //============================================================================

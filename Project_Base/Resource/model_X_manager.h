@@ -21,6 +21,8 @@ public:
 	enum class TYPE
 	{
 		TEST = 0,	// テスト
+		CYLINDER,	// cylinder
+		SAMUS,		// サムス
 		MAX,
 	};
 

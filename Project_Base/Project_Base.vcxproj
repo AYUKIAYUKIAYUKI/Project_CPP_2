@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Resource\block.cpp" />
     <ClCompile Include="resource\camera.cpp" />
     <ClCompile Include="Resource\fade.cpp" />
     <ClCompile Include="Resource\game.cpp" />
@@ -36,6 +37,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Resource\player.cpp" />
     <ClCompile Include="resource\renderer.cpp" />
     <ClCompile Include="Resource\result.cpp" />
     <ClCompile Include="Resource\scene.cpp" />
@@ -45,6 +47,7 @@
     <ClCompile Include="Resource\utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Resource\block.h" />
     <ClInclude Include="resource\camera.h" />
     <ClInclude Include="Resource\fade.h" />
     <ClInclude Include="Resource\game.h" />
@@ -59,6 +62,7 @@
     <ClInclude Include="Resource\object_billboard.h" />
     <ClInclude Include="resource\object_X.h" />
     <ClInclude Include="resource\pch.h" />
+    <ClInclude Include="Resource\player.h" />
     <ClInclude Include="resource\renderer.h" />
     <ClInclude Include="Resource\result.h" />
     <ClInclude Include="Resource\scene.h" />
