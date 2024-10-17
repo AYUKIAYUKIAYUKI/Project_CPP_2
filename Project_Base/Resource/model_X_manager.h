@@ -23,6 +23,9 @@ public:
 		TEST = 0,	// テスト
 		CYLINDER,	// cylinder
 		SAMUS,		// サムス
+		RUBBLE_00,	// がれき00
+		RUBBLE_01,	// がれき01
+		RUBBLE_02,	// がれき02
 		MAX,
 	};
 

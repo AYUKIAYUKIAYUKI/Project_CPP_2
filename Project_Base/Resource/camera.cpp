@@ -265,6 +265,16 @@ void CCamera::Translation()
 	// 追従度合
 	float fTracking = 0.25f;
 
+	// 上下
+	if (CManager::GetKeyboard()->GetPress(DIK_W))
+	{
+		m_PosTarget.y += 1.0f;
+	}
+	else if (CManager::GetKeyboard()->GetPress(DIK_S))
+	{
+		m_PosTarget.y -= 1.0f;
+	}
+
 	// 移動量反映
 	// posTargetに値を設定していない場合は数値がおかしくなります
 	m_Pos += (m_PosTarget - m_Pos) * fTracking;

@@ -33,8 +33,8 @@ public:
 
 private:
 
-	void Create();			// 生成
-	void Uninit();			// 終了処理
+	void Create();	// 生成
+	void Uninit();	// 終了処理
 
 	static CRenderer* m_pRenderer;	// レンダラー
 

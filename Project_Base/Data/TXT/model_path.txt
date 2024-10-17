@@ -1,3 +1,6 @@
 test.x
 cylinder.x
 samus.x
+rubble00.x
+rubble01.x
+rubble02.x

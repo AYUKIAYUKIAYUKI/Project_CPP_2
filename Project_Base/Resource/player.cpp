@@ -31,7 +31,8 @@ using Vec = D3DXVECTOR3;
 // デフォルトコンストラクタ
 //============================================================================
 CPlayer::CPlayer() :
-	m_PosTarget{ D3DXVECTOR3(0.0f, 0.0f, 0.0f) }
+	CObject_X(static_cast<int>(CObject::LAYER::MIDDLE)),
+	m_PosTarget{ Vec(0.0f, 0.0f, 0.0f) }
 {
 
 }
@@ -119,7 +120,7 @@ CPlayer* CPlayer::Create()
 	CPlayer* pNewInstance = DBG_NEW CPlayer();
 
 	// タイプを設定
-	pNewInstance->SetType(TYPE::NONE);
+	pNewInstance->SetType(TYPE::PLAYER);
 	
 	// 初期設定
 	pNewInstance->Init();
@@ -145,16 +146,8 @@ void CPlayer::Control()
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();	// キーボード
 	CInputPad* pPad = CManager::GetPad();					// パッド
 
-	// 移動方向用
-	bool bMove = false;			// 入力があるか検出
-	float X = 0.0f, Y = 0.0f;	// 単位ベクトル用
-
-	// スティックの傾きを取得
-	X = pPad->GetJoyStickL().X;
-	Y = pPad->GetJoyStickL().Y;
-
 	/* お試し */
-	static float f角度 = 0.0f;
+	static float f角度 = D3DX_PI * -0.5f;
 	CRenderer::GetInstance()->SetDebugString("プレイヤー座標の角度" + std::to_string(f角度));
 
 	float f増加量 = 0.025f;
@@ -162,29 +155,11 @@ void CPlayer::Control()
 	// X軸の入力
 	if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::LEFT))
 	{
-		X = -1.0f;
 		f角度 += -f増加量;
 	}
 	else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT))
 	{
-		X = 1.0f;
 		f角度 += f増加量;
-	}
-
-	// Y軸の入力
-	if (pKeyboard->GetPress(DIK_W) || pPad->GetPress(CInputPad::JOYKEY::UP))
-	{
-		Y = 1.0f;
-	}
-	else if (pKeyboard->GetPress(DIK_S) || pPad->GetPress(CInputPad::JOYKEY::DOWN))
-	{
-		Y = -1.0f;
-	}
-
-	// 何か入力していれば移動判定を出す
-	if (X != 0.0f || Y != 0.0f)
-	{
-		bMove = true;
 	}
 
 	/* 角度制限 -> 治せ */
@@ -197,32 +172,15 @@ void CPlayer::Control()
 		f角度 += D3DX_PI * 2.0f;
 	}
 
-	//if (bMove)
-	//{
-	//	float f反映量 = 50.0f;
-
-	//	// 座標を反映
-	//	Vec NewPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//	NewPos.x = cosf(f角度) * f反映量;
-	//	NewPos.z = sinf(f角度) * f反映量;
-	//	SetPos(NewPos);
-
-	//	// 向きを反映
-	//	Vec NewRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//	NewRot.y = f角度 * 0.5f;
-	//	SetRot(NewRot);
-	//}
-
-	float f反映量 = 150.0f;
-
 	// 座標を反映
-	Vec NewPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	Vec NewPos = Vec(0.0f, 0.0f, 0.0f);
+	float f反映量 = 150.0f;
 	NewPos.x = cosf(f角度) * f反映量;
 	NewPos.z = sinf(f角度) * f反映量;
 	SetPos(NewPos);
 
 	// 向きを反映
-	Vec NewRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	Vec NewRot = Vec(0.0f, 0.0f, 0.0f);
 	NewRot.y = -f角度;
 	SetRot(NewRot);
 }

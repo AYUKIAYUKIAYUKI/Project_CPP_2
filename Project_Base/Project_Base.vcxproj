@@ -22,6 +22,7 @@
     <ClCompile Include="Resource\block.cpp" />
     <ClCompile Include="resource\camera.cpp" />
     <ClCompile Include="Resource\fade.cpp" />
+    <ClCompile Include="Resource\field_manager.cpp" />
     <ClCompile Include="Resource\game.cpp" />
     <ClCompile Include="resource\input.cpp" />
     <ClCompile Include="resource\light.cpp" />
@@ -39,7 +40,9 @@
     </ClCompile>
     <ClCompile Include="Resource\player.cpp" />
     <ClCompile Include="resource\renderer.cpp" />
+    <ClCompile Include="Resource\render_collision.cpp" />
     <ClCompile Include="Resource\result.cpp" />
+    <ClCompile Include="Resource\rubble.cpp" />
     <ClCompile Include="Resource\scene.cpp" />
     <ClCompile Include="resource\sound.cpp" />
     <ClCompile Include="resource\texture_manager.cpp" />
@@ -50,6 +53,7 @@
     <ClInclude Include="Resource\block.h" />
     <ClInclude Include="resource\camera.h" />
     <ClInclude Include="Resource\fade.h" />
+    <ClInclude Include="Resource\field_manager.h" />
     <ClInclude Include="Resource\game.h" />
     <ClInclude Include="resource\input.h" />
     <ClInclude Include="resource\light.h" />
@@ -64,7 +68,9 @@
     <ClInclude Include="resource\pch.h" />
     <ClInclude Include="Resource\player.h" />
     <ClInclude Include="resource\renderer.h" />
+    <ClInclude Include="Resource\render_collision.h" />
     <ClInclude Include="Resource\result.h" />
+    <ClInclude Include="Resource\rubble.h" />
     <ClInclude Include="Resource\scene.h" />
     <ClInclude Include="resource\sound.h" />
     <ClInclude Include="resource\texture_manager.h" />

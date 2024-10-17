@@ -20,6 +20,8 @@
 #include "player.h"
 #include "texture_manager.h"
 
+#include "field_manager.h"
+
 //============================================================================
 // デフォルトコンストラクタ
 //============================================================================
@@ -48,7 +50,6 @@ HRESULT CGame::Init()
 	CPlayer::Create();
 
 	/* ステージの代わりに円状のポチゴンを表示します */
-
 	CObject_X* pTest{ CObject_X::Create() };
 	pTest->BindModel(CModel_X_Manager::TYPE::CYLINDER);
 	pTest->SetPos({ 0.0f, -10.0f, 0.0f });
@@ -63,6 +64,9 @@ HRESULT CGame::Init()
 	//	pTest->SetSize({ 150.0f, 5.0f, 0.0f });
 	//}
 
+	// フィールドマネージャーの初期設定
+	CField_Manager::GetInstance()->Init();
+
 	return hr;
 }
 
@@ -71,6 +75,9 @@ HRESULT CGame::Init()
 //============================================================================
 void CGame::Uninit()
 {
+	// フィールドマネージャーの解放
+	CField_Manager::GetInstance()->Release();
+
 	// 基底クラスの終了処理
 	CScene::Uninit();
 }
@@ -80,6 +87,9 @@ void CGame::Uninit()
 //============================================================================
 void CGame::Update()
 {
+	// フィールドマネージャーの更新
+	CField_Manager::GetInstance()->Update();
+
 	// 基底クラスの更新処理
 	CScene::Update();
 

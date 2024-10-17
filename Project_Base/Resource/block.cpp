@@ -10,6 +10,14 @@
 //****************************************************
 #include "block.h"
 
+// オブジェクト用
+#include "rubble.h"
+
+//****************************************************
+// エイリアスを定義
+//****************************************************
+using Vec = D3DXVECTOR3;
+
 //============================================================================
 // 
 // publicメンバ
@@ -19,7 +27,8 @@
 //============================================================================
 // デフォルトコンストラクタ
 //============================================================================
-CBlock::CBlock()
+CBlock::CBlock() :
+	CObject_X( static_cast<int>(CObject::LAYER::MIDDLE) )
 {
 
 }
@@ -29,7 +38,16 @@ CBlock::CBlock()
 //============================================================================
 CBlock::~CBlock()
 {
+	for (int i = 0; i < 3; i++)
+	{
+		// ランダムな加速度を設定 ( ややY↑に偏った)
+		D3DXVECTOR3 RandomVelocity{ CUtility::GetRandomValue<float>() * 0.01f, fabsf(CUtility::GetRandomValue<float>()) * 0.03f, -0.5f };
 
+		// がれきを生成
+		CRubble::Create(0,						// 通常
+			GetPos() + RandomVelocity * 2.0f,	// 座標
+			RandomVelocity * 0.5f);				// 加速度
+	}
 }
 
 //============================================================================
@@ -91,6 +109,38 @@ CBlock* CBlock::Create()
 
 	// モデルを設定
 	pNewInstance->BindModel(CModel_X_Manager::TYPE::TEST);
+
+	return pNewInstance;
+}
+
+//============================================================================
+// 生成
+//============================================================================
+CBlock* CBlock::Create(Vec Pos, Vec Rot)
+{
+	// インスタンスを生成
+	CBlock* pNewInstance = DBG_NEW CBlock();
+
+	// タイプを設定
+	pNewInstance->SetType(TYPE::BLOCK);
+
+	// 初期設定
+	pNewInstance->Init();
+
+	// 座標を設定
+	pNewInstance->SetPos(Pos);
+
+	// 向きを設定
+	pNewInstance->SetRot(Rot);
+
+	// モデルを設定
+	pNewInstance->BindModel(CModel_X_Manager::TYPE::TEST);
+
+	// サイズを設定
+	pNewInstance->SetSize(Vec(10.0f, 10.0f, 10.0f));
+
+	// 描画前に1度更新
+	pNewInstance->Update();
 
 	return pNewInstance;
 }
