@@ -178,7 +178,8 @@ void CField_Manager::TestMethod()
 		if (CObject::FindObject(CObject::TYPE::PLAYER))
 		{
 			// オブジェクトをプレイヤータグにダウンキャスト
-			CPlayer* pPlayer = CUtility::DownCast<CPlayer, CObject>(CObject::FindObject(CObject::TYPE::PLAYER));
+			CPlayer* pPlayer = nullptr;
+			pPlayer = CUtility::DownCast(pPlayer, CObject::FindObject(CObject::TYPE::PLAYER));
 
 			// プレイヤーの座標から角度を計算
 			D3DXVECTOR3 NewPos = pPlayer->GetPos();
@@ -215,10 +216,12 @@ void CField_Manager::TestDelete()
 			if (CObject::FindObject(CObject::TYPE::PLAYER))
 			{
 				// オブジェクトをブロックタグにダウンキャスト
-				CBlock* pBlock = CUtility::DownCast<CBlock, CObject>(pObj);
+				CBlock* pBlock = nullptr;
+				pBlock = CUtility::DownCast(pBlock, pObj);
 				
 				// オブジェクトをプレイヤータグにダウンキャスト
-				CPlayer* pPlayer = CUtility::DownCast<CPlayer, CObject>(CObject::FindObject(CObject::TYPE::PLAYER));
+				CPlayer* pPlayer = nullptr;
+				pPlayer = CUtility::DownCast(pPlayer, CObject::FindObject(CObject::TYPE::PLAYER));
 
 				m_pCylinderCollider->SetPos(pPlayer->GetPos());
 				m_pCylinderCollider->SetRot(pPlayer->GetRot());

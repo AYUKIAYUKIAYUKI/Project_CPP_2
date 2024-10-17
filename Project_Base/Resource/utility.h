@@ -25,7 +25,7 @@ public:
 	template <typename T> static T GetRandomValue();
 
 	// ダウンキャスト
-	template <typename T1, typename T2> static T1* DownCast(T2* pBase);
+	template <typename T1, typename T2> static T1* DownCast(T1* pDest, T2* pBase);
 };
 
 //============================================================================
@@ -53,8 +53,10 @@ template <typename T> T CUtility::GetRandomValue()
 //============================================================================
 // ダウンキャスト
 //============================================================================
-template <typename T1, typename T2> T1* CUtility::DownCast(T2* pBase)
+template <typename T1, typename T2> T1* CUtility::DownCast(T1* pDest, T2* pBase)
 {
+	pDest;
+
 	// 引数のオブジェクトを指定されたクラスにダウンキャスト
 	T1* pObj{ dynamic_cast<T1*>(pBase) };
 
