@@ -89,7 +89,7 @@ void CCamera::Update()
 	CalcPosR();
 
 #ifdef _DEBUG
-	CRenderer::GetInstance()->SetDebugString("カメラ座標 : " + std::to_string(m_Pos.x) + " :  " + std::to_string(m_Pos.y) + " : " + std::to_string(m_Pos.z));
+	CRenderer::GetInstance()->SetDebugString("カメラ座標 : " + std::to_string(GetPos().x) + " :  " + std::to_string(GetPos().y) + " : " + std::to_string(m_Pos.z));
 	CRenderer::GetInstance()->SetDebugString("カメラ向き : " + std::to_string(m_Rot.x) + " :  " + std::to_string(m_Rot.y) + " : " + std::to_string(m_Rot.z));
 	CRenderer::GetInstance()->SetDebugString("カメラ間距離 : " + std::to_string(m_fDistance));
 #endif // _DEBUG
@@ -121,7 +121,7 @@ void CCamera::SetCamera()
 //============================================================================
 // 座標を取得
 //============================================================================
-D3DXVECTOR3 CCamera::GetPos() const
+const D3DXVECTOR3& CCamera::GetPos() const
 {
 	return m_Pos;
 }

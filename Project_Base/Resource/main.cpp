@@ -63,7 +63,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 	};
 
 	HWND hWnd;	// ウィンドウハンドル(識別子)
-	MSG msg;	// メッセージを格納する変数
+	MSG  msg;	// メッセージを格納する変数
 
 	// 画面サイズの設定用
 	RECT rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
@@ -110,7 +110,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 	timeBeginPeriod(1);
 
 	// FPS計測用
-	int nCountFPS = 0;						// 現在のFPS
+	int   nCountFPS = 0;					// 現在のFPS
 	DWORD dwCurrentTime = 0;				// 現在時刻用
 	DWORD dwFrameCount = 0;					// 最後に処理した時間
 	DWORD dwExecLastTime = timeGetTime();	// フレームカウント格納

@@ -18,12 +18,12 @@ public:
 	CCamera();	// デフォルトコンストラクタ
 	~CCamera();	// デストラクタ
 
-	HRESULT Init();		// 初期設定
+	HRESULT	Init();		// 初期設定
 	void Update();		// 更新処理
 	void SetCamera();	// カメラをセット
 
-	D3DXVECTOR3 GetPos() const;		// 座標を取得
-	void SetPos(D3DXVECTOR3 Pos);	// 座標を設定
+	const D3DXVECTOR3&	GetPos() const;	// 座標を取得
+	void SetPos(D3DXVECTOR3 Pos);		// 座標を設定
 
 	D3DXVECTOR3 GetPosTarget() const;			// 目標座標を取得
 	void SetPosTarget(D3DXVECTOR3 PosTarget);	// 目標座標を設定
@@ -49,19 +49,19 @@ private:
 	void CalcMtxProjection();	// プロジェクション行列計算
 	void CalcMtxView();			// ビュー行列計算
 
-	D3DXVECTOR3 m_Pos;			// 座標
-	D3DXVECTOR3 m_PosTarget;	// 目標座標
-	D3DXVECTOR3 m_PosV;			// 視点座標
-	D3DXVECTOR3 m_PosTargetV;	// 目標視点座標
-	D3DXVECTOR3 m_PosR;			// 注視点座標
-	D3DXVECTOR3 m_PosTargetR;	// 目標注視点座標
-	D3DXVECTOR3 m_Rot;			// 向き
-	D3DXVECTOR3 m_RotTarget;	// 目標向き
-	float m_fDistance;			// 視点 -> 注視点間の距離
-	D3DXVECTOR3 m_VecU;			// 上方向ベクトル
-	D3DXMATRIX m_MtxProjection;	// プロジェクション行列
-	D3DXMATRIX m_MtxView;		// ビュー行列
-	float m_fAdjust;			// 俯瞰度合
+	D3DXVECTOR3 m_Pos;				// 座標
+	D3DXVECTOR3 m_PosTarget;		// 目標座標
+	D3DXVECTOR3 m_PosV;				// 視点座標
+	D3DXVECTOR3 m_PosTargetV;		// 目標視点座標
+	D3DXVECTOR3 m_PosR;				// 注視点座標
+	D3DXVECTOR3 m_PosTargetR;		// 目標注視点座標
+	D3DXVECTOR3 m_Rot;				// 向き
+	D3DXVECTOR3 m_RotTarget;		// 目標向き
+	float		m_fDistance;		// 視点 -> 注視点間の距離
+	D3DXVECTOR3	m_VecU;				// 上方向ベクトル
+	D3DXMATRIX	m_MtxProjection;	// プロジェクション行列
+	D3DXMATRIX	m_MtxView;			// ビュー行列
+	float		m_fAdjust;			// 俯瞰度合
 };
 
 #endif // _CAMERA_H_
