@@ -13,9 +13,6 @@
 // デバイス取得用
 #include "renderer.h"
 
-// 判定可視化用
-#include "render_collision.h"
-
 //****************************************************
 // 静的メンバ変数の初期化
 //****************************************************
@@ -35,9 +32,6 @@ CObject_X::CObject_X(int nPriority) :
 	m_fAlpha{ DEFAULT_ALPHA_VALUE }
 {
 	D3DXMatrixIdentity(&m_MtxWorld);	// ワールド行列
-
-	// 判定表示の生成
-	//CRender_Collision::Create(this, m_Pos, m_Size);
 }
 
 //============================================================================

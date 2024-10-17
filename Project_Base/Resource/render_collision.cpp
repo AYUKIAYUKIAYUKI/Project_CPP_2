@@ -23,14 +23,12 @@ const int CRender_Collision::m_nNumIdx = 24;		// インデックス数
 //============================================================================
 // コンストラクタ
 //============================================================================
-CRender_Collision::CRender_Collision(CObject_X* pObj, D3DXVECTOR3& posRef, D3DXVECTOR3& sizeRef, int nPriority) :
+CRender_Collision::CRender_Collision(CObject_X* pObj, int nPriority) :
 	CObject{ nPriority },				// プライオリティ
 	m_pVtxBuff{ nullptr },				// 頂点バッファのポインタ
 	m_pIdxBuff{ nullptr },				// インデックスバッファのポインタ
-	m_pRefPtr(pObj),					// 参照先
-	m_posRef{ posRef },					// 参照位置
-	m_col{ 1.0f, 0.0f, 0.0f, 1.0f },	// 色
-	m_size{ sizeRef }
+	m_pObj(pObj),						// オブジェクト
+	m_col{ 1.0f, 0.0f, 0.0f, 1.0f }		// 色
 {
 	// ワールド行列の初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
@@ -98,8 +96,6 @@ void CRender_Collision::Update()
 
 	// ワールド行列の設定
 	SetMtxWorld();
-
-	SetRelease();
 }
 
 //============================================================================
@@ -143,10 +139,10 @@ void CRender_Collision::Draw()
 //============================================================================
 // 生成
 //============================================================================
-CRender_Collision* CRender_Collision::Create(CObject_X* pObj, D3DXVECTOR3& posRef, D3DXVECTOR3& sizeRef)
+CRender_Collision* CRender_Collision::Create(CObject_X* pObj)
 {
 	// インスタンスを生成
-	CRender_Collision* pRender_Collision = DBG_NEW CRender_Collision{ pObj, posRef, sizeRef, static_cast<int>(LAYER::FRONT) };
+	CRender_Collision* pRender_Collision = DBG_NEW CRender_Collision{ pObj, static_cast<int>(LAYER::FRONT) };
 
 	// 生成出来ていたら初期設定
 	if (pRender_Collision != nullptr)
@@ -269,14 +265,14 @@ void CRender_Collision::SetVtx()
 	// 頂点バッファをロックし頂点情報時へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 
-	pVtx[0].pos = { -m_size.x, +m_size.y, -m_size.z };
-	pVtx[1].pos = { +m_size.x, +m_size.y, -m_size.z };
-	pVtx[2].pos = { -m_size.x, -m_size.y, -m_size.z };
-	pVtx[3].pos = { +m_size.x, -m_size.y, -m_size.z };
-	pVtx[4].pos = { -m_size.x, +m_size.y, +m_size.z };
-	pVtx[5].pos = { +m_size.x, +m_size.y, +m_size.z };
-	pVtx[6].pos = { -m_size.x, -m_size.y, +m_size.z };
-	pVtx[7].pos = { +m_size.x, -m_size.y, +m_size.z };
+	pVtx[0].pos = { -m_pObj->GetSize().x, +m_pObj->GetSize().y, -m_pObj->GetSize().z };
+	pVtx[1].pos = { +m_pObj->GetSize().x, +m_pObj->GetSize().y, -m_pObj->GetSize().z };
+	pVtx[2].pos = { -m_pObj->GetSize().x, -m_pObj->GetSize().y, -m_pObj->GetSize().z };
+	pVtx[3].pos = { +m_pObj->GetSize().x, -m_pObj->GetSize().y, -m_pObj->GetSize().z };
+	pVtx[4].pos = { -m_pObj->GetSize().x, +m_pObj->GetSize().y, +m_pObj->GetSize().z };
+	pVtx[5].pos = { +m_pObj->GetSize().x, +m_pObj->GetSize().y, +m_pObj->GetSize().z };
+	pVtx[6].pos = { -m_pObj->GetSize().x, -m_pObj->GetSize().y, +m_pObj->GetSize().z };
+	pVtx[7].pos = { +m_pObj->GetSize().x, -m_pObj->GetSize().y, +m_pObj->GetSize().z };
 
 	// 頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
@@ -295,9 +291,9 @@ void CRender_Collision::SetMtxWorld()
 
 	// 平行移動行列作成
 	D3DXMatrixTranslation(&mtxTrans,
-		m_posRef.x,
-		m_posRef.y,
-		m_posRef.z);
+		m_pObj->GetPos().x,
+		m_pObj->GetPos().y,
+		m_pObj->GetPos().z);
 
 	// 平行移動行列との掛け算
 	D3DXMatrixMultiply(&m_mtxWorld,
