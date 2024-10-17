@@ -20,12 +20,13 @@ public:
 	//****************************************************
 	enum class TYPE
 	{
-		TEST = 0,	// テスト
-		CYLINDER,	// cylinder
-		SAMUS,		// サムス
-		RUBBLE_00,	// がれき00
-		RUBBLE_01,	// がれき01
-		RUBBLE_02,	// がれき02
+		TEST = 0,			// テスト
+		CYLINDER,			// cylinder
+		SAMUS,				// サムス
+		RUBBLE_00,			// がれき00
+		RUBBLE_01,			// がれき01
+		RUBBLE_02,			// がれき02
+		CYLINDERCOLLIDER,	// cylinder collider
 		MAX,
 	};
 

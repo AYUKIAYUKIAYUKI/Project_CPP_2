@@ -33,6 +33,18 @@ CField_Manager* CField_Manager::m_pInstance = nullptr;
 //============================================================================
 HRESULT CField_Manager::Init()
 {
+	// 円柱の判定を生成
+	m_pCylinderCollider = CObject_X::Create();
+
+	// 初期設定
+	m_pCylinderCollider->Init();
+
+	// モデルを設定
+	m_pCylinderCollider->BindModel(CModel_X_Manager::TYPE::CYLINDERCOLLIDER);
+
+	// 透明度を設定
+	m_pCylinderCollider->SetAlpha(0.5f);
+
 	return S_OK;
 }
 
@@ -95,7 +107,8 @@ CField_Manager* CField_Manager::GetInstance()
 //============================================================================
 // デフォルトコンストラクタ
 //============================================================================
-CField_Manager::CField_Manager()
+CField_Manager::CField_Manager() :
+	m_pCylinderCollider(nullptr)
 {
 
 }
@@ -137,6 +150,7 @@ void CField_Manager::TestMethod()
 {
 	// ブロック数をカウント
 	int nCntBlock = 0;
+	constexpr int nMaxBlock = 50;
 
 	// ミドルオブジェクトをを取得
 	CObject* pObj = CObject::GetObject(static_cast<int>(CObject::LAYER::MIDDLE));
@@ -150,7 +164,7 @@ void CField_Manager::TestMethod()
 		}
 
 		// 一定カウントで以降の処理を行わない
-		if (nCntBlock >= 20)
+		if (nCntBlock >= nMaxBlock)
 		{
 			return;
 		}
@@ -158,24 +172,29 @@ void CField_Manager::TestMethod()
 		pObj = pObj->GetNext();
 	}
 
-	// プレイヤータグを取得
-	if (CObject::FindObject(CObject::TYPE::PLAYER))
+	while (nCntBlock < nMaxBlock)
 	{
-		// オブジェクトをプレイヤータグにダウンキャスト
-		CPlayer* pPlayer = CUtility::DownCast<CPlayer, CObject>(CObject::FindObject(CObject::TYPE::PLAYER));
+		// プレイヤータグを取得
+		if (CObject::FindObject(CObject::TYPE::PLAYER))
+		{
+			// オブジェクトをプレイヤータグにダウンキャスト
+			CPlayer* pPlayer = CUtility::DownCast<CPlayer, CObject>(CObject::FindObject(CObject::TYPE::PLAYER));
 
-		// プレイヤーの座標から角度を計算
-		D3DXVECTOR3 NewPos = pPlayer->GetPos();
-		float f角度 = atan2f(NewPos.z, NewPos.x), f反映量 = 150.0f, f乱数 = CUtility::GetRandomValue<float>() * 0.01f;
-		NewPos.x = cosf(f角度 + f乱数) * f反映量;
-		NewPos.y = fabsf(CUtility::GetRandomValue<float>());
-		NewPos.z = sinf(f角度 + f乱数) * f反映量;
+			// プレイヤーの座標から角度を計算
+			D3DXVECTOR3 NewPos = pPlayer->GetPos();
+			float f角度 = atan2f(NewPos.z, NewPos.x), f反映量 = 150.0f, f乱数 = CUtility::GetRandomValue<float>() * 0.01f;
+			NewPos.x = cosf(f角度 + f乱数) * f反映量;
+			NewPos.y = fabsf(CUtility::GetRandomValue<float>());
+			NewPos.z = sinf(f角度 + f乱数) * f反映量;
 
-		// 向きを決定
-		D3DXVECTOR3 NewRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		NewRot.y = -(f角度 + f乱数);
+			// 向きを決定
+			D3DXVECTOR3 NewRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			NewRot.y = -(f角度 + f乱数);
 
-		CBlock::Create(NewPos, NewRot);
+			CBlock::Create(NewPos, NewRot);
+
+			nCntBlock++;
+		}
 	}
 }
 
@@ -201,10 +220,15 @@ void CField_Manager::TestDelete()
 				// オブジェクトをプレイヤータグにダウンキャスト
 				CPlayer* pPlayer = CUtility::DownCast<CPlayer, CObject>(CObject::FindObject(CObject::TYPE::PLAYER));
 
-				//if (pP)
-				//{
-				//	pBlock->SetRelease();
-				//}
+				m_pCylinderCollider->SetPos(pPlayer->GetPos());
+				m_pCylinderCollider->SetRot(pPlayer->GetRot());
+				m_pCylinderCollider->SetScale(250.0f);
+
+				// 逆に、円柱範囲外の場合消去
+				if (!CUtility::CylinderAndPoint(pPlayer->GetPos(), 250.0f, 250.0f, pBlock->GetPos()))
+				{
+					pBlock->SetRelease();
+				}
 			}
 		}
 

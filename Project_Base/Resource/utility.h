@@ -15,6 +15,12 @@ class CUtility final
 {
 public:
 
+	// ‹…‚Ç‚¤‚µ‚ÌÕ“Ë”»’è
+	static bool OnlySphere(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const D3DXVECTOR3& posTarget, const float& fRadiusTarget);
+
+	// ‰~’Œ‚Æ“_‚ÌÕ“Ë”»’è
+	static bool CylinderAndPoint(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& posTarget);
+
 	// —”¶¬
 	template <typename T> static T GetRandomValue();
 
