@@ -36,7 +36,6 @@ bool CUtility::CylinderAndPoint(const D3DXVECTOR3& posSelf, const float& fRadius
 	D3DXVECTOR3 vec = posTarget - posSelf;
 
 	// ‚¨Œİ‚¢‚Ì‹——£‚ªA”¼ŒaˆÈ‰º‚Å
-	//if (sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z) <= fRadiusSelf)
 	if (sqrtf(vec.x * vec.x + vec.z * vec.z) <= fRadiusSelf)
 	{
 		// ‰~’Œ‚Ì‚‚³‚Ì”ÍˆÍ“à‚É“_‚ª‘¶İ‚·‚ê‚ÎÕ“Ë

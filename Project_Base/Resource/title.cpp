@@ -44,16 +44,10 @@ HRESULT CTitle::Init()
 	HRESULT hr{ CScene::Init() };
 
 	/* 仮 */
-	CObject_2D* pTest{ CObject_2D::Create() };
+	CObject_2D* pTest = CObject_2D::Create();
 	pTest->BindTex(CTexture_Manager::TYPE::TEST1);
 	pTest->SetPos({ SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f });
 	pTest->SetSize({ 30.0f, 30.0f, 0.0f });
-
-	// 全てのサウンドを停止
-	//CSound::GetInstance()->Stop();
-
-	// BGMをかける
-	//CSound::GetInstance()->Play(CSound::LABEL::TEST);
 
 	return hr;
 }

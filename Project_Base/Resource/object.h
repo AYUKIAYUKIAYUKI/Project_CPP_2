@@ -44,7 +44,7 @@ public:
 	};
 
 	CObject();												// デフォルトコンストラクタ
-	CObject(int nPriority = static_cast<int>(LAYER::NONE));	// プライオリティ指定コンストラクタ
+	CObject(int nPriority = static_cast<int>(LAYER::NONE));	// 描画優先度指定コンストラクタ
 	virtual ~CObject() = 0;									// デストラクタ
 
 	virtual HRESULT	Init() = 0;		// 初期設定

@@ -14,22 +14,28 @@
 #include "renderer.h"
 
 //============================================================================
-// コンストラクタ
+// 
+// publicメンバ
+// 
+//============================================================================
+
+//============================================================================
+// 描画優先度指定コンストラクタ
 //============================================================================
 CObject_2D::CObject_2D(int nPriority) :
 	CObject{ nPriority },
 	m_pVtxBuff{ nullptr },
 	m_pTex{ nullptr },
-	m_Pos{ 0.0f, 0.0f, 0.0f },			// 座標
-	m_Rot{ 0.0f, 0.0f, 0.0f },			// 向き
-	m_Size{ 0.0f, 0.0f, 0.0f },			// サイズ
-	m_Col{ 1.0f, 1.0f, 1.0f, 1.0f },	// 色
-	m_fLength{ 0.0f },					// 展開用対角線
-	m_fAngle{ 0.0f },					// 対角線用角度
-	m_fTexWidth{ 1.0f },				// 横テクスチャ分割幅
-	m_fTexHeight{ 1.0f },				// 縦テクスチャ分縦幅
-	m_nNowPatternU{ 0 },				// 現在の横テクスチャ種類
-	m_nNowPatternV{ 0 }					// 現在の縦テクスチャ種類
+	m_Pos{ 0.0f, 0.0f, 0.0f },
+	m_Rot{ 0.0f, 0.0f, 0.0f },
+	m_Size{ 0.0f, 0.0f, 0.0f },
+	m_Col{ 1.0f, 1.0f, 1.0f, 1.0f },
+	m_fLength{ 0.0f },
+	m_fAngle{ 0.0f },
+	m_fTexWidth{ 1.0f },
+	m_fTexHeight{ 1.0f },
+	m_nNowPatternU{ 0 },
+	m_nNowPatternV{ 0 }
 {
 
 }
@@ -48,7 +54,7 @@ CObject_2D::~CObject_2D()
 HRESULT CObject_2D::Init()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev{ CRenderer::GetInstance()->GetDeviece() };
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
 
 	// 頂点バッファの生成
 	pDev->CreateVertexBuffer(sizeof(VERTEX_2D) * 4,
@@ -64,12 +70,12 @@ HRESULT CObject_2D::Init()
 	}
 
 	// 頂点情報へのポインタ
-	VERTEX_2D* pVtx{ nullptr };
+	VERTEX_2D* pVtx = nullptr;
 
 	// 頂点バッファをロック
 	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 
-	// 位置の設定
+	// 頂点座標の設定
 	pVtx[0].pos = { 0.0f, 0.0f, 0.0f };
 	pVtx[1].pos = { 0.0f, 0.0f, 0.0f };
 	pVtx[2].pos = { 0.0f, 0.0f, 0.0f };
@@ -81,13 +87,13 @@ HRESULT CObject_2D::Init()
 	pVtx[2].rhw = 1.0f;
 	pVtx[3].rhw = 1.0f;
 
-	// 色の設定
+	//頂点色の設定
 	pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
-	// テクスチャの設定
+	// テクスチャ座標の設定
 	pVtx[0].tex = { 0.0f, 0.0f };
 	pVtx[1].tex = { 1.0f, 0.0f };
 	pVtx[2].tex = { 0.0f, 1.0f };
@@ -124,15 +130,15 @@ void CObject_2D::Update()
 
 	// 必要な数値を算出
 	m_fLength = sqrtf(m_Size.x * m_Size.x + m_Size.y * m_Size.y);
-	m_fAngle = atan2f(m_Size.x, m_Size.y);
+	m_fAngle = atan2f(m_Size.y, m_Size.x);
 
 	// 頂点情報へのポインタ
-	VERTEX_2D* pVtx{ nullptr };
+	VERTEX_2D* pVtx = nullptr;
 
 	// 頂点バッファをロック
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	// 位置の設定
+	// 頂点座標の設定
 	pVtx[0].pos = {
 		m_Pos.x + sinf(m_Rot.z - (D3DX_PI - m_fAngle)) * m_fLength,
 		m_Pos.y + cosf(m_Rot.z - (D3DX_PI - m_fAngle)) * m_fLength,
@@ -157,13 +163,18 @@ void CObject_2D::Update()
 		0.0f
 	};
 
-	// 色の設定
+	for (int i = 0; i < 4; ++i)
+	{
+		CRenderer::GetInstance()->SetDebugString("頂点座標 : " + std::to_string(pVtx[i].pos.x) + " :  " + std::to_string(pVtx[i].pos.y) + " : " + std::to_string(pVtx[i].pos.z));
+	}
+
+	// 頂点色の設定
 	pVtx[0].col = m_Col;
 	pVtx[1].col = m_Col;
 	pVtx[2].col = m_Col;
 	pVtx[3].col = m_Col;
 
-	// テクスチャの設定
+	// テクスチャ座標の設定
 	pVtx[0].tex = { m_fTexWidth * m_nNowPatternU, m_fTexHeight * m_nNowPatternV };
 	pVtx[1].tex = { m_fTexWidth * (m_nNowPatternU + 1), m_fTexHeight * m_nNowPatternV };
 	pVtx[2].tex = { m_fTexWidth * (m_nNowPatternU), m_fTexHeight * (m_nNowPatternV + 1) };
@@ -179,7 +190,7 @@ void CObject_2D::Update()
 void CObject_2D::Draw()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev{ CRenderer::GetInstance()->GetDeviece() };
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
 
 	// 頂点バッファをデータストリームに設定
 	pDev->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_2D));
@@ -215,7 +226,7 @@ void CObject_2D::BindTex(CTexture_Manager::TYPE Type)
 //============================================================================
 // 座標取得
 //============================================================================
-D3DXVECTOR3 CObject_2D::GetPos()
+const D3DXVECTOR3& CObject_2D::GetPos() const
 {
 	return m_Pos;
 }
@@ -231,7 +242,7 @@ void CObject_2D::SetPos(D3DXVECTOR3 Pos)
 //============================================================================
 // 向き取得
 //============================================================================
-D3DXVECTOR3 CObject_2D::GetRot()
+const D3DXVECTOR3& CObject_2D::GetRot()const
 {
 	return m_Rot;
 }
@@ -247,7 +258,7 @@ void CObject_2D::SetRot(D3DXVECTOR3 Rot)
 //============================================================================
 // サイズ取得
 //============================================================================
-D3DXVECTOR3 CObject_2D::GetSize()
+const D3DXVECTOR3& CObject_2D::GetSize() const
 {
 	return m_Size;
 }
@@ -263,7 +274,7 @@ void CObject_2D::SetSize(D3DXVECTOR3 Size)
 //============================================================================
 // 色を取得
 //============================================================================
-D3DXCOLOR CObject_2D::GetCol()
+const D3DXCOLOR& CObject_2D::GetCol() const
 {
 	return m_Col;
 }
@@ -279,7 +290,7 @@ void CObject_2D::SetCol(D3DXCOLOR Col)
 //============================================================================
 // アルファ値を取得
 //============================================================================
-float& CObject_2D::GetAlpha()
+const float& CObject_2D::GetAlpha() const
 {
 	return m_Col.a;
 }
@@ -295,7 +306,7 @@ void CObject_2D::SetAlpha(float fAlpha)
 //============================================================================
 // 展開用対角線取得
 //============================================================================
-float CObject_2D::GetLength()
+const float& CObject_2D::GetLength() const
 {
 	return m_fLength;
 }
@@ -319,7 +330,7 @@ void CObject_2D::SetTexHeight(float fHeight)
 //============================================================================
 // 現在のテクスチャ横分割幅取得
 //============================================================================
-int CObject_2D::GetNowPatternU()
+const int& CObject_2D::GetNowPatternU() const
 {
 	return m_nNowPatternU;
 }
@@ -335,7 +346,7 @@ void CObject_2D::SetNowPatternU(int nNowPatternU)
 //============================================================================
 // 現在のテクスチャ縦分割幅取得
 //============================================================================
-int CObject_2D::GetNowPatternV()
+const int& CObject_2D::GetNowPatternV() const
 {
 	return m_nNowPatternV;
 }
@@ -353,7 +364,8 @@ void CObject_2D::SetNowPatternV(int nNowPatternV)
 //============================================================================
 CObject_2D* CObject_2D::Create()
 {
-	CObject_2D* pObject2D = DBG_NEW CObject_2D{};
+	// インスタンスを生成
+	CObject_2D* pObject2D = DBG_NEW CObject_2D();
 
 	// 生成出来ていたら初期設定
 	if (pObject2D != nullptr)
