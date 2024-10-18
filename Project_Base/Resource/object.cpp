@@ -16,7 +16,7 @@
 //****************************************************
 // 静的メンバの初期化
 //****************************************************
-int CObject::m_nNumAll = 0;										// オブジェクト総数
+int		 CObject::m_nNumAll = 0;								// オブジェクト総数
 CObject* CObject::m_pTop[static_cast<int>(LAYER::MAX)] = {};	// 先頭オブジェクトのポインタ
 CObject* CObject::m_pCur[static_cast<int>(LAYER::MAX)] = {};	// 終端オブジェクトのポインタ
 
@@ -24,11 +24,11 @@ CObject* CObject::m_pCur[static_cast<int>(LAYER::MAX)] = {};	// 終端オブジェクト
 // デフォルトコンストラクタ
 //============================================================================
 CObject::CObject() :
-	m_nPriority{ static_cast<int>(LAYER::MAX) - 1 },	// 描画優先度
-	m_pPrev{ nullptr },									// 前のオブジェクトのポインタ
-	m_pNext{ nullptr },									// 次のオブジェクトのポインタ
-	m_type(TYPE::NONE),									// タイプ識別
-	m_bDeath{ false }									// 死亡フラグ
+	m_nPriority{ static_cast<int>(LAYER::MAX) - 1 },
+	m_pPrev{ nullptr },
+	m_pNext{ nullptr },
+	m_Type(TYPE::NONE),
+	m_bDeath{ false }
 {
 	// このオブジェクトをリストに登録
 	if (m_pCur[m_nPriority] == nullptr)
@@ -53,23 +53,17 @@ CObject::CObject() :
 
 	// 総数をカウントアップ
 	m_nNumAll++;
-
-	//// 常識的なオブジェクトの生成限度を超えたら
-	//if (m_nNumAll > MAX_OBJ)
-	//{
-	//	assert(false);
-	//}
 }
 
 //============================================================================
 // プライオリティ指定コンストラクタ
 //============================================================================
 CObject::CObject(int nPriority) :
-	m_nPriority{ nPriority },	// 描画優先度
-	m_pPrev{ nullptr },			// 前のオブジェクトのポインタ
-	m_pNext{ nullptr },			// 次のオブジェクトのポインタ
-	m_type(TYPE::NONE),			// タイプ識別
-	m_bDeath{ false }			// 死亡フラグ
+	m_nPriority{ nPriority },
+	m_pPrev{ nullptr },
+	m_pNext{ nullptr },
+	m_Type(TYPE::NONE),
+	m_bDeath{ false }
 {
 	// このオブジェクトをリストに登録
 	if (m_pCur[nPriority] == nullptr)
@@ -94,12 +88,6 @@ CObject::CObject(int nPriority) :
 
 	// 総数をカウントアップ
 	m_nNumAll++;
-
-	// オブジェクトの生成限度を超えたら
-	if (m_nNumAll > 99999999)
-	{
-		assert(false);
-	}
 }
 
 //============================================================================
@@ -181,15 +169,15 @@ void CObject::Release()
 //============================================================================
 CObject::TYPE CObject::GetType()
 {
-	return m_type;
+	return m_Type;
 }
 
 //============================================================================
 // タイプを設定
 //============================================================================
-void CObject::SetType(TYPE type)
+void CObject::SetType(TYPE Type)
 {
-	m_type = type;
+	m_Type = Type;
 }
 
 //============================================================================
@@ -328,7 +316,7 @@ CObject* CObject::GetObject(int nPriority)
 //============================================================================
 // 特定タイプのオブジェクトを探す
 //============================================================================
-CObject* CObject::FindObject(TYPE type)
+CObject* CObject::FindObject(TYPE Type)
 {
 	for (int nCntPriority = 0; nCntPriority < static_cast<int>(LAYER::MAX); nCntPriority++)
 	{
@@ -338,7 +326,7 @@ CObject* CObject::FindObject(TYPE type)
 		// 次のオブジェクトが無くなるまで
 		while (pObj != nullptr)
 		{
-			if (pObj->GetType() == type)
+			if (pObj->GetType() == Type)
 			{
 				// タイプ一致なら返す
 				return pObj;
