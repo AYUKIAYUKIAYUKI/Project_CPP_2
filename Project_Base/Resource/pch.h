@@ -70,13 +70,18 @@
 #define SCREEN_HEIGHT	1080	// ウインドウの高さ
 
 //****************************************************
+// エイリアスを定義
+//****************************************************
+using Vec3 = D3DXVECTOR3;
+
+//****************************************************
 // 2Dポリゴン頂点フォーマットの定義
 //****************************************************
 struct VERTEX_2D
 {
-	D3DXVECTOR3 pos;	// 頂点座標
-	float rhw;			// 除算数
-	D3DCOLOR col;		// 頂点カラー
+	Vec3		pos;	// 頂点座標
+	float		rhw;	// 除算数
+	D3DCOLOR	col;	// 頂点カラー
 	D3DXVECTOR2 tex;	// テクスチャ座標
 };
 
@@ -85,10 +90,10 @@ struct VERTEX_2D
 //****************************************************
 struct VERTEX_3D
 {
-	D3DXVECTOR3 pos;	// 頂点座標
-	D3DXVECTOR3 nor;	// 法線ベクトル
-	D3DCOLOR col;		// 頂点カラー
-	D3DXVECTOR2 tex;	// テクスチャ座標用
+	Vec3		 pos;	// 頂点座標
+	Vec3		 nor;	// 法線ベクトル
+	D3DCOLOR	col;	// 頂点カラー
+	D3DXVECTOR2 tex;	// テクスチャ座標
 };
 
 #endif	_PCH_H_

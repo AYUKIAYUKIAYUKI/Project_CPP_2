@@ -16,11 +16,6 @@
 // デバッグ表示用
 #include "renderer.h"
 
-//****************************************************
-// エイリアスを定義
-//****************************************************
-using Vec = D3DXVECTOR3;
-
 //============================================================================
 // 
 // publicメンバ
@@ -32,7 +27,7 @@ using Vec = D3DXVECTOR3;
 //============================================================================
 CPlayer::CPlayer() :
 	CObject_X(static_cast<int>(CObject::LAYER::MIDDLE)),
-	m_PosTarget{ Vec(0.0f, 0.0f, 0.0f) }
+	m_PosTarget{ Vec3(0.0f, 0.0f, 0.0f) }
 {
 
 }
@@ -98,7 +93,7 @@ void CPlayer::Draw()
 //============================================================================
 // 目標座標を取得
 //============================================================================
-Vec CPlayer::GetPosTarget() const
+Vec3 CPlayer::GetPosTarget() const
 {
 	return m_PosTarget;
 }
@@ -106,7 +101,7 @@ Vec CPlayer::GetPosTarget() const
 //============================================================================
 // 目標座標を設定
 //============================================================================
-void CPlayer::SetPosTarget(Vec PosTarget)
+void CPlayer::SetPosTarget(Vec3 PosTarget)
 {
 	m_PosTarget = PosTarget;
 }
@@ -173,14 +168,14 @@ void CPlayer::Control()
 	}
 
 	// 座標を反映
-	Vec NewPos = Vec(0.0f, 0.0f, 0.0f);
+	Vec3 NewPos = Vec3(0.0f, 0.0f, 0.0f);
 	float f反映量 = 150.0f;
 	NewPos.x = cosf(f角度) * f反映量;
 	NewPos.z = sinf(f角度) * f反映量;
 	SetPos(NewPos);
 
 	// 向きを反映
-	Vec NewRot = Vec(0.0f, 0.0f, 0.0f);
+	Vec3 NewRot = Vec3(0.0f, 0.0f, 0.0f);
 	NewRot.y = -f角度;
 	SetRot(NewRot);
 }
