@@ -94,9 +94,9 @@ void CCamera::Update()
 	CalcPosR();
 
 #ifdef _DEBUG
-	CRenderer::GetInstance()->SetDebugString("カメラ座標 : " + std::to_string(GetPos().x) + " :  " + std::to_string(GetPos().y) + " : " + std::to_string(m_Pos.z));
-	CRenderer::GetInstance()->SetDebugString("カメラ向き : " + std::to_string(m_Rot.x) + " :  " + std::to_string(m_Rot.y) + " : " + std::to_string(m_Rot.z));
-	CRenderer::GetInstance()->SetDebugString("カメラ間距離 : " + std::to_string(m_fDistance));
+	CRenderer::GetInstance()->SetDebugString("カメラ座標 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(m_Pos.z));
+	CRenderer::GetInstance()->SetDebugString("カメラ向き : " + to_string(m_Rot.x) + " :  " + to_string(m_Rot.y) + " : " + to_string(m_Rot.z));
+	CRenderer::GetInstance()->SetDebugString("カメラ間距離 : " + to_string(m_fDistance));
 #endif // _DEBUG
 }
 
@@ -126,7 +126,7 @@ void CCamera::SetCamera()
 //============================================================================
 // 座標を取得
 //============================================================================
-const D3DXVECTOR3& CCamera::GetPos() const
+const Vec3& CCamera::GetPos() const
 {
 	return m_Pos;
 }
@@ -134,7 +134,7 @@ const D3DXVECTOR3& CCamera::GetPos() const
 //============================================================================
 // 座標を設定
 //============================================================================
-void CCamera::SetPos(D3DXVECTOR3 Pos)
+void CCamera::SetPos(Vec3 Pos)
 {
 	m_Pos = Pos;
 }
@@ -142,7 +142,7 @@ void CCamera::SetPos(D3DXVECTOR3 Pos)
 //============================================================================
 // 目標座標を取得
 //============================================================================
-D3DXVECTOR3 CCamera::GetPosTarget() const
+const Vec3& CCamera::GetPosTarget() const
 {
 	return m_PosTarget;
 }
@@ -150,7 +150,7 @@ D3DXVECTOR3 CCamera::GetPosTarget() const
 //============================================================================
 // 目標座標を設定
 //============================================================================
-void CCamera::SetPosTarget(D3DXVECTOR3 PosTarget)
+void CCamera::SetPosTarget(Vec3 PosTarget)
 {
 	m_PosTarget = PosTarget;
 }
@@ -158,7 +158,7 @@ void CCamera::SetPosTarget(D3DXVECTOR3 PosTarget)
 //============================================================================
 // 向きを取得
 //============================================================================
-D3DXVECTOR3 CCamera::GetRot() const
+const Vec3& CCamera::GetRot() const
 {
 	return m_Rot;
 }
@@ -166,7 +166,7 @@ D3DXVECTOR3 CCamera::GetRot() const
 //============================================================================
 // 向きを設定
 //============================================================================
-void CCamera::SetRot(D3DXVECTOR3 Rot)
+void CCamera::SetRot(Vec3 Rot)
 {
 	m_Rot = Rot;
 }
@@ -174,7 +174,7 @@ void CCamera::SetRot(D3DXVECTOR3 Rot)
 //============================================================================
 // 目標向きを取得
 //============================================================================
-D3DXVECTOR3 CCamera::GetRotTarget() const
+const Vec3& CCamera::GetRotTarget() const
 {
 	return m_RotTarget;
 }
@@ -182,7 +182,7 @@ D3DXVECTOR3 CCamera::GetRotTarget() const
 //============================================================================
 // 目標向きを設定
 //============================================================================
-void CCamera::SetRotTarget(D3DXVECTOR3 RotTarget)
+void CCamera::SetRotTarget(Vec3 RotTarget)
 {
 	m_RotTarget = RotTarget;
 }
@@ -190,7 +190,7 @@ void CCamera::SetRotTarget(D3DXVECTOR3 RotTarget)
 //============================================================================
 // 間距離を取得
 //============================================================================
-float CCamera::GetDistance() const
+const float& CCamera::GetDistance() const
 {
 	return m_fDistance;
 }
@@ -391,8 +391,8 @@ void CCamera::CalcMtxView()
 	D3DXMatrixIdentity(&m_MtxView);
 
 	// 視点座標の調整用
-	D3DXVECTOR3 posV = m_PosV;
-	D3DXVECTOR3 posR = m_PosR;
+	Vec3 posV = m_PosV;
+	Vec3 posR = m_PosR;
 
 	// ビュー行列の生成
 	D3DXMatrixLookAtLH(&m_MtxView,

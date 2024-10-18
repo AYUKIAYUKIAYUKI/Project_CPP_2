@@ -82,7 +82,7 @@ void CPlayer::Update()
 	CObject_X::Update();
 
 #ifdef _DEBUG
-	CRenderer::GetInstance()->SetDebugString("プレイヤー座標 : " + std::to_string(GetPos().x) + " :  " + std::to_string(GetPos().y) + " : " + std::to_string(GetPos().z));
+	CRenderer::GetInstance()->SetDebugString("プレイヤー座標 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
 #endif // _DEBUG
 }
 
@@ -148,7 +148,7 @@ void CPlayer::Control()
 
 	/* お試し */
 	static float f角度 = D3DX_PI * -0.5f;
-	CRenderer::GetInstance()->SetDebugString("プレイヤー座標の角度" + std::to_string(f角度));
+	CRenderer::GetInstance()->SetDebugString("プレイヤー座標の角度" + to_string(f角度));
 
 	float f増加量 = 0.025f;
 

@@ -19,6 +19,11 @@ namespace camera
 	using namespace abbr;
 
 	//****************************************************
+	// using宣言
+	//****************************************************
+	using std::to_string;
+
+	//****************************************************
 	// カメラクラス
 	//****************************************************
 	class CCamera
@@ -35,16 +40,16 @@ namespace camera
 		const Vec3& GetPos() const;	// 座標を取得
 		void SetPos(Vec3 Pos);		// 座標を設定
 
-		Vec3 GetPosTarget() const;			// 目標座標を取得
+		const Vec3& GetPosTarget() const;	// 目標座標を取得
 		void SetPosTarget(Vec3 PosTarget);	// 目標座標を設定
 
-		Vec3 GetRot() const;		// 向きを取得
-		void SetRot(Vec3 Rot);	// 向きを設定
+		const Vec3& GetRot() const;	// 向きを取得
+		void SetRot(Vec3 Rot);		// 向きを設定
 
-		Vec3 GetRotTarget() const;			// 目標向きを取得
+		const Vec3& GetRotTarget() const;	// 目標向きを取得
 		void SetRotTarget(Vec3 RotTarget);	// 目標向きを設定
 
-		float GetDistance() const;			// 間距離を取得
+		const float& GetDistance() const;	// 間距離を取得
 		void SetDistance(float fDistance);	// 間距離を設定
 
 	private:
@@ -59,19 +64,19 @@ namespace camera
 		void CalcMtxProjection();	// プロジェクション行列計算
 		void CalcMtxView();			// ビュー行列計算
 
-		Vec3		m_Pos;				// 座標
-		Vec3		m_PosTarget;		// 目標座標
-		Vec3		m_PosV;				// 視点座標
-		Vec3		m_PosTargetV;		// 目標視点座標
-		Vec3		m_PosR;				// 注視点座標
-		Vec3		m_PosTargetR;		// 目標注視点座標
-		Vec3		m_Rot;				// 向き
-		Vec3		m_RotTarget;		// 目標向き
-		float		m_fDistance;		// 視点 -> 注視点間の距離
-		Vec3		m_VecU;				// 上方向ベクトル
-		D3DXMATRIX	m_MtxProjection;	// プロジェクション行列
-		D3DXMATRIX	m_MtxView;			// ビュー行列
-		float		m_fAdjust;			// 俯瞰度合
+		Vec3	m_Pos;				// 座標
+		Vec3	m_PosTarget;		// 目標座標
+		Vec3	m_PosV;				// 視点座標
+		Vec3	m_PosTargetV;		// 目標視点座標
+		Vec3	m_PosR;				// 注視点座標
+		Vec3	m_PosTargetR;		// 目標注視点座標
+		Vec3	m_Rot;				// 向き
+		Vec3	m_RotTarget;		// 目標向き
+		float	m_fDistance;		// 視点 -> 注視点間の距離
+		Vec3	m_VecU;				// 上方向ベクトル
+		Mtx		m_MtxProjection;	// プロジェクション行列
+		Mtx		m_MtxView;			// ビュー行列
+		float	m_fAdjust;			// 俯瞰度合
 	};
 }
 

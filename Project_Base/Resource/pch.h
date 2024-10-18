@@ -79,6 +79,7 @@ namespace abbr
 	//****************************************************
 	using Vec2 = D3DXVECTOR2;
 	using Vec3 = D3DXVECTOR3;
+	using Mtx = D3DXMATRIX;
 }
 
 //****************************************************
