@@ -80,6 +80,12 @@ namespace abbr
 	using Vec2 = D3DXVECTOR2;
 	using Vec3 = D3DXVECTOR3;
 	using Mtx = D3DXMATRIX;
+
+	/// <summary> D3DXVECTOR2èâä˙âªóp </summary>
+	static const Vec2 Vec2Init = Vec2(0.0f, 0.0f);
+
+	/// <summary> D3DXVECTOR3èâä˙âªóp </summary>
+	static const Vec3 Vec3Init = Vec3(0.0f, 0.0f, 0.0f);
 }
 
 //****************************************************

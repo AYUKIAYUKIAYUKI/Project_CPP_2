@@ -25,14 +25,14 @@ using namespace camera;
 // デフォルトコンストラクタ
 //============================================================================
 CCamera::CCamera() :
-	m_Pos{ 0.0f, 0.0f, 0.0f },
-	m_PosTarget{ 0.0f, 0.0f, 0.0f },
-	m_PosV{ 0.0f, 0.0f, 0.0f },
-	m_PosTargetV{ 0.0f, 0.0f, 0.0f },
-	m_PosR{ 0.0f, 0.0f, 0.0f },
-	m_PosTargetR{ 0.0f, 0.0f, 0.0f },
-	m_Rot{ 0.0f, 0.0f, 0.0f },
-	m_RotTarget{ 0.0f, 0.0f, 0.0f },
+	m_Pos{ Vec3Init },
+	m_PosTarget{ Vec3Init },
+	m_PosV{ Vec3Init },
+	m_PosTargetV{ Vec3Init },
+	m_PosR{ Vec3Init },
+	m_PosTargetR{ Vec3Init },
+	m_Rot{ Vec3Init },
+	m_RotTarget{ Vec3Init },
 	m_fDistance{ 0.0f },
 	m_VecU{ 0.0f, 1.0f, 0.0f },
 	m_fAdjust{ 0.0f }
@@ -55,20 +55,8 @@ CCamera::~CCamera()
 //============================================================================
 HRESULT CCamera::Init()
 {
-	m_Pos = { 0.0f, 0.0f, 0.0f };
-	m_PosTarget = { 0.0f, 0.0f, 0.0f };
-	m_PosV = { 0.0f, 0.0f, 0.0f };
-	m_PosTargetV = { 0.0f, 0.0f, 0.0f };
-	m_PosR = { 0.0f, 0.0f, 0.0f };
-	m_PosTargetR = { 0.0f, 0.0f, 0.0f };
-	m_Rot = { 0.0f, 0.0f, 0.0f };
-	m_RotTarget = { 0.0f, 0.0f, 0.0f };
-	m_fDistance = { 0.0f };
-	m_VecU = { 0.0f, 1.0f, 0.0f };
-	m_fAdjust = 0.0f;
+	// 間距離を設定
 	m_fDistance = 300.0f;
-	D3DXMatrixIdentity(&m_MtxProjection);
-	D3DXMatrixIdentity(&m_MtxView);
 
 	return S_OK;
 }

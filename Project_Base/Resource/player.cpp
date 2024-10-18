@@ -32,7 +32,7 @@ using namespace player;
 //============================================================================
 CPlayer::CPlayer() :
 	CObject_X(static_cast<int>(CObject::LAYER::MIDDLE)),
-	m_PosTarget{ Vec3(0.0f, 0.0f, 0.0f) }
+	m_PosTarget{ Vec3Init }
 {
 
 }
@@ -173,14 +173,14 @@ void CPlayer::Control()
 	}
 
 	// ç¿ïWÇîΩâf
-	Vec3 NewPos = Vec3(0.0f, 0.0f, 0.0f);
+	Vec3 NewPos = Vec3Init;
 	float fîΩâfó  = 150.0f;
 	NewPos.x = cosf(fäpìx) * fîΩâfó ;
 	NewPos.z = sinf(fäpìx) * fîΩâfó ;
 	SetPos(NewPos);
 
 	// å¸Ç´ÇîΩâf
-	Vec3 NewRot = Vec3(0.0f, 0.0f, 0.0f);
+	Vec3 NewRot = Vec3Init;
 	NewRot.y = -fäpìx;
 	SetRot(NewRot);
 }

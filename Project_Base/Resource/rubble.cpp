@@ -110,6 +110,9 @@ void CRubble::SetVelocity(D3DXVECTOR3 Velocity)
 //============================================================================
 CRubble* CRubble::Create(int nType, D3DXVECTOR3 Pos, D3DXVECTOR3 Velocity)
 {
+	// åxçêó}êßóp
+	nType;
+
 	CRubble* pRubble = DBG_NEW CRubble{};
 
 	// ê∂ê¨é∏îs
