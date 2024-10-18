@@ -14,18 +14,24 @@
 #include "renderer.h"
 
 //============================================================================
+// 
+// publicメンバ
+// 
+//============================================================================
+
+//============================================================================
 // コンストラクタ
 //============================================================================
 CObject_3D::CObject_3D(int nPriority) :
 	CObject{ nPriority },
 	m_pVtxBuff{ nullptr },
 	m_pTex{ nullptr },
-	m_Pos{ 0.0f, 0.0f, 0.0f },			// 座標
-	m_Rot{ 0.0f, 0.0f, 0.0f },			// 向き
-	m_Size{ 0.0f, 0.0f, 0.0f },			// サイズ
-	m_Col{ 1.0f, 1.0f, 1.0f, 1.0f },	// 色
-	m_fLength{ 0.0f },					// 展開用対角線
-	m_fAngle{ 0.0f }					// 対角線用角度
+	m_Pos{ 0.0f, 0.0f, 0.0f },
+	m_Rot{ 0.0f, 0.0f, 0.0f },
+	m_Size{ 0.0f, 0.0f, 0.0f },
+	m_Col{ 1.0f, 1.0f, 1.0f, 1.0f },
+	m_fLength{ 0.0f },
+	m_fAngle{ 0.0f }
 {
 	D3DXMatrixIdentity(&m_MtxWorld);	// ワールド行列
 }
@@ -44,7 +50,7 @@ CObject_3D::~CObject_3D()
 HRESULT CObject_3D::Init()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev{ CRenderer::GetInstance()->GetDeviece() };
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
 
 	// 頂点バッファの生成
 	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * 4,
@@ -60,7 +66,7 @@ HRESULT CObject_3D::Init()
 	}
 
 	// 頂点情報へのポインタ
-	VERTEX_3D* pVtx{ nullptr };
+	VERTEX_3D* pVtx = nullptr;
 
 	// 頂点バッファをロック
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
@@ -123,7 +129,7 @@ void CObject_3D::Update()
 	m_fLength = sqrtf(m_Size.x * m_Size.x + m_Size.y * m_Size.y);
 
 	// 頂点情報へのポインタ
-	VERTEX_3D* pVtx{ nullptr };
+	VERTEX_3D* pVtx = nullptr;
 
 	// 頂点バッファをロック
 	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
@@ -171,7 +177,7 @@ void CObject_3D::Update()
 void CObject_3D::Draw()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev{ CRenderer::GetInstance()->GetDeviece() };
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
 
 	// ワールド行列の設定
 	pDev->SetTransform(D3DTS_WORLD, &m_MtxWorld);
@@ -210,7 +216,7 @@ void CObject_3D::BindTex(CTexture_Manager::TYPE Type)
 //============================================================================
 // 座標取得
 //============================================================================
-D3DXVECTOR3 CObject_3D::GetPos()
+const D3DXVECTOR3& CObject_3D::GetPos() const
 {
 	return m_Pos;
 }
@@ -226,7 +232,7 @@ void CObject_3D::SetPos(D3DXVECTOR3 Pos)
 //============================================================================
 // 向き取得
 //============================================================================
-D3DXVECTOR3 CObject_3D::GetRot()
+const D3DXVECTOR3& CObject_3D::GetRot()const
 {
 	return m_Rot;
 }
@@ -242,7 +248,7 @@ void CObject_3D::SetRot(D3DXVECTOR3 Rot)
 //============================================================================
 // サイズ取得
 //============================================================================
-D3DXVECTOR3 CObject_3D::GetSize()
+const D3DXVECTOR3& CObject_3D::GetSize() const
 {
 	return m_Size;
 }
@@ -256,9 +262,25 @@ void CObject_3D::SetSize(D3DXVECTOR3 Size)
 }
 
 //============================================================================
+// 色を取得
+//============================================================================
+const D3DXCOLOR& CObject_3D::GetCol() const
+{
+	return m_Col;
+}
+
+//============================================================================
+// 色を設定
+//============================================================================
+void CObject_3D::SetCol(D3DXCOLOR Col)
+{
+	m_Col = Col;
+}
+
+//============================================================================
 // アルファ値を取得
 //============================================================================
-float& CObject_3D::GetAlpha()
+const float& CObject_3D::GetAlpha() const
 {
 	return m_Col.a;
 }
@@ -274,7 +296,7 @@ void CObject_3D::SetAlpha(float fAlpha)
 //============================================================================
 // 展開用対角線取得
 //============================================================================
-float CObject_3D::GetLength()
+const float& CObject_3D::GetLength() const
 {
 	return m_fLength;
 }
@@ -284,7 +306,8 @@ float CObject_3D::GetLength()
 //============================================================================
 CObject_3D* CObject_3D::Create()
 {
-	CObject_3D* pObject3D = DBG_NEW CObject_3D{};
+	// インスタンスを生成
+	CObject_3D* pObject3D = DBG_NEW CObject_3D();
 
 	// 生成出来ていたら初期設定
 	if (pObject3D != nullptr)
@@ -301,7 +324,7 @@ CObject_3D* CObject_3D::Create()
 void CObject_3D::SetMtxWorld()
 {
 	// 計算用行列
-	D3DXMATRIX mtxRot{}, mtxTrans{};
+	D3DXMATRIX mtxRot, mtxTrans;
 
 	// ワールド行列を初期化
 	D3DXMatrixIdentity(&m_MtxWorld);
