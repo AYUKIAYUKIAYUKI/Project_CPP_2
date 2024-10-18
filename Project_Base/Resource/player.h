@@ -14,30 +14,41 @@
 #include "object_X.h"
 
 //****************************************************
-// プレイヤークラス
+// 名前空間を定義
 //****************************************************
-class CPlayer : public CObject_X
+namespace player
 {
-public:
+	//****************************************************
+	// usingディレクティブ
+	//****************************************************
+	using namespace abbr;
 
-	CPlayer();	// デフォルトコンストラクタ
-	~CPlayer();	// デストラクタ
+	//****************************************************
+	// プレイヤークラス
+	//****************************************************
+	class CPlayer : public CObject_X
+	{
+	public:
 
-	HRESULT Init() override;	// 初期設定
-	void Uninit() override;		// 終了設定
-	void Update() override;		// 更新処理
-	void Draw() override;		// 描画処理
+		CPlayer();	// デフォルトコンストラクタ
+		~CPlayer();	// デストラクタ
 
-	D3DXVECTOR3 GetPosTarget() const;			// 目標座標を取得
-	void SetPosTarget(D3DXVECTOR3 PosTarget);	// 目標座標を設定
+		HRESULT Init() override;	// 初期設定
+		void Uninit() override;		// 終了設定
+		void Update() override;		// 更新処理
+		void Draw() override;		// 描画処理
 
-	static CPlayer* Create();	// 生成
+		Vec3 GetPosTarget() const;			// 目標座標を取得
+		void SetPosTarget(Vec3 PosTarget);	// 目標座標を設定
 
-private:
+		static CPlayer* Create();	// 生成
 
-	void Control();	// 操作
+	private:
 
-	D3DXVECTOR3 m_PosTarget;	// 目標座標
-};
+		void Control();	// 操作
+
+		Vec3 m_PosTarget;	// 目標座標
+	};
+}
 
 #endif // _PLAYER_H_

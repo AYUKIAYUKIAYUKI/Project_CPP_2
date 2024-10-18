@@ -31,7 +31,7 @@ public:
 	void Update();	// 更新処理
 	void Draw();	// 描画処理
 
-	static CCamera* GetCamera();				// カメラ取得
+	static camera::CCamera* GetCamera();		// カメラ取得
 	static CLight* GetLight();					// ライト取得
 	static CInputKeyboard* GetKeyboard();		// キーボード取得
 	static CInputPad* GetPad();					// パッド取得
@@ -40,7 +40,7 @@ public:
 
 private:
 
-	static CCamera* m_pCamera;			// カメラ管理
+	static camera::CCamera* m_pCamera;	// カメラ管理
 	static CLight* m_pLight;			// ライト管理
 	static CInputKeyboard* m_pKeyboard;	// キーボード管理
 	static CInputPad* m_pPad;			// パッド管理
