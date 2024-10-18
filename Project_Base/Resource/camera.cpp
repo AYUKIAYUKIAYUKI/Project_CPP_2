@@ -25,14 +25,14 @@ using namespace camera;
 // デフォルトコンストラクタ
 //============================================================================
 CCamera::CCamera() :
-	m_Pos{ Vec3Init },
-	m_PosTarget{ Vec3Init },
-	m_PosV{ Vec3Init },
-	m_PosTargetV{ Vec3Init },
-	m_PosR{ Vec3Init },
-	m_PosTargetR{ Vec3Init },
-	m_Rot{ Vec3Init },
-	m_RotTarget{ Vec3Init },
+	m_Pos{ VEC3_INIT },
+	m_PosTarget{ VEC3_INIT },
+	m_PosV{ VEC3_INIT },
+	m_PosTargetV{ VEC3_INIT },
+	m_PosR{ VEC3_INIT },
+	m_PosTargetR{ VEC3_INIT },
+	m_Rot{ VEC3_INIT },
+	m_RotTarget{ VEC3_INIT },
 	m_fDistance{ 0.0f },
 	m_VecU{ 0.0f, 1.0f, 0.0f },
 	m_fAdjust{ 0.0f }

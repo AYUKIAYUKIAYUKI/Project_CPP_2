@@ -65,9 +65,15 @@
 #define FVF_VERTEX_2D	(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)
 #define FVF_VERTEX_3D	(D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1)
 
-// ウィンドウサイズ
-#define SCREEN_WIDTH	1980	// ウインドウの幅
-#define SCREEN_HEIGHT	1080	// ウインドウの高さ
+//****************************************************
+// 定数を宣言
+//****************************************************
+
+/// <summary> スクリーン横幅 </summary>
+static constexpr WORD SCREEN_WIDTH = 1980;
+
+/// <summary> スクリーン縦幅 </summary>
+static constexpr WORD SCREEN_HEIGHT = 1080;
 
 //****************************************************
 // 名前空間を定義
@@ -82,10 +88,10 @@ namespace abbr
 	using Mtx = D3DXMATRIX;
 
 	/// <summary> D3DXVECTOR2初期化用 </summary>
-	static const Vec2 Vec2Init = Vec2(0.0f, 0.0f);
+	static const Vec2 VEC2_INIT = Vec2(0.0f, 0.0f);
 
 	/// <summary> D3DXVECTOR3初期化用 </summary>
-	static const Vec3 Vec3Init = Vec3(0.0f, 0.0f, 0.0f);
+	static const Vec3 VEC3_INIT = Vec3(0.0f, 0.0f, 0.0f);
 }
 
 //****************************************************
