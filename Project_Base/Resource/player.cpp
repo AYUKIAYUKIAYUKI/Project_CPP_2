@@ -80,7 +80,7 @@ void CPlayer::Update()
 
 	// 基底クラスの更新処理
 	CObject_X::Update();
-
+	
 #ifdef _DEBUG
 	CRenderer::GetInstance()->SetDebugString("プレイヤー座標 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
 #endif // _DEBUG

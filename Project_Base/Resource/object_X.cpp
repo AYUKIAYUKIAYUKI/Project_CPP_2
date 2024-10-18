@@ -13,11 +13,11 @@
 // デバイス取得用
 #include "renderer.h"
 
-//****************************************************
-// 静的メンバ変数の初期化
-//****************************************************
-const float CObject_X::DEFAULT_SCALE_VALUE = 1.0f;	// デフォルトスケール値
-const float CObject_X::DEFAULT_ALPHA_VALUE = 1.0f;	// デフォルトアルファ値
+//============================================================================
+// 
+// publicメンバ
+// 
+//============================================================================
 
 //============================================================================
 // コンストラクタ
@@ -28,8 +28,8 @@ CObject_X::CObject_X(int nPriority) :
 	m_Pos{ 0.0f, 0.0f, 0.0f },
 	m_Rot{ 0.0f, 0.0f, 0.0f },
 	m_Size{ 0.0f, 0.0f, 0.0f },
-	m_fScale{ DEFAULT_SCALE_VALUE },
-	m_fAlpha{ DEFAULT_ALPHA_VALUE }
+	m_fScale{ SCALE_INIT },
+	m_fAlpha{ ALPHA_INIT }
 {
 	D3DXMatrixIdentity(&m_MtxWorld);	// ワールド行列
 }
@@ -82,16 +82,16 @@ void CObject_X::Draw()
 	}
 
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev{ CRenderer::GetInstance()->GetDeviece() };
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
 
 	// 頂点法線の自動正規化を有効に
 	pDev->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
 
 	// 現在のマテリアル保存用
-	D3DMATERIAL9 matDef{};
+	D3DMATERIAL9 matDef;
 
 	// マテリアル情報へのポインタ
-	D3DXMATERIAL* pMat{ nullptr };
+	D3DXMATERIAL* pMat = nullptr;
 
 	// ワールドマトリックスの設定
 	pDev->SetTransform(D3DTS_WORLD, &m_MtxWorld);
@@ -143,7 +143,7 @@ void CObject_X::BindModel(CModel_X_Manager::TYPE Type)
 //============================================================================
 // 座標取得
 //============================================================================
-D3DXVECTOR3 CObject_X::GetPos()
+const D3DXVECTOR3& CObject_X::GetPos() const
 {
 	return m_Pos;
 }
@@ -159,7 +159,7 @@ void CObject_X::SetPos(D3DXVECTOR3 Pos)
 //============================================================================
 // 向き取得
 //============================================================================
-D3DXVECTOR3& CObject_X::GetRot()
+const D3DXVECTOR3& CObject_X::GetRot()const
 {
 	return m_Rot;
 }
@@ -175,7 +175,7 @@ void CObject_X::SetRot(D3DXVECTOR3 Rot)
 //============================================================================
 // サイズ取得
 //============================================================================
-D3DXVECTOR3 CObject_X::GetSize()
+const D3DXVECTOR3& CObject_X::GetSize() const
 {
 	return m_Size;
 }
@@ -189,15 +189,31 @@ void CObject_X::SetSize(D3DXVECTOR3 Size)
 }
 
 //============================================================================
-// アルファ値取得
+// 縮尺を取得
 //============================================================================
-float& CObject_X::GetAlpha()
+const float& CObject_X::GetScale() const
+{
+	return m_fScale;
+}
+
+//============================================================================
+// 縮尺を設定
+//============================================================================
+void CObject_X::SetScale(float fScale)
+{
+	m_fScale = fScale;
+}
+
+//============================================================================
+// アルファ値を取得
+//============================================================================
+const float& CObject_X::GetAlpha() const
 {
 	return m_fAlpha;
 }
 
 //============================================================================
-// アルファ値設定
+// アルファ値を設定
 //============================================================================
 void CObject_X::SetAlpha(float fAlpha)
 {
@@ -209,7 +225,8 @@ void CObject_X::SetAlpha(float fAlpha)
 //============================================================================
 CObject_X* CObject_X::Create()
 {
-	CObject_X* pObjectX = DBG_NEW CObject_X{};
+	// インスタンスを生成
+	CObject_X* pObjectX = DBG_NEW CObject_X();
 
 	// 生成出来ていたら初期設定
 	if (pObjectX != nullptr)
@@ -221,12 +238,18 @@ CObject_X* CObject_X::Create()
 }
 
 //============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
+
+//============================================================================
 // ワールド行列設定
 //============================================================================
 void CObject_X::SetMtxWorld()
 {
 	// 計算用行列
-	D3DXMATRIX mtxScale{}, mtxRot{}, mtxTrans{};
+	D3DXMATRIX mtxScale, mtxRot, mtxTrans;
 
 	// ワールド行列を初期化
 	D3DXMatrixIdentity(&m_MtxWorld);
