@@ -20,6 +20,9 @@ class CField_Manager final
 {
 public:
 
+	/// <summary> フィールド半径用 <summary>
+	static constexpr float RADIUS = 300.0f;
+
 	HRESULT Init();	// 初期設定
 	void Release();	// 解放
 	void Update();	// 更新処理

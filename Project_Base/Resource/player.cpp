@@ -13,6 +13,9 @@
 // インプット取得
 #include "manager.h"
 
+// フィールドマネージャー
+#include "field_manager.h"
+
 // デバッグ表示用
 #include "renderer.h"
 
@@ -32,7 +35,8 @@ using namespace player;
 //============================================================================
 CPlayer::CPlayer() :
 	CObject_X(static_cast<int>(CObject::LAYER::MIDDLE)),
-	m_PosTarget{ VEC3_INIT }
+	m_PosTarget(VEC3_INIT),
+	m_fDirection(0.0f)
 {
 
 }
@@ -50,6 +54,9 @@ CPlayer::~CPlayer()
 //============================================================================
 HRESULT CPlayer::Init()
 {
+	// 初期方角を設定
+	m_fDirection = D3DX_PI * -0.5f;
+
 	// 基底クラスの初期設定
 	HRESULT hr = CObject_X::Init();
 
@@ -83,6 +90,7 @@ void CPlayer::Update()
 	
 #ifdef _DEBUG
 	CRenderer::GetInstance()->SetDebugString("プレイヤー座標 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
+	CRenderer::GetInstance()->SetDebugString("プレイヤー座標の角度" + to_string(m_fDirection));
 #endif // _DEBUG
 }
 
@@ -146,41 +154,35 @@ void CPlayer::Control()
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();	// キーボード
 	CInputPad* pPad = CManager::GetPad();					// パッド
 
-	/* お試し */
-	static float f角度 = D3DX_PI * -0.5f;
-	CRenderer::GetInstance()->SetDebugString("プレイヤー座標の角度" + to_string(f角度));
-
 	float f増加量 = 0.025f;
 
 	// X軸の入力
 	if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::LEFT))
 	{
-		f角度 += -f増加量;
+		m_fDirection += -f増加量;
 	}
 	else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT))
 	{
-		f角度 += f増加量;
+		m_fDirection += f増加量;
 	}
 
-	/* 角度制限 -> 治せ */
-	if (f角度 > D3DX_PI)
+	if (m_fDirection > D3DX_PI)
 	{
-		f角度 += -D3DX_PI * 2.0f;
+		m_fDirection += -D3DX_PI * 2.0f;
 	}
-	else if (f角度 < -D3DX_PI)
+	else if (m_fDirection < -D3DX_PI)
 	{
-		f角度 += D3DX_PI * 2.0f;
+		m_fDirection += D3DX_PI * 2.0f;
 	}
 
 	// 座標を反映
 	Vec3 NewPos = VEC3_INIT;
-	float f反映量 = 150.0f;
-	NewPos.x = cosf(f角度) * f反映量;
-	NewPos.z = sinf(f角度) * f反映量;
+	NewPos.x = cosf(m_fDirection) * CField_Manager::RADIUS;
+	NewPos.z = sinf(m_fDirection) * CField_Manager::RADIUS;
 	SetPos(NewPos);
 
 	// 向きを反映
 	Vec3 NewRot = VEC3_INIT;
-	NewRot.y = -f角度;
+	NewRot.y = -m_fDirection;
 	SetRot(NewRot);
 }

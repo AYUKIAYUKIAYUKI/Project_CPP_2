@@ -39,9 +39,9 @@ namespace player
 		~CPlayer();	// デストラクタ
 
 		HRESULT Init() override;	// 初期設定
-		void Uninit() override;		// 終了設定
-		void Update() override;		// 更新処理
-		void Draw() override;		// 描画処理
+		void	Uninit() override;	// 終了設定
+		void	Update() override;	// 更新処理
+		void	Draw() override;	// 描画処理
 
 		Vec3 GetPosTarget() const;			// 目標座標を取得
 		void SetPosTarget(Vec3 PosTarget);	// 目標座標を設定
@@ -52,7 +52,8 @@ namespace player
 
 		void Control();	// 操作
 
-		Vec3 m_PosTarget;	// 目標座標
+		Vec3	m_PosTarget;	// 目標座標
+		float	m_fDirection;	// 方角
 	};
 }
 
