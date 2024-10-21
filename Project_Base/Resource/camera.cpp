@@ -244,7 +244,7 @@ void CCamera::Rotation()
 	m_Rot += m_RotTarget * 0.5f;
 
 	// ヨー角の範囲を制限
-	RestrictYaw();
+	CUtility::AdjustAngle(m_Rot.y);
 
 	// ピッチ角の範囲を制限
 	RestrictPitch();
@@ -271,21 +271,6 @@ void CCamera::Translation()
 	// 移動量反映
 	// posTargetに値を設定していない場合は数値がおかしくなります
 	m_Pos += (m_PosTarget - m_Pos) * fTracking;
-}
-
-//============================================================================
-// ヨー角の範囲を制限
-//============================================================================
-void CCamera::RestrictYaw()
-{
-	if (m_Rot.y > D3DX_PI)
-	{
-		m_Rot.y += -D3DX_PI * 2.0f;
-	}
-	else if (m_Rot.y < -D3DX_PI)
-	{
-		m_Rot.y += D3DX_PI * 2.0f;
-	}
 }
 
 //============================================================================

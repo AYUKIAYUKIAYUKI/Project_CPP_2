@@ -57,7 +57,6 @@ namespace camera
 		void Control();				// 操作
 		void Rotation();			// 回転
 		void Translation();			// 移動
-		void RestrictYaw();			// ヨー角の範囲制限
 		void RestrictPitch();		// ピッチ角の範囲制限
 		void CalcPosV();			// 視点座標を計算
 		void CalcPosR();			// 注視点座標を計算
