@@ -51,6 +51,15 @@ HRESULT CField_Manager::Init()
 	// 初期設定
 	m_pCylinderCollider->Init();
 
+	// オブジェクトをプレイヤータグにダウンキャスト
+	CPlayer* pPlayer = nullptr;
+	pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+
+	// 各種パラメータ設定
+	m_pCylinderCollider->SetPos(pPlayer->GetPos());
+	m_pCylinderCollider->SetRot(pPlayer->GetRot());
+	m_pCylinderCollider->SetScale(250.0f);
+
 	// モデルを設定
 	m_pCylinderCollider->BindModel(CModel_X_Manager::TYPE::CYLINDERCOLLIDER);
 
@@ -94,7 +103,7 @@ void CField_Manager::Update()
 	// 仮の破棄メソッド
 	TestDelete();
 
-	if (CManager::GetKeyboard()->GetTrigger(DIK_BACK))
+	if (CManager::GetKeyboard()->GetTrigger(DIK_DELETE))
 	{
 		// 仮の全破棄メソッド
 		TestDeleteAll();
@@ -218,8 +227,8 @@ void CField_Manager::TestCreate()
 //============================================================================
 void CField_Manager::TestDelete()
 {
-	// ミドルオブジェクトをを取得
-	CObject* pObj = CObject::GetObject(static_cast<int>(CObject::LAYER::MIDDLE));
+	// ミドルオブジェクトを取得
+	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
 
 	// ブロックタグの数をカウントする
 	while (pObj != nullptr)
@@ -258,8 +267,8 @@ void CField_Manager::TestDelete()
 //============================================================================
 void CField_Manager::TestDeleteAll()
 {
-	// ミドルオブジェクトをを取得
-	CObject* pObj = CObject::GetObject(static_cast<int>(CObject::LAYER::MIDDLE));
+	// ミドルオブジェクトを取得
+	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
 
 	// ブロックタグの数をカウントする
 	while (pObj != nullptr)

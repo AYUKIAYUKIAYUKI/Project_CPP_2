@@ -16,7 +16,7 @@ class CObject
 public:
 
 	/// <summary> 常識的なオブジェクトの最大数 </summary>
-	static constexpr int MAX_OBJ = 2048;
+	static constexpr int MAX_OBJECT = 2048;
 
 	//****************************************************
 	// オブジェクトの種類識別
@@ -54,8 +54,8 @@ public:
 	void			SetRelease();	// 解放予約設定
 	void			Release();		// 個別解放処理
 
-	TYPE GetType();				// タイプを取得
-	void SetType(TYPE Type);	// タイプを設定
+	const TYPE& GetType() const;	// タイプを取得
+	void SetType(TYPE Type);		// タイプを設定
 
 	CObject* GetPrev();	// 前のオブジェクトのポインタを取得
 	CObject* GetNext();	// 次のオブジェクトのポインタを取得
@@ -65,9 +65,10 @@ public:
 	static void LateUpdateAll();	// 全オブジェクト後更新処理
 	static void DrawAll();			// 全オブジェクト描画処理
 
-	static CObject* GetObject(int nPriority);		// 先頭オブジェクトのポインタ取得
+	static CObject* GetTopObject();					// 先頭オブジェクトのポインタ取得
+	static CObject* GetTopObject(int nPriority);	// 先頭オブジェクトのポインタ取得
 	static CObject* FindSpecificObject(TYPE Type);	// 特定タイプのオブジェクト探す
-	static int CountSpecificObject(TYPE Type);		// 特定タイプのオブジェクト数を取得
+	static int		CountSpecificObject(TYPE Type);	// 特定タイプのオブジェクト数を取得
 
 private:
 

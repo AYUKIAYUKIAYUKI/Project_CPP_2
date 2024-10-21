@@ -36,7 +36,7 @@ namespace player
 	public:
 
 		/// <summary> デフォルトのプレイヤー移動速度 </summary>
-		static constexpr float DEFAULT_MOVE_SPEED = 0.025f;
+		static constexpr float DEFAULT_MOVE_SPEED = 0.01f;
 
 		CPlayer();	// デフォルトコンストラクタ
 		~CPlayer();	// デストラクタ
