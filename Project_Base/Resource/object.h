@@ -65,8 +65,9 @@ public:
 	static void LateUpdateAll();	// 全オブジェクト後更新処理
 	static void DrawAll();			// 全オブジェクト描画処理
 
-	static CObject* GetObject(int nPriority);	// 先頭オブジェクトのポインタ取得
-	static CObject* FindObject(TYPE Type);		// 特定タイプのオブジェクト探す
+	static CObject* GetObject(int nPriority);		// 先頭オブジェクトのポインタ取得
+	static CObject* FindSpecificObject(TYPE Type);	// 特定タイプのオブジェクト探す
+	static int CountSpecificObject(TYPE Type);		// 特定タイプのオブジェクト数を取得
 
 private:
 

@@ -84,7 +84,8 @@ void CField_Manager::Release()
 void CField_Manager::Update()
 {
 #ifdef _DEBUG
-	CRenderer::GetInstance()->SetDebugString(to_string(m_fCoeffRaondomRange));
+	// ランダム範囲の強度を表示
+	CRenderer::GetInstance()->SetDebugString("ランダム範囲の強度:" + to_string(m_fCoeffRaondomRange));
 #endif
 
 	// 仮の生成メソッド
@@ -166,45 +167,26 @@ void CField_Manager::Uninit()
 void CField_Manager::TestCreate()
 {
 	// ブロック数をカウント
-	int nCntBlock = 0;
+	int nCntBlock = CObject::CountSpecificObject(CObject::TYPE::BLOCK);
 
-	// ミドルオブジェクトをを取得
-	CObject* pObj = CObject::GetObject(static_cast<int>(CObject::LAYER::MIDDLE));
+#ifdef _DEBUG
+	CRenderer::GetInstance()->SetDebugString("ブロック数:" + to_string(nCntBlock));
+#endif
 
-	// ブロックタグの数をカウントする
-	while (pObj != nullptr)
-	{
-		if (pObj->GetType() == CObject::TYPE::BLOCK)
-		{
-			nCntBlock++;
-		}
-
-		// 一定カウントで以降の処理を行わない
-		if (nCntBlock >= MAX_BLOCK)
-		{
-			return;
-		}
-
-		pObj = pObj->GetNext();
-	}
-
+	// ブロック数が上限に満たなければ
 	while (nCntBlock < MAX_BLOCK)
 	{
 		// プレイヤータグを取得
-		if (CObject::FindObject(CObject::TYPE::PLAYER))
+		if (CObject::FindSpecificObject(CObject::TYPE::PLAYER))
 		{
 			// オブジェクトをプレイヤータグにダウンキャスト
 			CPlayer* pPlayer = nullptr;
-			pPlayer = CUtility::DownCast(pPlayer, CObject::FindObject(CObject::TYPE::PLAYER));
+			pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
 
-			// プレイヤーの方角をコピー
-			const float& fDirection = pPlayer->GetDirection();
-
-			// ブロック用の座標・向きを作成
-			Vec3 NewPos = VEC3_INIT, NewRot = VEC3_INIT;
-
-			// ランダムな方角範囲
-			float fRandomRange = 0.0f;
+			// 生成座標計算用
+			const float&	fDirection = pPlayer->GetDirection();	// プレイヤーの方角をコピー
+			Vec3			NewPos = VEC3_INIT, NewRot = VEC3_INIT;	// ブロック用の座標・向きを作成
+			float			fRandomRange = 0.0f;					// ランダムな方角範囲
 
 			// 破棄範囲にはみ出さず生成されるように調整
 			do
@@ -222,8 +204,10 @@ void CField_Manager::TestCreate()
 			// 向きを決定
 			NewRot.y = -(fDirection + fRandomRange);
 
+			// ブロックを生成
 			CBlock::Create(NewPos, NewRot);
 
+			// ブロック数をカウントアップ
 			nCntBlock++;
 		}
 	}
@@ -243,7 +227,7 @@ void CField_Manager::TestDelete()
 		if (pObj->GetType() == CObject::TYPE::BLOCK)
 		{
 			// プレイヤータグを取得
-			if (CObject::FindObject(CObject::TYPE::PLAYER))
+			if (CObject::FindSpecificObject(CObject::TYPE::PLAYER))
 			{
 				// オブジェクトをブロックタグにダウンキャスト
 				CBlock* pBlock = nullptr;
@@ -251,7 +235,7 @@ void CField_Manager::TestDelete()
 				
 				// オブジェクトをプレイヤータグにダウンキャスト
 				CPlayer* pPlayer = nullptr;
-				pPlayer = CUtility::DownCast(pPlayer, CObject::FindObject(CObject::TYPE::PLAYER));
+				pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
 
 				m_pCylinderCollider->SetPos(pPlayer->GetPos());
 				m_pCylinderCollider->SetRot(pPlayer->GetRot());

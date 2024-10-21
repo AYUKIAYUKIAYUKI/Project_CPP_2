@@ -43,10 +43,11 @@ CBlock::CBlock() :
 //============================================================================
 CBlock::~CBlock()
 {
-	// 可視化も破棄
+	// 可視化を破棄
 	m_pTest->SetRelease();
 
-	for (int i = 0; i < 3; i++)
+#if 1
+	for (int i = 0; i < 2; i++)
 	{
 		// ランダムな加速度を設定 ( ややY↑に偏った)
 		D3DXVECTOR3 RandomVelocity{ CUtility::GetRandomValue<float>() * 0.01f, fabsf(CUtility::GetRandomValue<float>()) * 0.03f, -0.5f };
@@ -56,6 +57,7 @@ CBlock::~CBlock()
 			GetPos() + RandomVelocity * 2.0f,	// 座標
 			RandomVelocity * 0.5f);				// 加速度
 	}
+#endif
 }
 
 //============================================================================

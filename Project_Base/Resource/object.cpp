@@ -322,7 +322,7 @@ CObject* CObject::GetObject(int nPriority)
 //============================================================================
 // 特定タイプのオブジェクトを探す
 //============================================================================
-CObject* CObject::FindObject(TYPE Type)
+CObject* CObject::FindSpecificObject(TYPE Type)
 {
 	for (int nCntPriority = 0; nCntPriority < static_cast<int>(LAYER::MAX); nCntPriority++)
 	{
@@ -344,4 +344,32 @@ CObject* CObject::FindObject(TYPE Type)
 	}
 
 	return nullptr;
+}
+
+//============================================================================
+// 特定タイプのオブジェクト数を取得
+//============================================================================
+int CObject::CountSpecificObject(TYPE Type)
+{
+	// 数カウント用
+	int nCount = 0;
+
+	for (int nCntPriority = 0; nCntPriority < static_cast<int>(LAYER::MAX); nCntPriority++)
+	{
+		// 先頭オブジェクトのポインタをコピー
+		CObject* pObj = m_pTop[nCntPriority];
+
+		// 次のオブジェクトが無くなるまで
+		while (pObj != nullptr)
+		{
+			if (pObj->GetType() == Type)
+			{
+				nCount++;
+			}
+
+			pObj = pObj->GetNext();
+		}
+	}
+
+	return nCount;
 }
