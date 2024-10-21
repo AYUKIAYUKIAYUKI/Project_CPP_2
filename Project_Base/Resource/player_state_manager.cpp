@@ -44,7 +44,10 @@ void CPlayer_State_Manager::Release()
 {
 	if (this != nullptr)
 	{
+		// I—¹ˆ—
 		this->Uninit();
+
+		// ƒƒ‚ƒŠ‚ğ‰ğ•ú
 		delete this;
 	}
 }

@@ -83,7 +83,10 @@ void CPlayer::Uninit()
 	// プレイヤーステートマネージャーの破棄
 	if (m_pPlayerStateManager)
 	{
+		// 解放
 		m_pPlayerStateManager->Release();
+		
+		// ポインタを初期化
 		m_pPlayerStateManager = nullptr;
 	}
 

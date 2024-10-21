@@ -57,9 +57,9 @@ namespace player
 
 		player_state_manager::CPlayer_State_Manager* m_pPlayerStateManager;	// プレイヤーステートマネージャー
 
-		Vec3		m_PosTarget;	// 目標座標
-		float		m_fMoveSpeed;	// 移動速度
-		float		m_fDirection;	// 方角
+		Vec3	m_PosTarget;	// 目標座標
+		float	m_fMoveSpeed;	// 移動速度
+		float	m_fDirection;	// 方角
 	};
 }
 
