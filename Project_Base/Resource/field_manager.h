@@ -14,35 +14,59 @@
 #include "object_X.h"
 
 //****************************************************
-// フィールドマネージャークラス
+// 名前空間を定義
 //****************************************************
-class CField_Manager final
+namespace field_manager
 {
-public:
+	//****************************************************
+	// usingディレクティブ
+	//****************************************************
+	using namespace abbr;
 
-	/// <summary> フィールド半径 </summary>
-	static constexpr float FIELD_RADIUS = 300.0f;
+	//****************************************************
+	// using宣言
+	//****************************************************
+	using std::to_string;
 
-	HRESULT Init();	// 初期設定
-	void Release();	// 解放
-	void Update();	// 更新処理
+	//****************************************************
+	// フィールドマネージャークラス
+	//****************************************************
+	class CField_Manager final
+	{
+	public:
 
-	static CField_Manager* GetInstance();	// 自インスタンスを取得
+		/// <summary> フィールド半径 </summary>
+		static constexpr float FIELD_RADIUS = 300.0f;
 
-private:
+		/// <summary> 最大ブロック数 </summary>
+		static constexpr int MAX_BLOCK = 30;
 
-	CField_Manager();	// デフォルトコンストラクタ
-	~CField_Manager();	// デストラクタ
+		/// <summary> 重力 </summary>
+		static constexpr float FIELD_GRAVITY = -0.025f;
 
-	void Create();			// 生成
-	void Uninit();			// 終了処理
-	void TestMethod();		// 仮の生成メソッド
-	void TestDelete();		// 仮の破棄メソッド
-	void TestDeleteAll();	// 仮の全破棄メソッド
+		HRESULT Init();	// 初期設定
+		void Release();	// 解放
+		void Update();	// 更新処理
 
-	CObject_X* m_pCylinderCollider;	// cylinder collider
+		static CField_Manager* GetInstance();	// 自インスタンスを取得
 
-	static CField_Manager* m_pInstance;	// 自インスタンス
-};
+	private:
+
+		CField_Manager();	// デフォルトコンストラクタ
+		~CField_Manager();	// デストラクタ
+
+		void Create();			// 生成
+		void Uninit();			// 終了処理
+		void TestCreate();		// 仮の生成メソッド
+		void TestDelete();		// 仮の破棄メソッド
+		void TestDeleteAll();	// 仮の全破棄メソッド
+
+		float m_fCoeffRaondomRange;	// ランダム範囲の強度
+
+		static CField_Manager* m_pInstance;	// 自インスタンス
+
+		CObject_X* m_pCylinderCollider;	// cylinder collider
+	};
+}
 
 #endif // _FIELD_MANAGER_H_

@@ -25,6 +25,7 @@
 //****************************************************
 // usingディレクティブ
 //****************************************************
+using namespace field_manager;
 using namespace player;
 
 //============================================================================
@@ -58,7 +59,7 @@ HRESULT CGame::Init()
 	CObject_X* pTest{ CObject_X::Create() };
 	pTest->BindModel(CModel_X_Manager::TYPE::CYLINDER);
 	pTest->SetPos({ 0.0f, -10.0f, 0.0f });
-	pTest->SetScale(4.25f);
+	pTest->SetScale(8.5f);
 
 	//for (int i{ 0 }; i < 200; i++)
 	//{

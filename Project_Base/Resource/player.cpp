@@ -107,7 +107,7 @@ void CPlayer::Draw()
 //============================================================================
 // 目標座標を取得
 //============================================================================
-Vec3 CPlayer::GetPosTarget() const
+const Vec3& CPlayer::GetPosTarget() const
 {
 	return m_PosTarget;
 }
@@ -120,6 +120,22 @@ void CPlayer::SetPosTarget(Vec3 PosTarget)
 	m_PosTarget = PosTarget;
 }
 
+
+//============================================================================
+// 方角を取得
+//============================================================================
+const float& CPlayer::GetDirection() const
+{
+	return m_fDirection;
+}
+
+//============================================================================
+// 方角を設定
+//============================================================================
+void CPlayer::SetDirection(float fDirection)
+{
+	m_fDirection = fDirection;
+}
 //============================================================================
 // 生成
 //============================================================================
@@ -151,16 +167,21 @@ CPlayer* CPlayer::Create()
 //============================================================================
 void CPlayer::Control()
 {
+	//****************************************************
+	// usingディレクティブ
+	//****************************************************
+	using namespace field_manager;
+
 	// インプット系取得
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();	// キーボード
 	CInputPad* pPad = CManager::GetPad();					// パッド
 
 	// X軸の入力
-	if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::LEFT))
+	if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::LEFT) || pPad->GetJoyStickL().X < 0)
 	{
 		m_fDirection += -m_fMoveSpeed;
 	}
-	else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT))
+	else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT) || pPad->GetJoyStickL().X > 0)
 	{
 		m_fDirection += m_fMoveSpeed;
 	}

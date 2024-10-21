@@ -13,6 +13,9 @@
 // 入力取得用
 #include "manager.h"
 
+// デバッグ表示用
+#include "renderer.h"
+
 // オブジェクト用
 #include "player.h"
 #include "block.h"
@@ -20,6 +23,7 @@
 //****************************************************
 // usingディレクティブ
 //****************************************************
+using namespace field_manager;
 using namespace player;
 
 //****************************************************
@@ -38,6 +42,9 @@ CField_Manager* CField_Manager::m_pInstance = nullptr;
 //============================================================================
 HRESULT CField_Manager::Init()
 {
+	// ランダム範囲の設定
+	m_fCoeffRaondomRange = 0.1f;
+
 	// 円柱の判定を生成
 	m_pCylinderCollider = CObject_X::Create();
 
@@ -76,8 +83,12 @@ void CField_Manager::Release()
 //============================================================================
 void CField_Manager::Update()
 {
-	// 仮のメソッド
-	TestMethod();
+#ifdef _DEBUG
+	CRenderer::GetInstance()->SetDebugString(to_string(m_fCoeffRaondomRange));
+#endif
+
+	// 仮の生成メソッド
+	TestCreate();
 
 	// 仮の破棄メソッド
 	TestDelete();
@@ -113,6 +124,7 @@ CField_Manager* CField_Manager::GetInstance()
 // デフォルトコンストラクタ
 //============================================================================
 CField_Manager::CField_Manager() :
+	m_fCoeffRaondomRange(0.0f),
 	m_pCylinderCollider(nullptr)
 {
 
@@ -151,11 +163,10 @@ void CField_Manager::Uninit()
 //============================================================================
 // 仮の生成メソッド
 //============================================================================
-void CField_Manager::TestMethod()
+void CField_Manager::TestCreate()
 {
 	// ブロック数をカウント
 	int nCntBlock = 0;
-	constexpr int nMaxBlock = 50;
 
 	// ミドルオブジェクトをを取得
 	CObject* pObj = CObject::GetObject(static_cast<int>(CObject::LAYER::MIDDLE));
@@ -169,7 +180,7 @@ void CField_Manager::TestMethod()
 		}
 
 		// 一定カウントで以降の処理を行わない
-		if (nCntBlock >= nMaxBlock)
+		if (nCntBlock >= MAX_BLOCK)
 		{
 			return;
 		}
@@ -177,7 +188,7 @@ void CField_Manager::TestMethod()
 		pObj = pObj->GetNext();
 	}
 
-	while (nCntBlock < nMaxBlock)
+	while (nCntBlock < MAX_BLOCK)
 	{
 		// プレイヤータグを取得
 		if (CObject::FindObject(CObject::TYPE::PLAYER))
@@ -186,16 +197,30 @@ void CField_Manager::TestMethod()
 			CPlayer* pPlayer = nullptr;
 			pPlayer = CUtility::DownCast(pPlayer, CObject::FindObject(CObject::TYPE::PLAYER));
 
-			// プレイヤーの座標から角度を計算
-			D3DXVECTOR3 NewPos = pPlayer->GetPos();
-			float f角度 = atan2f(NewPos.z, NewPos.x), f反映量 = 150.0f, f乱数 = CUtility::GetRandomValue<float>() * 0.01f;
-			NewPos.x = cosf(f角度 + f乱数) * f反映量;
-			NewPos.y = fabsf(CUtility::GetRandomValue<float>());
-			NewPos.z = sinf(f角度 + f乱数) * f反映量;
+			// プレイヤーの方角をコピー
+			const float& fDirection = pPlayer->GetDirection();
+
+			// ブロック用の座標・向きを作成
+			Vec3 NewPos = VEC3_INIT, NewRot = VEC3_INIT;
+
+			// ランダムな方角範囲
+			float fRandomRange = 0.0f;
+
+			// 破棄範囲にはみ出さず生成されるように調整
+			do
+			{
+				// ランダムに方角をずらす
+				fRandomRange = CUtility::GetRandomValue<float>() * m_fCoeffRaondomRange;
+
+				// 生成用の座標を決定
+				NewPos.x = cosf(fDirection + fRandomRange) * FIELD_RADIUS;
+				NewPos.y = fabsf(CUtility::GetRandomValue<float>());
+				NewPos.z = sinf(fDirection + fRandomRange) * FIELD_RADIUS;
+
+			} while (!CUtility::CylinderAndPoint(pPlayer->GetPos(), 250.0f, 250.0f, NewPos));
 
 			// 向きを決定
-			D3DXVECTOR3 NewRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-			NewRot.y = -(f角度 + f乱数);
+			NewRot.y = -(fDirection + fRandomRange);
 
 			CBlock::Create(NewPos, NewRot);
 
