@@ -13,6 +13,13 @@
 // デバイス取得用
 #include "renderer.h"
 
+//****************************************************
+// プリプロセッサディレクティブ
+//****************************************************
+
+/// <summary> Zバッファでの描画切り替え </summary>
+#define CHANGE_DRAW_ZBUFFER 0
+
 //============================================================================
 // 
 // publicメンバ
@@ -87,6 +94,16 @@ void CObject_X::Draw()
 	// 頂点法線の自動正規化を有効に
 	pDev->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
 
+#if CHANGE_DRAW_ZBUFFER
+
+	// 深度テストの比較方法の変更
+	pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
+
+	// 深度バッファに描画しない
+	pDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+
+#endif	// CHANGE_DRAW_ZBUFFER
+
 	// 現在のマテリアル保存用
 	D3DMATERIAL9 matDef;
 
@@ -122,6 +139,16 @@ void CObject_X::Draw()
 
 	// 頂点法線の自動正規化を無効に
 	pDev->SetRenderState(D3DRS_NORMALIZENORMALS, FALSE);
+
+#if CHANGE_DRAW_ZBUFFER
+
+	// 深度テストの比較方法の変更
+	pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+
+	// 深度バッファに書き込む
+	pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+
+#endif	// CHANGE_DRAW_ZBUFFER
 }
 
 //============================================================================
@@ -227,6 +254,23 @@ CObject_X* CObject_X::Create()
 {
 	// インスタンスを生成
 	CObject_X* pObjectX = DBG_NEW CObject_X();
+
+	// 生成出来ていたら初期設定
+	if (pObjectX != nullptr)
+	{
+		pObjectX->Init();
+	}
+
+	return pObjectX;
+}
+
+//============================================================================
+// 生成
+//============================================================================
+CObject_X* CObject_X::Create(int nPriority)
+{
+	// インスタンスを生成
+	CObject_X* pObjectX = DBG_NEW CObject_X(nPriority);
 
 	// 生成出来ていたら初期設定
 	if (pObjectX != nullptr)

@@ -75,34 +75,8 @@ HRESULT CCamera::Init()
 //============================================================================
 void CCamera::Update()
 {
-	// カメラの追従切り替え
-	if (CManager::GetKeyboard()->GetTrigger(DIK_F1))
-	{
-		m_bTrack = !m_bTrack;
-	}
-
-	if (m_bTrack)
-	{ // 追従カメラモード
-
-		if (CObject::FindSpecificObject(CObject::TYPE::PLAYER))
-		{ // プレイヤーが存在していれば
-
-			// プレイヤータグを取得
-			CPlayer* pPlayer = nullptr;
-			pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
-		
-			// カメラをプレイヤーに追従
-			m_PosTarget = pPlayer->GetPos();
-			m_RotTarget.y = -pPlayer->GetDirection() + D3DX_PI * 0.5f;
-			m_fDistance = 200.0f;
-		}
-	}
-	else
-	{ // フリーカメラモード
-
-		// カメラ操作
-		Control();
-	}
+	// ビューモード分岐
+	BranchMode();
 
 	// 回転
 	Rotation();
@@ -227,6 +201,41 @@ const float& CCamera::GetDistance() const
 void CCamera::SetDistance(float fDistance)
 {
 	m_fDistance = fDistance;
+}
+
+//============================================================================
+// モード分岐
+//============================================================================
+void CCamera::BranchMode()
+{
+	// カメラの追従切り替え
+	if (CManager::GetKeyboard()->GetTrigger(DIK_F1))
+	{
+		m_bTrack = !m_bTrack;
+	}
+
+	if (m_bTrack)
+	{ // 追従カメラモード
+
+		if (CObject::FindSpecificObject(CObject::TYPE::PLAYER))
+		{ // プレイヤーが存在していれば
+
+			// プレイヤータグを取得
+			CPlayer* pPlayer = nullptr;
+			pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+
+			// カメラをプレイヤーに追従
+			m_PosTarget = pPlayer->GetPos();
+			m_RotTarget.y = pPlayer->GetDirection();
+			m_fDistance = 200.0f;
+		}
+	}
+	else
+	{ // フリーカメラモード
+
+		// カメラ操作
+		Control();
+	}
 }
 
 //============================================================================

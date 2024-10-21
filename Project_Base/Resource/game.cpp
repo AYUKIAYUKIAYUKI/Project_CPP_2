@@ -55,20 +55,11 @@ HRESULT CGame::Init()
 	/* プレイヤーを仮生成 */
 	CPlayer::Create();
 
-	/* ステージの代わりに円状のポチゴンを表示します */
-	CObject_X* pTest{ CObject_X::Create() };
+	/* ステージ代わりの円筒 */
+	CObject_X* pTest = CObject_X::Create(static_cast<int>(CObject::LAYER::BACK));
 	pTest->BindModel(CModel_X_Manager::TYPE::CYLINDER);
 	pTest->SetPos({ 0.0f, -10.0f, 0.0f });
 	pTest->SetScale(8.5f);
-
-	//for (int i{ 0 }; i < 200; i++)
-	//{
-	//	CObject_3D* pTest{ CObject_3D::Create() };
-	//	pTest->BindTex(CTexture_Manager::TYPE::TEST1);
-	//	pTest->SetPos({ 0.0f, -15.0f, 0.0f });
-	//	pTest->SetRot({ 0.0f, 0.0f + 0.1f * i, 0.0f });
-	//	pTest->SetSize({ 150.0f, 5.0f, 0.0f });
-	//}
 
 	// フィールドマネージャーの初期設定
 	CField_Manager::GetInstance()->Init();

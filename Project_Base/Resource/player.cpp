@@ -83,6 +83,10 @@ void CPlayer::Uninit()
 //============================================================================
 void CPlayer::Update()
 {
+	// •ûŠp‚Ì•â³
+	/* •K‚¸ˆ—‚Ìæ“ª‚É */
+	CUtility::AdjustAngle(m_fDirection);
+
 	// ‘€ì
 	Control();
 
@@ -186,9 +190,6 @@ void CPlayer::Control()
 		m_fDirection += m_fMoveSpeed;
 	}
 
-	// •ûŠp‚Ì•â³
-	CUtility::AdjustAngle(m_fDirection);
-
 	// À•W‚ğ”½‰f
 	Vec3 NewPos = VEC3_INIT;
 	NewPos.x = cosf(m_fDirection) * CField_Manager::FIELD_RADIUS;
@@ -197,6 +198,6 @@ void CPlayer::Control()
 
 	// Œü‚«‚ğ”½‰f
 	Vec3 NewRot = VEC3_INIT;
-	NewRot.y = -m_fDirection;
+	//NewRot.y =
 	SetRot(NewRot);
 }

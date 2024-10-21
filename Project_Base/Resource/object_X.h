@@ -49,7 +49,8 @@ public:
 	const float& GetAlpha() const;	// アルファ値取得
 	void SetAlpha(float fAlpha);	// アルファ値設定
 
-	static CObject_X* Create();	// 生成
+	static CObject_X* Create();					// 生成
+	static CObject_X* Create(int nPriority);	// 生成
 
 private:
 

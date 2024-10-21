@@ -55,8 +55,9 @@ namespace camera
 	private:
 
 		/// <summary> 目標値への補間強度 </summary>
-		static constexpr float COEF_ADJUST = 0.01f;
+		static constexpr float COEF_ADJUST = 0.1f;
 
+		void BranchMode();			// ビューモード分岐
 		void Control();				// 操作
 		void Rotation();			// 回転
 		void RestrictPitch();		// ピッチ角の範囲制限

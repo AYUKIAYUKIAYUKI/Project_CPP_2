@@ -46,7 +46,7 @@ HRESULT CField_Manager::Init()
 	m_fCoeffRaondomRange = 0.1f;
 
 	// ‰~’Œ‚Ì”»’è‚ğ¶¬
-	m_pCylinderCollider = CObject_X::Create();
+	m_pCylinderCollider = CObject_X::Create(static_cast<int>(CObject::LAYER::BACK));
 
 	// ‰Šúİ’è
 	m_pCylinderCollider->Init();
@@ -59,6 +59,7 @@ HRESULT CField_Manager::Init()
 	m_pCylinderCollider->SetPos(pPlayer->GetPos());
 	m_pCylinderCollider->SetRot(pPlayer->GetRot());
 	m_pCylinderCollider->SetScale(250.0f);
+	m_pCylinderCollider->SetAlpha(0.25f);
 
 	// ƒ‚ƒfƒ‹‚ğİ’è
 	m_pCylinderCollider->BindModel(CModel_X_Manager::TYPE::CYLINDERCOLLIDER);
