@@ -209,7 +209,7 @@ void CField_Manager::TestCreate()
 				NewPos.y = fabsf(CUtility::GetRandomValue<float>());
 				NewPos.z = sinf(fDirection + fRandomRange) * FIELD_RADIUS;
 
-			} while (!CUtility::CylinderAndPoint(pPlayer->GetPos(), 250.0f, 250.0f, NewPos));
+			} while (!CUtility::CylinderAndSphere(pPlayer->GetPos(), 250.0f, 250.0f, NewPos, 10.0f));
 
 			// Œü‚«‚ðŒˆ’è
 			NewRot.y = -(fDirection + fRandomRange);
@@ -252,7 +252,7 @@ void CField_Manager::TestDelete()
 				m_pCylinderCollider->SetScale(250.0f);
 
 				// ‹t‚ÉA‰~’Œ”ÍˆÍŠO‚Ìê‡Á‹Ž
-				if (!CUtility::CylinderAndPoint(pPlayer->GetPos(), 250.0f, 250.0f, pBlock->GetPos()))
+				if (!CUtility::CylinderAndSphere(pPlayer->GetPos(), 250.0f, 250.0f, pBlock->GetPos(), 10.0f))
 				{
 					pBlock->SetRelease();
 				}

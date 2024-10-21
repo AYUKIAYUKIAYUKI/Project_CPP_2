@@ -111,11 +111,11 @@ void CUtility::AdjustDirection(float& fAngle1, float& fAngle2)
 //============================================================================
 bool CUtility::OnlySphere(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const D3DXVECTOR3& posTarget, const float& fRadiusTarget)
 {
-	// 目標地点へのベクトルを算出
-	D3DXVECTOR3 vec = posTarget - posSelf;
+	// 対象位置へのベクトルを算出
+	const D3DXVECTOR3& Vec = posTarget - posSelf;
 
 	// お互いの距離が、お互いの半径の和以下であれば衝突
-	if (sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z) <= (fRadiusSelf + fRadiusTarget))
+	if (sqrtf(Vec.x * Vec.x + Vec.y * Vec.y + Vec.z * Vec.z) <= fRadiusSelf - fRadiusTarget)
 	{
 		return 1;
 	}
@@ -128,11 +128,33 @@ bool CUtility::OnlySphere(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, 
 //============================================================================
 bool CUtility::CylinderAndPoint(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& posTarget)
 {
-	// 目標地点へのベクトルを算出
-	D3DXVECTOR3 vec = posTarget - posSelf;
+	// 対象位置へのベクトルを算出
+	const D3DXVECTOR3& Vec = posTarget - posSelf;
 
 	// お互いの距離が、半径以下で
-	if (sqrtf(vec.x * vec.x + vec.z * vec.z) <= fRadiusSelf)
+	if (sqrtf(Vec.x * Vec.x + Vec.z * Vec.z) <= fRadiusSelf)
+	{
+		// 円柱の高さの範囲内に点が存在すれば衝突
+		if (posSelf.y + fHeight > posTarget.y &&
+			posSelf.y - fHeight < posTarget.y)
+		{
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+//============================================================================
+// 円柱と球の衝突判定
+//============================================================================
+bool CUtility::CylinderAndSphere(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& posTarget, const float& fRadiusTarget)
+{
+	// 対象位置へのベクトルを算出
+	const D3DXVECTOR3& Vec = posTarget - posSelf;
+
+	// お互いの距離が、半径以下で
+	if (sqrtf(Vec.x * Vec.x + Vec.z * Vec.z) <= fRadiusSelf - fRadiusTarget)
 	{
 		// 円柱の高さの範囲内に点が存在すれば衝突
 		if (posSelf.y + fHeight > posTarget.y &&

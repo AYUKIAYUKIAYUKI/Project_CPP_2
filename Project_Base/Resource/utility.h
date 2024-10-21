@@ -33,6 +33,9 @@ public:
 	// ‰~’Œ‚Æ“_‚ÌÕ“Ë”»’è
 	static bool CylinderAndPoint(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& posTarget);
 
+	// ‰~’Œ‚Æ‹…‚ÌÕ“Ë”»’è
+	static bool CylinderAndSphere(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& posTarget, const float& fRadiusTarget);
+
 	// —”¶¬
 	template <typename T> static T GetRandomValue();
 
