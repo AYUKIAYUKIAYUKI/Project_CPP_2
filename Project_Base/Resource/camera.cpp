@@ -16,10 +16,15 @@
 // デバイス取得用
 #include "renderer.h"
 
+// 追従対象取得用
+#include "object.h"
+#include "player.h"
+
 //****************************************************
 // usingディレクティブ
 //****************************************************
 using namespace camera;
+using namespace player;
 
 //============================================================================
 // デフォルトコンストラクタ
@@ -35,7 +40,8 @@ CCamera::CCamera() :
 	m_RotTarget{ VEC3_INIT },
 	m_fDistance{ 0.0f },
 	m_VecU{ 0.0f, 1.0f, 0.0f },
-	m_fAdjust{ 0.0f }
+	m_fAdjust{ 0.0f },
+	m_bTrack{ false }
 {
 	// 行列を初期化
 	D3DXMatrixIdentity(&m_MtxProjection);	// プロジェクション行列
@@ -58,6 +64,9 @@ HRESULT CCamera::Init()
 	// 間距離を設定
 	m_fDistance = 300.0f;
 
+	// 俯瞰度合いを設定
+	m_fAdjust = 50.0f;
+
 	return S_OK;
 }
 
@@ -66,8 +75,34 @@ HRESULT CCamera::Init()
 //============================================================================
 void CCamera::Update()
 {
-	// カメラ操作
-	Control();
+	// カメラの追従切り替え
+	if (CManager::GetKeyboard()->GetTrigger(DIK_F1))
+	{
+		m_bTrack = !m_bTrack;
+	}
+
+	if (m_bTrack)
+	{ // 追従カメラモード
+
+		if (CObject::FindSpecificObject(CObject::TYPE::PLAYER))
+		{ // プレイヤーが存在していれば
+
+			// プレイヤータグを取得
+			CPlayer* pPlayer = nullptr;
+			pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+		
+			// カメラをプレイヤーに追従
+			m_PosTarget = pPlayer->GetPos();
+			m_RotTarget.y = -pPlayer->GetDirection() + D3DX_PI * 0.5f;
+			m_fDistance = 200.0f;
+		}
+	}
+	else
+	{ // フリーカメラモード
+
+		// カメラ操作
+		Control();
+	}
 
 	// 回転
 	Rotation();
@@ -82,9 +117,12 @@ void CCamera::Update()
 	CalcPosR();
 
 #ifdef _DEBUG
-	CRenderer::GetInstance()->SetDebugString("カメラ座標 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(m_Pos.z));
-	CRenderer::GetInstance()->SetDebugString("カメラ向き : " + to_string(m_Rot.x) + " :  " + to_string(m_Rot.y) + " : " + to_string(m_Rot.z));
+	CRenderer::GetInstance()->SetDebugString("カメラ座標　　 : " + to_string(m_Pos.x) + " :  " + to_string(m_Pos.y) + " : " + to_string(m_Pos.z));
+	CRenderer::GetInstance()->SetDebugString("目標カメラ座標 : " + to_string(m_PosTarget.x) + " :  " + to_string(m_PosTarget.y) + " : " + to_string(m_PosTarget.z));
+	CRenderer::GetInstance()->SetDebugString("カメラ向き　　 : " + to_string(m_Rot.x) + " :  " + to_string(m_Rot.y) + " : " + to_string(m_Rot.z));
+	CRenderer::GetInstance()->SetDebugString("目標カメラ向き : " + to_string(m_RotTarget.x) + " :  " + to_string(m_RotTarget.y) + " : " + to_string(m_RotTarget.z));
 	CRenderer::GetInstance()->SetDebugString("カメラ間距離 : " + to_string(m_fDistance));
+	CRenderer::GetInstance()->SetDebugString("カメラモード : " + to_string(m_bTrack));
 #endif // _DEBUG
 }
 
@@ -196,6 +234,36 @@ void CCamera::SetDistance(float fDistance)
 //============================================================================
 void CCamera::Control()
 {
+	// 移動上下
+	if (CManager::GetKeyboard()->GetPress(DIK_W))
+	{
+		m_PosTarget.y += 1.0f;
+	}
+	else if (CManager::GetKeyboard()->GetPress(DIK_S))
+	{
+		m_PosTarget.y -= 1.0f;
+	}
+
+	// 向き左右
+	if (CManager::GetKeyboard()->GetPress(DIK_RIGHT))
+	{
+		m_RotTarget.y += 0.02f;
+	}
+	else if (CManager::GetKeyboard()->GetPress(DIK_LEFT))
+	{
+		m_RotTarget.y -= 0.02f;
+	}
+
+	// 向き上下
+	if (CManager::GetKeyboard()->GetPress(DIK_UP))
+	{
+		m_RotTarget.x += 0.02f;
+	}
+	else if (CManager::GetKeyboard()->GetPress(DIK_DOWN))
+	{
+		m_RotTarget.x -= 0.02f;
+	}
+
 	// ズームイン / アウト
 	if (CManager::GetKeyboard()->GetPress(DIK_AT) && m_fDistance > 10.0f)
 	{
@@ -210,26 +278,6 @@ void CCamera::Control()
 		// 距離間リセット
 		m_fDistance = 200.0f;
 	}
-
-	// 左右
-	if (CManager::GetKeyboard()->GetPress(DIK_RIGHT))
-	{
-		m_RotTarget.y += 0.02f;
-	}
-	else if (CManager::GetKeyboard()->GetPress(DIK_LEFT))
-	{
-		m_RotTarget.y -= 0.02f;
-	}
-
-	// 上下
-	if (CManager::GetKeyboard()->GetPress(DIK_UP))
-	{
-		m_RotTarget.x += 0.02f;
-	}
-	else if (CManager::GetKeyboard()->GetPress(DIK_DOWN))
-	{
-		m_RotTarget.x -= 0.02f;
-	}
 }
 
 //============================================================================
@@ -237,40 +285,14 @@ void CCamera::Control()
 //============================================================================
 void CCamera::Rotation()
 {
-	// 回転量減衰
-	m_RotTarget *= 0.8f;
-
-	// 回転量反映
-	m_Rot += m_RotTarget * 0.5f;
-
 	// ヨー角の範囲を制限
-	CUtility::AdjustAngle(m_Rot.y);
+	CUtility::AdjustAngle(m_RotTarget.y, m_Rot.y);
 
 	// ピッチ角の範囲を制限
 	RestrictPitch();
-}
 
-//============================================================================
-// 移動
-//============================================================================
-void CCamera::Translation()
-{
-	// 追従度合
-	float fTracking = 0.25f;
-
-	// 上下
-	if (CManager::GetKeyboard()->GetPress(DIK_W))
-	{
-		m_PosTarget.y += 1.0f;
-	}
-	else if (CManager::GetKeyboard()->GetPress(DIK_S))
-	{
-		m_PosTarget.y -= 1.0f;
-	}
-
-	// 移動量反映
-	// posTargetに値を設定していない場合は数値がおかしくなります
-	m_Pos += (m_PosTarget - m_Pos) * fTracking;
+	// 目標向きへ補正
+	m_Rot += (m_RotTarget - m_Rot) * COEF_ADJUST;
 }
 
 //============================================================================
@@ -278,17 +300,26 @@ void CCamera::Translation()
 //============================================================================
 void CCamera::RestrictPitch()
 {
-	// 0 ～ 0.5
-	float fCoeff{ 0.48f };
+	// 0.0f ～ 0.5f
+	float fCoeff = 0.48f;
 
-	if (m_Rot.x + m_RotTarget.x > D3DX_PI * fCoeff)
+	if (m_RotTarget.x > D3DX_PI * fCoeff)
 	{
-		m_Rot.x = D3DX_PI * fCoeff;
+		m_RotTarget.x = D3DX_PI * fCoeff;
 	}
-	else if (m_Rot.x + m_RotTarget.x < -D3DX_PI * fCoeff)
+	else if (m_RotTarget.x < -D3DX_PI * fCoeff)
 	{
-		m_Rot.x = -D3DX_PI * fCoeff;
+		m_RotTarget.x = -D3DX_PI * fCoeff;
 	}
+}
+
+//============================================================================
+// 移動
+//============================================================================
+void CCamera::Translation()
+{
+	// 目標座標へ補正
+	m_Pos += (m_PosTarget - m_Pos) * COEF_ADJUST;
 }
 
 //============================================================================
@@ -364,8 +395,10 @@ void CCamera::CalcMtxView()
 	D3DXMatrixIdentity(&m_MtxView);
 
 	// 視点座標の調整用
-	Vec3 posV = m_PosV;
-	Vec3 posR = m_PosR;
+	Vec3 posV = m_PosV, posR = m_PosR;
+
+	// 俯瞰度合いを反映
+	posV.y += m_fAdjust;
 
 	// ビュー行列の生成
 	D3DXMatrixLookAtLH(&m_MtxView,

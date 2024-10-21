@@ -26,6 +26,23 @@ void CUtility::AdjustAngle(float& fAngle)
 }
 
 //============================================================================
+// Šp“x‚Ì•â³
+//============================================================================
+void CUtility::AdjustAngle(float& fAngle1, float& fAngle2)
+{
+	if (fAngle1 > D3DX_PI)
+	{
+		fAngle1 += -D3DX_PI * 2.0f;
+		fAngle2 += -D3DX_PI * 2.0f;
+	}
+	else if (fAngle1 < -D3DX_PI)
+	{
+		fAngle1 += D3DX_PI * 2.0f;
+		fAngle2 += D3DX_PI * 2.0f;
+	}
+}
+
+//============================================================================
 // ‹…Œ`‚Ç‚¤‚µ‚ÌÕ“Ë”»’è
 //============================================================================
 bool CUtility::OnlySphere(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const D3DXVECTOR3& posTarget, const float& fRadiusTarget)

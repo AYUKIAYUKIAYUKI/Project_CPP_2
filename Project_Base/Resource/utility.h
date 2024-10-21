@@ -18,6 +18,9 @@ public:
 	// 角度の補正(ラジアン)
 	static void AdjustAngle(float& fAngle);
 
+	// 角度の補正(ラジアン)
+	static void AdjustAngle(float& fAngle1, float& fAngle2);
+
 	// 球どうしの衝突判定
 	static bool OnlySphere(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const D3DXVECTOR3& posTarget, const float& fRadiusTarget);
 

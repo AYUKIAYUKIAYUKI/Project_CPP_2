@@ -54,10 +54,13 @@ namespace camera
 
 	private:
 
+		/// <summary> 目標値への補間強度 </summary>
+		static constexpr float COEF_ADJUST = 0.01f;
+
 		void Control();				// 操作
 		void Rotation();			// 回転
-		void Translation();			// 移動
 		void RestrictPitch();		// ピッチ角の範囲制限
+		void Translation();			// 移動
 		void CalcPosV();			// 視点座標を計算
 		void CalcPosR();			// 注視点座標を計算
 		void CalcMtxProjection();	// プロジェクション行列計算
@@ -75,7 +78,8 @@ namespace camera
 		Vec3	m_VecU;				// 上方向ベクトル
 		Mtx		m_MtxProjection;	// プロジェクション行列
 		Mtx		m_MtxView;			// ビュー行列
-		float	m_fAdjust;			// 俯瞰度合
+		float	m_fAdjust;			// 俯瞰度合い
+		bool	m_bTrack;			// カメラの追従切り替え
 	};
 }
 
