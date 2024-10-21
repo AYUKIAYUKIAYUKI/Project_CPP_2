@@ -23,6 +23,7 @@
 // usingディレクティブ
 //****************************************************
 using namespace player;
+using namespace player_state_manager;
 
 //============================================================================
 // 
@@ -35,11 +36,16 @@ using namespace player;
 //============================================================================
 CPlayer::CPlayer() :
 	CObject_X{ static_cast<int>(CObject::LAYER::MIDDLE) },
+	m_pPlayerStateManager{ nullptr },
 	m_PosTarget{ VEC3_INIT },
 	m_fMoveSpeed{ DEFAULT_MOVE_SPEED },
 	m_fDirection{ 0.0f }
 {
-
+	// プレイヤーステートマネージャーを生成
+	if (!m_pPlayerStateManager)
+	{
+		m_pPlayerStateManager = CPlayer_State_Manager::Create();
+	}
 }
 
 //============================================================================
@@ -74,6 +80,13 @@ HRESULT CPlayer::Init()
 //============================================================================
 void CPlayer::Uninit()
 {
+	// プレイヤーステートマネージャーの破棄
+	if (m_pPlayerStateManager)
+	{
+		m_pPlayerStateManager->Release();
+		m_pPlayerStateManager = nullptr;
+	}
+
 	// 基底クラスの終了処理
 	CObject_X::Uninit();
 }

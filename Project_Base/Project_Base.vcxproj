@@ -39,12 +39,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Resource\player.cpp" />
+    <ClCompile Include="Resource\player_state_manager.cpp" />
     <ClCompile Include="resource\renderer.cpp" />
     <ClCompile Include="Resource\render_collision.cpp" />
     <ClCompile Include="Resource\result.cpp" />
     <ClCompile Include="Resource\rubble.cpp" />
     <ClCompile Include="Resource\scene.cpp" />
     <ClCompile Include="resource\sound.cpp" />
+    <ClCompile Include="Resource\state.cpp" />
     <ClCompile Include="resource\texture_manager.cpp" />
     <ClCompile Include="Resource\title.cpp" />
     <ClCompile Include="Resource\utility.cpp" />
@@ -67,12 +69,14 @@
     <ClInclude Include="resource\object_X.h" />
     <ClInclude Include="resource\pch.h" />
     <ClInclude Include="Resource\player.h" />
+    <ClInclude Include="Resource\player_state_manager.h" />
     <ClInclude Include="resource\renderer.h" />
     <ClInclude Include="Resource\render_collision.h" />
     <ClInclude Include="Resource\result.h" />
     <ClInclude Include="Resource\rubble.h" />
     <ClInclude Include="Resource\scene.h" />
     <ClInclude Include="resource\sound.h" />
+    <ClInclude Include="Resource\state.h" />
     <ClInclude Include="resource\texture_manager.h" />
     <ClInclude Include="Resource\title.h" />
     <ClInclude Include="Resource\utility.h" />

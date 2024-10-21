@@ -13,6 +13,8 @@
 //****************************************************
 #include "object_X.h"
 
+#include "player_state_manager.h"
+
 //****************************************************
 // 名前空間を定義
 //****************************************************
@@ -22,11 +24,6 @@ namespace player
 	// usingディレクティブ
 	//****************************************************
 	using namespace abbr;
-
-	//****************************************************
-	// using宣言
-	//****************************************************
-	using std::to_string;
 
 	//****************************************************
 	// プレイヤークラス
@@ -58,9 +55,11 @@ namespace player
 
 		void Control();	// 操作
 
-		Vec3	m_PosTarget;	// 目標座標
-		float	m_fMoveSpeed;	// 移動速度
-		float	m_fDirection;	// 方角
+		player_state_manager::CPlayer_State_Manager* m_pPlayerStateManager;	// プレイヤーステートマネージャー
+
+		Vec3		m_PosTarget;	// 目標座標
+		float		m_fMoveSpeed;	// 移動速度
+		float		m_fDirection;	// 方角
 	};
 }
 
