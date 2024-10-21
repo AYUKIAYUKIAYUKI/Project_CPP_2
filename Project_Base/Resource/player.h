@@ -35,6 +35,9 @@ namespace player
 	{
 	public:
 
+		/// <summary> デフォルトのプレイヤー移動速度 </summary>
+		static constexpr float DEFAULT_MOVE_SPEED = 0.025f;
+
 		CPlayer();	// デフォルトコンストラクタ
 		~CPlayer();	// デストラクタ
 
@@ -53,6 +56,7 @@ namespace player
 		void Control();	// 操作
 
 		Vec3	m_PosTarget;	// 目標座標
+		float	m_fMoveSpeed;	// 移動速度
 		float	m_fDirection;	// 方角
 	};
 }

@@ -36,6 +36,7 @@ using namespace player;
 CPlayer::CPlayer() :
 	CObject_X(static_cast<int>(CObject::LAYER::MIDDLE)),
 	m_PosTarget(VEC3_INIT),
+	m_fMoveSpeed(DEFAULT_MOVE_SPEED),
 	m_fDirection(0.0f)
 {
 
@@ -154,16 +155,14 @@ void CPlayer::Control()
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();	// キーボード
 	CInputPad* pPad = CManager::GetPad();					// パッド
 
-	float f増加量 = 0.1f;
-
 	// X軸の入力
 	if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::LEFT))
 	{
-		m_fDirection += -f増加量;
+		m_fDirection += -m_fMoveSpeed;
 	}
 	else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT))
 	{
-		m_fDirection += f増加量;
+		m_fDirection += m_fMoveSpeed;
 	}
 
 	// 方角の補正
@@ -171,8 +170,8 @@ void CPlayer::Control()
 
 	// 座標を反映
 	Vec3 NewPos = VEC3_INIT;
-	NewPos.x = cosf(m_fDirection) * CField_Manager::RADIUS;
-	NewPos.z = sinf(m_fDirection) * CField_Manager::RADIUS;
+	NewPos.x = cosf(m_fDirection) * CField_Manager::FIELD_RADIUS;
+	NewPos.z = sinf(m_fDirection) * CField_Manager::FIELD_RADIUS;
 	SetPos(NewPos);
 
 	// 向きを反映
