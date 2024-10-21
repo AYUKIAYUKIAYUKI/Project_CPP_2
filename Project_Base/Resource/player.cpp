@@ -154,7 +154,7 @@ void CPlayer::Control()
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();	// キーボード
 	CInputPad* pPad = CManager::GetPad();					// パッド
 
-	float f増加量 = 0.025f;
+	float f増加量 = 0.1f;
 
 	// X軸の入力
 	if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::LEFT))
@@ -166,14 +166,8 @@ void CPlayer::Control()
 		m_fDirection += f増加量;
 	}
 
-	if (m_fDirection > D3DX_PI)
-	{
-		m_fDirection += -D3DX_PI * 2.0f;
-	}
-	else if (m_fDirection < -D3DX_PI)
-	{
-		m_fDirection += D3DX_PI * 2.0f;
-	}
+	// 方角の補正
+	CUtility::AdjustAngle(m_fDirection);
 
 	// 座標を反映
 	Vec3 NewPos = VEC3_INIT;

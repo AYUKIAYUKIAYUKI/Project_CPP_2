@@ -11,6 +11,21 @@
 #include "utility.h"
 
 //============================================================================
+// Šp“x‚Ì•â³
+//============================================================================
+void CUtility::AdjustAngle(float& fAngle)
+{
+	if (fAngle > D3DX_PI)
+	{
+		fAngle += -D3DX_PI * 2.0f;
+	}
+	else if (fAngle < -D3DX_PI)
+	{
+		fAngle += D3DX_PI * 2.0f;
+	}
+}
+
+//============================================================================
 // ‹…Œ`‚Ç‚¤‚µ‚ÌÕ“Ë”»’è
 //============================================================================
 bool CUtility::OnlySphere(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const D3DXVECTOR3& posTarget, const float& fRadiusTarget)

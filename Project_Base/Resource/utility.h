@@ -15,6 +15,9 @@ class CUtility final
 {
 public:
 
+	// Šp“x‚Ì•â³(ƒ‰ƒWƒAƒ“)
+	static void AdjustAngle(float& fAngle);
+
 	// ‹…‚Ç‚¤‚µ‚ÌÕ“Ë”»’è
 	static bool OnlySphere(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const D3DXVECTOR3& posTarget, const float& fRadiusTarget);
 
