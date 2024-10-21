@@ -135,8 +135,8 @@ CField_Manager* CField_Manager::GetInstance()
 // デフォルトコンストラクタ
 //============================================================================
 CField_Manager::CField_Manager() :
-	m_fCoeffRaondomRange(0.0f),
-	m_pCylinderCollider(nullptr)
+	m_fCoeffRaondomRange{ 0.0f },
+	m_pCylinderCollider{ nullptr }
 {
 
 }

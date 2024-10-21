@@ -39,7 +39,7 @@ namespace field_manager
 		static constexpr float FIELD_RADIUS = 300.0f;
 
 		/// <summary> 最大ブロック数 </summary>
-		static constexpr int MAX_BLOCK = 30;
+		static constexpr int MAX_BLOCK = 100;
 
 		/// <summary> 重力 </summary>
 		static constexpr float FIELD_GRAVITY = -0.025f;

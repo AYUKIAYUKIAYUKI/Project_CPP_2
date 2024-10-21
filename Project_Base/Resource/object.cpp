@@ -33,7 +33,7 @@ CObject::CObject() :
 	m_nPriority{ static_cast<int>(LAYER::MAX) - 1 },
 	m_pPrev{ nullptr },
 	m_pNext{ nullptr },
-	m_Type(TYPE::NONE),
+	m_Type{ TYPE::NONE },
 	m_bDeath{ false }
 {
 	// このオブジェクトをリストに登録
@@ -68,7 +68,7 @@ CObject::CObject(int nPriority) :
 	m_nPriority{ nPriority },
 	m_pPrev{ nullptr },
 	m_pNext{ nullptr },
-	m_Type(TYPE::NONE),
+	m_Type{ TYPE::NONE },
 	m_bDeath{ false }
 {
 	// このオブジェクトをリストに登録

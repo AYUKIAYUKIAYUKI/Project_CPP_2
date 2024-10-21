@@ -34,10 +34,10 @@ using namespace player;
 // デフォルトコンストラクタ
 //============================================================================
 CPlayer::CPlayer() :
-	CObject_X(static_cast<int>(CObject::LAYER::MIDDLE)),
-	m_PosTarget(VEC3_INIT),
-	m_fMoveSpeed(DEFAULT_MOVE_SPEED),
-	m_fDirection(0.0f)
+	CObject_X{ static_cast<int>(CObject::LAYER::MIDDLE) },
+	m_PosTarget{ VEC3_INIT },
+	m_fMoveSpeed{ DEFAULT_MOVE_SPEED },
+	m_fDirection{ 0.0f }
 {
 
 }
@@ -56,7 +56,7 @@ CPlayer::~CPlayer()
 HRESULT CPlayer::Init()
 {
 	// 初期方角を設定
-	//m_fDirection = D3DX_PI * -0.5f;
+	m_fDirection = D3DX_PI * -0.5f;
 
 	// 基底クラスの初期設定
 	HRESULT hr = CObject_X::Init();

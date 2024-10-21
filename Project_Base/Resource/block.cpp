@@ -16,11 +16,6 @@
 // 判定可視化用
 #include "render_collision.h"
 
-//****************************************************
-// エイリアスを定義
-//****************************************************
-using Vec = D3DXVECTOR3;
-
 //============================================================================
 // 
 // publicメンバ
@@ -31,8 +26,8 @@ using Vec = D3DXVECTOR3;
 // デフォルトコンストラクタ
 //============================================================================
 CBlock::CBlock() :
-	CObject_X( static_cast<int>(CObject::LAYER::MIDDLE) ),
-	m_pTest(nullptr)
+	CObject_X{ static_cast<int>(CObject::LAYER::MIDDLE) },
+	m_pTest{ nullptr }
 {
 	// 判定表示の生成
 	m_pTest = CRender_Collision::Create(this);
@@ -126,7 +121,7 @@ CBlock* CBlock::Create()
 //============================================================================
 // 生成
 //============================================================================
-CBlock* CBlock::Create(Vec Pos, Vec Rot)
+CBlock* CBlock::Create(const D3DXVECTOR3& Pos, const D3DXVECTOR3& Rot)
 {
 	// インスタンスを生成
 	CBlock* pNewInstance = DBG_NEW CBlock();
@@ -147,7 +142,7 @@ CBlock* CBlock::Create(Vec Pos, Vec Rot)
 	pNewInstance->BindModel(CModel_X_Manager::TYPE::TEST);
 
 	// サイズを設定
-	pNewInstance->SetSize(Vec(10.0f, 10.0f, 10.0f));
+	pNewInstance->SetSize(D3DXVECTOR3(10.0f, 10.0f, 10.0f));
 
 	// 描画前に1度更新
 	pNewInstance->Update();

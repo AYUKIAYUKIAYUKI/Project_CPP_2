@@ -96,11 +96,11 @@ void CObject_X::Draw()
 
 #if CHANGE_DRAW_ZBUFFER
 
-	// 深度テストの比較方法の変更
-	pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
+		// 深度テストの比較方法の変更
+		pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
 
-	// 深度バッファに描画しない
-	pDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+		// 深度バッファに描画しない
+		pDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
 #endif	// CHANGE_DRAW_ZBUFFER
 
@@ -142,11 +142,11 @@ void CObject_X::Draw()
 
 #if CHANGE_DRAW_ZBUFFER
 
-	// 深度テストの比較方法の変更
-	pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+		// 深度テストの比較方法の変更
+		pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 
-	// 深度バッファに書き込む
-	pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+		// 深度バッファに書き込む
+		pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
 #endif	// CHANGE_DRAW_ZBUFFER
 }
