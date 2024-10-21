@@ -93,8 +93,8 @@ void CCamera::Update()
 #ifdef _DEBUG
 	CRenderer::GetInstance()->SetDebugString("カメラ座標　　 : " + to_string(m_Pos.x) + " :  " + to_string(m_Pos.y) + " : " + to_string(m_Pos.z));
 	CRenderer::GetInstance()->SetDebugString("目標カメラ座標 : " + to_string(m_PosTarget.x) + " :  " + to_string(m_PosTarget.y) + " : " + to_string(m_PosTarget.z));
-	CRenderer::GetInstance()->SetDebugString("カメラ向き　　 : " + to_string(m_Rot.x) + " :  " + to_string(m_Rot.y) + " : " + to_string(m_Rot.z));
-	CRenderer::GetInstance()->SetDebugString("目標カメラ向き : " + to_string(m_RotTarget.x) + " :  " + to_string(m_RotTarget.y) + " : " + to_string(m_RotTarget.z));
+	CRenderer::GetInstance()->SetDebugString("カメラ向き　　 : " + to_string(m_Rot.x * (180 / D3DX_PI)) + " :  " + to_string(m_Rot.y * (180 / D3DX_PI)) + " : " + to_string(m_Rot.z * (180 / D3DX_PI)));
+	CRenderer::GetInstance()->SetDebugString("目標カメラ向き : " + to_string(m_RotTarget.x * (180 / D3DX_PI)) + " :  " + to_string(m_RotTarget.y * (180 / D3DX_PI)) + " : " + to_string(m_RotTarget.z * (180 / D3DX_PI)));
 	CRenderer::GetInstance()->SetDebugString("カメラ間距離 : " + to_string(m_fDistance));
 	CRenderer::GetInstance()->SetDebugString("カメラモード : " + to_string(m_bTrack));
 #endif // _DEBUG
@@ -225,9 +225,12 @@ void CCamera::BranchMode()
 			pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
 
 			// カメラをプレイヤーに追従
-			m_PosTarget = pPlayer->GetPos();
-			m_RotTarget.y = pPlayer->GetDirection();
-			m_fDistance = 200.0f;
+			m_PosTarget = pPlayer->GetPos();					// 目標座標を同期
+			const Vec3& NegVec = VEC3_INIT - pPlayer->GetPos();	// プレイヤーから原点への逆位置ベクトルを計算
+			m_RotTarget = VEC3_INIT;							// カメラの目標向きをリセット
+			m_RotTarget.y = atan2f(NegVec.x, NegVec.z);			// カメラの目標向きを逆位置ベクトル方向に
+			CUtility::AdjustAngle(m_Rot.y, m_RotTarget.y);		// 角度を補正
+			m_fDistance = 200.0f;								// 間距離を固定
 		}
 	}
 	else
@@ -295,7 +298,7 @@ void CCamera::Control()
 void CCamera::Rotation()
 {
 	// ヨー角の範囲を制限
-	CUtility::AdjustAngle(m_RotTarget.y, m_Rot.y);
+	CUtility::AdjustDirection(m_RotTarget.y, m_Rot.y);
 
 	// ピッチ角の範囲を制限
 	RestrictPitch();

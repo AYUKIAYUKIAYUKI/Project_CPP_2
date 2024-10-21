@@ -8,12 +8,76 @@
 //****************************************************
 // インクルードファイル
 //****************************************************
-#include "utility.h"
+#include "renderer.h"
 
 //============================================================================
-// 角度の補正
+// 角度の補正(ラジアン)
 //============================================================================
-void CUtility::AdjustAngle(float& fAngle)
+void CUtility::AdjustAngle(float& fAngle, const float& fDest)
+{
+	// 目標角度と現在角度との差を計算
+	const float& fDifference = fAngle - fDest;
+
+	if (fDifference > D3DX_PI)
+	{
+		fAngle += -D3DX_PI * 2.0f;
+
+#ifdef _DEBUG
+
+		// どれだけの差があるか表示
+		CRenderer::GetInstance()->SetTimeString("[りれき1]現在角度と目標角度の差 : " + std::to_string(fDifference), 120);
+
+#endif	// _DEBUG
+	}
+	else if (fDifference < -D3DX_PI)
+	{
+		fAngle += D3DX_PI * 2.0f;
+	
+#ifdef _DEBUG
+
+		// どれだけの差があるか表示
+		CRenderer::GetInstance()->SetTimeString("[りれき2]現在角度と目標角度の差 : " + std::to_string(fDifference), 120);
+
+#endif	// _DEBUG
+	}
+}
+
+//============================================================================
+// 角度の補正(ラジアン)
+//============================================================================
+void CUtility::AdjustAngle(float& fAngle, const float& fDest, const float& fRadius)
+{
+	// 目標角度と現在角度との差を計算
+	const float& fDifference = fAngle - fDest;
+
+	if (fDifference > fRadius)
+	{
+		fAngle += -fRadius * 2.0f;
+
+#ifdef _DEBUG
+
+		// どれだけの差があるか表示
+		CRenderer::GetInstance()->SetTimeString("[りれき1]現在角度と目標角度の差 : " + std::to_string(fDifference), 120);
+
+#endif	// _DEBUG
+	}
+	else if (fDifference < -fRadius)
+	{
+		fAngle += fRadius * 2.0f;
+
+#ifdef _DEBUG
+
+		// どれだけの差があるか表示
+		CRenderer::GetInstance()->SetTimeString("[りれき2]現在角度と目標角度の差 : " + std::to_string(fDifference), 120);
+
+#endif	// _DEBUG
+	}
+}
+
+//============================================================================
+// 向きの補正(ラジアン)
+//============================================================================
+void CUtility::AdjustDirection(float& fAngle)
 {
 	if (fAngle > D3DX_PI)
 	{
@@ -26,9 +90,9 @@ void CUtility::AdjustAngle(float& fAngle)
 }
 
 //============================================================================
-// 角度の補正
+// 向きの補正(ラジアン)
 //============================================================================
-void CUtility::AdjustAngle(float& fAngle1, float& fAngle2)
+void CUtility::AdjustDirection(float& fAngle1, float& fAngle2)
 {
 	if (fAngle1 > D3DX_PI)
 	{

@@ -16,10 +16,16 @@ class CUtility final
 public:
 
 	// 角度の補正(ラジアン)
-	static void AdjustAngle(float& fAngle);
+	static void AdjustAngle(float& fAngle, const float& fDest);
 
 	// 角度の補正(ラジアン)
-	static void AdjustAngle(float& fAngle1, float& fAngle2);
+	static void AdjustAngle(float& fAngle, const float& fDest, const float& fRadius);
+
+	// 向きの補正(ラジアン)
+	static void AdjustDirection(float& fAngle);
+
+	// 向きの補正(ラジアン)
+	static void AdjustDirection(float& fAngle1, float& fAngle2);
 
 	// 球どうしの衝突判定
 	static bool OnlySphere(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const D3DXVECTOR3& posTarget, const float& fRadiusTarget);

@@ -56,7 +56,7 @@ CPlayer::~CPlayer()
 HRESULT CPlayer::Init()
 {
 	// 初期方角を設定
-	m_fDirection = D3DX_PI * -0.5f;
+	//m_fDirection = D3DX_PI * -0.5f;
 
 	// 基底クラスの初期設定
 	HRESULT hr = CObject_X::Init();
@@ -85,7 +85,7 @@ void CPlayer::Update()
 {
 	// 方角の補正
 	/* 必ず処理の先頭に */
-	CUtility::AdjustAngle(m_fDirection);
+	CUtility::AdjustDirection(m_fDirection);
 
 	// 操作
 	Control();
@@ -95,7 +95,8 @@ void CPlayer::Update()
 	
 #ifdef _DEBUG
 	CRenderer::GetInstance()->SetDebugString("プレイヤー座標 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
-	CRenderer::GetInstance()->SetDebugString("プレイヤー座標の角度" + to_string(m_fDirection));
+	CRenderer::GetInstance()->SetDebugString("プレイヤー向き : " + to_string(GetRot().x * (180 / D3DX_PI)) + " :  " + to_string(GetRot().y * (180 / D3DX_PI)) + " : " + to_string(GetRot().z * (180 / D3DX_PI)));
+	CRenderer::GetInstance()->SetDebugString("プレイヤー方角" + to_string(m_fDirection * (180 / D3DX_PI)));
 #endif // _DEBUG
 }
 
@@ -198,6 +199,6 @@ void CPlayer::Control()
 
 	// 向きを反映
 	Vec3 NewRot = VEC3_INIT;
-	//NewRot.y =
+	//NewRot.y = atan2f(NewRot.x - NewPos.x, NewRot.z - NewPos.z);
 	SetRot(NewRot);
 }
