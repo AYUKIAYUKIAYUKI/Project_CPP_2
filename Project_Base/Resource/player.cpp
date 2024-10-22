@@ -41,11 +41,7 @@ CPlayer::CPlayer() :
 	m_fMoveSpeed{ DEFAULT_MOVE_SPEED },
 	m_fDirection{ 0.0f }
 {
-	// プレイヤーステートマネージャーを生成
-	if (!m_pPlayerStateManager)
-	{
-		m_pPlayerStateManager = CPlayer_State_Manager::Create();
-	}
+
 }
 
 //============================================================================
@@ -61,6 +57,12 @@ CPlayer::~CPlayer()
 //============================================================================
 HRESULT CPlayer::Init()
 {
+	// プレイヤーステートマネージャーの生成
+	if (!m_pPlayerStateManager)
+	{
+		m_pPlayerStateManager = CPlayer_State_Manager::Create();
+	}
+
 	// 初期方角を設定
 	m_fDirection = D3DX_PI * -0.5f;
 
@@ -99,8 +101,10 @@ void CPlayer::Uninit()
 //============================================================================
 void CPlayer::Update()
 {
+	// プレイヤーステートマネージャーの更新
+	m_pPlayerStateManager->Update();
+
 	// 方角の補正
-	/* 必ず処理の先頭に */
 	CUtility::AdjustDirection(m_fDirection);
 
 	// 操作

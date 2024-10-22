@@ -10,6 +10,9 @@
 //****************************************************
 #include "player_state_manager.h"
 
+// デバッグ表示用
+#include "renderer.h"
+
 //****************************************************
 // usingディレクティブ
 //****************************************************
@@ -24,7 +27,8 @@ using namespace player_state_manager;
 //============================================================================
 // デフォルトコンストラクタ
 //============================================================================
-CPlayer_State_Manager::CPlayer_State_Manager()
+CPlayer_State_Manager::CPlayer_State_Manager() :
+	m_pState{ nullptr }
 {
 
 }
@@ -57,7 +61,23 @@ void CPlayer_State_Manager::Release()
 //============================================================================
 void CPlayer_State_Manager::Update()
 {
+	// ステートの更新
+	m_pState->Update();
 
+#ifdef _DEBUG
+
+	// ステートの中身がどの派生クラスか表示
+	CRenderer::GetInstance()->SetDebugString("現在のプレイヤーステート : 【" + static_cast<std::string>(typeid(*m_pState).name()) + "】");
+	
+#endif	// _DEBUG
+}
+
+//============================================================================
+// 状態を設定
+//============================================================================
+void CPlayer_State_Manager::SetState(CState* pState)
+{
+	m_pState = pState;
 }
 
 //============================================================================
@@ -65,12 +85,12 @@ void CPlayer_State_Manager::Update()
 //============================================================================
 CPlayer_State_Manager* CPlayer_State_Manager::Create()
 {
-	// インスタンスを生成
+	// プレイヤーステートマネージャーを生成
 	CPlayer_State_Manager* pNewInstance = DBG_NEW CPlayer_State_Manager();
 
 	if (pNewInstance == nullptr)
 	{ // 生成失敗
-		assert(false && "プレイヤーステートの生成に失敗");
+		assert(false && "プレイヤーステートマネージャーの生成に失敗");
 	}
 
 	// 初期設定
@@ -90,7 +110,15 @@ CPlayer_State_Manager* CPlayer_State_Manager::Create()
 //============================================================================
 HRESULT CPlayer_State_Manager::Init()
 {
-	return S_OK;
+	// 初期状態を生成
+	if (m_pState == nullptr)
+	{
+		m_pState = DBG_NEW CPlayer_State_Default();
+
+		return S_OK;
+	}
+
+	return E_FAIL;
 }
 
 //============================================================================
@@ -98,5 +126,12 @@ HRESULT CPlayer_State_Manager::Init()
 //============================================================================
 void CPlayer_State_Manager::Uninit()
 {
+	if (m_pState != nullptr)
+	{
+		// メモリを解放
+		delete m_pState;
 
+		// ポインタを初期化
+		m_pState = nullptr;
+	}
 }

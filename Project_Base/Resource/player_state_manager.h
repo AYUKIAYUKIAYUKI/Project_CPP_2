@@ -12,7 +12,11 @@
 // インクルードファイル
 //****************************************************
 #include "state.h"
+#include "player_state_default.h"
 
+//****************************************************
+// 名前空間の定義
+//****************************************************
 namespace player_state_manager
 {
 	//****************************************************
@@ -21,9 +25,9 @@ namespace player_state_manager
 	using namespace abbr;
 
 	//****************************************************
-	// プレイヤーステートクラス
+	// プレイヤーステートマネージャークラス
 	//****************************************************
-	class CPlayer_State_Manager
+	class CPlayer_State_Manager final
 	{
 	public:
 
@@ -33,12 +37,16 @@ namespace player_state_manager
 		void Release();	// 破棄
 		void Update() ;	// 更新処理
 
+		void SetState(CState* pState);	// 状態を設定
+
 		static CPlayer_State_Manager* Create();	// 生成
 
 	private:
 
 		HRESULT Init();		// 初期設定
 		void	Uninit();	// 終了設定
+
+		CState* m_pState;	// ステート
 	};
 }
 
