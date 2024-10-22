@@ -30,6 +30,7 @@ CPlayer_State::CPlayer_State() :
 // プレイヤー取得コンストラクタ
 //============================================================================
 CPlayer_State::CPlayer_State(player::CPlayer* pPlayer) :
+	CState{},
 	m_pPlayer{ pPlayer }
 {
 	if (pPlayer == nullptr)

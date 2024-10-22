@@ -9,6 +9,8 @@
 // インクルードファイル
 //****************************************************
 #include "player_state_manager.h"
+
+// 初期ステート設定用
 #include "player_state_default.h"
 
 // デバッグ表示用
