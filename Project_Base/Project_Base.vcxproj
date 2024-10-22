@@ -39,6 +39,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Resource\player.cpp" />
+    <ClCompile Include="Resource\player_state.cpp" />
     <ClCompile Include="Resource\player_state_default.cpp" />
     <ClCompile Include="Resource\player_state_manager.cpp" />
     <ClCompile Include="resource\renderer.cpp" />
@@ -70,6 +71,7 @@
     <ClInclude Include="resource\object_X.h" />
     <ClInclude Include="resource\pch.h" />
     <ClInclude Include="Resource\player.h" />
+    <ClInclude Include="Resource\player_state.h" />
     <ClInclude Include="Resource\player_state_default.h" />
     <ClInclude Include="Resource\player_state_manager.h" />
     <ClInclude Include="resource\renderer.h" />

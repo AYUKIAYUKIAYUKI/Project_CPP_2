@@ -1,29 +1,35 @@
 //============================================================================
 //
-// プレイヤー通常ステート、ヘッダファイル [player_state_default.h]
+// プレイヤーステート、ヘッダファイル [player_state.h]
 // Author : 福田歩希
 //
 //============================================================================
 
-#ifndef _PLAYER_STATE_DEFAULT_
-#define _PLAYER_STATE_DEFAULT_	// 二重インクルード防止
+#ifndef _PLAYER_STATE_
+#define _PLAYER_STATE_	// 二重インクルード防止
 
 //****************************************************
 // インクルードファイル
 //****************************************************
-#include "player_state.h"
+#include "state.h"
+#include "player.h"
 
 //****************************************************
-// プレイヤー通常ステートクラス
+// プレイヤーステートクラス
 //****************************************************
-class CPlayer_State_Default : public CPlayer_State
+class CPlayer_State : public CState
 {
 public:
 
-	CPlayer_State_Default();			// デフォルトコンストラクタ
-	~CPlayer_State_Default() override;	// デストラクタ
+	CPlayer_State();							// デフォルトコンストラクタ
+	CPlayer_State(player::CPlayer* pPlayer);	// プレイヤー取得コンストラクタ
+	~CPlayer_State() override;					// デストラクタ
 
 	void Update() override;	// 更新処理
+
+protected:
+
+	player::CPlayer* m_pPlayer;	// プレイヤー
 };
 
-#endif	// _PLAYER_STATE_DEFAULT_
+#endif	// _PLAYER_STATE_

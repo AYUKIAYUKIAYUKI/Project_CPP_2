@@ -9,6 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "player_state_manager.h"
+#include "player_state_default.h"
 
 // デバッグ表示用
 #include "renderer.h"
@@ -75,7 +76,7 @@ void CPlayer_State_Manager::Update()
 //============================================================================
 // 状態を設定
 //============================================================================
-void CPlayer_State_Manager::SetState(CState* pState)
+void CPlayer_State_Manager::SetState(CPlayer_State* pState)
 {
 	m_pState = pState;
 }
