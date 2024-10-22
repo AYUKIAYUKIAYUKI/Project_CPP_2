@@ -25,7 +25,7 @@ public:
 	CPlayer_State(player::CPlayer* pPlayer);	// プレイヤー取得コンストラクタ
 	~CPlayer_State() override;					// デストラクタ
 
-	void Update() override;	// 更新処理
+	virtual void Update() override = 0;	// 更新処理
 
 protected:
 
