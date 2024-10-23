@@ -1,12 +1,12 @@
 //============================================================================
 //
-// プレイヤー通常ステート、ヘッダファイル [player_state_default.h]
+// プレイヤー歩行ステート、ヘッダファイル [player_state_walk.h]
 // Author : 福田歩希
 //
 //============================================================================
 
-#ifndef _PLAYER_STATE_DEFAULT_
-#define _PLAYER_STATE_DEFAULT_	// 二重インクルード防止
+#ifndef _PLAYER_STATE_WALK_
+#define _PLAYER_STATE_WALK_	// 二重インクルード防止
 
 //****************************************************
 // インクルードファイル
@@ -14,20 +14,16 @@
 #include "player_state.h"
 
 //****************************************************
-// プレイヤー通常ステートクラス
+// プレイヤー歩行ステートクラス
 //****************************************************
-class CPlayer_State_Default : public CPlayer_State
+class CPlayer_State_Walk : public CPlayer_State
 {
 public:
 
-	CPlayer_State_Default();			// デフォルトコンストラクタ
-	~CPlayer_State_Default() override;	// デストラクタ
+	CPlayer_State_Walk();			// デフォルトコンストラクタ
+	~CPlayer_State_Walk() override;	// デストラクタ
 
 	void Update() override;	// 更新処理
-
-private:
-
-	void To_Walk();	// 歩き始める
 };
 
-#endif	// _PLAYER_STATE_DEFAULT_
+#endif	// _PLAYER_STATE_WALK_

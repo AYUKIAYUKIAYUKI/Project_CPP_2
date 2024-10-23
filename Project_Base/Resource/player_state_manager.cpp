@@ -67,6 +67,9 @@ void CPlayer_State_Manager::Update()
 	// ステートの更新
 	m_pState->Update();
 
+	// ステートの変更確認
+	CheckChangeState();
+
 #ifdef _DEBUG
 
 	// ステートの中身がどの派生クラスか表示
@@ -76,11 +79,22 @@ void CPlayer_State_Manager::Update()
 }
 
 //============================================================================
-// 状態を設定
+// ステートの変更確認
 //============================================================================
-void CPlayer_State_Manager::SetState(CPlayer_State* pState)
+void CPlayer_State_Manager::CheckChangeState()
 {
-	m_pState = pState;
+	// 次のステートが存在していれば
+	if (m_pState->GetNextState() != nullptr)
+	{
+		// 変更先のステートをコピー
+		CPlayer_State* NextState = m_pState->GetNextState();
+
+		// 終了処理を呼び、現在のステートを初期化する
+		Uninit();
+
+		// 状態を変更する
+		m_pState = NextState;
+	}
 }
 
 //============================================================================

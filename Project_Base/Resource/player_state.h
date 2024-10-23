@@ -27,9 +27,13 @@ public:
 
 	virtual void Update() override = 0;	// 更新処理
 
+	CPlayer_State* GetNextState();				// 次のステートを取得
+	void SetNextState(CPlayer_State* pState);	// 次のステートを設定
+
 protected:
 
-	player::CPlayer* m_pPlayer;	// プレイヤー
+	player::CPlayer* m_pPlayer;		// プレイヤー
+	CPlayer_State* m_pNextState;	// 次のステート
 };
 
 #endif	// _PLAYER_STATE_

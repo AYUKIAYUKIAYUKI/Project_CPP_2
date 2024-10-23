@@ -33,10 +33,9 @@ namespace player_state_manager
 		CPlayer_State_Manager();	// デフォルトコンストラクタ
 		~CPlayer_State_Manager();	// デストラクタ
 
-		void Release();	// 破棄
-		void Update() ;	// 更新処理
-
-		void SetState(CPlayer_State* State);	// 状態を設定
+		void Release();				// 破棄
+		void Update();				// 更新処理
+		void CheckChangeState();	// ステートを変更
 
 		static CPlayer_State_Manager* Create();	// 生成
 

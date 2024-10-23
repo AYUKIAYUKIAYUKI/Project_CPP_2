@@ -21,7 +21,8 @@
 //============================================================================
 CPlayer_State::CPlayer_State() :
 	CState{},
-	m_pPlayer{ nullptr }
+	m_pPlayer{ nullptr },
+	m_pNextState{ nullptr }
 {
 
 }
@@ -44,13 +45,30 @@ CPlayer_State::CPlayer_State(player::CPlayer* pPlayer) :
 //============================================================================
 CPlayer_State::~CPlayer_State()
 {
+#if 0	// 
+	if (m_pNextState != nullptr)
+	{
+		// メモリを解放
+		delete m_pNextState;
 
+		//  ポインタを初期化
+		m_pNextState = nullptr;
+	}
+#endif
 }
 
 //============================================================================
-// 更新処理
+// 次のステートを取得
 //============================================================================
-void CPlayer_State::Update()
+CPlayer_State* CPlayer_State::GetNextState()
 {
-	
+	return m_pNextState;
+}
+
+//============================================================================
+// 次のステートを設定
+//============================================================================
+void CPlayer_State::SetNextState(CPlayer_State* pState)
+{
+	m_pNextState = pState;
 }
