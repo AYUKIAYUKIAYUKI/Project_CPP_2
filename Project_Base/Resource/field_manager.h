@@ -33,6 +33,9 @@ namespace field_manager
 		/// <summary> フィールド半径 </summary>
 		static constexpr float FIELD_RADIUS = 300.0f;
 
+		/// <summary> 生成範囲の半径 </summary>
+		static constexpr float GENERATE_RANGE_RADIUS = 50.0f;
+
 		/// <summary> 最大ブロック数 </summary>
 		static constexpr int MAX_BLOCK = 100;
 

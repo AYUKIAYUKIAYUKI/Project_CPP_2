@@ -67,7 +67,7 @@ HRESULT CField_Manager::Init()
 	// 各種パラメータ設定
 	m_pCylinderCollider->SetPos(pPlayer->GetPos());
 	m_pCylinderCollider->SetRot(pPlayer->GetRot());
-	m_pCylinderCollider->SetScale(250.0f);
+	m_pCylinderCollider->SetScale(GENERATE_RANGE_RADIUS);
 	m_pCylinderCollider->SetAlpha(0.25f);
 
 	// モデルを設定
@@ -218,7 +218,7 @@ void CField_Manager::TestCreate()
 				NewPos.y = fabsf(CUtility::GetRandomValue<float>());
 				NewPos.z = sinf(fDirection + fRandomRange) * FIELD_RADIUS;
 
-			} while (!CUtility::CylinderAndSphere(pPlayer->GetPos(), 250.0f, 250.0f, NewPos, 10.0f));
+			} while (!CUtility::CylinderAndSphere(pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, NewPos, 10.0f));
 
 			// 向きを決定
 			NewRot.y = -(fDirection + fRandomRange);
@@ -258,10 +258,9 @@ void CField_Manager::TestDelete()
 
 				m_pCylinderCollider->SetPos(pPlayer->GetPos());
 				m_pCylinderCollider->SetRot(pPlayer->GetRot());
-				m_pCylinderCollider->SetScale(250.0f);
 
 				// 逆に、円柱範囲外の場合消去
-				if (!CUtility::CylinderAndSphere(pPlayer->GetPos(), 250.0f, 250.0f, pBlock->GetPos(), 10.0f))
+				if (!CUtility::CylinderAndSphere(pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, pBlock->GetPos(), 10.0f))
 				{
 					pBlock->SetRelease();
 				}
