@@ -51,9 +51,18 @@ HRESULT CField_Manager::Init()
 	// 初期設定
 	m_pCylinderCollider->Init();
 
-	// オブジェクトをプレイヤータグにダウンキャスト
+	// プレイヤーを格納
 	CPlayer* pPlayer = nullptr;
-	pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+
+	// プレイヤーを検索
+	if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
+	{
+		pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+	}
+	else
+	{
+		assert(false && "プレイヤーの検索結果がありませんでした");
+	}
 
 	// 各種パラメータ設定
 	m_pCylinderCollider->SetPos(pPlayer->GetPos());

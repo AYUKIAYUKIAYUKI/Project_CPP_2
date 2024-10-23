@@ -32,8 +32,13 @@ public:
 
 protected:
 
-	player::CPlayer*	m_pPlayer;		// プレイヤー
-	CPlayer_State*		m_pNextState;	// 次のステート
+	player::CPlayer* m_pPlayer;	// プレイヤー
+
+private:
+
+	player::CPlayer* RetrievePlayer();	// プレイヤーを取得
+
+	CPlayer_State* m_pNextState;	// 次のステート
 };
 
 #endif	// _PLAYER_STATE_

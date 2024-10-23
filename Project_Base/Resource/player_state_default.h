@@ -27,6 +27,7 @@ public:
 
 private:
 
+	void Control();	// ‘€ì
 	void To_Dash();	// ƒ_ƒbƒVƒ…‚ğ‚·‚é
 };
 

@@ -45,14 +45,15 @@ namespace player
 		const Vec3& GetPosTarget() const;	// 目標座標を取得
 		void SetPosTarget(Vec3 PosTarget);	// 目標座標を設定
 
+		const float& GetMoveSpeed() const;		// 移動速度を取得
+		void SetMoveSpeed(float fMoveSpeed);	// 移動速度を設定
+
 		const float& GetDirection() const;		// 方角を取得
-		void SetDirection(float fDirection);	// 方角を取得
+		void SetDirection(float fDirection);	// 方角を設定
 
 		static CPlayer* Create();	// 生成
 
 	private:
-
-		void Control();	// 操作
 
 		player_state_manager::CPlayer_State_Manager* m_pPlayerStateManager;	// プレイヤーステートマネージャー
 

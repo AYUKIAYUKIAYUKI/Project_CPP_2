@@ -24,7 +24,8 @@ CPlayer_State::CPlayer_State() :
 	m_pPlayer{ nullptr },
 	m_pNextState{ nullptr }
 {
-
+	// プレイヤーを取得
+	m_pPlayer = RetrievePlayer();
 }
 
 //============================================================================
@@ -71,4 +72,25 @@ CPlayer_State* CPlayer_State::GetNextState()
 void CPlayer_State::SetNextState(CPlayer_State* pState)
 {
 	m_pNextState = pState;
+}
+
+//============================================================================
+// プレイヤーを取得
+//============================================================================
+player::CPlayer* CPlayer_State::RetrievePlayer()
+{
+	// プレイヤーを格納
+	player::CPlayer* pPlayer = nullptr;
+
+	// プレイヤーを検索
+	if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
+	{
+		pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+	}
+	else
+	{
+		assert(false && "プレイヤーの検索結果がありませんでした");
+	}
+
+	return pPlayer;
 }
