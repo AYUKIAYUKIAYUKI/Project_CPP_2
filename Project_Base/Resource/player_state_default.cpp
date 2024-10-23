@@ -11,7 +11,7 @@
 #include "player_state_default.h"
 
 // 変更先ステート
-#include "player_state_walk.h"
+#include "player_state_dash.h"
 
 // インプット取得用
 #include "manager.h"
@@ -44,10 +44,10 @@ CPlayer_State_Default::~CPlayer_State_Default()
 //============================================================================
 void CPlayer_State_Default::Update()
 {
-	if (CManager::GetKeyboard()->GetTrigger(DIK_1))
+	if (CManager::GetKeyboard()->GetTrigger(DIK_RSHIFT))
 	{
-		// 歩き始める
-		To_Walk();
+		// ダッシュをする
+		To_Dash();
 	}
 }
 
@@ -58,12 +58,12 @@ void CPlayer_State_Default::Update()
 //============================================================================
 
 //============================================================================
-// 歩き始める
+// ダッシュをする
 //============================================================================
-void CPlayer_State_Default::To_Walk()
+void CPlayer_State_Default::To_Dash()
 {
 	if (GetNextState() == nullptr)
 	{
-		SetNextState(DBG_NEW CPlayer_State_Walk());
+		SetNextState(DBG_NEW CPlayer_State_Dash());
 	}
 }
