@@ -27,8 +27,10 @@ public:
 
 private:
 
-	void Control();	// 操作
-	void To_Dash();	// ダッシュをする
+	void Control();						// 操作
+	void SetRotTargetToMoveDirection();	// 目標向きを移動方向に合わせる
+	void SetPosTargetByDirection();		// 目標座標を方角に合わせて設定
+	void To_Dash();						// ダッシュをする
 };
 
 #endif	// _PLAYER_STATE_DEFAULT_

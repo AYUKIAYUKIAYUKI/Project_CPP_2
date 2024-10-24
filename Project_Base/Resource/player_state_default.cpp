@@ -67,49 +67,77 @@ void CPlayer_State_Default::Update()
 //============================================================================
 void CPlayer_State_Default::Control()
 {
-	//****************************************************
-	// usingディレクティブ
-	//****************************************************
-	using namespace field_manager;
+	// インプット系取得
+	CInputKeyboard* pKeyboard = CManager::GetKeyboard();	// キーボード
+	CInputPad* pPad = CManager::GetPad();					// パッド
 
 	// プレイヤーパラメータ用
 	float fDirection = m_pPlayer->GetDirection();			// 方角を取得
 	const float& fMoveSpeed = m_pPlayer->GetMoveSpeed();	// 移動速度を取得
 
-	// インプット系取得
-	CInputKeyboard* pKeyboard = CManager::GetKeyboard();	// キーボード
-	CInputPad* pPad = CManager::GetPad();					// パッド
-
 	// X軸の入力
 	if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::LEFT) || pPad->GetJoyStickL().X < 0)
-	{
+	{ // カメラから見て左へ
+
+		// 方角を変動
 		fDirection += -fMoveSpeed;
+
+		// 目標向きを移動方向に設定
+		SetRotTargetToMoveDirection();
 	}
 	else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT) || pPad->GetJoyStickL().X > 0)
-	{
+	{ // カメラから見て右へ
+		
+		 // 方角を変動
 		fDirection += fMoveSpeed;
+
+		// 目標向きを移動方向に設定
+		SetRotTargetToMoveDirection();
 	}
 
 	// 方角を反映
 	m_pPlayer->SetDirection(fDirection);
 
-	// 目標座標を反映
-	Vec3 NewPosTarget = VEC3_INIT;
-	NewPosTarget.x = cosf(fDirection) * CField_Manager::FIELD_RADIUS;
-	NewPosTarget.z = sinf(fDirection) * CField_Manager::FIELD_RADIUS;
-	m_pPlayer->SetPosTarget(NewPosTarget);
-
-	// 目標向きを反映
-	Vec3 NewRotTarget = m_pPlayer->GetRotTarget();
-	const Vec3& NegVec = VEC3_INIT - m_pPlayer->GetPos();	// プレイヤーから原点への逆位置ベクトルを計算
-	NewRotTarget.y = atan2f(NegVec.x, NegVec.z);			// プレイヤーの目標向きを逆位置ベクトル方向に
-	m_pPlayer->SetRotTarget(NewRotTarget);
+	// 目標座標を方角に合わせて設定
+	SetPosTargetByDirection();
 
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RSHIFT))
 	{
 		// ダッシュをする
 		To_Dash();
 	}
+}
+
+//============================================================================
+// 目標向きを移動方向に設定
+//============================================================================
+void CPlayer_State_Default::SetRotTargetToMoveDirection()
+{
+	/* キー入力の判定外でこの関数を呼ぶと、座標移動の終わりがけの慣性力で向きが狂う */
+
+	Vec3 NewRotTarget = m_pPlayer->GetRotTarget();							// 目標向きを取得
+	const Vec3& MoveVec = m_pPlayer->GetPosTarget() - m_pPlayer->GetPos();	// 移動方向のベクトルを作成
+	NewRotTarget.y = atan2f(-MoveVec.x, -MoveVec.z);						// 目標向きを移動方向に
+	m_pPlayer->SetRotTarget(NewRotTarget);									// 目標向きを反映
+}
+
+//============================================================================
+// 目標座標を方角に合わせて設定
+//============================================================================
+void CPlayer_State_Default::SetPosTargetByDirection()
+{
+	//****************************************************
+	// usingディレクティブ
+	//****************************************************
+	using namespace field_manager;
+
+	// 方角を取得
+	const float& fDirection = m_pPlayer->GetDirection();
+
+	Vec3 NewPosTarget = VEC3_INIT;										// 新規目標座標を作成
+	NewPosTarget.x = cosf(fDirection) * CField_Manager::FIELD_RADIUS;	// X方向の座標を設定
+	NewPosTarget.z = sinf(fDirection) * CField_Manager::FIELD_RADIUS;	// Z方向の座標を設定
+	m_pPlayer->SetPosTarget(NewPosTarget);								// 目標座標を反映
 }
 
 //============================================================================

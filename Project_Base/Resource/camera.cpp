@@ -226,7 +226,7 @@ void CCamera::BranchMode()
 
 			// カメラをプレイヤーに追従
 			m_PosTarget = pPlayer->GetPosTarget();				// 目標座標を同期
-			const Vec3& NegVec = VEC3_INIT - pPlayer->GetPos();	// プレイヤーから原点への逆位置ベクトルを計算
+			const Vec3& NegVec = VEC3_INIT - pPlayer->GetPos();	// プレイヤーから原点への逆位置ベクトルを作成
 			m_RotTarget = VEC3_INIT;							// (カメラの目標向きをリセット)
 			m_RotTarget.y = atan2f(NegVec.x, NegVec.z);			// カメラの目標向きを逆位置ベクトル方向に
 			CUtility::AdjustAngle(m_Rot.y, m_RotTarget.y);		// 角度の差を補正
