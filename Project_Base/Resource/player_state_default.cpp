@@ -84,6 +84,12 @@ void CPlayer_State_Default::Control()
 
 		// 目標向きを移動方向に設定
 		SetRotTargetToMoveDirection();
+
+		if (CManager::GetKeyboard()->GetTrigger(DIK_RSHIFT))
+		{
+			// ダッシュをする
+			To_Dash();
+		}
 	}
 	else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT) || pPad->GetJoyStickL().X > 0)
 	{ // カメラから見て右へ
@@ -93,6 +99,12 @@ void CPlayer_State_Default::Control()
 
 		// 目標向きを移動方向に設定
 		SetRotTargetToMoveDirection();
+
+		if (CManager::GetKeyboard()->GetTrigger(DIK_RSHIFT))
+		{
+			// ダッシュをする
+			To_Dash();
+		}
 	}
 
 	// 方角を反映
@@ -100,12 +112,6 @@ void CPlayer_State_Default::Control()
 
 	// 目標座標を方角に合わせて設定
 	SetPosTargetByDirection();
-
-	if (CManager::GetKeyboard()->GetTrigger(DIK_RSHIFT))
-	{
-		// ダッシュをする
-		To_Dash();
-	}
 }
 
 //============================================================================
@@ -122,7 +128,7 @@ void CPlayer_State_Default::SetRotTargetToMoveDirection()
 }
 
 //============================================================================
-// 目標座標を方角に合わせて設定
+// 方角から目標座標を設定
 //============================================================================
 void CPlayer_State_Default::SetPosTargetByDirection()
 {

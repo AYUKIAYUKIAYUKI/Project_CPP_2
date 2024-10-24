@@ -115,10 +115,11 @@ void CPlayer::Update()
 	CObject_X::Update();
 	
 #ifdef _DEBUG
+	CRenderer::GetInstance()->SetDebugString("プレイヤー方角" + to_string(m_fDirection * (180 / D3DX_PI)));
 	CRenderer::GetInstance()->SetDebugString("プレイヤー座標 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
+	CRenderer::GetInstance()->SetDebugString("プレイヤー移動速度" + to_string(m_fMoveSpeed));
 	CRenderer::GetInstance()->SetDebugString("プレイヤー向き　　 : " + to_string(GetRot().x * (180 / D3DX_PI)) + " :  " + to_string(GetRot().y * (180 / D3DX_PI)) + " : " + to_string(GetRot().z * (180 / D3DX_PI)));
 	CRenderer::GetInstance()->SetDebugString("目標プレイヤー向き : " + to_string(GetRotTarget().x * (180 / D3DX_PI)) + " :  " + to_string(GetRotTarget().y * (180 / D3DX_PI)) + " : " + to_string(GetRotTarget().z * (180 / D3DX_PI)));
-	CRenderer::GetInstance()->SetDebugString("プレイヤー方角" + to_string(m_fDirection * (180 / D3DX_PI)));
 #endif // _DEBUG
 }
 

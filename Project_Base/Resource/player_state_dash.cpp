@@ -13,6 +13,14 @@
 // 変更先ステート
 #include "player_state_default.h"
 
+// フィールドサイズ取得用
+#include "field_manager.h"
+
+//****************************************************
+// usingディレクティブ
+//****************************************************
+using namespace abbr;
+
 //============================================================================
 // 
 // publicメンバ
@@ -42,6 +50,12 @@ CPlayer_State_Dash::~CPlayer_State_Dash()
 //============================================================================
 void CPlayer_State_Dash::Update()
 {
+	// 目標向きを移動方向に設定
+	SetRotTargetToMoveDirection();
+
+	// 目標座標をダッシュ方向に増加
+	SetPosTarget_Unnamed();
+
 	// 継続期間をカウントアップ
 	m_nDashDuration++;
 
@@ -58,6 +72,38 @@ void CPlayer_State_Dash::Update()
 // privateメンバ
 // 
 //============================================================================
+
+//============================================================================
+// 目標向きを移動方向に設定
+//============================================================================
+void CPlayer_State_Dash::SetRotTargetToMoveDirection()
+{
+	Vec3 NewRotTarget = m_pPlayer->GetRotTarget();							// 目標向きを取得
+	const Vec3& MoveVec = m_pPlayer->GetPosTarget() - m_pPlayer->GetPos();	// 移動方向のベクトルを作成
+	NewRotTarget.y = atan2f(-MoveVec.x, -MoveVec.z);						// 目標向きを移動方向に
+	m_pPlayer->SetRotTarget(NewRotTarget);									// 目標向きを反映
+}
+
+//============================================================================
+// 目標座標をダッシュ方向に増加
+//============================================================================
+void CPlayer_State_Dash::SetPosTarget_Unnamed()
+{
+	//****************************************************
+	// usingディレクティブ
+	//****************************************************
+	using namespace field_manager;
+
+	// 方角を設定
+	float fDirection = m_pPlayer->GetDirection();		// 取得
+	fDirection += -m_pPlayer->GetMoveSpeed() * 3.0f;	// 変動
+	m_pPlayer->SetDirection(fDirection);				// 反映
+
+	Vec3 NewPosTarget = VEC3_INIT;										// 新規目標座標を作成
+	NewPosTarget.x = cosf(fDirection) * CField_Manager::FIELD_RADIUS;	// X方向の座標を設定
+	NewPosTarget.z = sinf(fDirection) * CField_Manager::FIELD_RADIUS;	// Z方向の座標を設定
+	m_pPlayer->SetPosTarget(NewPosTarget);								// 目標座標を反映
+}
 
 //============================================================================
 // 元に戻る

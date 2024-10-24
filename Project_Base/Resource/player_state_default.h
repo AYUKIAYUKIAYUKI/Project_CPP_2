@@ -28,8 +28,8 @@ public:
 private:
 
 	void Control();						// 操作
-	void SetRotTargetToMoveDirection();	// 目標向きを移動方向に合わせる
-	void SetPosTargetByDirection();		// 目標座標を方角に合わせて設定
+	void SetRotTargetToMoveDirection();	// 目標向きを移動方向に設定
+	void SetPosTargetByDirection();		// 方角から目標座標を設定
 	void To_Dash();						// ダッシュをする
 };
 

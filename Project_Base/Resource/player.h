@@ -32,7 +32,7 @@ namespace player
 	public:
 
 		/// <summary> デフォルトのプレイヤー移動速度 </summary>
-		static constexpr float DEFAULT_MOVE_SPEED = 0.01f;
+		static constexpr float DEFAULT_MOVE_SPEED = 0.005f;
 
 		CPlayer();	// デフォルトコンストラクタ
 		~CPlayer();	// デストラクタ
@@ -59,7 +59,7 @@ namespace player
 	private:
 
 		/// <summary> 目標値への補間強度 </summary>
-		static constexpr float COEF_ADJUST = 0.05f;
+		static constexpr float COEF_ADJUST = 0.1f;
 
 		void AdjustToTarget();	// 目標値への補正
 
