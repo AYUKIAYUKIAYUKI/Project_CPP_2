@@ -15,16 +15,16 @@ class CUtility final
 {
 public:
 
-	// 角度の補正(ラジアン)
+	// 角度の差の補正(ラジアン)
 	static void AdjustAngle(float& fAngle, const float& fDest);
 
-	// 角度の補正(ラジアン)
+	// 角度の差の補正(ラジアン)
 	static void AdjustAngle(float& fAngle, const float& fDest, const float& fRadius);
 
-	// 向きの補正(ラジアン)
+	// 向きの範囲の補正(ラジアン)
 	static void AdjustDirection(float& fAngle);
 
-	// 向きの補正(ラジアン)
+	// 向きの範囲の補正(ラジアン)
 	static void AdjustDirection(float& fAngle1, float& fAngle2);
 
 	// 球どうしの衝突判定

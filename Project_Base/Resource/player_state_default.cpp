@@ -19,6 +19,11 @@
 // インプット取得用
 #include "manager.h"
 
+//****************************************************
+// usingディレクティブ
+//****************************************************
+using namespace abbr;
+
 //============================================================================
 // 
 // publicメンバ
@@ -88,16 +93,17 @@ void CPlayer_State_Default::Control()
 	// 方角を反映
 	m_pPlayer->SetDirection(fDirection);
 
-	// 座標を反映
-	Vec3 NewPos = VEC3_INIT;
-	NewPos.x = cosf(fDirection) * CField_Manager::FIELD_RADIUS;
-	NewPos.z = sinf(fDirection) * CField_Manager::FIELD_RADIUS;
-	m_pPlayer->SetPos(NewPos);
+	// 目標座標を反映
+	Vec3 NewPosTarget = VEC3_INIT;
+	NewPosTarget.x = cosf(fDirection) * CField_Manager::FIELD_RADIUS;
+	NewPosTarget.z = sinf(fDirection) * CField_Manager::FIELD_RADIUS;
+	m_pPlayer->SetPosTarget(NewPosTarget);
 
-	// 向きを反映
-	Vec3 NewRot = VEC3_INIT;
-	//NewRot.y = atan2f(NewRot.x - NewPos.x, NewRot.z - NewPos.z);
-	m_pPlayer->SetRot(NewRot);
+	// 目標向きを反映
+	Vec3 NewRotTarget = m_pPlayer->GetRotTarget();
+	const Vec3& NegVec = VEC3_INIT - m_pPlayer->GetPos();	// プレイヤーから原点への逆位置ベクトルを計算
+	NewRotTarget.y = atan2f(NegVec.x, NegVec.z);			// プレイヤーの目標向きを逆位置ベクトル方向に
+	m_pPlayer->SetRotTarget(NewRotTarget);
 
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RSHIFT))
 	{

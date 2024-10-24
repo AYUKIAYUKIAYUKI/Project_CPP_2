@@ -43,7 +43,7 @@ CField_Manager* CField_Manager::m_pInstance = nullptr;
 HRESULT CField_Manager::Init()
 {
 	// ランダム範囲の設定
-	m_fCoeffRaondomRange = 0.1f;
+	m_fCoeffRaondomRange = 0.01f;
 
 	// 円柱の判定を生成
 	m_pCylinderCollider = CObject_X::Create(static_cast<int>(CObject::LAYER::BACK));
@@ -208,6 +208,7 @@ void CField_Manager::TestCreate()
 			float			fRandomRange = 0.0f;					// ランダムな方角範囲
 
 			// 破棄範囲にはみ出さず生成されるように調整
+			/* 初期座標が原点の場合、生成範囲の半径がフィールドの半径を下回ると無限ループ */
 			do
 			{
 				// ランダムに方角をずらす

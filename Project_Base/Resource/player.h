@@ -45,6 +45,9 @@ namespace player
 		const Vec3& GetPosTarget() const;	// 目標座標を取得
 		void SetPosTarget(Vec3 PosTarget);	// 目標座標を設定
 
+		const Vec3& GetRotTarget() const;	// 目標向きを取得
+		void SetRotTarget(Vec3 RotTarget);	// 目標向きを設定
+
 		const float& GetMoveSpeed() const;		// 移動速度を取得
 		void SetMoveSpeed(float fMoveSpeed);	// 移動速度を設定
 
@@ -55,11 +58,17 @@ namespace player
 
 	private:
 
+		/// <summary> 目標値への補間強度 </summary>
+		static constexpr float COEF_ADJUST = 0.05f;
+
+		void AdjustToTarget();	// 目標値への補正
+
 		player_state_manager::CPlayer_State_Manager* m_pPlayerStateManager;	// プレイヤーステートマネージャー
 
+		float	m_fDirection;	// 方角
 		Vec3	m_PosTarget;	// 目標座標
 		float	m_fMoveSpeed;	// 移動速度
-		float	m_fDirection;	// 方角
+		Vec3	m_RotTarget;	// 目標向き
 	};
 }
 

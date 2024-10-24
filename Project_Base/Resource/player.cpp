@@ -37,9 +37,10 @@ using namespace player_state_manager;
 CPlayer::CPlayer() :
 	CObject_X{ static_cast<int>(CObject::LAYER::MIDDLE) },
 	m_pPlayerStateManager{ nullptr },
+	m_fDirection{ 0.0f },
 	m_PosTarget{ VEC3_INIT },
 	m_fMoveSpeed{ DEFAULT_MOVE_SPEED },
-	m_fDirection{ 0.0f }
+	m_RotTarget{ VEC3_INIT }
 {
 
 }
@@ -107,6 +108,9 @@ void CPlayer::Update()
 	// プレイヤーステートマネージャーの更新
 	m_pPlayerStateManager->Update();
 
+	// 目標値への補正
+	AdjustToTarget();
+
 	// 基底クラスの更新処理
 	CObject_X::Update();
 	
@@ -141,6 +145,23 @@ void CPlayer::SetPosTarget(Vec3 PosTarget)
 {
 	m_PosTarget = PosTarget;
 }
+
+//============================================================================
+// 目標向きを取得
+//============================================================================
+const Vec3& CPlayer::GetRotTarget() const
+{
+	return m_RotTarget;
+}
+
+//============================================================================
+// 目標向きを設定
+//============================================================================
+void CPlayer::SetRotTarget(Vec3 RotTarget)
+{
+	m_RotTarget = RotTarget;
+}
+
 
 //============================================================================
 // 移動速度を取得
@@ -192,4 +213,27 @@ CPlayer* CPlayer::Create()
 	pNewInstance->BindModel(CModel_X_Manager::TYPE::SAMUS);
 
 	return pNewInstance;
+}
+
+//============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
+
+//============================================================================
+// 目標値への補正
+//============================================================================
+void CPlayer::AdjustToTarget()
+{
+	// 目標座標へ移動
+	Vec3 NowPos = GetPos();
+	NowPos += (m_PosTarget - NowPos) * COEF_ADJUST;
+	SetPos(NowPos);
+
+	// 目標向きへ補正
+	Vec3 NowRot = GetRot();
+	CUtility::AdjustAngle(NowRot.y, m_RotTarget.y);	// 角度の差を補正
+	NowRot += (m_RotTarget - NowRot) * COEF_ADJUST;
+	SetRot(NowRot);
 }

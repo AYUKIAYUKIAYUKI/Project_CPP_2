@@ -34,7 +34,7 @@ namespace field_manager
 		static constexpr float FIELD_RADIUS = 300.0f;
 
 		/// <summary> ¶¬”ÍˆÍ‚Ì”¼Œa </summary>
-		static constexpr float GENERATE_RANGE_RADIUS = 50.0f;
+		static constexpr float GENERATE_RANGE_RADIUS = 350.0f;
 
 		/// <summary> Å‘åƒuƒƒbƒN” </summary>
 		static constexpr int MAX_BLOCK = 100;

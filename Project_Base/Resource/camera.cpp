@@ -225,11 +225,11 @@ void CCamera::BranchMode()
 			pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
 
 			// カメラをプレイヤーに追従
-			m_PosTarget = pPlayer->GetPos();					// 目標座標を同期
+			m_PosTarget = pPlayer->GetPosTarget();				// 目標座標を同期
 			const Vec3& NegVec = VEC3_INIT - pPlayer->GetPos();	// プレイヤーから原点への逆位置ベクトルを計算
-			m_RotTarget = VEC3_INIT;							// カメラの目標向きをリセット
+			m_RotTarget = VEC3_INIT;							// (カメラの目標向きをリセット)
 			m_RotTarget.y = atan2f(NegVec.x, NegVec.z);			// カメラの目標向きを逆位置ベクトル方向に
-			CUtility::AdjustAngle(m_Rot.y, m_RotTarget.y);		// 角度を補正
+			CUtility::AdjustAngle(m_Rot.y, m_RotTarget.y);		// 角度の差を補正
 			m_fDistance = 200.0f;								// 間距離を固定
 		}
 	}
