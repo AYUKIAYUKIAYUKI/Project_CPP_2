@@ -91,9 +91,13 @@ namespace abbr
 	//****************************************************
 	// 型エイリアスを定義
 	//****************************************************
+	using XCol = D3DXCOLOR;
+	using Mtx = D3DXMATRIX;
 	using Vec2 = D3DXVECTOR2;
 	using Vec3 = D3DXVECTOR3;
-	using Mtx = D3DXMATRIX;
+
+	/// <summary> D3DXCOLOR初期化用 </summary>
+	static const XCol XCOl_INIT = XCol(1.0f, 1.0f, 1.0f, 1.0f);
 
 	/// <summary> D3DXVECTOR2初期化用 </summary>
 	static const Vec2 VEC2_INIT = Vec2(0.0f, 0.0f);

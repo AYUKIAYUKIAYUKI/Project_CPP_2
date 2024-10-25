@@ -43,6 +43,7 @@ HRESULT CResult::Init()
 	// 基底クラスの初期設定
 	HRESULT hr{ CScene::Init() };
 
+#if 0
 	/* 仮 */
 	for (int i{ 0 }; i < 50; i++)
 	{
@@ -52,16 +53,11 @@ HRESULT CResult::Init()
 		pTest->SetRot({ 0.0f, -25.0f + 1.0f * i, 0.0f });
 		pTest->SetSize({ 15.0f, 15.0f, 0.0f });
 	}
+#endif
 
 	/* スプラインの初期設定 */
 	m_pSpline = DBG_NEW CSpline_Test();
 	m_pSpline->Init();
-
-	// 全てのサウンドを停止
-	//CSound::GetInstance()->Stop();
-
-	// BGMをかける
-	//CSound::GetInstance()->Play(CSound::LABEL::TEST);
 
 	return hr;
 }

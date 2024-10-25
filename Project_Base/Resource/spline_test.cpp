@@ -11,6 +11,11 @@
 #include "spline_test.h"
 #include "renderer.h"
 
+//****************************************************
+// usingディレクティブ
+//****************************************************
+using namespace abbr;
+
 //============================================================================
 //
 // publicメンバ
@@ -26,25 +31,8 @@ CSpline_Test::CSpline_Test() :
 	m_nNumPrim{ 0 },
 	m_pIdxBuff{ nullptr },
 	m_nNumIdx{ 0 },
-	m_Pos{ 0.0f, 0.0f, 0.0f }
-{
-	// ワールド行列の初期化
-	D3DXMatrixIdentity(&m_MtxWorld);
-}
-
-//============================================================================
-// デストラクタ
-//============================================================================
-CSpline_Test::~CSpline_Test()
-{
-	// 念のため終了処理
-	Uninit();
-}
-
-//============================================================================
-// 初期設定
-//============================================================================
-HRESULT CSpline_Test::Init()
+	m_Pos{ VEC3_INIT },
+	m_pMoving{ nullptr }
 {
 	// JSONファイルを読み取り展開
 	std::ifstream ifs("Data\\JSON\\spline_test.json");
@@ -65,6 +53,28 @@ HRESULT CSpline_Test::Init()
 		assert(false && "spline_test.jsonの読み取りに失敗しました");
 	}
 
+	// ワールド行列の初期化
+	D3DXMatrixIdentity(&m_MtxWorld);
+
+	// 動物を生成
+	m_pMoving = CObject_X::Create();
+	m_pMoving->BindModel(CModel_X_Manager::TYPE::SAMUS);
+}
+
+//============================================================================
+// デストラクタ
+//============================================================================
+CSpline_Test::~CSpline_Test()
+{
+	// 念のため終了処理
+	Uninit();
+}
+
+//============================================================================
+// 初期設定
+//============================================================================
+HRESULT CSpline_Test::Init()
+{
 	// 頂点バッファの生成
 	if (FAILED(CreateVtxBuff()))
 	{
@@ -105,7 +115,7 @@ void CSpline_Test::Uninit()
 //============================================================================
 void CSpline_Test::Update()
 {
-
+	m_pMoving->GetPos();
 }
 
 //============================================================================
@@ -197,17 +207,17 @@ HRESULT CSpline_Test::CreateVtxBuff()
 #if 1
 		// 頂点座標の設定
 		const float& X = Pos_List[i][0], Y = Pos_List[i][1], Z = Pos_List[i][2];	// 要素を抜き出して
-		pVtx[i].pos = D3DXVECTOR3(X, Y, Z);											// 座標を作成し代入
+		pVtx[i].pos = D3DXVECTOR3(X, Y, Z) * 3.0f;									// 座標を作成し代入
 #endif
 
 		// 法線ベクトルの設定
-		pVtx[i].nor = { 0.0f, 0.0f, 0.0f };
+		pVtx[i].nor = VEC3_INIT;
 
 		// 頂点色の設定
-		pVtx[i].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+		pVtx[i].col = XCOl_INIT;
 
 		// テクスチャ座標の設定
-		pVtx[i].tex = { 0.0f, 0.0f };
+		pVtx[i].tex = VEC2_INIT;
 	}
 
 	// 頂点バッファをアンロックする
@@ -258,7 +268,7 @@ HRESULT CSpline_Test::CreateIdxBuff()
 void CSpline_Test::SetMtxWorld()
 {
 	// 計算用行列
-	D3DXMATRIX mtxRot, mtxTrans;
+	Mtx mtxRot, mtxTrans;
 
 	// ワールド行列を初期化
 	D3DXMatrixIdentity(&m_MtxWorld);
