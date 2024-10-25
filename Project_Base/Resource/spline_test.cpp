@@ -9,6 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "spline_test.h"
+
 #include "renderer.h"
 
 //****************************************************
@@ -32,7 +33,9 @@ CSpline_Test::CSpline_Test() :
 	m_pIdxBuff{ nullptr },
 	m_nNumIdx{ 0 },
 	m_Pos{ VEC3_INIT },
-	m_pMoving{ nullptr }
+	m_pMoving{ nullptr },
+	m_nMoveIdx{ 0 },
+	m_nMoveCnt{ 0 }
 {
 	// JSONファイルを読み取り展開
 	std::ifstream ifs("Data\\JSON\\spline_test.json");
@@ -58,6 +61,9 @@ CSpline_Test::CSpline_Test() :
 
 	// 動物を生成
 	m_pMoving = CObject_X::Create();
+	const auto& Pos_List = m_Json["Pos_List"];
+	const float& X = Pos_List[m_nMoveIdx][0], Y = Pos_List[m_nMoveIdx][1], Z = Pos_List[m_nMoveIdx][2];
+	m_pMoving->SetPos(D3DXVECTOR3(X, Y, Z));
 	m_pMoving->BindModel(CModel_X_Manager::TYPE::SAMUS);
 }
 
@@ -115,7 +121,32 @@ void CSpline_Test::Uninit()
 //============================================================================
 void CSpline_Test::Update()
 {
-	m_pMoving->GetPos();
+	// 座標情報をデシリアライズ
+	const auto& Pos_List = m_Json["Pos_List"];
+
+	// 過去のインデックス、目標のインデックスから地点を抜き出す
+	const auto& OldPos_Param = Pos_List[m_nMoveIdx],
+		Dest_Param = Pos_List[m_nMoveIdx + 1];
+	Vec3 DestPos  = D3DXVECTOR3(Dest_Param[0], Dest_Param[1], Dest_Param[2]),
+		OldPos = D3DXVECTOR3(OldPos_Param[0], OldPos_Param[1], OldPos_Param[2]),
+		NewPos = m_pMoving->GetPos();
+
+	// 目標地点に移動
+	NewPos += (DestPos - OldPos) / MAX_MOVE_COUNT;
+	m_pMoving->SetPos(NewPos);
+
+	// 一定期間経過で目標を更新
+	m_nMoveCnt++;
+	if (m_nMoveCnt > MAX_MOVE_COUNT) {
+		m_nMoveIdx < (m_nNumVtx - 1) - 1 ? m_nMoveIdx++ : m_nMoveIdx = 0;
+		m_nMoveCnt = 0;
+	}
+
+#ifdef _DEBUG
+	CRenderer::GetInstance()->SetDebugString("移動方向 : " + to_string(m_nMoveIdx) + " -> " + to_string(m_nMoveIdx + 1));
+	CRenderer::GetInstance()->SetDebugString("現在地 　: " + to_string(NewPos.x) + to_string(NewPos.y) + to_string(NewPos.z));
+	CRenderer::GetInstance()->SetDebugString("目的地 　: " + to_string(DestPos.x) + to_string(DestPos.y) + to_string(DestPos.z));
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -204,10 +235,13 @@ HRESULT CSpline_Test::CreateVtxBuff()
 
 	for (int i = 0; i < m_nNumVtx; i++)
 	{
-#if 1
+#if 0
 		// 頂点座標の設定
 		const float& X = Pos_List[i][0], Y = Pos_List[i][1], Z = Pos_List[i][2];	// 要素を抜き出して
-		pVtx[i].pos = D3DXVECTOR3(X, Y, Z) * 3.0f;									// 座標を作成し代入
+		pVtx[i].pos = D3DXVECTOR3(X, Y, Z);											// 座標を作成し代入
+#elif 1
+		const auto& Pos = Pos_List[i];				// 要素を抜き出して
+		pVtx[i].pos = Vec3(Pos[0], Pos[1], Pos[2]);	// 座標を作成し代入
 #endif
 
 		// 法線ベクトルの設定

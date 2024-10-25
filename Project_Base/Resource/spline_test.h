@@ -30,6 +30,9 @@ public:
 
 private:
 
+	/// <summary> ムーブカウントの最大数 </summary>
+	static constexpr int MAX_MOVE_COUNT = 60;
+
 	HRESULT CreateVtxBuff();	// 頂点バッファの生成
 	HRESULT CreateIdxBuff();	// インデックスバッファの生成
 	void	SetMtxWorld();		// ワールド行列設定
@@ -43,6 +46,8 @@ private:
 	D3DXVECTOR3				m_Pos;		// 座標
 	D3DXMATRIX				m_MtxWorld;	// ワールド行列
 	CObject_X*				m_pMoving;	// 動物
+	int						m_nMoveIdx;	// ムーブインデックス
+	int						m_nMoveCnt;	// ムーブカウント
 };
 
 #endif	// _SPLINE_TEST_

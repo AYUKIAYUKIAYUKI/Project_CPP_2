@@ -84,6 +84,8 @@ void CResult::Uninit()
 //============================================================================
 void CResult::Update()
 {
+	m_pSpline->Update();
+
 	// 基底クラスの更新処理
 	CScene::Update();
 
