@@ -15,9 +15,8 @@ class CSpline_Test
 {
 public:
 
-	CSpline_Test() :m_pVtxBuff{ nullptr }, m_pIdxBuff{ nullptr }, m_Pos{ 0.0f, 0.0f, 0.0f } {// ワールド行列の初期化
-		D3DXMatrixIdentity(&m_MtxWorld); };	// デフォルトコンストラクタ
-	~CSpline_Test() { Uninit(); };	// デストラクタ
+	CSpline_Test();		// デフォルトコンストラクタ
+	~CSpline_Test();	// デストラクタ
 
 	HRESULT Init();		// 初期設定
 	void	Uninit();	// 終了処理
