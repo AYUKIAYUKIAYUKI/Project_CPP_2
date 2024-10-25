@@ -49,6 +49,7 @@
     <ClCompile Include="Resource\rubble.cpp" />
     <ClCompile Include="Resource\scene.cpp" />
     <ClCompile Include="resource\sound.cpp" />
+    <ClCompile Include="Resource\spline_test.cpp" />
     <ClCompile Include="Resource\state.cpp" />
     <ClCompile Include="resource\texture_manager.cpp" />
     <ClCompile Include="Resource\title.cpp" />
@@ -82,6 +83,7 @@
     <ClInclude Include="Resource\rubble.h" />
     <ClInclude Include="Resource\scene.h" />
     <ClInclude Include="resource\sound.h" />
+    <ClInclude Include="Resource\spline_test.h" />
     <ClInclude Include="Resource\state.h" />
     <ClInclude Include="resource\texture_manager.h" />
     <ClInclude Include="Resource\title.h" />
@@ -165,7 +167,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>$(SolutionDir)Resource;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Resource;$(SolutionDir)Lib\json-3.11.3\json-3.11.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

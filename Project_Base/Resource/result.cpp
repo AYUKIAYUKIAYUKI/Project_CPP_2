@@ -21,7 +21,8 @@
 //============================================================================
 // コンストラクタ
 //============================================================================
-CResult::CResult()
+CResult::CResult() :
+	m_pSpline{nullptr}
 {
 
 }
@@ -52,6 +53,10 @@ HRESULT CResult::Init()
 		pTest->SetSize({ 15.0f, 15.0f, 0.0f });
 	}
 
+	/* スプラインの初期設定 */
+	m_pSpline = DBG_NEW CSpline();
+	m_pSpline->Init();
+
 	// 全てのサウンドを停止
 	//CSound::GetInstance()->Stop();
 
@@ -66,6 +71,14 @@ HRESULT CResult::Init()
 //============================================================================
 void CResult::Uninit()
 {
+	// スプラインの終了処理
+	if (m_pSpline != nullptr)
+	{
+		m_pSpline->Uninit();
+		delete m_pSpline;
+		m_pSpline = nullptr;
+	}
+
 	// 基底クラスの終了処理
 	CScene::Uninit();
 }
@@ -90,6 +103,9 @@ void CResult::Update()
 //============================================================================
 void CResult::Draw()
 {
+	// スプラインの描画処理
+	m_pSpline->Draw();
+
 	// 基底クラスの描画処理
 	CScene::Draw();
 }

@@ -96,7 +96,7 @@ void CPlayer_State_Dash::SetPosTarget_Unnamed()
 
 	// •ûŠp‚ğİ’è
 	float fDirection = m_pPlayer->GetDirection();		// æ“¾
-	fDirection += -m_pPlayer->GetMoveSpeed() * 3.0f;	// •Ï“®
+	fDirection += -m_pPlayer->GetMoveSpeed() * 20.0f;	// •Ï“®
 	m_pPlayer->SetDirection(fDirection);				// ”½‰f
 
 	Vec3 NewPosTarget = VEC3_INIT;										// V‹K–Ú•WÀ•W‚ğì¬

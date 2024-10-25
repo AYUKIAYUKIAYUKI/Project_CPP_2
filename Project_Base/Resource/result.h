@@ -12,6 +12,7 @@
 // インクルードファイル
 //****************************************************
 #include "scene.h"
+#include "spline_test.h"
 
 //****************************************************
 // リザルトクラス
@@ -27,6 +28,10 @@ public:
 	void Uninit() override;		// 終了処理
 	void Update() override;		// 更新処理
 	void Draw() override;		// 描画処理
+
+private:
+
+	CSpline* m_pSpline;	// スプラインテスト
 };
 
 #endif // _RESULT_H_
