@@ -1,6 +1,6 @@
 //============================================================================
 // 
-// プリコンパイル済みヘッダー [pch.h]
+// プリコンパイルヘッダー [pch.h]
 // Author : 福田歩希
 // 
 //============================================================================
@@ -22,6 +22,9 @@
 #include <xinput.h>					// コントローラー動作用
 #include <xaudio2.h>				// サウンド動作用
 
+// JSON
+#include <nlohmann/json.hpp>
+
 // 標準ライブラリ
 #include <fstream>
 #include <iomanip>
@@ -40,11 +43,11 @@
 // ライブラリのリンク
 //****************************************************
 #pragma comment(lib, "winmm.lib")
-#pragma	comment(lib,"d3d9.lib")		// 描画処理用
-#pragma	comment(lib,"d3dx9.lib")	// [d3d9.lib]の拡張ライブラリ
-#pragma	comment(lib,"dxguid.lib")	// DirectXのコーポネント使用のため
-#pragma	comment(lib,"dinput8.lib")	// DirectInput動作用
-#pragma comment(lib,"xinput.lib")	// コントローラ動作用
+#pragma	comment(lib, "d3d9.lib")	// 描画処理用
+#pragma	comment(lib, "d3dx9.lib")	// [d3d9.lib]の拡張ライブラリ
+#pragma	comment(lib, "dxguid.lib")	// DirectXのコーポネント使用のため
+#pragma	comment(lib, "dinput8.lib")	// DirectInput動作用
+#pragma comment(lib, "xinput.lib")	// コントローラ動作用
 
 //****************************************************
 // マクロ定義
@@ -98,6 +101,11 @@ namespace abbr
 	/// <summary> D3DXVECTOR3初期化用 </summary>
 	static const Vec3 VEC3_INIT = Vec3(0.0f, 0.0f, 0.0f);
 }
+
+//****************************************************
+// usingディレクティブ
+//****************************************************
+using JSON = nlohmann::json;
 
 //****************************************************
 // 2Dポリゴン頂点フォーマットの定義

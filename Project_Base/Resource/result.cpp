@@ -54,7 +54,7 @@ HRESULT CResult::Init()
 	}
 
 	/* スプラインの初期設定 */
-	m_pSpline = DBG_NEW CSpline();
+	m_pSpline = DBG_NEW CSpline_Test();
 	m_pSpline->Init();
 
 	// 全てのサウンドを停止

@@ -31,7 +31,7 @@ public:
 
 private:
 
-	CSpline* m_pSpline;	// スプラインテスト
+	CSpline_Test* m_pSpline;	// スプラインテスト
 };
 
 #endif // _RESULT_H_
