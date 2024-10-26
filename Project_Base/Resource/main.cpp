@@ -261,7 +261,7 @@ void ChangeWindowSize(HWND hWnd)
 	static bool bSetFullScreen = false;
 
 	// ウィンドウサイズ保持用
-	static RECT windowRectHold = { 0, 0, 0, 0 };
+	static RECT windowRectHold = { 0, 0, 1280, 720 };
 
 	// 現在のウィンドウスタイルを取得
 	DWORD dwStyle = GetWindowLong(hWnd, GWL_STYLE);
@@ -273,7 +273,7 @@ void ChangeWindowSize(HWND hWnd)
 	{ // フルスクリーンモードに切り替え
 
 		// 現在のウィンドウサイズを保持する
-		GetWindowRect(hWnd, &windowRectHold);
+		//GetWindowRect(hWnd, &windowRectHold);
 
 		// ウィンドウの表示スタイルを変更する
 		SetWindowLong(hWnd, GWL_STYLE, dwStyle & ~WS_OVERLAPPEDWINDOW);
