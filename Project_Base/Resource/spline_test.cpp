@@ -10,6 +10,7 @@
 //****************************************************
 #include "spline_test.h"
 
+// デバイス取得用
 #include "renderer.h"
 
 //****************************************************
@@ -33,7 +34,7 @@ CSpline_Test::CSpline_Test() :
 	m_pIdxBuff{ nullptr },
 	m_nNumIdx{ 0 },
 	m_Pos{ VEC3_INIT },
-	m_Bezier{ nullptr, nullptr, {VEC3_INIT, VEC3_INIT}, VEC3_INIT, 0.0f }
+	m_QuadraticBezier{ nullptr, nullptr, {VEC3_INIT, VEC3_INIT}, VEC3_INIT, 0.0f }
 {
 	// JSONファイルを読み取り展開
 	std::ifstream ifs("Data\\JSON\\spline_test.json");
@@ -59,40 +60,40 @@ CSpline_Test::CSpline_Test() :
 
 #if 0
 	// 動物を生成
-	m_Bezier.pObject = CObject_X::Create();
+	m_QuadraticBezier.pObject = CObject_X::Create();
 	const auto& Pos_List = m_Json["Pos_List"];
 	const float& X = Pos_List[m_nMoveIdx][0], Y = Pos_List[m_nMoveIdx][1], Z = Pos_List[m_nMoveIdx][2];
 	m_pMoving->SetPos(D3DXVECTOR3(X, Y, Z));
 	m_pMoving->BindModel(CModel_X_Manager::TYPE::SAMUS);
 #else
 	// ベジェ曲線用の物体を生成
-	m_Bezier.pObject = CObject_X::Create();
-	m_Bezier.pObject->SetPos(VEC3_INIT);
-	m_Bezier.pObject->BindModel(CModel_X_Manager::TYPE::SAMUS);
+	m_QuadraticBezier.pObject = CObject_X::Create();
+	m_QuadraticBezier.pObject->SetPos(VEC3_INIT);
+	m_QuadraticBezier.pObject->BindModel(CModel_X_Manager::TYPE::SAMUS);
 
 	// 座標情報をデシリアライズ
 	const auto& Pos_List = m_Json["Pos_List"];
 	
 	{
 		const auto& Pos = Pos_List[0];
-		m_Bezier.PinPos[0] = Vec3(Pos[0], Pos[1], Pos[2]);
+		m_QuadraticBezier.PinPos[0] = Vec3(Pos[0], Pos[1], Pos[2]);
 	}
 
 	{
 		const auto& Pos = Pos_List[1];
-		m_Bezier.MagPos = Vec3(Pos[0], Pos[1], Pos[2]);
+		m_QuadraticBezier.MagPos = Vec3(Pos[0], Pos[1], Pos[2]);
 	}
 
 	{
 		const auto& Pos = Pos_List[2];
-		m_Bezier.PinPos[1] = Vec3(Pos[0], Pos[1], Pos[2]);
+		m_QuadraticBezier.PinPos[1] = Vec3(Pos[0], Pos[1], Pos[2]);
 	}
 
 	for (int i = 0; i < 3; i++)
 	{
-		m_Bezier.pCoefObj[i] = CObject_X::Create();
-		m_Bezier.pCoefObj[i]->SetPos(VEC3_INIT);
-		m_Bezier.pCoefObj[i]->BindModel(CModel_X_Manager::TYPE::SPHERE);
+		m_QuadraticBezier.pCoefObj[i] = CObject_X::Create();
+		m_QuadraticBezier.pCoefObj[i]->SetPos(VEC3_INIT);
+		m_QuadraticBezier.pCoefObj[i]->BindModel(CModel_X_Manager::TYPE::SPHERE);
 	}
 #endif
 }
@@ -139,10 +140,10 @@ void CSpline_Test::Uninit()
 	}
 
 	// 頂点バッファの破棄
-	if (m_Bezier.pVtxBuff != nullptr)
+	if (m_QuadraticBezier.pVtxBuff != nullptr)
 	{
-		m_Bezier.pVtxBuff->Release();
-		m_Bezier.pVtxBuff = nullptr;
+		m_QuadraticBezier.pVtxBuff->Release();
+		m_QuadraticBezier.pVtxBuff = nullptr;
 	}
 
 	// インデックスバッファの破棄
@@ -191,10 +192,10 @@ void CSpline_Test::Update()
 	// ベジェ曲線を計算
 	CalcBezier();
 
-	CRenderer::GetInstance()->SetDebugString("ピン座標1：" + to_string(m_Bezier.PinPos[0].x) + " : " + to_string(m_Bezier.PinPos[0].y) + " : " + to_string(m_Bezier.PinPos[0].z));
-	CRenderer::GetInstance()->SetDebugString("磁石座標 ：" + to_string(m_Bezier.MagPos.x) + " : " + to_string(m_Bezier.MagPos.y) + " : " + to_string(m_Bezier.MagPos.z));
-	CRenderer::GetInstance()->SetDebugString("ピン座標2：" + to_string(m_Bezier.PinPos[1].x) + " : " + to_string(m_Bezier.PinPos[1].y) + " : " + to_string(m_Bezier.PinPos[1].z));
-	CRenderer::GetInstance()->SetDebugString("移動割合 ：" + to_string(m_Bezier.fCoef));
+	CRenderer::GetInstance()->SetDebugString("ピン座標1：" + to_string(m_QuadraticBezier.PinPos[0].x) + " : " + to_string(m_QuadraticBezier.PinPos[0].y) + " : " + to_string(m_QuadraticBezier.PinPos[0].z));
+	CRenderer::GetInstance()->SetDebugString("磁石座標 ：" + to_string(m_QuadraticBezier.MagPos.x) + " : " + to_string(m_QuadraticBezier.MagPos.y) + " : " + to_string(m_QuadraticBezier.MagPos.z));
+	CRenderer::GetInstance()->SetDebugString("ピン座標2：" + to_string(m_QuadraticBezier.PinPos[1].x) + " : " + to_string(m_QuadraticBezier.PinPos[1].y) + " : " + to_string(m_QuadraticBezier.PinPos[1].z));
+	CRenderer::GetInstance()->SetDebugString("移動割合 ：" + to_string(m_QuadraticBezier.fCoef));
 
 #endif
 }
@@ -246,7 +247,7 @@ void CSpline_Test::Draw()
 	// Bezier
 	{
 		// 頂点バッファをデータストリームに設定
-		pDev->SetStreamSource(0, m_Bezier.pVtxBuff, 0, sizeof(VERTEX_3D));
+		pDev->SetStreamSource(0, m_QuadraticBezier.pVtxBuff, 0, sizeof(VERTEX_3D));
 
 		// 線の描画
 		pDev->DrawPrimitive(D3DPT_LINESTRIP,	// プリミティブの種類
@@ -325,16 +326,16 @@ HRESULT CSpline_Test::CreateVtxBuff()
 			D3DUSAGE_WRITEONLY,
 			FVF_VERTEX_3D,
 			D3DPOOL_MANAGED,
-			&m_Bezier.pVtxBuff,
+			&m_QuadraticBezier.pVtxBuff,
 			nullptr);
 
-		if (m_Bezier.pVtxBuff == nullptr)
+		if (m_QuadraticBezier.pVtxBuff == nullptr)
 		{ // 生成失敗
 			return E_FAIL;
 		}
 
 		// 頂点バッファをロック
-		m_Bezier.pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
+		m_QuadraticBezier.pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 
 		for (int i = 0; i < 2; i++)
 		{
@@ -352,7 +353,7 @@ HRESULT CSpline_Test::CreateVtxBuff()
 		}
 
 		// 頂点バッファをアンロックする
-		m_Bezier.pVtxBuff->Unlock();
+		m_QuadraticBezier.pVtxBuff->Unlock();
 	}
 
 	return S_OK;
@@ -400,33 +401,33 @@ HRESULT CSpline_Test::CreateIdxBuff()
 void CSpline_Test::CalcBezier()
 {
 	// ピン -> 磁石間の距離を移動した割合
-	m_Bezier.fCoef += 0.01f;
+	m_QuadraticBezier.fCoef += 0.01f;
 
-	Vec3 MovePos1 = m_Bezier.PinPos[0] + (m_Bezier.MagPos - m_Bezier.PinPos[0]) * m_Bezier.fCoef;
-	m_Bezier.pCoefObj[0]->SetPos(MovePos1);
+	Vec3 MovePos1 = m_QuadraticBezier.PinPos[0] + (m_QuadraticBezier.MagPos - m_QuadraticBezier.PinPos[0]) * m_QuadraticBezier.fCoef;
+	m_QuadraticBezier.pCoefObj[0]->SetPos(MovePos1);
 
-	Vec3 MovePos2 = m_Bezier.MagPos + (m_Bezier.PinPos[1] - m_Bezier.MagPos) * m_Bezier.fCoef;
-	m_Bezier.pCoefObj[1]->SetPos(MovePos2);
+	Vec3 MovePos2 = m_QuadraticBezier.MagPos + (m_QuadraticBezier.PinPos[1] - m_QuadraticBezier.MagPos) * m_QuadraticBezier.fCoef;
+	m_QuadraticBezier.pCoefObj[1]->SetPos(MovePos2);
 
-	Vec3 MovePos3 = MovePos1 + (MovePos2 - MovePos1) * m_Bezier.fCoef;
-	m_Bezier.pCoefObj[2]->SetPos(MovePos3);
+	Vec3 MovePos3 = MovePos1 + (MovePos2 - MovePos1) * m_QuadraticBezier.fCoef;
+	m_QuadraticBezier.pCoefObj[2]->SetPos(MovePos3);
 
 	// 頂点情報へのポインタ
 	VERTEX_3D* pVtx = nullptr;
 
 	// 頂点バッファをロック
-	m_Bezier.pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
+	m_QuadraticBezier.pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 
 	// 頂点座標を設定
 	pVtx[0].pos = MovePos1;
 	pVtx[1].pos = MovePos2;
 
 	// 頂点バッファをアンロックする
-	m_Bezier.pVtxBuff->Unlock();
+	m_QuadraticBezier.pVtxBuff->Unlock();
 
-	if (m_Bezier.fCoef > 1.0f)
+	if (m_QuadraticBezier.fCoef > 1.0f)
 	{
-		m_Bezier.fCoef = 0.0f;
+		m_QuadraticBezier.fCoef = 0.0f;
 	}
 }
 
