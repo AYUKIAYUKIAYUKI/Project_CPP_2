@@ -35,7 +35,7 @@ CQuadratic_Bezier::CQuadratic_Bezier(const D3DXVECTOR3& Pos1, const D3DXVECTOR3&
 	m_ControlPoint[2] = Pos3;
 
 	// 見た目の初期化
-	for (int i = 0; i < NUM_VISUAL; ++i)
+	for (WORD i = 0; i < NUM_VISUAL; ++i)
 	{
 		m_pParameterVisual[i] = nullptr;
 	}
@@ -54,47 +54,14 @@ CQuadratic_Bezier::~CQuadratic_Bezier()
 //============================================================================
 HRESULT CQuadratic_Bezier::Init()
 {
-	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
-
 	// 頂点バッファの生成
-	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * 2,
-		D3DUSAGE_WRITEONLY,
-		FVF_VERTEX_3D,
-		D3DPOOL_MANAGED,
-		&m_pVtxBuff,
-		nullptr);
-
-	if (m_pVtxBuff == nullptr)
-	{ // 生成失敗
+	if (FAILED(CreateVtxBuff()))
+	{
 		return E_FAIL;
 	}
 
-	// 頂点情報へのポインタ
-	VERTEX_3D* pVtx = nullptr;
-
-	// 頂点バッファをロック
-	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
-
-	for (int i = 0; i < 2; i++)
-	{
-		// 頂点座標を設定
-		pVtx[i].pos = VEC3_INIT;
-
-		// 法線ベクトルの設定
-		pVtx[i].nor = VEC3_INIT;
-
-		// 頂点色の設定
-		pVtx[i].col = XCOl_INIT;
-
-		// テクスチャ座標の設定
-		pVtx[i].tex = VEC2_INIT;
-	}
-
-	// 頂点バッファをアンロックする
-	m_pVtxBuff->Unlock();
-
-	for (int i = 0; i < NUM_VISUAL; ++i)
+	// 進行度の見た目を生成
+	for (WORD i = 0; i < NUM_VISUAL; ++i)
 	{
 		m_pParameterVisual[i] = CObject_X::Create();
 		m_pParameterVisual[i]->BindModel(CModel_X_Manager::TYPE::SPHERE);
@@ -174,4 +141,58 @@ void CQuadratic_Bezier::Draw()
 
 	// ライトをオン
 	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
+}
+
+//============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
+
+//============================================================================
+// 頂点バッファを生成
+//============================================================================
+HRESULT CQuadratic_Bezier::CreateVtxBuff()
+{
+	// デバイスを取得
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+
+	// 頂点バッファの生成
+	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * 2,
+		D3DUSAGE_WRITEONLY,
+		FVF_VERTEX_3D,
+		D3DPOOL_MANAGED,
+		&m_pVtxBuff,
+		nullptr);
+
+	if (m_pVtxBuff == nullptr)
+	{ // 生成失敗
+		return E_FAIL;
+	}
+
+	// 頂点情報へのポインタ
+	VERTEX_3D* pVtx = nullptr;
+
+	// 頂点バッファをロック
+	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
+
+	for (WORD i = 0; i < 2; ++i)
+	{
+		// 頂点座標を設定
+		pVtx[i].pos = VEC3_INIT;
+
+		// 法線ベクトルの設定
+		pVtx[i].nor = VEC3_INIT;
+
+		// 頂点色の設定
+		pVtx[i].col = XCOl_INIT;
+
+		// テクスチャ座標の設定
+		pVtx[i].tex = VEC2_INIT;
+	}
+
+	// 頂点バッファをアンロックする
+	m_pVtxBuff->Unlock();
+
+	return S_OK;
 }

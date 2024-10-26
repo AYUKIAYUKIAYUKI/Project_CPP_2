@@ -31,15 +31,12 @@ public:
 private:
 
 	HRESULT CreateVtxBuff();	// 頂点バッファの生成
-	HRESULT CreateIdxBuff();	// インデックスバッファの生成
 	void	SetMtxWorld();		// ワールド行列設定
 
 	JSON					m_Json;					// ジェイソンオブジェクト
 	LPDIRECT3DVERTEXBUFFER9	m_pVtxBuff;				// 頂点バッファのポインタ
 	int						m_nNumVtx;				// 頂点数
 	int						m_nNumPrim;				// プリミティブ数
-	LPDIRECT3DINDEXBUFFER9	m_pIdxBuff;				// インデックスバッファのポインタ
-	int						m_nNumIdx;				// インデックス数
 	D3DXVECTOR3				m_Pos;					// 座標
 	D3DXMATRIX				m_MtxWorld;				// ワールド行列
 	CQuadratic_Bezier*		m_pQuadratic_Bezier;	// 二次ベジェ曲線

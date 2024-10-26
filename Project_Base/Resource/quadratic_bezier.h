@@ -20,6 +20,9 @@ class CQuadratic_Bezier
 {
 public:
 
+	/// <summary> 制御点の数 </summary>
+	static constexpr WORD NUM_CONTROLPOINT = 3;
+
 	CQuadratic_Bezier(const D3DXVECTOR3& Pos1, const D3DXVECTOR3& Pos2, const D3DXVECTOR3& Pos3);	// 座標渡しコンストラクタ
 	~CQuadratic_Bezier();																			// デストラクタ
 
@@ -30,11 +33,10 @@ public:
 
 private:
 
-	/// <summary> 制御点の数 </summary>
-	static constexpr WORD NUM_CONTROLPOINT = 3;
-
 	/// <summary> 見た目の数 </summary>
 	static constexpr WORD NUM_VISUAL = 3;
+
+	HRESULT CreateVtxBuff();	// 頂点バッファを生成
 
 	LPDIRECT3DVERTEXBUFFER9	m_pVtxBuff;							// 頂点バッファのポインタ
 	D3DXVECTOR3				m_ControlPoint[NUM_CONTROLPOINT];	// 制御点

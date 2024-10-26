@@ -29,8 +29,6 @@ CSpline_Test::CSpline_Test() :
 	m_pVtxBuff{ nullptr },
 	m_nNumVtx{ 0 },
 	m_nNumPrim{ 0 },
-	m_pIdxBuff{ nullptr },
-	m_nNumIdx{ 0 },
 	m_Pos{ VEC3_INIT },
 	m_pQuadratic_Bezier{ nullptr }
 {
@@ -45,7 +43,6 @@ CSpline_Test::CSpline_Test() :
 
 		// 各種パラメータをデシリアライズ
 		m_nNumVtx = m_Json["Vtx"];
-		m_nNumIdx = m_Json["Idx"];
 		m_nNumPrim = m_Json["Prim"];
 	}
 	else
@@ -77,20 +74,15 @@ HRESULT CSpline_Test::Init()
 		return E_FAIL;
 	}
 
-	// インデックスバッファの生成
-	if (FAILED(CreateIdxBuff()))
-	{
-		return E_FAIL;
-	}
-
+	/* 原点にモデルを生成 */
 	auto pTest = CObject_X::Create();
 	pTest->BindModel(CModel_X_Manager::TYPE::SAMUS);
 
 	// 座標情報をデシリアライズ
 	const auto& Pos_List = m_Json["Pos_List"];
-	Vec3 Pos[3];
+	Vec3 Pos[CQuadratic_Bezier::NUM_CONTROLPOINT];
 
-	for (int i = 0; i < 3; ++i)
+	for (WORD i = 0; i < CQuadratic_Bezier::NUM_CONTROLPOINT; ++i)
 	{
 		// 座標の設定
 		const auto& Pos_Param = Pos_List[i];						// 要素を抜き出して
@@ -116,13 +108,6 @@ void CSpline_Test::Uninit()
 		m_pVtxBuff = nullptr;
 	}
 
-	// インデックスバッファの破棄
-	if (m_pIdxBuff != nullptr)
-	{
-		m_pIdxBuff->Release();
-		m_pIdxBuff = nullptr;
-	}
-
 	// 二次ベジェ曲線の破棄
 	if (m_pQuadratic_Bezier != nullptr)
 	{
@@ -139,6 +124,9 @@ void CSpline_Test::Update()
 {
 	// 二次ベジェ曲線の更新
 	m_pQuadratic_Bezier->Update();
+
+	// ワールド行列設定
+	SetMtxWorld();
 }
 
 //============================================================================
@@ -155,9 +143,6 @@ void CSpline_Test::Draw()
 	// 頂点バッファをデータストリームに設定
 	pDev->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_3D));
 
-	// インデックスバッファをデータストリームに設定
-	pDev->SetIndices(m_pIdxBuff);
-
 	// 頂点フォーマットの設定
 	pDev->SetFVF(FVF_VERTEX_3D);
 
@@ -167,23 +152,10 @@ void CSpline_Test::Draw()
 	// テクスチャの設定
 	pDev->SetTexture(0, nullptr);
 
-#if 0
-
-	// インデックスから線の描画
-	pDev->DrawIndexedPrimitive(D3DPT_LINESTRIP,	// プリミティブの種類
-		0,
-		0,
-		m_nNumVtx,								// 頂点数
-		0,
-		m_nNumPrim);							// プリミティブ数
-#else
-
 	// 線の描画
 	pDev->DrawPrimitive(D3DPT_LINESTRIP,	// プリミティブの種類
 		0,									// 頂点情報の先頭アドレス
 		m_nNumPrim);						// プリミティブ数
-
-#endif
 
 	// ライトをオン
 	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
@@ -228,7 +200,7 @@ HRESULT CSpline_Test::CreateVtxBuff()
 	// 座標情報をデシリアライズ
 	const auto& Pos_List = m_Json["Pos_List"];
 
-	for (int i = 0; i < m_nNumVtx; i++)
+	for (WORD i = 0; i < m_nNumVtx; ++i)
 	{
 		// 頂点座標の設定
 		const auto& Pos = Pos_List[i];				// 要素を抜き出して
@@ -246,42 +218,6 @@ HRESULT CSpline_Test::CreateVtxBuff()
 
 	// 頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
-
-	return S_OK;
-}
-
-//============================================================================
-// インデックスバッファを生成
-//============================================================================
-HRESULT CSpline_Test::CreateIdxBuff()
-{
-	// インデックスバッファの生成
-	CRenderer::GetInstance()->GetDeviece()->CreateIndexBuffer(sizeof(WORD) * m_nNumIdx,
-		D3DUSAGE_WRITEONLY,
-		D3DFMT_INDEX16,
-		D3DPOOL_MANAGED,
-		&m_pIdxBuff,
-		nullptr);
-
-	if (m_pIdxBuff == nullptr)
-	{ // 生成失敗
-		return E_FAIL;
-	}
-
-	// インデックス情報へのポインタ
-	WORD* pIdx = nullptr;
-
-	// インデックスバッファをロック
-	m_pIdxBuff->Lock(0, 0, reinterpret_cast<void**>(&pIdx), 0);
-
-	// インデックスを設定
-	for (int i = 0; i < m_nNumIdx; i++)
-	{
-		pIdx[i] = static_cast<WORD>(i);
-	}
-
-	// インデックスバッファをアンロック
-	m_pIdxBuff->Unlock();
 
 	return S_OK;
 }
