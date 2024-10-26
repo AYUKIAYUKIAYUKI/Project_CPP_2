@@ -27,6 +27,7 @@ public:
 		RUBBLE_01,			// ‚ª‚ê‚«01
 		RUBBLE_02,			// ‚ª‚ê‚«02
 		CYLINDERCOLLIDER,	// cylinder collider
+		SPHERE,				// sphere
 		MAX,
 	};
 

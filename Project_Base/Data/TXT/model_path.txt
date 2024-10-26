@@ -5,3 +5,4 @@ rubble00.x
 rubble01.x
 rubble02.x
 cylindercollider.x
+sphere.x

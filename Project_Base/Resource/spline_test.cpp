@@ -1,6 +1,6 @@
 //============================================================================
 //
-// スプライン曲線のテスト [spline_test.cpp]
+// スプライン曲線テスト [spline_test.cpp]
 // Author : 福田歩希
 //
 //============================================================================
@@ -33,9 +33,7 @@ CSpline_Test::CSpline_Test() :
 	m_pIdxBuff{ nullptr },
 	m_nNumIdx{ 0 },
 	m_Pos{ VEC3_INIT },
-	m_pMoving{ nullptr },
-	m_nMoveIdx{ 0 },
-	m_nMoveCnt{ 0 }
+	m_Bezier{ nullptr, nullptr, {VEC3_INIT, VEC3_INIT}, VEC3_INIT, 0.0f }
 {
 	// JSONファイルを読み取り展開
 	std::ifstream ifs("Data\\JSON\\spline_test.json");
@@ -59,12 +57,44 @@ CSpline_Test::CSpline_Test() :
 	// ワールド行列の初期化
 	D3DXMatrixIdentity(&m_MtxWorld);
 
+#if 0
 	// 動物を生成
-	m_pMoving = CObject_X::Create();
+	m_Bezier.pObject = CObject_X::Create();
 	const auto& Pos_List = m_Json["Pos_List"];
 	const float& X = Pos_List[m_nMoveIdx][0], Y = Pos_List[m_nMoveIdx][1], Z = Pos_List[m_nMoveIdx][2];
 	m_pMoving->SetPos(D3DXVECTOR3(X, Y, Z));
 	m_pMoving->BindModel(CModel_X_Manager::TYPE::SAMUS);
+#else
+	// ベジェ曲線用の物体を生成
+	m_Bezier.pObject = CObject_X::Create();
+	m_Bezier.pObject->SetPos(VEC3_INIT);
+	m_Bezier.pObject->BindModel(CModel_X_Manager::TYPE::SAMUS);
+
+	// 座標情報をデシリアライズ
+	const auto& Pos_List = m_Json["Pos_List"];
+	
+	{
+		const auto& Pos = Pos_List[0];
+		m_Bezier.PinPos[0] = Vec3(Pos[0], Pos[1], Pos[2]);
+	}
+
+	{
+		const auto& Pos = Pos_List[1];
+		m_Bezier.MagPos = Vec3(Pos[0], Pos[1], Pos[2]);
+	}
+
+	{
+		const auto& Pos = Pos_List[2];
+		m_Bezier.PinPos[1] = Vec3(Pos[0], Pos[1], Pos[2]);
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		m_Bezier.pCoefObj[i] = CObject_X::Create();
+		m_Bezier.pCoefObj[i]->SetPos(VEC3_INIT);
+		m_Bezier.pCoefObj[i]->BindModel(CModel_X_Manager::TYPE::SPHERE);
+	}
+#endif
 }
 
 //============================================================================
@@ -108,6 +138,13 @@ void CSpline_Test::Uninit()
 		m_pVtxBuff = nullptr;
 	}
 
+	// 頂点バッファの破棄
+	if (m_Bezier.pVtxBuff != nullptr)
+	{
+		m_Bezier.pVtxBuff->Release();
+		m_Bezier.pVtxBuff = nullptr;
+	}
+
 	// インデックスバッファの破棄
 	if (m_pIdxBuff != nullptr)
 	{
@@ -121,6 +158,8 @@ void CSpline_Test::Uninit()
 //============================================================================
 void CSpline_Test::Update()
 {
+
+#if 0
 	// 座標情報をデシリアライズ
 	const auto& Pos_List = m_Json["Pos_List"];
 
@@ -147,6 +186,17 @@ void CSpline_Test::Update()
 	CRenderer::GetInstance()->SetDebugString("現在地 　: " + to_string(NewPos.x) + to_string(NewPos.y) + to_string(NewPos.z));
 	CRenderer::GetInstance()->SetDebugString("目的地 　: " + to_string(DestPos.x) + to_string(DestPos.y) + to_string(DestPos.z));
 #endif // _DEBUG
+#else 
+
+	// ベジェ曲線を計算
+	CalcBezier();
+
+	CRenderer::GetInstance()->SetDebugString("ピン座標1：" + to_string(m_Bezier.PinPos[0].x) + " : " + to_string(m_Bezier.PinPos[0].y) + " : " + to_string(m_Bezier.PinPos[0].z));
+	CRenderer::GetInstance()->SetDebugString("磁石座標 ：" + to_string(m_Bezier.MagPos.x) + " : " + to_string(m_Bezier.MagPos.y) + " : " + to_string(m_Bezier.MagPos.z));
+	CRenderer::GetInstance()->SetDebugString("ピン座標2：" + to_string(m_Bezier.PinPos[1].x) + " : " + to_string(m_Bezier.PinPos[1].y) + " : " + to_string(m_Bezier.PinPos[1].z));
+	CRenderer::GetInstance()->SetDebugString("移動割合 ：" + to_string(m_Bezier.fCoef));
+
+#endif
 }
 
 //============================================================================
@@ -192,6 +242,17 @@ void CSpline_Test::Draw()
 		m_nNumPrim);						// プリミティブ数
 
 #endif
+
+	// Bezier
+	{
+		// 頂点バッファをデータストリームに設定
+		pDev->SetStreamSource(0, m_Bezier.pVtxBuff, 0, sizeof(VERTEX_3D));
+
+		// 線の描画
+		pDev->DrawPrimitive(D3DPT_LINESTRIP,	// プリミティブの種類
+			0,									// 頂点情報の先頭アドレス
+			1);									// プリミティブ数
+	}
 
 	// ライトをオン
 	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
@@ -257,6 +318,43 @@ HRESULT CSpline_Test::CreateVtxBuff()
 	// 頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
 
+	// Bezier
+	{
+		// 頂点バッファの生成
+		pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * 2,
+			D3DUSAGE_WRITEONLY,
+			FVF_VERTEX_3D,
+			D3DPOOL_MANAGED,
+			&m_Bezier.pVtxBuff,
+			nullptr);
+
+		if (m_Bezier.pVtxBuff == nullptr)
+		{ // 生成失敗
+			return E_FAIL;
+		}
+
+		// 頂点バッファをロック
+		m_Bezier.pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
+
+		for (int i = 0; i < 2; i++)
+		{
+			// 頂点座標を設定
+			pVtx[i].pos = VEC3_INIT;
+
+			// 法線ベクトルの設定
+			pVtx[i].nor = VEC3_INIT;
+
+			// 頂点色の設定
+			pVtx[i].col = XCOl_INIT;
+
+			// テクスチャ座標の設定
+			pVtx[i].tex = VEC2_INIT;
+		}
+
+		// 頂点バッファをアンロックする
+		m_Bezier.pVtxBuff->Unlock();
+	}
+
 	return S_OK;
 }
 
@@ -294,6 +392,42 @@ HRESULT CSpline_Test::CreateIdxBuff()
 	m_pIdxBuff->Unlock();
 
 	return S_OK;
+}
+
+//============================================================================
+// ベジェ曲線を計算
+//============================================================================
+void CSpline_Test::CalcBezier()
+{
+	// ピン -> 磁石間の距離を移動した割合
+	m_Bezier.fCoef += 0.01f;
+
+	Vec3 MovePos1 = m_Bezier.PinPos[0] + (m_Bezier.MagPos - m_Bezier.PinPos[0]) * m_Bezier.fCoef;
+	m_Bezier.pCoefObj[0]->SetPos(MovePos1);
+
+	Vec3 MovePos2 = m_Bezier.MagPos + (m_Bezier.PinPos[1] - m_Bezier.MagPos) * m_Bezier.fCoef;
+	m_Bezier.pCoefObj[1]->SetPos(MovePos2);
+
+	Vec3 MovePos3 = MovePos1 + (MovePos2 - MovePos1) * m_Bezier.fCoef;
+	m_Bezier.pCoefObj[2]->SetPos(MovePos3);
+
+	// 頂点情報へのポインタ
+	VERTEX_3D* pVtx = nullptr;
+
+	// 頂点バッファをロック
+	m_Bezier.pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
+
+	// 頂点座標を設定
+	pVtx[0].pos = MovePos1;
+	pVtx[1].pos = MovePos2;
+
+	// 頂点バッファをアンロックする
+	m_Bezier.pVtxBuff->Unlock();
+
+	if (m_Bezier.fCoef > 1.0f)
+	{
+		m_Bezier.fCoef = 0.0f;
+	}
 }
 
 //============================================================================
