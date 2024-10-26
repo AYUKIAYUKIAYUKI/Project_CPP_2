@@ -29,9 +29,6 @@ CQuadratic_Bezier::CQuadratic_Bezier(const D3DXVECTOR3& Pos1, const D3DXVECTOR3&
 	m_pVtxBuff{ nullptr },
 	m_fParameter{ 0.0f }
 {
-	// ワールド行列の初期化
-	D3DXMatrixIdentity(&m_MtxWorld);
-
 	// 制御点の初期化
 	m_ControlPoint[0] = Pos1;
 	m_ControlPoint[1] = Pos2;
@@ -167,9 +164,6 @@ void CQuadratic_Bezier::Draw()
 	// 頂点フォーマットの設定
 	pDev->SetFVF(FVF_VERTEX_3D);
 
-	// ワールドマトリックスの設定
-	pDev->SetTransform(D3DTS_WORLD, &m_MtxWorld);
-
 	// テクスチャの設定
 	pDev->SetTexture(0, nullptr);
 
@@ -180,33 +174,4 @@ void CQuadratic_Bezier::Draw()
 
 	// ライトをオン
 	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
-}
-
-//============================================================================
-// 
-// privateメンバ
-// 
-//============================================================================
-
-//============================================================================
-// ワールド行列設定
-//============================================================================
-void CQuadratic_Bezier::SetMtxWorld()
-{
-	// 計算用行列
-	Mtx mtxRot, mtxTrans;
-
-	// ワールド行列を初期化
-	D3DXMatrixIdentity(&m_MtxWorld);
-
-	// 平行移動行列作成
-	D3DXMatrixTranslation(&mtxTrans,
-		VEC3_INIT.x,
-		VEC3_INIT.y,
-		VEC3_INIT.z);
-
-	// 平行移動行列との掛け算
-	D3DXMatrixMultiply(&m_MtxWorld,
-		&m_MtxWorld,
-		&mtxTrans);
 }

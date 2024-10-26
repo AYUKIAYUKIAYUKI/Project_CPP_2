@@ -36,10 +36,7 @@ private:
 	/// <summary> 見た目の数 </summary>
 	static constexpr WORD NUM_VISUAL = 3;
 
-	void SetMtxWorld();	// ワールド行列設定
-
 	LPDIRECT3DVERTEXBUFFER9	m_pVtxBuff;							// 頂点バッファのポインタ
-	D3DXMATRIX				m_MtxWorld;							// ワールド行列
 	D3DXVECTOR3				m_ControlPoint[NUM_CONTROLPOINT];	// 制御点
 	float					m_fParameter;						// 進行度
 	CObject_X*				m_pParameterVisual[NUM_VISUAL];		// 進行度の見た目
