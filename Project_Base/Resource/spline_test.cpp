@@ -80,6 +80,9 @@ HRESULT CSpline_Test::Init()
 
 	// 座標情報をデシリアライズ
 	const auto& Pos_List = m_Json["Pos_List"];
+
+#if 1
+
 	Vec3 Pos[CQuadratic_Bezier::NUM_CONTROLPOINT];
 
 	for (WORD i = 0; i < CQuadratic_Bezier::NUM_CONTROLPOINT; ++i)
@@ -91,6 +94,23 @@ HRESULT CSpline_Test::Init()
 
 	// 二次ベジェ曲線用を生成
 	m_pQuadratic_Bezier = DBG_NEW CQuadratic_Bezier(Pos[0], Pos[1], Pos[2]);
+
+#else
+
+	std::array<D3DXVECTOR3, CQuadratic_Bezier::NUM_CONTROLPOINT> ControlPoint;
+
+	for (WORD i = 0; i < CQuadratic_Bezier::NUM_CONTROLPOINT; ++i)
+	{
+		// 制御点の作成
+		const auto& Pos = Pos_List[i];							// 要素を抜き出して
+		ControlPoint[i] = D3DXVECTOR3(Pos[0], Pos[1], Pos[2]);	// 座標を作成し代入
+	}
+
+	// 二次ベジェ曲線用を生成
+	m_pQuadratic_Bezier = DBG_NEW CQuadratic_Bezier(ControlPoint);
+
+#endif
+
 	m_pQuadratic_Bezier->Init();
 
 	return S_OK;

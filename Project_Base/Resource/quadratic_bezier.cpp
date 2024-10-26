@@ -29,15 +29,33 @@ CQuadratic_Bezier::CQuadratic_Bezier(const D3DXVECTOR3& Pos1, const D3DXVECTOR3&
 	m_pVtxBuff{ nullptr },
 	m_fParameter{ 0.0f }
 {
-	// 制御点の初期化
+	// 制御点の設定
 	m_ControlPoint[0] = Pos1;
 	m_ControlPoint[1] = Pos2;
 	m_ControlPoint[2] = Pos3;
 
-	// 見た目の初期化
-	for (WORD i = 0; i < NUM_VISUAL; ++i)
+	// 軌跡の初期化
+	for (WORD i = 0; i < NUM_TRAJECTORY; ++i)
 	{
-		m_pParameterVisual[i] = nullptr;
+		m_pTrajectory[i] = nullptr;
+	}
+}
+
+//============================================================================
+// 座標渡しコンストラクタ
+//============================================================================
+CQuadratic_Bezier::CQuadratic_Bezier(const std::array<D3DXVECTOR3, NUM_CONTROLPOINT>& ControlPoint)
+{
+	// 制御点の設定
+	for (WORD i = 0; i < NUM_CONTROLPOINT; ++i)
+	{
+		m_ControlPoint[i] = ControlPoint[i];
+	}
+
+	// 軌跡の初期化
+	for (WORD i = 0; i < NUM_TRAJECTORY; ++i)
+	{
+		m_pTrajectory[i] = nullptr;
 	}
 }
 
@@ -60,11 +78,11 @@ HRESULT CQuadratic_Bezier::Init()
 		return E_FAIL;
 	}
 
-	// 進行度の見た目を生成
-	for (WORD i = 0; i < NUM_VISUAL; ++i)
+	// 軌跡の生成
+	for (WORD i = 0; i < NUM_TRAJECTORY; ++i)
 	{
-		m_pParameterVisual[i] = CObject_X::Create();
-		m_pParameterVisual[i]->BindModel(CModel_X_Manager::TYPE::SPHERE);
+		m_pTrajectory[i] = CObject_X::Create();
+		m_pTrajectory[i]->BindModel(CModel_X_Manager::TYPE::SPHERE);
 	}
 
 	return S_OK;
@@ -88,14 +106,16 @@ void CQuadratic_Bezier::Uninit()
 //============================================================================
 void CQuadratic_Bezier::Update()
 {
+#if 0
+
 	Vec3 MovePos1 = m_ControlPoint[0] + (m_ControlPoint[1] - m_ControlPoint[0]) * m_fParameter;
-	m_pParameterVisual[0]->SetPos(MovePos1);
+	m_pTrajectory[0]->SetPos(MovePos1);
 
 	Vec3 MovePos2 = m_ControlPoint[1] + (m_ControlPoint[2] - m_ControlPoint[1]) * m_fParameter;
-	m_pParameterVisual[1]->SetPos(MovePos2);
+	m_pTrajectory[1]->SetPos(MovePos2);
 
 	Vec3 MovePos3 = MovePos1 + (MovePos2 - MovePos1) * m_fParameter;
-	m_pParameterVisual[2]->SetPos(MovePos3);
+	m_pTrajectory[2]->SetPos(MovePos3);
 
 	// 頂点情報へのポインタ
 	VERTEX_3D* pVtx = nullptr;
@@ -110,8 +130,36 @@ void CQuadratic_Bezier::Update()
 	// 頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
 
+#else
+
+	for (WORD i = 0; i < NUM_CONTROLPOINT - 1; ++i)
+	{
+		// 進行度に合わせて、制御点間上の軌跡の座標を更新
+		m_pTrajectory[i]->SetPos(m_ControlPoint[i] + (m_ControlPoint[i + 1] - m_ControlPoint[i]) * m_fParameter);
+	}
+
+	// 軌跡同士を結ぶ線上に、さらなる軌跡を表示
+	m_pTrajectory[NUM_CONTROLPOINT - 1]->SetPos(m_pTrajectory[0]->GetPos() + (m_pTrajectory[1]->GetPos() - m_pTrajectory[0]->GetPos()) * m_fParameter);
+
+	// 頂点情報へのポインタ
+	VERTEX_3D* pVtx = nullptr;
+
+	// 頂点バッファをロック
+	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
+
+	// 頂点座標を制御点間の軌跡上に設定
+	for (WORD i = 0; i < NUM_CONTROLPOINT - 1; ++i)
+	{
+		pVtx[i].pos = m_pTrajectory[i]->GetPos();
+	}
+
+	// 頂点バッファをアンロックする
+	m_pVtxBuff->Unlock();
+
+#endif
+
 	// 進行度の変動
-	m_fParameter < 1.0f ? m_fParameter += 0.01f : m_fParameter = 0.0f;
+	m_fParameter < 1.0f ? m_fParameter += MOVE_SPEED : m_fParameter = 0.0f;
 }
 
 //============================================================================
