@@ -1,6 +1,6 @@
 //============================================================================
 //
-// スプライン曲線テスト [spline_test.cpp]
+// 三次ベジェ曲線 [cubic_bezier.cpp]
 // Author : 福田歩希
 //
 //============================================================================
@@ -8,7 +8,8 @@
 //****************************************************
 // インクルードファイル
 //****************************************************
-#include "spline_test.h"
+#include "cubic_bezier.h"
+#include "quadratic_bezier.h"
 #include "renderer.h"
 
 //****************************************************
@@ -17,56 +18,35 @@
 using namespace abbr;
 
 //============================================================================
-//
+// 
 // publicメンバ
-//
+// 
 //============================================================================
 
 //============================================================================
-// デフォルトコンストラクタ
+// 二次軌跡渡しコンストラクタ
 //============================================================================
-CSpline_Test::CSpline_Test() :
+CCubic_Bezier::CCubic_Bezier(CObject_X* p1, CObject_X* p2) :
 	m_pVtxBuff{ nullptr },
-	m_nNumVtx{ 0 },
-	m_nNumPrim{ 0 },
-	m_Pos{ VEC3_INIT },
-	m_pQuadratic_Bezier{ nullptr, nullptr }
+	m_fParameter{ 0.0f },
+	m_pQuadratic_Trajectory{ p1, p2 },
+	m_pCubic_Trajectory{ nullptr }
 {
-	// JSONファイルを読み取り展開
-	std::ifstream ifs("Data\\JSON\\spline_test.json");
 
-	// ファイルが展開出来ていたら
-	if (ifs.good())
-	{
-		// JSONデータをパース
-		ifs >> m_Json;
-
-		// 各種パラメータをデシリアライズ
-		m_nNumVtx = m_Json["Vtx"];
-		m_nNumPrim = m_Json["Prim"];
-	}
-	else
-	{
-		assert(false && "spline_test.jsonの読み取りに失敗しました");
-	}
-
-	// ワールド行列の初期化
-	D3DXMatrixIdentity(&m_MtxWorld);
 }
 
 //============================================================================
 // デストラクタ
 //============================================================================
-CSpline_Test::~CSpline_Test()
+CCubic_Bezier::~CCubic_Bezier()
 {
-	// 念のため終了処理
-	Uninit();
+
 }
 
 //============================================================================
 // 初期設定
 //============================================================================
-HRESULT CSpline_Test::Init()
+HRESULT CCubic_Bezier::Init()
 {
 	// 頂点バッファの生成
 	if (FAILED(CreateVtxBuff()))
@@ -74,33 +54,9 @@ HRESULT CSpline_Test::Init()
 		return E_FAIL;
 	}
 
-	/* 原点にモデルを生成 */
-	auto pTest = CObject_X::Create();
-	pTest->BindModel(CModel_X_Manager::TYPE::SAMUS);
-
-	// 座標情報をデシリアライズ
-	const auto& Pos_List = m_Json["Pos_List"];
-
-	for (WORD i = 0; i < NUM_QUADRATIC_BEZIER; ++i)
-	{
-		// 座標格格納用コンテナ
-		std::array<Vec3, CQuadratic_Bezier::NUM_CONTROLPOINT> ControlPoint;
-
-		for (WORD j = 0; j < CQuadratic_Bezier::NUM_CONTROLPOINT; ++j)
-		{
-			// 制御点の作成
-			const auto& Pos = Pos_List[j + i];				// 要素を抜き出して
-			ControlPoint[j] = Vec3(Pos[0], Pos[1], Pos[2]);	// 座標を作成し代入
-		}
-
-		// 二次ベジェ曲線用を生成
-		m_pQuadratic_Bezier[i] = DBG_NEW CQuadratic_Bezier(ControlPoint);
-		m_pQuadratic_Bezier[i]->Init();
-	}
-
-	// 三次ベジェ曲線の生成
-	m_pCubic_Bezier = DBG_NEW CCubic_Bezier(m_pQuadratic_Bezier[0]->GetQuadratic_Trajectory(), m_pQuadratic_Bezier[1]->GetQuadratic_Trajectory());
-	m_pCubic_Bezier->Init();
+	// 三次軌跡の生成
+	m_pCubic_Trajectory = CObject_X::Create();
+	m_pCubic_Trajectory->BindModel(CModel_X_Manager::TYPE::SPHERE);
 
 	return S_OK;
 }
@@ -108,7 +64,7 @@ HRESULT CSpline_Test::Init()
 //============================================================================
 // 終了処理
 //============================================================================
-void CSpline_Test::Uninit()
+void CCubic_Bezier::Uninit()
 {
 	// 頂点バッファの破棄
 	if (m_pVtxBuff != nullptr)
@@ -116,49 +72,39 @@ void CSpline_Test::Uninit()
 		m_pVtxBuff->Release();
 		m_pVtxBuff = nullptr;
 	}
-
-	// 二次ベジェ曲線の破棄
-	for (WORD i = 0; i < NUM_QUADRATIC_BEZIER; ++i)
-	{
-		if (m_pQuadratic_Bezier[i] != nullptr)
-		{
-			m_pQuadratic_Bezier[i]->Uninit();
-			delete m_pQuadratic_Bezier[i];
-			m_pQuadratic_Bezier[i] = nullptr;
-		}
-	}
-
-	// 三次ベジェ曲線の破棄
-	if (m_pCubic_Bezier != nullptr)
-	{
-		m_pCubic_Bezier->Uninit();
-		delete m_pCubic_Bezier;
-		m_pCubic_Bezier = nullptr;
-	}
 }
 
 //============================================================================
 // 更新処理
 //============================================================================
-void CSpline_Test::Update()
+void CCubic_Bezier::Update()
 {
-	// 二次ベジェ曲線の更新
-	for (WORD i = 0; i < NUM_QUADRATIC_BEZIER; ++i)
+	// 二次軌跡同士を結ぶ線上に、三次軌跡を表示
+	m_pCubic_Trajectory->SetPos(m_pQuadratic_Trajectory[0]->GetPos() + (m_pQuadratic_Trajectory[1]->GetPos() - m_pQuadratic_Trajectory[0]->GetPos()) * m_fParameter);
+
+	// 頂点情報へのポインタ
+	VERTEX_3D* pVtx = nullptr;
+
+	// 頂点バッファをロック
+	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
+
+	// 頂点座標を制御点間の軌跡上に設定
+	for (WORD i = 0; i < NUM_CONTROLPOINT - 1; ++i)
 	{
-		m_pQuadratic_Bezier[i]->Update();
+		pVtx[i].pos = m_pQuadratic_Trajectory[i]->GetPos();
 	}
 
-	// 三次ベジェ曲線の更新
-	m_pCubic_Bezier->Update();
+	// 頂点バッファをアンロックする
+	m_pVtxBuff->Unlock();
 
-	// ワールド行列設定
-	SetMtxWorld();
+	// 進行度の変動
+	m_fParameter < 1.0f ? m_fParameter += MOVE_SPEED : m_fParameter = 0.0f;
 }
 
 //============================================================================
 // 描画処理
 //============================================================================
-void CSpline_Test::Draw()
+void CCubic_Bezier::Draw()
 {
 	// デバイスを取得
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
@@ -172,46 +118,34 @@ void CSpline_Test::Draw()
 	// 頂点フォーマットの設定
 	pDev->SetFVF(FVF_VERTEX_3D);
 
-	// ワールドマトリックスの設定
-	pDev->SetTransform(D3DTS_WORLD, &m_MtxWorld);
-
 	// テクスチャの設定
 	pDev->SetTexture(0, nullptr);
 
 	// 線の描画
 	pDev->DrawPrimitive(D3DPT_LINESTRIP,	// プリミティブの種類
 		0,									// 頂点情報の先頭アドレス
-		m_nNumPrim);						// プリミティブ数
+		1);									// プリミティブ数
 
 	// ライトをオン
 	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
-
-	// 二次ベジェ曲線の描画
-	for (WORD i = 0; i < NUM_QUADRATIC_BEZIER; ++i)
-	{
-		m_pQuadratic_Bezier[i]->Draw();
-	}
-
-	// 三次ベジェ曲線の描画
-	m_pCubic_Bezier->Draw();
 }
 
 //============================================================================
-//
+// 
 // privateメンバ
-//
+// 
 //============================================================================
 
 //============================================================================
 // 頂点バッファを生成
 //============================================================================
-HRESULT CSpline_Test::CreateVtxBuff()
+HRESULT CCubic_Bezier::CreateVtxBuff()
 {
 	// デバイスを取得
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
 
 	// 頂点バッファの生成
-	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * m_nNumVtx,
+	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * 2,
 		D3DUSAGE_WRITEONLY,
 		FVF_VERTEX_3D,
 		D3DPOOL_MANAGED,
@@ -229,14 +163,10 @@ HRESULT CSpline_Test::CreateVtxBuff()
 	// 頂点バッファをロック
 	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 
-	// 座標情報をデシリアライズ
-	const auto& Pos_List = m_Json["Pos_List"];
-
-	for (WORD i = 0; i < m_nNumVtx; ++i)
+	for (WORD i = 0; i < 2; ++i)
 	{
-		// 頂点座標の設定
-		const auto& Pos = Pos_List[i];				// 要素を抜き出して
-		pVtx[i].pos = Vec3(Pos[0], Pos[1], Pos[2]);	// 座標を作成し代入
+		// 頂点座標を設定
+		pVtx[i].pos = VEC3_INIT;
 
 		// 法線ベクトルの設定
 		pVtx[i].nor = VEC3_INIT;
@@ -252,27 +182,4 @@ HRESULT CSpline_Test::CreateVtxBuff()
 	m_pVtxBuff->Unlock();
 
 	return S_OK;
-}
-
-//============================================================================
-// ワールド行列設定
-//============================================================================
-void CSpline_Test::SetMtxWorld()
-{
-	// 計算用行列
-	Mtx mtxRot, mtxTrans;
-
-	// ワールド行列を初期化
-	D3DXMatrixIdentity(&m_MtxWorld);
-
-	// 平行移動行列作成
-	D3DXMatrixTranslation(&mtxTrans,
-		m_Pos.x,
-		m_Pos.y,
-		m_Pos.z);
-
-	// 平行移動行列との掛け算
-	D3DXMatrixMultiply(&m_MtxWorld,
-		&m_MtxWorld,
-		&mtxTrans);
 }

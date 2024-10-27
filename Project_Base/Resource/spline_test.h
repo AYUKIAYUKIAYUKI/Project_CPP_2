@@ -12,6 +12,7 @@
 // インクルードファイル
 //****************************************************
 #include "quadratic_bezier.h"
+#include "cubic_bezier.h"
 
 //****************************************************
 // スプラインテストクラス
@@ -43,6 +44,7 @@ private:
 	D3DXMATRIX				m_MtxWorld;				// ワールド行列
 
 	CQuadratic_Bezier*		m_pQuadratic_Bezier[NUM_QUADRATIC_BEZIER];	// 二次ベジェ曲線
+	CCubic_Bezier*			m_pCubic_Bezier;							// 三次ベジェ曲線
 };
 
 #endif	// _SPLINE_TEST_

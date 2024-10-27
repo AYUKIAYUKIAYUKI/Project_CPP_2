@@ -25,7 +25,7 @@ using namespace abbr;
 //============================================================================
 // 座標渡しコンストラクタ
 //============================================================================
-CQuadratic_Bezier::CQuadratic_Bezier(const Vec3& Pos1, const Vec3& Pos2, const Vec3& Pos3) :
+CQuadratic_Bezier::CQuadratic_Bezier(const D3DXVECTOR3& Pos1, const D3DXVECTOR3& Pos2, const D3DXVECTOR3& Pos3) :
 	m_pVtxBuff{ nullptr },
 	m_fParameter{ 0.0f }
 {
@@ -44,7 +44,7 @@ CQuadratic_Bezier::CQuadratic_Bezier(const Vec3& Pos1, const Vec3& Pos2, const V
 //============================================================================
 // 座標渡しコンストラクタ
 //============================================================================
-CQuadratic_Bezier::CQuadratic_Bezier(const std::array<Vec3, NUM_CONTROLPOINT>& ControlPoint) :
+CQuadratic_Bezier::CQuadratic_Bezier(const std::array<D3DXVECTOR3, NUM_CONTROLPOINT>& ControlPoint) :
 	m_pVtxBuff{ nullptr },
 	m_fParameter{ 0.0f }
 {
@@ -175,6 +175,14 @@ void CQuadratic_Bezier::Draw()
 
 	// ライトをオン
 	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
+}
+
+//============================================================================
+// 二次軌跡を取得
+//============================================================================
+CObject_X* CQuadratic_Bezier::GetQuadratic_Trajectory() const
+{
+	return m_pTrajectory[2];
 }
 
 //============================================================================
