@@ -118,7 +118,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pPad->Init();
 
 	// Å‰‚ÌƒV[ƒ“Ý’è
-	SetScene(CScene::MODE::RESULT);
+	SetScene(CScene::MODE::TITLE);
 
 	// BGM‚ð‚©‚¯‚é
 	CSound::GetInstance()->Play(CSound::LABEL::TEST);

@@ -172,7 +172,7 @@ HRESULT CCubic_Bezier::CreateVtxBuff()
 		pVtx[i].nor = VEC3_INIT;
 
 		// 頂点色の設定
-		pVtx[i].col = XCOl_INIT;
+		pVtx[i].col = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);;
 
 		// テクスチャ座標の設定
 		pVtx[i].tex = VEC2_INIT;
