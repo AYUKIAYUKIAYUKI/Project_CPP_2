@@ -135,6 +135,7 @@ void CQuadratic_Bezier::Update()
 	// is“x‚Ì•Ï“®
 	m_fParameter < 1.0f ? m_fParameter += MOVE_SPEED : m_fParameter = 0.0f;
 
+#if 0
 	for (WORD i = 0; i < NUM_CONTROLPOINT; ++i)
 	{
 		CRenderer::GetInstance()->SetDebugString(to_string(m_pTrajectory[i]->GetPos().x) + " : " + to_string(m_pTrajectory[i]->GetPos().y) + " : " + to_string(m_pTrajectory[i]->GetPos().z));
@@ -144,6 +145,7 @@ void CQuadratic_Bezier::Update()
 	{
 		CRenderer::GetInstance()->SetDebugString(to_string(m_ControlPoint[i].x) + " : " + to_string(m_ControlPoint[i].y) + " : " + to_string(m_ControlPoint[i].z));
 	}
+#endif
 }
 
 //============================================================================

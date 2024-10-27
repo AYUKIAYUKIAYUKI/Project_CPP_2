@@ -30,7 +30,7 @@ CSpline_Test::CSpline_Test() :
 	m_nNumVtx{ 0 },
 	m_nNumPrim{ 0 },
 	m_Pos{ VEC3_INIT },
-	m_pQuadratic_Bezier{ nullptr }
+	m_pQuadratic_Bezier{ nullptr, nullptr }
 {
 	// JSONファイルを読み取り展開
 	std::ifstream ifs("Data\\JSON\\spline_test.json");
@@ -81,19 +81,22 @@ HRESULT CSpline_Test::Init()
 	// 座標情報をデシリアライズ
 	const auto& Pos_List = m_Json["Pos_List"];
 
-	// 座標格格納用コンテナ
-	std::array<Vec3, CQuadratic_Bezier::NUM_CONTROLPOINT> ControlPoint;
-
-	for (WORD i = 0; i < CQuadratic_Bezier::NUM_CONTROLPOINT; ++i)
+	for (WORD i = 0; i < NUM_QUADRATIC_BEZIER; ++i)
 	{
-		// 制御点の作成
-		const auto& Pos = Pos_List[i];					// 要素を抜き出して
-		ControlPoint[i] = Vec3(Pos[0], Pos[1], Pos[2]);	// 座標を作成し代入
-	}
+		// 座標格格納用コンテナ
+		std::array<Vec3, CQuadratic_Bezier::NUM_CONTROLPOINT> ControlPoint;
 
-	// 二次ベジェ曲線用を生成
-	m_pQuadratic_Bezier = DBG_NEW CQuadratic_Bezier(ControlPoint);
-	m_pQuadratic_Bezier->Init();
+		for (WORD j = 0; j < CQuadratic_Bezier::NUM_CONTROLPOINT; ++j)
+		{
+			// 制御点の作成
+			const auto& Pos = Pos_List[j + i];				// 要素を抜き出して
+			ControlPoint[j] = Vec3(Pos[0], Pos[1], Pos[2]);	// 座標を作成し代入
+		}
+
+		// 二次ベジェ曲線用を生成
+		m_pQuadratic_Bezier[i] = DBG_NEW CQuadratic_Bezier(ControlPoint);
+		m_pQuadratic_Bezier[i]->Init();
+	}
 
 	return S_OK;
 }
@@ -111,11 +114,14 @@ void CSpline_Test::Uninit()
 	}
 
 	// 二次ベジェ曲線の破棄
-	if (m_pQuadratic_Bezier != nullptr)
+	for (WORD i = 0; i < NUM_QUADRATIC_BEZIER; ++i)
 	{
-		m_pQuadratic_Bezier->Uninit();
-		delete m_pQuadratic_Bezier;
-		m_pQuadratic_Bezier = nullptr;
+		if (m_pQuadratic_Bezier[i] != nullptr)
+		{
+			m_pQuadratic_Bezier[i]->Uninit();
+			delete m_pQuadratic_Bezier[i];
+			m_pQuadratic_Bezier[i] = nullptr;
+		}
 	}
 }
 
@@ -125,7 +131,10 @@ void CSpline_Test::Uninit()
 void CSpline_Test::Update()
 {
 	// 二次ベジェ曲線の更新
-	m_pQuadratic_Bezier->Update();
+	for (WORD i = 0; i < NUM_QUADRATIC_BEZIER; ++i)
+	{
+		m_pQuadratic_Bezier[i]->Update();
+	}
 
 	// ワールド行列設定
 	SetMtxWorld();
@@ -163,7 +172,10 @@ void CSpline_Test::Draw()
 	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 
 	// 二次ベジェ曲線の描画
-	m_pQuadratic_Bezier->Draw();
+	for (WORD i = 0; i < NUM_QUADRATIC_BEZIER; ++i)
+	{
+		m_pQuadratic_Bezier[i]->Draw();
+	}
 }
 
 //============================================================================

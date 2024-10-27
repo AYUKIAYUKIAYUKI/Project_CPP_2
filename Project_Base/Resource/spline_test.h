@@ -30,6 +30,8 @@ public:
 
 private:
 
+	static constexpr WORD NUM_QUADRATIC_BEZIER = 2;
+
 	HRESULT CreateVtxBuff();	// 頂点バッファの生成
 	void	SetMtxWorld();		// ワールド行列設定
 
@@ -39,7 +41,8 @@ private:
 	int						m_nNumPrim;				// プリミティブ数
 	D3DXVECTOR3				m_Pos;					// 座標
 	D3DXMATRIX				m_MtxWorld;				// ワールド行列
-	CQuadratic_Bezier*		m_pQuadratic_Bezier;	// 二次ベジェ曲線
+
+	CQuadratic_Bezier*		m_pQuadratic_Bezier[NUM_QUADRATIC_BEZIER];	// 二次ベジェ曲線
 };
 
 #endif	// _SPLINE_TEST_
