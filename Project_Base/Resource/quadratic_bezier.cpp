@@ -25,7 +25,7 @@ using namespace abbr;
 //============================================================================
 // 座標渡しコンストラクタ
 //============================================================================
-CQuadratic_Bezier::CQuadratic_Bezier(const D3DXVECTOR3& Pos1, const D3DXVECTOR3& Pos2, const D3DXVECTOR3& Pos3) :
+CQuadratic_Bezier::CQuadratic_Bezier(const Vec3& Pos1, const Vec3& Pos2, const Vec3& Pos3) :
 	m_pVtxBuff{ nullptr },
 	m_fParameter{ 0.0f }
 {
@@ -44,7 +44,9 @@ CQuadratic_Bezier::CQuadratic_Bezier(const D3DXVECTOR3& Pos1, const D3DXVECTOR3&
 //============================================================================
 // 座標渡しコンストラクタ
 //============================================================================
-CQuadratic_Bezier::CQuadratic_Bezier(const std::array<D3DXVECTOR3, NUM_CONTROLPOINT>& ControlPoint)
+CQuadratic_Bezier::CQuadratic_Bezier(const std::array<Vec3, NUM_CONTROLPOINT>& ControlPoint) :
+	m_pVtxBuff{ nullptr },
+	m_fParameter{ 0.0f }
 {
 	// 制御点の設定
 	for (WORD i = 0; i < NUM_CONTROLPOINT; ++i)
@@ -106,32 +108,6 @@ void CQuadratic_Bezier::Uninit()
 //============================================================================
 void CQuadratic_Bezier::Update()
 {
-#if 0
-
-	Vec3 MovePos1 = m_ControlPoint[0] + (m_ControlPoint[1] - m_ControlPoint[0]) * m_fParameter;
-	m_pTrajectory[0]->SetPos(MovePos1);
-
-	Vec3 MovePos2 = m_ControlPoint[1] + (m_ControlPoint[2] - m_ControlPoint[1]) * m_fParameter;
-	m_pTrajectory[1]->SetPos(MovePos2);
-
-	Vec3 MovePos3 = MovePos1 + (MovePos2 - MovePos1) * m_fParameter;
-	m_pTrajectory[2]->SetPos(MovePos3);
-
-	// 頂点情報へのポインタ
-	VERTEX_3D* pVtx = nullptr;
-
-	// 頂点バッファをロック
-	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
-
-	// 頂点座標を設定
-	pVtx[0].pos = MovePos1;
-	pVtx[1].pos = MovePos2;
-
-	// 頂点バッファをアンロックする
-	m_pVtxBuff->Unlock();
-
-#else
-
 	for (WORD i = 0; i < NUM_CONTROLPOINT - 1; ++i)
 	{
 		// 進行度に合わせて、制御点間上の軌跡の座標を更新
@@ -156,10 +132,18 @@ void CQuadratic_Bezier::Update()
 	// 頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
 
-#endif
-
 	// 進行度の変動
 	m_fParameter < 1.0f ? m_fParameter += MOVE_SPEED : m_fParameter = 0.0f;
+
+	for (WORD i = 0; i < NUM_CONTROLPOINT; ++i)
+	{
+		CRenderer::GetInstance()->SetDebugString(to_string(m_pTrajectory[i]->GetPos().x) + " : " + to_string(m_pTrajectory[i]->GetPos().y) + " : " + to_string(m_pTrajectory[i]->GetPos().z));
+	}
+
+	for (WORD i = 0; i < NUM_CONTROLPOINT; ++i)
+	{
+		CRenderer::GetInstance()->SetDebugString(to_string(m_ControlPoint[i].x) + " : " + to_string(m_ControlPoint[i].y) + " : " + to_string(m_ControlPoint[i].z));
+	}
 }
 
 //============================================================================
