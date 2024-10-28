@@ -37,7 +37,7 @@ namespace field_manager
 		static constexpr float GENERATE_RANGE_RADIUS = 350.0f;
 
 		/// <summary> 最大ブロック数 </summary>
-		static constexpr int MAX_BLOCK = 100;
+		static constexpr int MAX_BLOCK = 20;
 
 		/// <summary> 重力 </summary>
 		static constexpr float FIELD_GRAVITY = -0.025f;
@@ -53,11 +53,12 @@ namespace field_manager
 		CField_Manager();	// デフォルトコンストラクタ
 		~CField_Manager();	// デストラクタ
 
-		void Create();			// 生成
-		void Uninit();			// 終了処理
-		void TestCreate();		// 仮の生成メソッド
-		void TestDelete();		// 仮の破棄メソッド
-		void TestDeleteAll();	// 仮の全破棄メソッド
+		void Create();							// 生成
+		void Uninit();							// 終了処理
+		void TestCreate();						// 仮の生成メソッド
+		bool DetectAdjacentBlock(const Vec3& Pos);	// 隣接し合うブロックを検出
+		void TestDelete();						// 仮の破棄メソッド
+		void TestDeleteAll();					// 仮の全破棄メソッド
 
 		float m_fCoeffRaondomRange;	// ランダム範囲の強度
 

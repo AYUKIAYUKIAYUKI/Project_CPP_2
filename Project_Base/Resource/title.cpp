@@ -47,7 +47,7 @@ HRESULT CTitle::Init()
 	CObject_2D* pTest = CObject_2D::Create();
 	pTest->BindTex(CTexture_Manager::TYPE::TEST1);
 	pTest->SetPos({ SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f });
-	pTest->SetSize({ 30.0f, 30.0f, 0.0f });
+	pTest->SetSize({ 150.0f, 50.0f, 0.0f });
 
 	return hr;
 }

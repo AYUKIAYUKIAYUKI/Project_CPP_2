@@ -130,13 +130,13 @@ void CObject_2D::Update()
 
 	// 必要な数値を算出
 	m_fLength = sqrtf(m_Size.x * m_Size.x + m_Size.y * m_Size.y);
-	m_fAngle = atan2f(m_Size.y, m_Size.x);
+	m_fAngle = atan2f(m_Size.x, m_Size.y);
 
 	// 頂点情報へのポインタ
 	VERTEX_2D* pVtx = nullptr;
 
 	// 頂点バッファをロック
-	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 
 	// 頂点座標の設定
 	pVtx[0].pos = {

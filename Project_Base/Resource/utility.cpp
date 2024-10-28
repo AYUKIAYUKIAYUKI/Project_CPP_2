@@ -166,3 +166,22 @@ bool CUtility::CylinderAndSphere(const D3DXVECTOR3& posSelf, const float& fRadiu
 
 	return 0;
 }
+
+//============================================================================
+// ‰~’Œ‚ÆAABB‚ÌÕ“Ë”»’è
+//============================================================================
+bool CUtility::CylinderAndAABB(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& posTarget, const D3DXVECTOR3& sizeTarget)
+{
+	// ‘S‚Ä‚ÌŽ²•ûŒü‚©‚ç‚¨ŒÝ‚¢‚É‚ß‚èž‚ñ‚Å‚¢‚é‚Æ‚«Õ“Ë
+	if (posSelf.x + fRadiusSelf > posTarget.x - sizeTarget.x &&
+		posSelf.x - fRadiusSelf < posTarget.x + sizeTarget.x &&
+		posSelf.y + fHeight > posTarget.y - sizeTarget.y &&
+		posSelf.y < posTarget.y + sizeTarget.y &&
+		posSelf.z + fRadiusSelf > posTarget.z - sizeTarget.z &&
+		posSelf.z - fRadiusSelf < posTarget.z + sizeTarget.z)
+	{
+		return 1;
+	}
+
+	return 0;
+}

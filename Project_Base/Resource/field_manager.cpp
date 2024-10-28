@@ -207,6 +207,8 @@ void CField_Manager::TestCreate()
 			Vec3			NewPos = VEC3_INIT, NewRot = VEC3_INIT;	// ブロック用の座標・向きを作成
 			float			fRandomRange = 0.0f;					// ランダムな方角範囲
 
+			// ①プレイヤーの進行方向に沿って生成されるように補正
+
 			// 破棄範囲にはみ出さず生成されるように調整
 			/* 初期座標が原点の場合、生成範囲の半径がフィールドの半径を下回ると無限ループ */
 			do
@@ -218,6 +220,12 @@ void CField_Manager::TestCreate()
 				NewPos.x = cosf(fDirection + fRandomRange) * FIELD_RADIUS;
 				NewPos.y = fabsf(CUtility::GetRandomValue<float>());
 				NewPos.z = sinf(fDirection + fRandomRange) * FIELD_RADIUS;
+
+				// ブロック同士の幅を検出
+				if (DetectAdjacentBlock(NewPos))
+				{
+					NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
+				}
 
 			} while (!CUtility::CylinderAndSphere(pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, NewPos, 10.0f));
 
@@ -231,6 +239,42 @@ void CField_Manager::TestCreate()
 			nCntBlock++;
 		}
 	}
+}
+
+//============================================================================
+// 隣接し合うブロックを検出
+//============================================================================
+bool CField_Manager::DetectAdjacentBlock(const Vec3& Pos)
+{
+	// ミドルオブジェクトを取得
+	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
+
+	// ブロックタグの数をカウントする
+	while (pObj != nullptr)
+	{
+		if (pObj->GetType() == CObject::TYPE::BLOCK)
+		{
+			// オブジェクトをブロックタグにダウンキャスト
+			CBlock* pBlock = nullptr;
+			pBlock = CUtility::DownCast(pBlock, pObj);
+
+			// 軸方向におけるブロックの隣接を検出する
+
+			/* 今回は試験的にお互いの距離のみを考慮する */
+			const Vec3& Vec = pBlock->GetPos() - Pos;
+
+			/* ある程度接近してしまっているブロックが存在する場合 */
+			if (sqrtf(Vec.x * Vec.x + Vec.y * Vec.y + Vec.z * Vec.z) <= pBlock->GetSize().x * 5.0f)
+			{
+				// 座標の生成をやり直す
+				return 1;
+			}
+		}
+
+		pObj = pObj->GetNext();
+	}
+
+	return 0;
 }
 
 //============================================================================
