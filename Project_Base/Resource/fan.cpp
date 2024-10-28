@@ -35,9 +35,18 @@ void CFan::Release()
 //============================================================================
 // 更新処理
 //============================================================================
-void CFan::Update(D3DXVECTOR3 Pos)
+bool CFan::DetectInFanRange(D3DXVECTOR3 Pos)
 {
+	// 扇形の始点から特定座標へのベクトルを計算
+	Vec3 Vec = Pos - m_Pos;
 
+	// 範囲内に存在しているか、小数値を切り詰めて精密な判定を行う
+	if (static_cast<int>(sqrtf(Vec.x * Vec.x + Vec.z * Vec.z)) <= m_fLength)
+	{
+		return 1;
+	}
+
+	return 0;
 }
 
 //============================================================================
@@ -102,6 +111,41 @@ const float& CFan::GetRange() const
 void CFan::SetRange(float fRange)
 {
 	m_fRange = fRange;
+}
+
+//============================================================================
+// 生成
+//============================================================================
+CFan* CFan::Create()
+{
+	CFan* pNewInstance = DBG_NEW CFan();
+
+	if (!pNewInstance)
+	{
+		assert(false && "扇形インスタンスの生成に失敗");
+	}
+
+	// JSONファイルを読み取り展開
+	std::ifstream ifs("Data\\JSON\\fan_parameter.json");
+
+	// ファイルが展開出来ていたら
+	if (ifs.good())
+	{
+		// JSONデータをパース
+		JSON Json;
+		ifs >> Json;
+
+		// 各種パラメータをデシリアライズ
+		pNewInstance->SetDirection(Json["Direction"]);
+		pNewInstance->SetLength(Json["Length"]);
+		pNewInstance->SetRange(Json["Range"]);
+	}
+	else
+	{
+		assert(false && "spline_test.jsonの読み取りに失敗しました");
+	}
+
+	return pNewInstance;
 }
 
 //============================================================================

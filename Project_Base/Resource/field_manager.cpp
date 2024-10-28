@@ -51,7 +51,7 @@ HRESULT CField_Manager::Init()
 	m_pCylinderCollider->Init();
 
 	// 扇形を生成
-	m_pFan = CFan::Create(VEC3_INIT, 0.0f, 1.0f, 1.0f);
+	m_pFan = CFan::Create();
 
 	// プレイヤーを検索
 	if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
@@ -105,9 +105,6 @@ void CField_Manager::Update()
 	// ランダム範囲の強度を表示
 	CRenderer::GetInstance()->SetDebugString("ランダム範囲の強度:" + to_string(m_fCoeffRaondomRange));
 #endif
-
-	m_pFan->Update(m_pPlayer->GetPos());
-
 	// 仮の生成メソッド
 	TestCreate();
 
@@ -316,6 +313,8 @@ void CField_Manager::TestDelete()
 				CBlock* pBlock = nullptr;
 				pBlock = CUtility::DownCast(pBlock, pObj);
 
+				// 破棄方法の変更
+#if 0
 				m_pCylinderCollider->SetPos(m_pPlayer->GetPos());
 				m_pCylinderCollider->SetRot(m_pPlayer->GetRot());
 
@@ -324,6 +323,14 @@ void CField_Manager::TestDelete()
 				{
 					pBlock->SetRelease();
 				}
+#else
+				m_pCylinderCollider->SetPos(Vec3(FLT_MAX, FLT_MAX, FLT_MAX));
+
+				if (m_pFan->DetectInFanRange(pBlock->GetPos()))
+				{
+					pBlock->SetRelease();
+				}
+#endif
 			}
 		}
 

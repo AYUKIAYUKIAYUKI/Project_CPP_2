@@ -20,8 +20,8 @@ class CFan
 {
 public:
 	
-	void Release();					// 破棄
-	void Update(D3DXVECTOR3 Pos);	// 更新処理
+	void Release();							// 破棄
+	bool DetectInFanRange(D3DXVECTOR3 Pos);	// 扇形範囲内にあるか検出
 
 	const D3DXVECTOR3& GetPos() const;	// 座標を取得
 	void SetPos(D3DXVECTOR3 Pos);		// 座標を設定
@@ -35,6 +35,7 @@ public:
 	const float& GetRange() const;	// 範囲を取得
 	void SetRange(float fRange);	// 範囲を設定
 
+	static CFan* Create();																	// 生成
 	static CFan* Create(D3DXVECTOR3 Pos, float fDirection, float fLength, float fRange);	// 生成
 
 private:
