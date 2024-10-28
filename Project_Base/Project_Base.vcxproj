@@ -23,6 +23,7 @@
     <ClCompile Include="resource\camera.cpp" />
     <ClCompile Include="Resource\cubic_bezier.cpp" />
     <ClCompile Include="Resource\fade.cpp" />
+    <ClCompile Include="Resource\fan.cpp" />
     <ClCompile Include="Resource\field_manager.cpp" />
     <ClCompile Include="Resource\game.cpp" />
     <ClCompile Include="resource\input.cpp" />
@@ -62,6 +63,7 @@
     <ClInclude Include="resource\camera.h" />
     <ClInclude Include="Resource\cubic_bezier.h" />
     <ClInclude Include="Resource\fade.h" />
+    <ClInclude Include="Resource\fan.h" />
     <ClInclude Include="Resource\field_manager.h" />
     <ClInclude Include="Resource\game.h" />
     <ClInclude Include="resource\input.h" />

@@ -9,6 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "field_manager.h"
+#include "fan.h"
 
 // 入力取得用
 #include "manager.h"
@@ -47,17 +48,15 @@ HRESULT CField_Manager::Init()
 
 	// 円柱の判定を生成
 	m_pCylinderCollider = CObject_X::Create(static_cast<int>(CObject::LAYER::BACK));
-
-	// 初期設定
 	m_pCylinderCollider->Init();
 
-	// プレイヤーを格納
-	CPlayer* pPlayer = nullptr;
+	// 扇形を生成
+	m_pFan = CFan::Create(VEC3_INIT, 0.0f, 1.0f, 1.0f);
 
 	// プレイヤーを検索
 	if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
 	{
-		pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+		m_pPlayer = CUtility::DownCast(m_pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
 	}
 	else
 	{
@@ -65,8 +64,8 @@ HRESULT CField_Manager::Init()
 	}
 
 	// 各種パラメータ設定
-	m_pCylinderCollider->SetPos(pPlayer->GetPos());
-	m_pCylinderCollider->SetRot(pPlayer->GetRot());
+	m_pCylinderCollider->SetPos(m_pPlayer->GetPos());
+	m_pCylinderCollider->SetRot(m_pPlayer->GetRot());
 	m_pCylinderCollider->SetScale(GENERATE_RANGE_RADIUS);
 	m_pCylinderCollider->SetAlpha(0.25f);
 
@@ -107,6 +106,8 @@ void CField_Manager::Update()
 	CRenderer::GetInstance()->SetDebugString("ランダム範囲の強度:" + to_string(m_fCoeffRaondomRange));
 #endif
 
+	m_pFan->Update(m_pPlayer->GetPos());
+
 	// 仮の生成メソッド
 	TestCreate();
 
@@ -145,7 +146,9 @@ CField_Manager* CField_Manager::GetInstance()
 //============================================================================
 CField_Manager::CField_Manager() :
 	m_fCoeffRaondomRange{ 0.0f },
-	m_pCylinderCollider{ nullptr }
+	m_pPlayer{ nullptr },
+	m_pCylinderCollider{ nullptr },
+	m_pFan{ nullptr }
 {
 
 }
@@ -177,7 +180,9 @@ void CField_Manager::Create()
 //============================================================================
 void CField_Manager::Uninit()
 {
-
+	// 扇形を破棄
+	m_pFan->Release();
+	m_pFan = nullptr;
 }
 
 //============================================================================
@@ -195,15 +200,29 @@ void CField_Manager::TestCreate()
 	// ブロック数が上限に満たなければ
 	while (nCntBlock < MAX_BLOCK)
 	{
+		CInputKeyboard* pKeyboard = CManager::GetKeyboard();
+		CInputPad* pPad = CManager::GetPad();
+
+		/* スクリーン画面内で、どちらの方向を移動していたか */
+		float ScreenX = 0.0f;
+
+		/* 直前の方角の変更を検出 */
+		if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::LEFT) || pPad->GetJoyStickL().X < 0)
+		{ // カメラから見て左へ
+
+		}
+		else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT) || pPad->GetJoyStickL().X > 0)
+		{ // カメラから見て右へ
+
+		}
+
+		/* 移動していた方向に合わせて、範囲の端から新たな地形が登場してくる */
+
 		// プレイヤータグを取得
 		if (CObject::FindSpecificObject(CObject::TYPE::PLAYER))
 		{
-			// オブジェクトをプレイヤータグにダウンキャスト
-			CPlayer* pPlayer = nullptr;
-			pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
-
 			// 生成座標計算用
-			const float&	fDirection = pPlayer->GetDirection();	// プレイヤーの方角をコピー
+			const float&	fDirection = m_pPlayer->GetDirection();	// プレイヤーの方角をコピー
 			Vec3			NewPos = VEC3_INIT, NewRot = VEC3_INIT;	// ブロック用の座標・向きを作成
 			float			fRandomRange = 0.0f;					// ランダムな方角範囲
 
@@ -227,7 +246,7 @@ void CField_Manager::TestCreate()
 					NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
 				}
 
-			} while (!CUtility::CylinderAndSphere(pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, NewPos, 10.0f));
+			} while (!CUtility::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, NewPos, 10.0f));
 
 			// 向きを決定
 			NewRot.y = -(fDirection + fRandomRange);
@@ -296,16 +315,12 @@ void CField_Manager::TestDelete()
 				// オブジェクトをブロックタグにダウンキャスト
 				CBlock* pBlock = nullptr;
 				pBlock = CUtility::DownCast(pBlock, pObj);
-				
-				// オブジェクトをプレイヤータグにダウンキャスト
-				CPlayer* pPlayer = nullptr;
-				pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
 
-				m_pCylinderCollider->SetPos(pPlayer->GetPos());
-				m_pCylinderCollider->SetRot(pPlayer->GetRot());
+				m_pCylinderCollider->SetPos(m_pPlayer->GetPos());
+				m_pCylinderCollider->SetRot(m_pPlayer->GetRot());
 
 				// 逆に、円柱範囲外の場合消去
-				if (!CUtility::CylinderAndSphere(pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, pBlock->GetPos(), 10.0f))
+				if (!CUtility::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, pBlock->GetPos(), 10.0f))
 				{
 					pBlock->SetRelease();
 				}

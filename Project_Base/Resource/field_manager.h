@@ -12,6 +12,12 @@
 // インクルードファイル
 //****************************************************
 #include "object_X.h"
+#include "player.h"
+
+//****************************************************
+// 前方宣言
+//****************************************************
+class CFan;
 
 //****************************************************
 // 名前空間を定義
@@ -64,7 +70,9 @@ namespace field_manager
 
 		static CField_Manager* m_pInstance;	// 自インスタンス
 
-		CObject_X* m_pCylinderCollider;	// cylinder collider
+		player::CPlayer*	m_pPlayer;				// プレイヤー	
+		CObject_X*			m_pCylinderCollider;	// 円柱判定
+		CFan*				m_pFan;					// 扇形
 	};
 }
 
