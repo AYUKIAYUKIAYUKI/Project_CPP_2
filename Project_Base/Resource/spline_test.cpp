@@ -242,7 +242,7 @@ HRESULT CSpline_Test::CreateVtxBuff()
 		pVtx[i].nor = VEC3_INIT;
 
 		// 頂点色の設定
-		pVtx[i].col = XCOl_INIT;
+		pVtx[i].col = XCOL_INIT;
 
 		// テクスチャ座標の設定
 		pVtx[i].tex = VEC2_INIT;

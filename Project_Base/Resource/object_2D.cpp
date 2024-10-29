@@ -12,6 +12,11 @@
 
 #include "renderer.h"
 
+//****************************************************
+// usingディレクティブ
+//****************************************************
+using namespace abbr;
+
 //============================================================================
 // 
 // publicメンバ
@@ -25,10 +30,10 @@ CObject_2D::CObject_2D(int nPriority) :
 	CObject{ nPriority },
 	m_pVtxBuff{ nullptr },
 	m_pTex{ nullptr },
-	m_Pos{ 0.0f, 0.0f, 0.0f },
-	m_Rot{ 0.0f, 0.0f, 0.0f },
-	m_Size{ 0.0f, 0.0f, 0.0f },
-	m_Col{ 1.0f, 1.0f, 1.0f, 1.0f },
+	m_Pos{ VEC3_INIT },
+	m_Rot{ VEC3_INIT },
+	m_Size{ VEC3_INIT },
+	m_Col{ XCOL_INIT },
 	m_fLength{ 0.0f },
 	m_fAngle{ 0.0f },
 	m_fTexWidth{ 1.0f },
@@ -75,10 +80,10 @@ HRESULT CObject_2D::Init()
 	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 
 	// 頂点座標の設定
-	pVtx[0].pos = { 0.0f, 0.0f, 0.0f };
-	pVtx[1].pos = { 0.0f, 0.0f, 0.0f };
-	pVtx[2].pos = { 0.0f, 0.0f, 0.0f };
-	pVtx[3].pos = { 0.0f, 0.0f, 0.0f };
+	pVtx[0].pos = VEC3_INIT;
+	pVtx[1].pos = VEC3_INIT;
+	pVtx[2].pos = VEC3_INIT;
+	pVtx[3].pos = VEC3_INIT;
 
 	// 除算数の設定
 	pVtx[0].rhw = 1.0f;
@@ -87,10 +92,10 @@ HRESULT CObject_2D::Init()
 	pVtx[3].rhw = 1.0f;
 
 	//頂点色の設定
-	pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	pVtx[0].col = XCOL_INIT;
+	pVtx[1].col = XCOL_INIT;
+	pVtx[2].col = XCOL_INIT;
+	pVtx[3].col = XCOL_INIT;
 
 	// テクスチャ座標の設定
 	pVtx[0].tex = { 0.0f, 0.0f };

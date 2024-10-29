@@ -97,7 +97,7 @@ namespace abbr
 	using Vec3 = D3DXVECTOR3;
 
 	/// <summary> D3DXCOLOR‰Šú‰»—p </summary>
-	static const XCol XCOl_INIT = XCol(1.0f, 1.0f, 1.0f, 1.0f);
+	static const XCol XCOL_INIT = XCol(1.0f, 1.0f, 1.0f, 1.0f);
 
 	/// <summary> D3DXVECTOR2‰Šú‰»—p </summary>
 	static const Vec2 VEC2_INIT = Vec2(0.0f, 0.0f);

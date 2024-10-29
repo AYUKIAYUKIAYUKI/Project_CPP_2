@@ -31,7 +31,7 @@ CObject_HUD::CObject_HUD(int nPriority) :
 	m_PosTarget{ VEC3_INIT },
 	m_RotTarget{ VEC3_INIT },
 	m_SizeTarget{ VEC3_INIT },
-	m_ColTarget{ XCOl_INIT }
+	m_ColTarget{ XCOL_INIT }
 {
 
 }
