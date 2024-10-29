@@ -45,6 +45,28 @@ CObject_2D::CObject_2D(int nPriority) :
 }
 
 //============================================================================
+// テクスチャ指定
+//============================================================================
+CObject_2D::CObject_2D(CTexture_Manager::TYPE Type) :
+	CObject{ static_cast<int>(CObject::LAYER::UI) },
+	m_pVtxBuff{ nullptr },
+	m_pTex{ nullptr },
+	m_Pos{ VEC3_INIT },
+	m_Rot{ VEC3_INIT },
+	m_Size{ VEC3_INIT },
+	m_Col{ XCOL_INIT },
+	m_fLength{ 0.0f },
+	m_fAngle{ 0.0f },
+	m_fTexWidth{ 1.0f },
+	m_fTexHeight{ 1.0f },
+	m_nNowPatternU{ 0 },
+	m_nNowPatternV{ 0 }
+{
+	// テクスチャ割当
+	BindTex(Type);
+}
+
+//============================================================================
 // デストラクタ
 //============================================================================
 CObject_2D::~CObject_2D()
@@ -57,54 +79,11 @@ CObject_2D::~CObject_2D()
 //============================================================================
 HRESULT CObject_2D::Init()
 {
-	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
-
 	// 頂点バッファの生成
-	pDev->CreateVertexBuffer(sizeof(VERTEX_2D) * 4,
-		D3DUSAGE_WRITEONLY,
-		FVF_VERTEX_2D,
-		D3DPOOL_MANAGED,
-		&m_pVtxBuff,
-		nullptr);
-
-	if (m_pVtxBuff == nullptr)
-	{ // 生成失敗
+	if (FAILED(CreateVtxBuff()))
+	{
 		return E_FAIL;
 	}
-
-	// 頂点情報へのポインタ
-	VERTEX_2D* pVtx = nullptr;
-
-	// 頂点バッファをロック
-	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
-
-	// 頂点座標の設定
-	pVtx[0].pos = VEC3_INIT;
-	pVtx[1].pos = VEC3_INIT;
-	pVtx[2].pos = VEC3_INIT;
-	pVtx[3].pos = VEC3_INIT;
-
-	// 除算数の設定
-	pVtx[0].rhw = 1.0f;
-	pVtx[1].rhw = 1.0f;
-	pVtx[2].rhw = 1.0f;
-	pVtx[3].rhw = 1.0f;
-
-	//頂点色の設定
-	pVtx[0].col = XCOL_INIT;
-	pVtx[1].col = XCOL_INIT;
-	pVtx[2].col = XCOL_INIT;
-	pVtx[3].col = XCOL_INIT;
-
-	// テクスチャ座標の設定
-	pVtx[0].tex = { 0.0f, 0.0f };
-	pVtx[1].tex = { 1.0f, 0.0f };
-	pVtx[2].tex = { 0.0f, 1.0f };
-	pVtx[3].tex = { 1.0f, 1.0f };
-
-	// 頂点バッファをアンロックする
-	m_pVtxBuff->Unlock();
 
 	return S_OK;
 }
@@ -117,8 +96,8 @@ void CObject_2D::Uninit()
 	// 頂点バッファの破棄
 	if (m_pVtxBuff != nullptr)
 	{
-		m_pVtxBuff->Release();
-		m_pVtxBuff = nullptr;
+		m_pVtxBuff->Release();	// 頂点バッファの解放
+		m_pVtxBuff = nullptr;	// ポインタの初期化
 	}
 }
 
@@ -129,7 +108,7 @@ void CObject_2D::Update()
 {
 	if (m_pVtxBuff == nullptr)
 	{ // 頂点バッファが消失
-		assert(false);
+		assert(false && "2Dオブジェクトの頂点バッファが消失");
 	}
 
 	// 必要な数値を算出
@@ -167,10 +146,14 @@ void CObject_2D::Update()
 		0.0f
 	};
 
+#if 0
+#ifdef _DEBUG
 	for (int i = 0; i < 4; ++i)
 	{
 		CRenderer::GetInstance()->SetDebugString("頂点座標 : " + std::to_string(pVtx[i].pos.x) + " :  " + std::to_string(pVtx[i].pos.y) + " : " + std::to_string(pVtx[i].pos.z));
 	}
+#endif	// _DEBUG
+#endif
 
 	// 頂点色の設定
 	pVtx[0].col = m_Col;
@@ -208,7 +191,7 @@ void CObject_2D::Draw()
 	// ポリゴンの描画
 	pDev->DrawPrimitive(D3DPT_TRIANGLESTRIP,	// プリミティブの種類
 		0,										// 頂点情報の先頭アドレス
-		2);										// プリミティブ数
+		NUM_PRIM);								// プリミティブ数
 }
 
 //============================================================================
@@ -369,13 +352,67 @@ void CObject_2D::SetNowPatternV(int nNowPatternV)
 CObject_2D* CObject_2D::Create()
 {
 	// インスタンスを生成
-	CObject_2D* pObject2D = DBG_NEW CObject_2D();
+	CObject_2D* pNewInstance = DBG_NEW CObject_2D();
 
 	// 生成出来ていたら初期設定
-	if (pObject2D != nullptr)
+	if (pNewInstance != nullptr)
 	{
-		pObject2D->Init();
+		pNewInstance->Init();
 	}
 
-	return pObject2D;
+	return pNewInstance;
+}
+
+//============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
+
+//============================================================================
+// 頂点バッファの生成
+//============================================================================
+HRESULT CObject_2D::CreateVtxBuff()
+{
+	// デバイスを取得
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+
+	// 頂点バッファの生成
+	pDev->CreateVertexBuffer(sizeof(VERTEX_2D) * NUM_VTX,
+		D3DUSAGE_WRITEONLY,
+		FVF_VERTEX_2D,
+		D3DPOOL_MANAGED,
+		&m_pVtxBuff,
+		nullptr);
+
+	if (m_pVtxBuff == nullptr)
+	{ // 生成失敗
+		return E_FAIL;
+	}
+
+	// 頂点情報へのポインタ
+	VERTEX_2D* pVtx = nullptr;
+
+	// 頂点バッファをロック
+	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
+
+	for (WORD wNumVtx = 0; wNumVtx < NUM_VTX; ++wNumVtx)
+	{
+		// 頂点座標の設定
+		pVtx[wNumVtx].pos = VEC3_INIT;
+
+		// 除算数の設定
+		pVtx[wNumVtx].rhw = 1.0f;
+
+		// 頂点色の設定
+		pVtx[wNumVtx].col = XCOL_INIT;
+
+		// テクスチャ座標の設定
+		pVtx[wNumVtx].tex = VEC2_INIT;
+	}
+
+	// 頂点バッファをアンロックする
+	m_pVtxBuff->Unlock();
+
+	return S_OK;
 }

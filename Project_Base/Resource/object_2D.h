@@ -24,6 +24,7 @@ class CObject_2D : public CObject
 public:
 
 	CObject_2D(int nPriority = static_cast<int>(LAYER::UI));	// 描画優先度指定コンストラクタ
+	CObject_2D(CTexture_Manager::TYPE Type);					// テクスチャ指定コンストラクタ
 	~CObject_2D() override;										// デストラクタ
 
 	HRESULT	Init() override;	// 初期設定
@@ -64,19 +65,23 @@ public:
 
 private:
 
-	LPDIRECT3DVERTEXBUFFER9	m_pVtxBuff;	// 頂点バッファのポインタ
-	LPDIRECT3DTEXTURE9		m_pTex;		// テクスチャのポインタ
+	static constexpr WORD NUM_VTX = 4;	// 頂点数
+	static constexpr WORD NUM_PRIM = 2;	// プリミティブ数
 
-	D3DXVECTOR3	m_Pos;			// 座標
-	D3DXVECTOR3	m_Rot;			// 向き
-	D3DXVECTOR3 m_Size;			// サイズ
-	D3DXCOLOR	m_Col;			// 色
-	float		m_fLength;		// 展開用対角線
-	float		m_fAngle;		// 対角線用角度
-	float		m_fTexWidth;	// 横テクスチャ分割幅
-	float		m_fTexHeight;	// 縦テクスチャ分縦幅
-	int			m_nNowPatternU;	// 現在の横テクスチャ種類
-	int			m_nNowPatternV;	// 現在の縦テクスチャ種類
+	HRESULT CreateVtxBuff();	// 頂点バッファの生成
+
+	LPDIRECT3DVERTEXBUFFER9	m_pVtxBuff;		// 頂点バッファのポインタ
+	LPDIRECT3DTEXTURE9		m_pTex;			// テクスチャのポインタ
+	D3DXVECTOR3				m_Pos;			// 座標
+	D3DXVECTOR3				m_Rot;			// 向き
+	D3DXVECTOR3				m_Size;			// サイズ
+	D3DXCOLOR				m_Col;			// 色
+	float					m_fLength;		// 展開用対角線
+	float					m_fAngle;		// 対角線用角度
+	float					m_fTexWidth;	// 横テクスチャ分割幅
+	float					m_fTexHeight;	// 縦テクスチャ分縦幅
+	int						m_nNowPatternU;	// 現在の横テクスチャ種類
+	int						m_nNowPatternV;	// 現在の縦テクスチャ種類
 };
 
 #endif // _OBJECT_2D_H_
