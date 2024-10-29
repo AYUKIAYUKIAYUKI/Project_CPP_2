@@ -57,11 +57,11 @@ HRESULT CField_Manager::Init()
 
 	// プレイヤーのゲージを生成
 	m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergauge.json");
-	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::TEST1);
+	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAYERGAUGE);
 
 	// プレイヤーのゲージウィンドウを生成
 	m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergaugewindow.json");
-	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::TEST0);
+	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAYERGAUGEWINDOW);
 
 	// 円柱の判定を生成
 	m_pCylinderCollider = CObject_X::Create(static_cast<int>(CObject::LAYER::BACK));

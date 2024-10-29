@@ -20,8 +20,10 @@ public:
 	//****************************************************
 	enum class TYPE
 	{
-		TEST0 = 0,	// テスト
-		TEST1,		// テスト
+		TEST0 = 0,			// テスト
+		TEST1,				// テスト
+		PLAYERGAUGE,		// プレイヤーのゲージ
+		PLAYERGAUGEWINDOW,	// プレイヤーのゲージウィンドウ
 		MAX,
 	};
 

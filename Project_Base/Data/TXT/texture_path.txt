@@ -1,2 +1,4 @@
 test.jpg
 sea.png
+gauge.png
+gauge_window.png
