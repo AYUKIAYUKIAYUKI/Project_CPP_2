@@ -58,6 +58,8 @@ namespace field_manager
 
 	private:
 
+		static constexpr WORD NUM_LIFE = 5;	// ライフの表示数
+
 		CField_Manager();	// デフォルトコンストラクタ
 		~CField_Manager();	// デストラクタ
 
@@ -68,11 +70,12 @@ namespace field_manager
 		void TestDelete();							// 仮の破棄メソッド
 		void TestDeleteAll();						// 仮の全破棄メソッド
 
-		player::CPlayer*	m_pPlayer;				// プレイヤー	
-		CObject_HUD*		m_pPlayerGauge;			// プレイヤーのゲージ
-		CObject_HUD*		m_pPlayerGaugeWindow;	// プレイヤーのゲージウィンドウ
-		CObject_X*			m_pCylinderCollider;	// 円柱判定
-		CFan*				m_pFan;					// 扇形
+		player::CPlayer*	m_pPlayer;					// プレイヤー	
+		CObject_HUD*		m_pPlayerLife[NUM_LIFE];	// プレイヤー	の体力
+		CObject_HUD*		m_pPlayerGauge;				// プレイヤーのゲージ
+		CObject_HUD*		m_pPlayerGaugeWindow;		// プレイヤーのゲージウィンドウ
+		CObject_X*			m_pCylinderCollider;		// 円柱判定
+		CFan*				m_pFan;						// 扇形
 
 		static CField_Manager* m_pInstance;	// 自インスタンス
 	};

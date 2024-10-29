@@ -1,4 +1,5 @@
 test.jpg
 sea.png
+circle.png
 gauge.png
 gauge_window.png

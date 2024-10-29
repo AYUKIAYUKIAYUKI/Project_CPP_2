@@ -40,7 +40,7 @@ HRESULT CTitle::Init()
 	HRESULT hr{ CScene::Init() };
 
 	/* ‰¼ */
-	CObject_HUD* pTest = CObject_HUD::Create("Data\\JSON\\HUD\\test_polygon.json");
+	CObject_HUD* pTest = CObject_HUD::Create("Data\\JSON\\HUD\\codingocean.json");
 	pTest->BindTex(CTexture_Manager::TYPE::TEST1);
 
 	return hr;

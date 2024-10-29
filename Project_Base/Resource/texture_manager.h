@@ -22,6 +22,7 @@ public:
 	{
 		TEST0 = 0,			// テスト
 		TEST1,				// テスト
+		CIRCLE,				// サークル
 		PLAYERGAUGE,		// プレイヤーのゲージ
 		PLAYERGAUGEWINDOW,	// プレイヤーのゲージウィンドウ
 		MAX,

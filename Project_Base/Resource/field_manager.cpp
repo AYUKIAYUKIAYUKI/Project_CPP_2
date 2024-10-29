@@ -55,6 +55,14 @@ HRESULT CField_Manager::Init()
 		assert(false && "プレイヤーの検索結果がありませんでした");
 	}
 
+	// プレイヤーの体力を生成
+	for (WORD i = 0; i < NUM_LIFE; ++i)
+	{
+		std::string FilePath = "Data\\JSON\\HUD\\playerlife\\" + to_string(i) + ".json";
+		m_pPlayerLife[i] = CObject_HUD::Create(FilePath);
+		m_pPlayerLife[i]->BindTex(CTexture_Manager::TYPE::CIRCLE);
+	}
+
 	// プレイヤーのゲージを生成
 	m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergauge.json");
 	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAYERGAUGE);
@@ -168,7 +176,10 @@ CField_Manager::CField_Manager() :
 	m_pCylinderCollider{ nullptr },
 	m_pFan{ nullptr }
 {
-
+	for (WORD i = 0; i < NUM_LIFE; ++i)
+	{
+		m_pPlayerLife[i] = nullptr;
+	}
 }
 
 //============================================================================

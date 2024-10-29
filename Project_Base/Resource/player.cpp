@@ -40,7 +40,8 @@ CPlayer::CPlayer() :
 	m_fDirection{ 0.0f },
 	m_PosTarget{ VEC3_INIT },
 	m_fMoveSpeed{ DEFAULT_MOVE_SPEED },
-	m_RotTarget{ VEC3_INIT }
+	m_RotTarget{ VEC3_INIT },
+	m_nLife{ 0 }
 {
 
 }
@@ -67,15 +68,16 @@ HRESULT CPlayer::Init()
 	// 初期方角を設定
 	m_fDirection = D3DX_PI * -0.5f;
 
-	// 基底クラスの初期設定
-	HRESULT hr = CObject_X::Init();
+	// 初期体力を設定
+	m_nLife = 5;
 
-	if (FAILED(hr))
+	// Xオブジェクトの初期設定
+	if (FAILED(CObject_X::Init()))
 	{
 		assert(false && "プレイヤークラスの初期設定に失敗");
 	}
 
-	return hr;
+	return S_OK;
 }
 
 //============================================================================
@@ -130,6 +132,22 @@ void CPlayer::Draw()
 {
 	// 基底クラスの描画処理
 	CObject_X::Draw();
+}
+
+//============================================================================
+// 体力を取得
+//============================================================================
+const int& CPlayer::GetLife() const
+{
+	return m_nLife;
+}
+
+//============================================================================
+// 体力を設定
+//============================================================================
+void CPlayer::SetLife(int nLife)
+{
+	m_nLife = nLife;
 }
 
 //============================================================================

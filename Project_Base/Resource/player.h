@@ -42,6 +42,9 @@ namespace player
 		void	Update() override;	// 更新処理
 		void	Draw() override;	// 描画処理
 
+		const int& GetLife() const;	// 体力を取得
+		void SetLife(int nLife);	// 体力を設定
+
 		const Vec3& GetPosTarget() const;	// 目標座標を取得
 		void SetPosTarget(Vec3 PosTarget);	// 目標座標を設定
 
@@ -69,6 +72,7 @@ namespace player
 		Vec3	m_PosTarget;	// 目標座標
 		float	m_fMoveSpeed;	// 移動速度
 		Vec3	m_RotTarget;	// 目標向き
+		int		m_nLife;		// 体力
 	};
 }
 
