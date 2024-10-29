@@ -355,10 +355,13 @@ CObject_2D* CObject_2D::Create()
 	CObject_2D* pNewInstance = DBG_NEW CObject_2D();
 
 	// 生成出来ていたら初期設定
-	if (pNewInstance != nullptr)
+	if (pNewInstance == nullptr)
 	{
-		pNewInstance->Init();
+		assert(false && "2Dオブジェクトの生成に失敗");
 	}
+
+	// 初期設定
+	pNewInstance->Init();
 
 	return pNewInstance;
 }

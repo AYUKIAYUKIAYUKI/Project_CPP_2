@@ -10,14 +10,10 @@
 //****************************************************
 #include "title.h"
 
-// インプット取得用
 #include "manager.h"
-
 #include "renderer.h"
 
-/* test */
-#include "object_2D.h"
-#include "texture_manager.h"
+#include "object_HUD.h"
 
 //============================================================================
 // コンストラクタ
@@ -44,10 +40,10 @@ HRESULT CTitle::Init()
 	HRESULT hr{ CScene::Init() };
 
 	/* 仮 */
-	CObject_2D* pTest = CObject_2D::Create();
+	CObject_HUD* pTest = CObject_HUD::Create();
 	pTest->BindTex(CTexture_Manager::TYPE::TEST1);
-	pTest->SetPos({ SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f });
-	pTest->SetSize({ 150.0f, 50.0f, 0.0f });
+	pTest->SetPosTarget({ SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f });
+	pTest->SetSizeTarget({ 150.0f, 50.0f, 0.0f });
 
 	return hr;
 }

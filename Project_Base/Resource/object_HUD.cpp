@@ -72,7 +72,8 @@ void CObject_HUD::Uninit()
 //============================================================================
 void CObject_HUD::Update()
 {
-
+	// 目標値への補正
+	AdjustToTarget();
 
 	// 2Dオブジェクトの更新処理
 	CObject_2D::Update();
@@ -88,6 +89,70 @@ void CObject_HUD::Draw()
 }
 
 //============================================================================
+// 目標座標取得
+//============================================================================
+const D3DXVECTOR3& CObject_HUD::GetPosTarget() const
+{
+	return m_PosTarget;
+}
+
+//============================================================================
+// 目標座標設定
+//============================================================================
+void CObject_HUD::SetPosTarget(D3DXVECTOR3 PosTarget)
+{
+	m_PosTarget = PosTarget;
+}
+
+//============================================================================
+// 目標向き取得
+//============================================================================
+const D3DXVECTOR3& CObject_HUD::GetRotTarget() const
+{
+	return m_RotTarget;
+}
+
+//============================================================================
+// 目標向き設定
+//============================================================================
+void CObject_HUD::SetRotTarget(D3DXVECTOR3 RotTarget)
+{
+	m_RotTarget = RotTarget;
+}
+
+//============================================================================
+// 目標サイズ取得
+//============================================================================
+const D3DXVECTOR3& CObject_HUD::GetSizeTarget() const
+{
+	return m_SizeTarget;
+}
+
+//============================================================================
+// 目標サイズ設定
+//============================================================================
+void CObject_HUD::SetSizeTarget(D3DXVECTOR3 SizeTarget)
+{
+	m_SizeTarget = SizeTarget;
+}
+
+//============================================================================
+// 目標色取得
+//============================================================================
+const D3DXCOLOR& CObject_HUD::GetColTarget() const
+{
+	return m_ColTarget;
+}
+
+//============================================================================
+// 目標色設定
+//============================================================================
+void CObject_HUD::SetColTarget(D3DXCOLOR ColTarget)
+{
+	m_ColTarget = ColTarget;
+}
+
+//============================================================================
 // 生成
 //============================================================================
 CObject_HUD* CObject_HUD::Create()
@@ -96,7 +161,7 @@ CObject_HUD* CObject_HUD::Create()
 	CObject_HUD* pNewInstance = DBG_NEW CObject_HUD();
 
 	// 生成出来ていたら初期設定
-	if (pNewInstance != nullptr)
+	if (pNewInstance == nullptr)
 	{
 		assert(false && "HUDオブジェクトの生成に失敗");
 	}
@@ -105,4 +170,37 @@ CObject_HUD* CObject_HUD::Create()
 	pNewInstance->Init();
 
 	return pNewInstance;
+}
+
+//============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
+
+//============================================================================
+// 目標値への補正
+//============================================================================
+void CObject_HUD::AdjustToTarget()
+{
+	// 目標座標へ移動
+	Vec3 NowPos = GetPos();
+	NowPos += (m_PosTarget - NowPos) * COEF_ADJUST;
+	SetPos(NowPos);
+
+	// 目標向きへ補正
+	Vec3 NowRot = GetRot();
+	CUtility::AdjustDirection(m_RotTarget.y, NowRot.y);	// 向きの範囲の補正
+	NowRot += (m_RotTarget - NowRot) * COEF_ADJUST;
+	SetRot(NowRot);
+
+	// 目標サイズへ補正
+	Vec3 NowSize = GetSize();
+	NowSize += (m_SizeTarget - NowSize) * COEF_ADJUST;
+	SetSize(NowSize);
+
+	// 目標色補正
+	XCol NowCol = GetCol();
+	NowCol += (m_ColTarget - NowCol) * COEF_ADJUST;
+	SetCol(NowCol);
 }

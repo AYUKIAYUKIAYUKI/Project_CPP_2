@@ -65,8 +65,11 @@ public:
 
 private:
 
-	static constexpr WORD NUM_VTX = 4;	// 頂点数
-	static constexpr WORD NUM_PRIM = 2;	// プリミティブ数
+	/// <summary> 頂点数 </summary>
+	static constexpr WORD NUM_VTX = 4;
+
+	/// <summary> プリミティブ数 </summary>
+	static constexpr WORD NUM_PRIM = 2;
 
 	HRESULT CreateVtxBuff();	// 頂点バッファの生成
 
