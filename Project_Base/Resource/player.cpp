@@ -41,7 +41,7 @@ CPlayer::CPlayer() :
 	m_PosTarget{ VEC3_INIT },
 	m_fMoveSpeed{ DEFAULT_MOVE_SPEED },
 	m_RotTarget{ VEC3_INIT },
-	m_nLife{ 0 }
+	m_nLife{ MAX_LIFE }
 {
 
 }
@@ -67,9 +67,6 @@ HRESULT CPlayer::Init()
 
 	// 初期方角を設定
 	m_fDirection = D3DX_PI * -0.5f;
-
-	// 初期体力を設定
-	m_nLife = 5;
 
 	// Xオブジェクトの初期設定
 	if (FAILED(CObject_X::Init()))
@@ -117,11 +114,23 @@ void CPlayer::Update()
 	CObject_X::Update();
 	
 #ifdef _DEBUG
+
+	if (CManager::GetKeyboard()->GetTrigger(DIK_1))
+	{
+		m_nLife > 0 ? m_nLife += -1 : m_nLife = 0;
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_2))
+	{
+		m_nLife < MAX_LIFE ? m_nLife += 1 : m_nLife = MAX_LIFE;
+	}
+
+	CRenderer::GetInstance()->SetDebugString("プレイヤー体力" + to_string(m_nLife));
 	CRenderer::GetInstance()->SetDebugString("プレイヤー方角" + to_string(m_fDirection * (180 / D3DX_PI)));
 	CRenderer::GetInstance()->SetDebugString("プレイヤー座標 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
 	CRenderer::GetInstance()->SetDebugString("プレイヤー移動速度" + to_string(m_fMoveSpeed));
 	CRenderer::GetInstance()->SetDebugString("プレイヤー向き　　 : " + to_string(GetRot().x * (180 / D3DX_PI)) + " :  " + to_string(GetRot().y * (180 / D3DX_PI)) + " : " + to_string(GetRot().z * (180 / D3DX_PI)));
 	CRenderer::GetInstance()->SetDebugString("目標プレイヤー向き : " + to_string(GetRotTarget().x * (180 / D3DX_PI)) + " :  " + to_string(GetRotTarget().y * (180 / D3DX_PI)) + " : " + to_string(GetRotTarget().z * (180 / D3DX_PI)));
+
 #endif // _DEBUG
 }
 

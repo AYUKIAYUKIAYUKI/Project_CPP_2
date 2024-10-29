@@ -31,7 +31,10 @@ namespace player
 	{
 	public:
 
-		/// <summary> デフォルトのプレイヤー移動速度 </summary>
+		/// <summary> プレイヤーの最大体力 </summary>
+		static constexpr int MAX_LIFE = 5;
+
+		/// <summary> プレイヤーのデフォルト移動速度 </summary>
 		static constexpr float DEFAULT_MOVE_SPEED = 0.005f;
 
 		CPlayer();	// デフォルトコンストラクタ

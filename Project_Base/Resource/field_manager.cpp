@@ -56,7 +56,7 @@ HRESULT CField_Manager::Init()
 	}
 
 	// プレイヤーの体力を生成
-	for (WORD i = 0; i < NUM_LIFE; ++i)
+	for (WORD i = 0; i < CPlayer::MAX_LIFE; ++i)
 	{
 		std::string FilePath = "Data\\JSON\\HUD\\playerlife\\" + to_string(i) + ".json";
 		m_pPlayerLife[i] = CObject_HUD::Create(FilePath);
@@ -127,14 +127,8 @@ void CField_Manager::Update()
 		TestDeleteAll();
 	}
 
-	if (CManager::GetKeyboard()->GetPress(DIK_Z))
-	{
-		m_pPlayerGaugeWindow->SetVibration();
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_X))
-	{
-		m_pPlayerGaugeWindow->SetWaving();
-	}
+	// HUDの更新
+	UpdateHUD();
 }
 
 //============================================================================
@@ -176,7 +170,7 @@ CField_Manager::CField_Manager() :
 	m_pCylinderCollider{ nullptr },
 	m_pFan{ nullptr }
 {
-	for (WORD i = 0; i < NUM_LIFE; ++i)
+	for (WORD i = 0; i < CPlayer::MAX_LIFE; ++i)
 	{
 		m_pPlayerLife[i] = nullptr;
 	}
@@ -395,4 +389,42 @@ void CField_Manager::TestDeleteAll()
 
 		pObj = pObj->GetNext();
 	}
+}
+
+//============================================================================
+// HUDの更新処理
+//============================================================================
+void CField_Manager::UpdateHUD()
+{
+	// 体力量分のHUDが表示されるように調整
+	for (WORD i = CPlayer::MAX_LIFE; i > 0; --i)
+	{
+		// 座標を取得
+		Vec3 NewPosTarget = m_pPlayerLife[i - 1]->GetPosTarget();
+
+		if (i > m_pPlayer->GetLife())
+		{
+			NewPosTarget.y = -100.0f;
+		}
+		else
+		{
+			NewPosTarget.y = 75.0f;
+		}
+
+		// 座標を反映
+		m_pPlayerLife[i - 1]->SetPosTarget(NewPosTarget);
+	}
+
+#if 0	// HUD挙動の確認
+
+	if (CManager::GetKeyboard()->GetPress(DIK_Z))
+	{
+		m_pPlayerGaugeWindow->SetVibration();
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_X))
+	{
+		m_pPlayerGaugeWindow->SetWaving();
+	}
+
+#endif
 }

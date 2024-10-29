@@ -58,8 +58,6 @@ namespace field_manager
 
 	private:
 
-		static constexpr WORD NUM_LIFE = 5;	// ライフの表示数
-
 		CField_Manager();	// デフォルトコンストラクタ
 		~CField_Manager();	// デストラクタ
 
@@ -69,13 +67,14 @@ namespace field_manager
 		bool DetectAdjacentBlock(const Vec3& Pos);	// 隣接し合うブロックを検出
 		void TestDelete();							// 仮の破棄メソッド
 		void TestDeleteAll();						// 仮の全破棄メソッド
+		void UpdateHUD();							// HUDの更新処理
 
-		player::CPlayer*	m_pPlayer;					// プレイヤー	
-		CObject_HUD*		m_pPlayerLife[NUM_LIFE];	// プレイヤー	の体力
-		CObject_HUD*		m_pPlayerGauge;				// プレイヤーのゲージ
-		CObject_HUD*		m_pPlayerGaugeWindow;		// プレイヤーのゲージウィンドウ
-		CObject_X*			m_pCylinderCollider;		// 円柱判定
-		CFan*				m_pFan;						// 扇形
+		player::CPlayer*	m_pPlayer;									// プレイヤー	
+		CObject_HUD*		m_pPlayerLife[player::CPlayer::MAX_LIFE];	// プレイヤー	の体力
+		CObject_HUD*		m_pPlayerGauge;								// プレイヤーのゲージ
+		CObject_HUD*		m_pPlayerGaugeWindow;						// プレイヤーのゲージウィンドウ
+		CObject_X*			m_pCylinderCollider;						// 円柱判定
+		CFan*				m_pFan;										// 扇形
 
 		static CField_Manager* m_pInstance;	// 自インスタンス
 	};
