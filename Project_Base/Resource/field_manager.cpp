@@ -17,6 +17,9 @@
 // デバッグ表示用
 #include "renderer.h"
 
+// シーン切り替え用
+#include "fade.h"
+
 // オブジェクト用
 #include "block.h"
 #include "object_HUD.h"
@@ -133,6 +136,11 @@ void CField_Manager::Update()
 
 	// HUDの更新
 	UpdateHUD();
+
+	if (m_pPlayer->GetLife() <= 0)
+	{
+		CFade::SetFade(CScene::MODE::RESULT);
+	}
 }
 
 //============================================================================
@@ -261,11 +269,11 @@ void CField_Manager::TestCreate()
 
 			// 破棄範囲にはみ出さず生成されるように調整
 			/* 初期座標が原点の場合、生成範囲の半径がフィールドの半径を下回ると無限ループ */
-			//do
-			//{
-#if 0
+			do
+			{
+#if 1
 				// ランダムに方角をずらす
-				fRandomRange = CUtility::GetRandomValue<float>() * m_fCoeffRaondomRange;
+				fRandomRange = CUtility::GetRandomValue<float>();
 
 				// 生成用の座標を決定
 				NewPos.x = cosf(fDirection + fRandomRange) * FIELD_RADIUS;
@@ -280,7 +288,7 @@ void CField_Manager::TestCreate()
 #else
 				NewPos = { 0.0f,0.0f, FIELD_RADIUS };
 #endif
-			//} while (!CUtility::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, NewPos, 10.0f));
+			} while (!CUtility::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, NewPos, 10.0f));
 
 			// 向きを決定
 			NewRot.y = -(fDirection + fRandomRange);
@@ -317,7 +325,7 @@ bool CField_Manager::DetectAdjacentBlock(const Vec3& Pos)
 			const Vec3& Vec = pBlock->GetPos() - Pos;
 
 			/* ある程度接近してしまっているブロックが存在する場合 */
-			if (sqrtf(Vec.x * Vec.x + Vec.y * Vec.y + Vec.z * Vec.z) <= pBlock->GetSize().x * 5.0f)
+			if (sqrtf(Vec.x * Vec.x + Vec.y * Vec.y + Vec.z * Vec.z) <= pBlock->GetSize().x * 3.0f)
 			{
 				// 座標の生成をやり直す
 				return 1;
@@ -351,7 +359,7 @@ void CField_Manager::TestDelete()
 				pBlock = CUtility::DownCast(pBlock, pObj);
 
 				// 破棄方法の変更
-#if 0
+#if 1
 				m_pCylinderCollider->SetPos(m_pPlayer->GetPos());
 				m_pCylinderCollider->SetRot(m_pPlayer->GetRot());
 
