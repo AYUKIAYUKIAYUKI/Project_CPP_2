@@ -68,11 +68,11 @@ namespace field_manager
 		void TestDelete();							// 仮の破棄メソッド
 		void TestDeleteAll();						// 仮の全破棄メソッド
 
-		player::CPlayer*	m_pPlayer;					// プレイヤー	
-		CObject_HUD*		m_pPlayerGaugeWindow[2];	// プレイヤーのゲージウィンドウ
-		CObject_HUD*		m_pPlayerGauge;				// プレイヤーのゲージ
-		CObject_X*			m_pCylinderCollider;		// 円柱判定
-		CFan*				m_pFan;						// 扇形
+		player::CPlayer*	m_pPlayer;				// プレイヤー	
+		CObject_HUD*		m_pPlayerGauge;			// プレイヤーのゲージ
+		CObject_HUD*		m_pPlayerGaugeWindow;	// プレイヤーのゲージウィンドウ
+		CObject_X*			m_pCylinderCollider;	// 円柱判定
+		CFan*				m_pFan;					// 扇形
 
 		static CField_Manager* m_pInstance;	// 自インスタンス
 	};

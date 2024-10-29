@@ -18,8 +18,9 @@
 #include "renderer.h"
 
 // オブジェクト用
-#include "player.h"
 #include "block.h"
+#include "object_HUD.h"
+#include "player.h"
 
 //****************************************************
 // usingディレクティブ
@@ -53,6 +54,14 @@ HRESULT CField_Manager::Init()
 	{
 		assert(false && "プレイヤーの検索結果がありませんでした");
 	}
+
+	// プレイヤーのゲージを生成
+	m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergauge.json");
+	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::TEST1);
+
+	// プレイヤーのゲージウィンドウを生成
+	m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergaugewindow.json");
+	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::TEST0);
 
 	// 円柱の判定を生成
 	m_pCylinderCollider = CObject_X::Create(static_cast<int>(CObject::LAYER::BACK));
@@ -145,6 +154,8 @@ CField_Manager* CField_Manager::GetInstance()
 //============================================================================
 CField_Manager::CField_Manager() :
 	m_pPlayer{ nullptr },
+	m_pPlayerGauge{ nullptr },
+	m_pPlayerGaugeWindow{ nullptr },
 	m_pCylinderCollider{ nullptr },
 	m_pFan{ nullptr }
 {
@@ -179,8 +190,11 @@ void CField_Manager::Create()
 void CField_Manager::Uninit()
 {
 	// 扇形を破棄
-	m_pFan->Release();
-	m_pFan = nullptr;
+	if (m_pFan != nullptr)
+	{
+		m_pFan->Release();	// 解放
+		m_pFan = nullptr;	// ポインタを初期化
+	}
 }
 
 //============================================================================
@@ -202,7 +216,7 @@ void CField_Manager::TestCreate()
 		CInputPad* pPad = CManager::GetPad();
 
 		/* スクリーン画面内で、どちらの方向を移動していたか */
-		float ScreenX = 0.0f;
+		//float ScreenX = 0.0f;
 
 		/* 直前の方角の変更を検出 */
 		if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::LEFT) || pPad->GetJoyStickL().X < 0)
