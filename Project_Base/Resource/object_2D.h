@@ -1,6 +1,6 @@
 //============================================================================
 // 
-// 2Dオブジェクト管理、ヘッダファイル [object_2D.h]
+// 2Dオブジェクト、ヘッダファイル [object_2D.h]
 // Author : 福田歩希
 // 
 //============================================================================
@@ -23,7 +23,7 @@ class CObject_2D : public CObject
 {
 public:
 
-	CObject_2D(int nPriority = static_cast<int>(LAYER::NONE));	// 描画優先度指定コンストラクタ
+	CObject_2D(int nPriority = static_cast<int>(LAYER::UI));	// 描画優先度指定コンストラクタ
 	~CObject_2D() override;										// デストラクタ
 
 	HRESULT	Init() override;	// 初期設定
