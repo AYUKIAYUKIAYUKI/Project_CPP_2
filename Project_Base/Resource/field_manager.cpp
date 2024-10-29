@@ -44,6 +44,10 @@ CField_Manager* CField_Manager::m_pInstance = nullptr;
 //============================================================================
 HRESULT CField_Manager::Init()
 {
+	// マップ表示
+	m_pMap = CObject_HUD::Create("Data\\JSON\\HUD\\map.json");
+	m_pMap->BindTex(CTexture_Manager::TYPE::MAP);
+
 	// プレイヤーを検索
 	if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
 	{
@@ -164,6 +168,7 @@ CField_Manager* CField_Manager::GetInstance()
 // デフォルトコンストラクタ
 //============================================================================
 CField_Manager::CField_Manager() :
+	m_pMap{ nullptr },
 	m_pPlayer{ nullptr },
 	m_pPlayerGauge{ nullptr },
 	m_pPlayerGaugeWindow{ nullptr },

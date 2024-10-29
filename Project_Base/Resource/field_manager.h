@@ -69,6 +69,7 @@ namespace field_manager
 		void TestDeleteAll();						// 仮の全破棄メソッド
 		void UpdateHUD();							// HUDの更新処理
 
+		CObject_HUD*		m_pMap;										// マップ
 		player::CPlayer*	m_pPlayer;									// プレイヤー	
 		CObject_HUD*		m_pPlayerLife[player::CPlayer::MAX_LIFE];	// プレイヤー	の体力
 		CObject_HUD*		m_pPlayerGauge;								// プレイヤーのゲージ
