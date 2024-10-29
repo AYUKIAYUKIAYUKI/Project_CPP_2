@@ -9,6 +9,9 @@
 // インクルードファイル
 //****************************************************
 #include "fan.h"
+#include "field_manager.h"
+
+#include "renderer.h"
 
 //****************************************************
 // usingディレクティブ
@@ -26,24 +29,99 @@ using namespace abbr;
 //============================================================================
 void CFan::Release()
 {
+	// 自身の破棄
 	if (this != nullptr)
 	{
-		delete this;
+		this->Uninit();	// 終了処理
+		delete this;	// メモリを解放
 	}
 }
 
 //============================================================================
 // 更新処理
 //============================================================================
+void CFan::Update()
+{
+	// 頂点座標の設定
+	SetVtx();
+
+	// ワールド行列設定
+	SetMtxWorld();
+
+#ifdef _DEBUG
+
+	CRenderer::GetInstance()->SetDebugString("扇形の方角 : " + to_string(m_fDirection));
+	CRenderer::GetInstance()->SetDebugString("方角のベク : " + to_string(sinf(m_fDirection)) + " : " + to_string(cosf(m_fDirection)));
+	CRenderer::GetInstance()->SetDebugString("扇形の長さ : " + to_string(m_fLength));
+	CRenderer::GetInstance()->SetDebugString("扇形の範囲 : " + to_string(m_fRange));
+	CRenderer::GetInstance()->SetDebugString("範囲のベク : " + to_string(cosf(m_fRange)));
+
+#endif // _DEBUG
+}
+
+//============================================================================
+// 描画処理
+//============================================================================
+void CFan::Draw()
+{
+	// デバイスを取得
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+
+	// ライトをオフ
+	pDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+
+	// 頂点バッファをデータストリームに設定
+	pDev->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_3D));
+
+	// 頂点フォーマットの設定
+	pDev->SetFVF(FVF_VERTEX_3D);
+
+	// ワールドマトリックスの設定
+	pDev->SetTransform(D3DTS_WORLD, &m_MtxWorld);
+
+	// テクスチャの設定
+	pDev->SetTexture(0, nullptr);
+
+	// 線の描画
+	pDev->DrawPrimitive(D3DPT_LINESTRIP,	// プリミティブの種類
+		0,									// 頂点情報の先頭アドレス
+		1);									// プリミティブ数
+
+	// ライトをオン
+	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
+}
+
+//============================================================================
+// 扇形範囲内にあるか検出
+//============================================================================
 bool CFan::DetectInFanRange(D3DXVECTOR3 Pos)
 {
 	// 扇形の始点から特定座標へのベクトルを計算
-	Vec3 Vec = Pos - m_Pos;
+	Vec3 VecPoint = Pos - m_Pos;
 
 	// 範囲内に存在しているか、小数値を切り詰めて精密な判定を行う
-	if (static_cast<int>(sqrtf(Vec.x * Vec.x + Vec.z * Vec.z)) <= m_fLength)
+	if (static_cast<int>(sqrtf(VecPoint.x * VecPoint.x + VecPoint.z * VecPoint.z)) <= m_fLength)
 	{
-		return 1;
+		// 座標ベクトルを正規化
+		D3DXVec3Normalize(&VecPoint, &VecPoint);
+
+		// 方角から方向ベクトルを計算
+		Vec3 VecDir = Vec3(sinf(m_fDirection), 0.0f, cosf(m_fDirection));
+
+		// 方向ベクトルを正規化
+		D3DXVec3Normalize(&VecDir, &VecDir);
+
+		// 方向ベクトルと座標ベクトルの内積を行い、扇の範囲をcosで求める
+		float fθ = D3DXVec3Dot(&VecDir, &VecPoint);
+
+		// 扇の範囲内に存在していれば
+		if (cosf(m_fRange) <= fθ ||
+			cosf(m_fRange) >= fθ)
+		{
+			CRenderer::GetInstance()->SetDebugString("内積のなす角 : " + to_string(fθ));
+
+			return 1;
+		}
 	}
 
 	return 0;
@@ -125,6 +203,9 @@ CFan* CFan::Create()
 		assert(false && "扇形インスタンスの生成に失敗");
 	}
 
+	// 初期設定
+	pNewInstance->Init();
+	
 	// JSONファイルを読み取り展開
 	std::ifstream ifs("Data\\JSON\\fan_parameter.json");
 
@@ -160,6 +241,9 @@ CFan* CFan::Create(D3DXVECTOR3 Pos, float fDirection, float fLength, float fRang
 		assert(false && "扇形インスタンスの生成に失敗");
 	}
 
+	// 初期設定
+	pNewInstance->Init();
+
 	// パラメータを反映
 	pNewInstance->SetPos(Pos);
 	pNewInstance->SetDirection(fDirection);
@@ -179,12 +263,14 @@ CFan* CFan::Create(D3DXVECTOR3 Pos, float fDirection, float fLength, float fRang
 // コンストラクタ
 //============================================================================
 CFan::CFan() :
+	m_pVtxBuff{ nullptr },
 	m_Pos{ VEC3_INIT },
 	m_fDirection{ 0.0f },
 	m_fLength{ 0.0f },
 	m_fRange{ 0.0f }
 {
-
+	// ワールド行列の初期化
+	D3DXMatrixIdentity(&m_MtxWorld);
 }
 
 //============================================================================
@@ -193,4 +279,129 @@ CFan::CFan() :
 CFan::~CFan()
 {
 
+}
+
+//============================================================================
+// 初期設定
+//============================================================================
+HRESULT CFan::Init()
+{
+	// 頂点バッファの生成
+	if (FAILED(CreateVtxBuff()))
+	{
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+//============================================================================
+// 頂点バッファの生成
+//============================================================================
+HRESULT CFan::CreateVtxBuff()
+{
+	// デバイスを取得
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+
+	// 頂点バッファの生成
+	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * NUM_VTX,
+		D3DUSAGE_WRITEONLY,
+		FVF_VERTEX_3D,
+		D3DPOOL_MANAGED,
+		&m_pVtxBuff,
+		nullptr);
+
+	if (m_pVtxBuff == nullptr)
+	{ // 生成失敗
+		return E_FAIL;
+	}
+
+	// 頂点情報へのポインタ
+	VERTEX_3D* pVtx = nullptr;
+
+	// 頂点バッファをロック
+	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
+
+	for (WORD i = 0; i < NUM_VTX; ++i)
+	{
+		// 頂点座標を設定
+		pVtx[i].pos = VEC3_INIT;
+
+		// 法線ベクトルの設定
+		pVtx[i].nor = VEC3_INIT;
+
+		// 頂点色の設定
+		pVtx[i].col = D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f);
+
+		// テクスチャ座標の設定
+		pVtx[i].tex = VEC2_INIT;
+	}
+
+	// 頂点バッファをアンロックする
+	m_pVtxBuff->Unlock();
+
+	return S_OK;
+}
+
+//============================================================================
+// 終了処理
+//============================================================================
+void CFan::Uninit()
+{
+	// 頂点バッファの破棄
+	if (m_pVtxBuff != nullptr)
+	{
+		m_pVtxBuff->Release();
+		m_pVtxBuff = nullptr;
+	}
+}
+
+//============================================================================
+// 頂点座標の設定
+//============================================================================
+void CFan::SetVtx()
+{
+	// 方角から方向ベクトルを計算
+	Vec3 VecDir = Vec3(sinf(m_fDirection), 0.0f, cosf(m_fDirection));
+
+	// 頂点情報へのポインタ
+	VERTEX_3D* pVtx = nullptr;
+
+	// 頂点バッファをロック
+	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
+
+	// 頂点座標の設定
+	pVtx[0].pos = m_Pos;
+	pVtx[1].pos = VecDir * 350.0f;
+
+	//for (WORD i = 0; i < NUM_VTX; ++i)
+	//{
+	//	CRenderer::GetInstance()->SetDebugString("オオオオオ : " + to_string(pVtx[i].pos.x) + " : " + to_string(pVtx[i].pos.y) + " : " + to_string(pVtx[i].pos.z));
+	//}
+
+	// 頂点バッファをアンロックする
+	m_pVtxBuff->Unlock();
+}
+
+//============================================================================
+// ワールド行列設定
+//============================================================================
+void CFan::SetMtxWorld()
+{
+	// 計算用行列
+	Mtx mtxRot, mtxTrans;
+
+	// ワールド行列を初期化
+	D3DXMatrixIdentity(&m_MtxWorld);
+
+	// 平行移動行列作成
+	D3DXMatrixTranslation(&mtxTrans,
+		m_Pos.x,
+		m_Pos.y,
+		m_Pos.z);
+
+	// 平行移動行列との掛け算
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxTrans);
 }

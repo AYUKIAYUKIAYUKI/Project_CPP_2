@@ -105,6 +105,13 @@ void CField_Manager::Update()
 	// ランダム範囲の強度を表示
 	CRenderer::GetInstance()->SetDebugString("ランダム範囲の強度:" + to_string(m_fCoeffRaondomRange));
 #endif
+
+	// 扇形の方角をプレイヤーの方角に
+	m_pFan->SetDirection(m_pPlayer->GetDirection());
+
+	// 扇形の更新処理
+	m_pFan->Update();
+
 	// 仮の生成メソッド
 	TestCreate();
 
@@ -116,6 +123,15 @@ void CField_Manager::Update()
 		// 仮の全破棄メソッド
 		TestDeleteAll();
 	}
+}
+
+//============================================================================
+// 描画処理
+//============================================================================
+void CField_Manager::Draw()
+{
+	// 扇形の描画処理
+	m_pFan->Draw();
 }
 
 //============================================================================
@@ -227,8 +243,9 @@ void CField_Manager::TestCreate()
 
 			// 破棄範囲にはみ出さず生成されるように調整
 			/* 初期座標が原点の場合、生成範囲の半径がフィールドの半径を下回ると無限ループ */
-			do
-			{
+			//do
+			//{
+#if 0
 				// ランダムに方角をずらす
 				fRandomRange = CUtility::GetRandomValue<float>() * m_fCoeffRaondomRange;
 
@@ -242,8 +259,10 @@ void CField_Manager::TestCreate()
 				{
 					NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
 				}
-
-			} while (!CUtility::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, NewPos, 10.0f));
+#else
+				NewPos = { 0.0f,0.0f, FIELD_RADIUS };
+#endif
+			//} while (!CUtility::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, NewPos, 10.0f));
 
 			// 向きを決定
 			NewRot.y = -(fDirection + fRandomRange);

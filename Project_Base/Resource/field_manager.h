@@ -43,7 +43,7 @@ namespace field_manager
 		static constexpr float GENERATE_RANGE_RADIUS = 350.0f;
 
 		/// <summary> 最大ブロック数 </summary>
-		static constexpr int MAX_BLOCK = 20;
+		static constexpr int MAX_BLOCK = 1;
 
 		/// <summary> 重力 </summary>
 		static constexpr float FIELD_GRAVITY = -0.025f;
@@ -51,6 +51,7 @@ namespace field_manager
 		HRESULT Init();	// 初期設定
 		void Release();	// 解放
 		void Update();	// 更新処理
+		void Draw();	// 描画処理
 
 		static CField_Manager* GetInstance();	// 自インスタンスを取得
 

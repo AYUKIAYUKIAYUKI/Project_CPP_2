@@ -21,6 +21,8 @@ class CFan
 public:
 	
 	void Release();							// 破棄
+	void Update();							// 更新処理
+	void Draw();							// 描画処理
 	bool DetectInFanRange(D3DXVECTOR3 Pos);	// 扇形範囲内にあるか検出
 
 	const D3DXVECTOR3& GetPos() const;	// 座標を取得
@@ -40,13 +42,23 @@ public:
 
 private:
 
+	static constexpr WORD NUM_VTX = 2;	// 頂点数
+
 	CFan();		// デフォルトコンストラクタ
 	~CFan();	// デストラクタ
 
-	D3DXVECTOR3 m_Pos;			// 座標
-	float		m_fDirection;	// 方角
-	float		m_fLength;		// 長さ
-	float		m_fRange;		// 範囲
+	HRESULT Init();				// 初期設定
+	HRESULT CreateVtxBuff();	// 頂点バッファの生成
+	void Uninit();				// 終了処理
+	void SetVtx();				// 頂点座標の設定
+	void SetMtxWorld();			// ワールド行列設定
+
+	LPDIRECT3DVERTEXBUFFER9	m_pVtxBuff;		// 頂点バッファのポインタ
+	D3DXMATRIX				m_MtxWorld;		// ワールド行列
+	D3DXVECTOR3				m_Pos;			// 座標
+	float					m_fDirection;	// 方角
+	float					m_fLength;		// 長さ
+	float					m_fRange;		// 範囲
 };
 
 #endif	// _FAN_H_

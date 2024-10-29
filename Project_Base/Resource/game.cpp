@@ -102,6 +102,9 @@ void CGame::Update()
 //============================================================================
 void CGame::Draw()
 {
+	// フィールドマネージャーの描画
+	CField_Manager::GetInstance()->Draw();
+
 	// 基底クラスの描画処理
 	CScene::Draw();
 }
