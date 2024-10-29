@@ -27,6 +27,10 @@ public:
 	void	Uninit() override;	// 終了処理
 	void	Update() override;	// 更新処理
 	void	Draw() override;	// 描画処理
+	void	SetVibration();		// 振動を与える
+	void	SetWaving();		// 波打ちを与える
+
+	void SetCorrectionCoef(float fCorrectionCoef);	// 補正係数設定
 
 	const D3DXVECTOR3& GetPosTarget() const;	// 目標座標取得
 	void SetPosTarget(D3DXVECTOR3 PosTarget);	// 目標座標設定
@@ -45,15 +49,13 @@ public:
 
 private:
 
-	/// <summary> 目標値への補間強度 </summary>
-	static constexpr float COEF_ADJUST = 0.1f;
+	void CorrectToTarget();	// 目標値へ補正
 
-	void AdjustToTarget();	// 目標値への補正
-
-	D3DXVECTOR3	m_PosTarget;	// 目標座標
-	D3DXVECTOR3	m_RotTarget;	// 目標向き
-	D3DXVECTOR3 m_SizeTarget;	// 目標サイズ
-	D3DXCOLOR	m_ColTarget;	// 目標色
+	float		m_fCorrectionCoef;	// 補正係数
+	D3DXVECTOR3	m_PosTarget;		// 目標座標
+	D3DXVECTOR3	m_RotTarget;		// 目標向き
+	D3DXVECTOR3 m_SizeTarget;		// 目標サイズ
+	D3DXCOLOR	m_ColTarget;		// 目標色
 };
 
 #endif // _OBJECT_HUD_H_

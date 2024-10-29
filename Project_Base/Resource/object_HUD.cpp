@@ -28,6 +28,7 @@ using namespace abbr;
 //============================================================================
 CObject_HUD::CObject_HUD(int nPriority) :
 	CObject_2D{ nPriority },
+	m_fCorrectionCoef{ 0.0f },
 	m_PosTarget{ VEC3_INIT },
 	m_RotTarget{ VEC3_INIT },
 	m_SizeTarget{ VEC3_INIT },
@@ -73,7 +74,7 @@ void CObject_HUD::Uninit()
 void CObject_HUD::Update()
 {
 	// 目標値への補正
-	AdjustToTarget();
+	CorrectToTarget();
 
 	// 2Dオブジェクトの更新処理
 	CObject_2D::Update();
@@ -86,6 +87,36 @@ void CObject_HUD::Draw()
 {
 	// 2Dオブジェクトの描画処理
 	CObject_2D::Draw();
+}
+
+//============================================================================
+// 振動を与える
+//============================================================================
+void CObject_HUD::SetVibration()
+{
+	Vec3 NewPos = GetPos();
+	NewPos.x += CUtility::GetRandomValue<float>() * 0.05f;
+	NewPos.y += CUtility::GetRandomValue<float>() * 0.05f;
+	SetPos(NewPos);
+}
+
+//============================================================================
+// 波打ちを与える
+//============================================================================
+void CObject_HUD::SetWaving()
+{
+	Vec3 NewSize = GetSize();
+	NewSize.x *= 1.2f;
+	NewSize.y *= 0.8f;
+	SetSize(NewSize);
+}
+
+//============================================================================
+// 補正係数設定
+//============================================================================
+void CObject_HUD::SetCorrectionCoef(float fCorrectioncoef)
+{
+	m_fCorrectionCoef = fCorrectioncoef;
 }
 
 //============================================================================
@@ -199,6 +230,10 @@ CObject_HUD* CObject_HUD::Create(std::string FilePath)
 		JSON Json;
 		ifs >> Json;
 
+		// 補正係数を設定
+		auto CorrectionCoef = Json["CorrectionCoef"];
+		pNewInstance->SetCorrectionCoef(CorrectionCoef);
+
 		// 初期座標を設定
 		auto Pos = Json["Pos"];
 		pNewInstance->SetPos(Vec3(Pos[0], Pos[1], Pos[2]));
@@ -248,26 +283,26 @@ CObject_HUD* CObject_HUD::Create(std::string FilePath)
 //============================================================================
 // 目標値への補正
 //============================================================================
-void CObject_HUD::AdjustToTarget()
+void CObject_HUD::CorrectToTarget()
 {
 	// 目標座標へ移動
 	Vec3 NowPos = GetPos();
-	NowPos += (m_PosTarget - NowPos) * COEF_ADJUST;
+	NowPos += (m_PosTarget - NowPos) * m_fCorrectionCoef;
 	SetPos(NowPos);
 
 	// 目標向きへ補正
 	Vec3 NowRot = GetRot();
 	CUtility::AdjustDirection(m_RotTarget.y, NowRot.y);	// 向きの範囲の補正
-	NowRot += (m_RotTarget - NowRot) * COEF_ADJUST;
+	NowRot += (m_RotTarget - NowRot) * m_fCorrectionCoef;
 	SetRot(NowRot);
 
 	// 目標サイズへ補正
 	Vec3 NowSize = GetSize();
-	NowSize += (m_SizeTarget - NowSize) * COEF_ADJUST;
+	NowSize += (m_SizeTarget - NowSize) * m_fCorrectionCoef;
 	SetSize(NowSize);
 
 	// 目標色補正
 	XCol NowCol = GetCol();
-	NowCol += (m_ColTarget - NowCol) * COEF_ADJUST;
+	NowCol += (m_ColTarget - NowCol) * m_fCorrectionCoef;
 	SetCol(NowCol);
 }

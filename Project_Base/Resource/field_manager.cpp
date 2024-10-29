@@ -118,6 +118,15 @@ void CField_Manager::Update()
 		// 仮の全破棄メソッド
 		TestDeleteAll();
 	}
+
+	if (CManager::GetKeyboard()->GetPress(DIK_Z))
+	{
+		m_pPlayerGaugeWindow->SetVibration();
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_X))
+	{
+		m_pPlayerGaugeWindow->SetWaving();
+	}
 }
 
 //============================================================================

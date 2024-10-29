@@ -109,10 +109,10 @@ void CUtility::AdjustDirection(float& fAngle1, float& fAngle2)
 //============================================================================
 // 球形どうしの衝突判定
 //============================================================================
-bool CUtility::OnlySphere(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const D3DXVECTOR3& posTarget, const float& fRadiusTarget)
+bool CUtility::OnlySphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget)
 {
 	// 対象位置へのベクトルを算出
-	const D3DXVECTOR3& Vec = posTarget - posSelf;
+	const D3DXVECTOR3& Vec = PosTarget - PosSelf;
 
 	// お互いの距離が、お互いの半径の和以下であれば衝突
 	if (sqrtf(Vec.x * Vec.x + Vec.y * Vec.y + Vec.z * Vec.z) <= fRadiusSelf - fRadiusTarget)
@@ -126,17 +126,17 @@ bool CUtility::OnlySphere(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, 
 //============================================================================
 // 円柱と点の衝突判定
 //============================================================================
-bool CUtility::CylinderAndPoint(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& posTarget)
+bool CUtility::CylinderAndPoint(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget)
 {
 	// 対象位置へのベクトルを算出
-	const D3DXVECTOR3& Vec = posTarget - posSelf;
+	const D3DXVECTOR3& Vec = PosTarget - PosSelf;
 
 	// お互いの距離が、半径以下で
 	if (sqrtf(Vec.x * Vec.x + Vec.z * Vec.z) <= fRadiusSelf)
 	{
 		// 円柱の高さの範囲内に点が存在すれば衝突
-		if (posSelf.y + fHeight > posTarget.y &&
-			posSelf.y - fHeight < posTarget.y)
+		if (PosSelf.y + fHeight > PosTarget.y &&
+			PosSelf.y - fHeight < PosTarget.y)
 		{
 			return 1;
 		}
@@ -148,17 +148,17 @@ bool CUtility::CylinderAndPoint(const D3DXVECTOR3& posSelf, const float& fRadius
 //============================================================================
 // 円柱と球の衝突判定
 //============================================================================
-bool CUtility::CylinderAndSphere(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& posTarget, const float& fRadiusTarget)
+bool CUtility::CylinderAndSphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget)
 {
 	// 対象位置へのベクトルを算出
-	const D3DXVECTOR3& Vec = posTarget - posSelf;
+	const D3DXVECTOR3& Vec = PosTarget - PosSelf;
 
 	// お互いの距離が、半径以下で
 	if (sqrtf(Vec.x * Vec.x + Vec.z * Vec.z) <= fRadiusSelf - fRadiusTarget)
 	{
 		// 円柱の高さの範囲内に点が存在すれば衝突
-		if (posSelf.y + fHeight > posTarget.y &&
-			posSelf.y - fHeight < posTarget.y)
+		if (PosSelf.y + fHeight > PosTarget.y &&
+			PosSelf.y - fHeight < PosTarget.y)
 		{
 			return 1;
 		}
@@ -170,15 +170,15 @@ bool CUtility::CylinderAndSphere(const D3DXVECTOR3& posSelf, const float& fRadiu
 //============================================================================
 // 円柱とAABBの衝突判定
 //============================================================================
-bool CUtility::CylinderAndAABB(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& posTarget, const D3DXVECTOR3& sizeTarget)
+bool CUtility::CylinderAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& sizeTarget)
 {
 	// 全ての軸方向からお互いにめり込んでいるとき衝突
-	if (posSelf.x + fRadiusSelf > posTarget.x - sizeTarget.x &&
-		posSelf.x - fRadiusSelf < posTarget.x + sizeTarget.x &&
-		posSelf.y + fHeight > posTarget.y - sizeTarget.y &&
-		posSelf.y < posTarget.y + sizeTarget.y &&
-		posSelf.z + fRadiusSelf > posTarget.z - sizeTarget.z &&
-		posSelf.z - fRadiusSelf < posTarget.z + sizeTarget.z)
+	if (PosSelf.x + fRadiusSelf > PosTarget.x - sizeTarget.x &&
+		PosSelf.x - fRadiusSelf < PosTarget.x + sizeTarget.x &&
+		PosSelf.y + fHeight > PosTarget.y - sizeTarget.y &&
+		PosSelf.y < PosTarget.y + sizeTarget.y &&
+		PosSelf.z + fRadiusSelf > PosTarget.z - sizeTarget.z &&
+		PosSelf.z - fRadiusSelf < PosTarget.z + sizeTarget.z)
 	{
 		return 1;
 	}

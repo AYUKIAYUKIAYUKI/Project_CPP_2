@@ -28,16 +28,16 @@ public:
 	static void AdjustDirection(float& fAngle1, float& fAngle2);
 
 	// ‹…‚Ç‚¤‚µ‚ÌÕ“Ë”»’è
-	static bool OnlySphere(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const D3DXVECTOR3& posTarget, const float& fRadiusTarget);
+	static bool OnlySphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget);
 
 	// ‰~’Œ‚Æ“_‚ÌÕ“Ë”»’è
-	static bool CylinderAndPoint(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& posTarget);
+	static bool CylinderAndPoint(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget);
 
 	// ‰~’Œ‚Æ‹…‚ÌÕ“Ë”»’è
-	static bool CylinderAndSphere(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& posTarget, const float& fRadiusTarget);
+	static bool CylinderAndSphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget);
 
 	// ‰~’Œ‚ÆAABB‚ÌÕ“Ë”»’è
-	static bool CylinderAndAABB(const D3DXVECTOR3& posSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& posTarget, const D3DXVECTOR3& sizeTarget);
+	static bool CylinderAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTarget);
 
 	// —”¶¬
 	template <typename T> static T GetRandomValue();
@@ -55,17 +55,17 @@ template <typename T> T CUtility::GetRandomValue()
 	const int nRange = 180;
 
 	// ”{‚Ì”ÍˆÍ‚©‚çƒ‰ƒ“ƒ_ƒ€‚È®”‚ğ¶¬
-	int random{ rand() % (nRange * 2) };
+	int nRandom{ rand() % (nRange * 2) };
 
 	// ‚à‚Æ‚Ì”ÍˆÍ‚ğ’´‚¦‚Ä‚¢‚½ê‡³•‰‚ğ”½“]
-	if (random > nRange)
+	if (nRandom > nRange)
 	{
-		random %= nRange;
-		random *= -1;
+		nRandom %= nRange;
+		nRandom *= -1;
 	}
 
 	// ®”‚ğw’è‚³‚ê‚½Œ^‚ÉƒLƒƒƒXƒg
-	return static_cast<T>(random);
+	return static_cast<T>(nRandom);
 }
 
 //============================================================================
