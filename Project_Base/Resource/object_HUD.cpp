@@ -173,6 +173,73 @@ CObject_HUD* CObject_HUD::Create()
 }
 
 //============================================================================
+// 生成
+//============================================================================
+CObject_HUD* CObject_HUD::Create(std::string FilePath)
+{
+	// インスタンスを生成
+	CObject_HUD* pNewInstance = DBG_NEW CObject_HUD();
+
+	// 生成出来ていたら初期設定
+	if (pNewInstance == nullptr)
+	{
+		assert(false && "HUDオブジェクトの生成に失敗");
+	}
+
+	// 初期設定
+	pNewInstance->Init();
+
+	// JSONファイルを読み取り展開
+	std::ifstream ifs(FilePath);
+
+	// ファイルが展開出来ていたら
+	if (ifs.good())
+	{
+		// JSONデータをパース
+		JSON Json;
+		ifs >> Json;
+
+		// 初期座標を設定
+		auto Pos = Json["Pos"];
+		pNewInstance->SetPos(Vec3(Pos[0], Pos[1], Pos[2]));
+
+		// 目標座標を設定
+		auto PosTarget = Json["PosTarget"];
+		pNewInstance->SetPosTarget(Vec3(PosTarget[0], PosTarget[1], PosTarget[2]));
+
+		// 初期向きを設定
+		auto Rot = Json["Rot"];
+		pNewInstance->SetRot(Vec3(Rot[0], Rot[1], Rot[2]));
+
+		// 目標向きを設定
+		auto RotTarget = Json["RotTarget"];
+		pNewInstance->SetRotTarget(Vec3(RotTarget[0], RotTarget[1], RotTarget[2]));
+
+		// 初期サイズを設定
+		auto Size = Json["Size"];
+		pNewInstance->SetSize(Vec3(Size[0], Size[1], Size[2]));
+
+		// 目標サイズを設定
+		auto SizeTarget = Json["SizeTarget"];
+		pNewInstance->SetSizeTarget(Vec3(SizeTarget[0], SizeTarget[1], SizeTarget[2]));
+
+		// 初期色を設定
+		auto Col = Json["Col"];
+		pNewInstance->SetCol(XCol(Col[0], Col[1], Col[2], Col[3]));
+
+		// 目標色を設定
+		auto ColTarget = Json["ColTarget"];
+		pNewInstance->SetColTarget(XCol(ColTarget[0], ColTarget[1], ColTarget[2], ColTarget[3]));
+	}
+	else
+	{
+		assert(false && (*FilePath.c_str() + "の読み取りに失敗しました"));
+	}
+
+	return pNewInstance;
+}
+
+//============================================================================
 // 
 // privateメンバ
 // 

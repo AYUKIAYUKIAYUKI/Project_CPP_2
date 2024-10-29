@@ -40,10 +40,8 @@ HRESULT CTitle::Init()
 	HRESULT hr{ CScene::Init() };
 
 	/* ‰¼ */
-	CObject_HUD* pTest = CObject_HUD::Create();
+	CObject_HUD* pTest = CObject_HUD::Create("Data\\JSON\\HUD\\test_polygon.json");
 	pTest->BindTex(CTexture_Manager::TYPE::TEST1);
-	pTest->SetPosTarget({ SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f });
-	pTest->SetSizeTarget({ 150.0f, 50.0f, 0.0f });
 
 	return hr;
 }

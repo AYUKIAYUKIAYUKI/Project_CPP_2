@@ -40,7 +40,8 @@ public:
 	const D3DXCOLOR& GetColTarget() const;	// 目標色取得
 	void SetColTarget(D3DXCOLOR ColTarget);	// 目標色設定
 
-	static CObject_HUD* Create();	// 生成
+	static CObject_HUD* Create();						// 生成
+	static CObject_HUD* Create(std::string FilePath);	// 生成
 
 private:
 
