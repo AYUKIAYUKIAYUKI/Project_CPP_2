@@ -43,19 +43,10 @@ CField_Manager* CField_Manager::m_pInstance = nullptr;
 //============================================================================
 HRESULT CField_Manager::Init()
 {
-	// ランダム範囲の設定
-	m_fCoeffRaondomRange = 0.01f;
-
-	// 円柱の判定を生成
-	m_pCylinderCollider = CObject_X::Create(static_cast<int>(CObject::LAYER::BACK));
-	m_pCylinderCollider->Init();
-
-	// 扇形を生成
-	m_pFan = CFan::Create();
-
 	// プレイヤーを検索
 	if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
 	{
+		// プレイヤーへのポインタを保持
 		m_pPlayer = CUtility::DownCast(m_pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
 	}
 	else
@@ -63,17 +54,17 @@ HRESULT CField_Manager::Init()
 		assert(false && "プレイヤーの検索結果がありませんでした");
 	}
 
-	// 各種パラメータ設定
+	// 円柱の判定を生成
+	m_pCylinderCollider = CObject_X::Create(static_cast<int>(CObject::LAYER::BACK));
+	m_pCylinderCollider->Init();
+	m_pCylinderCollider->BindModel(CModel_X_Manager::TYPE::CYLINDERCOLLIDER);
 	m_pCylinderCollider->SetPos(m_pPlayer->GetPos());
 	m_pCylinderCollider->SetRot(m_pPlayer->GetRot());
 	m_pCylinderCollider->SetScale(GENERATE_RANGE_RADIUS);
-	m_pCylinderCollider->SetAlpha(0.25f);
-
-	// モデルを設定
-	m_pCylinderCollider->BindModel(CModel_X_Manager::TYPE::CYLINDERCOLLIDER);
-
-	// 透明度を設定
 	m_pCylinderCollider->SetAlpha(0.5f);
+
+	// 扇形を生成
+	m_pFan = CFan::Create();
 
 	return S_OK;
 }
@@ -101,11 +92,6 @@ void CField_Manager::Release()
 //============================================================================
 void CField_Manager::Update()
 {
-#ifdef _DEBUG
-	// ランダム範囲の強度を表示
-	CRenderer::GetInstance()->SetDebugString("ランダム範囲の強度:" + to_string(m_fCoeffRaondomRange));
-#endif
-
 	// 扇形の方角をプレイヤーの方角に
 	m_pFan->SetDirection(m_pPlayer->GetDirection());
 
@@ -158,7 +144,6 @@ CField_Manager* CField_Manager::GetInstance()
 // デフォルトコンストラクタ
 //============================================================================
 CField_Manager::CField_Manager() :
-	m_fCoeffRaondomRange{ 0.0f },
 	m_pPlayer{ nullptr },
 	m_pCylinderCollider{ nullptr },
 	m_pFan{ nullptr }

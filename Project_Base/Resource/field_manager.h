@@ -17,6 +17,7 @@
 //****************************************************
 // 前方宣言
 //****************************************************
+class CObject_HUD;
 class CFan;
 
 //****************************************************
@@ -60,20 +61,20 @@ namespace field_manager
 		CField_Manager();	// デフォルトコンストラクタ
 		~CField_Manager();	// デストラクタ
 
-		void Create();							// 生成
-		void Uninit();							// 終了処理
-		void TestCreate();						// 仮の生成メソッド
+		void Create();								// 生成
+		void Uninit();								// 終了処理
+		void TestCreate();							// 仮の生成メソッド
 		bool DetectAdjacentBlock(const Vec3& Pos);	// 隣接し合うブロックを検出
-		void TestDelete();						// 仮の破棄メソッド
-		void TestDeleteAll();					// 仮の全破棄メソッド
+		void TestDelete();							// 仮の破棄メソッド
+		void TestDeleteAll();						// 仮の全破棄メソッド
 
-		float m_fCoeffRaondomRange;	// ランダム範囲の強度
+		player::CPlayer*	m_pPlayer;					// プレイヤー	
+		CObject_HUD*		m_pPlayerGaugeWindow[2];	// プレイヤーのゲージウィンドウ
+		CObject_HUD*		m_pPlayerGauge;				// プレイヤーのゲージ
+		CObject_X*			m_pCylinderCollider;		// 円柱判定
+		CFan*				m_pFan;						// 扇形
 
 		static CField_Manager* m_pInstance;	// 自インスタンス
-
-		player::CPlayer*	m_pPlayer;				// プレイヤー	
-		CObject_X*			m_pCylinderCollider;	// 円柱判定
-		CFan*				m_pFan;					// 扇形
 	};
 }
 
