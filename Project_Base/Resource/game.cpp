@@ -15,6 +15,7 @@
 #include "manager.h"
 
 /* test */
+#include "enemy.h"
 #include "object_3D.h"
 #include "object_X.h"
 #include "player.h"
@@ -54,6 +55,9 @@ HRESULT CGame::Init()
 
 	/* プレイヤーを仮生成 */
 	CPlayer::Create();
+
+	/* エネミーを仮生成 */
+	CEnemy::Create();
 
 	/* ステージ代わりの円筒 */
 	CObject_X* pTest = CObject_X::Create(static_cast<int>(CObject::LAYER::BACK));

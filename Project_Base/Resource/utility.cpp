@@ -156,7 +156,7 @@ bool CUtility::CylinderAndSphere(const D3DXVECTOR3& PosSelf, const float& fRadiu
 	// ‚¨Œİ‚¢‚Ì‹——£‚ªA”¼ŒaˆÈ‰º‚Å
 	if (sqrtf(Vec.x * Vec.x + Vec.z * Vec.z) <= fRadiusSelf - fRadiusTarget)
 	{
-		// ‰~’Œ‚Ì‚‚³‚Ì”ÍˆÍ“à‚É“_‚ª‘¶İ‚·‚ê‚ÎÕ“Ë
+		// ‰~’Œ‚Ì‚‚³‚Ì”ÍˆÍ“à‚É‹…‚ª‘¶İ‚·‚ê‚ÎÕ“Ë
 		if (PosSelf.y + fHeight > PosTarget.y &&
 			PosSelf.y - fHeight < PosTarget.y)
 		{

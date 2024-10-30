@@ -1,6 +1,7 @@
 test.x
 cylinder.x
 mika.x
+enemy.x
 rubble00.x
 rubble01.x
 rubble02.x
