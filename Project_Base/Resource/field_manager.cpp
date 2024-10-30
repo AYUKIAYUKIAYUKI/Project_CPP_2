@@ -421,7 +421,7 @@ void CField_Manager::UpdateHUD()
 		}
 		else
 		{
-			NewPosTarget.y = 100.0f;
+			NewPosTarget.y = 75.0f;
 		}
 
 		// À•W‚ğ”½‰f
