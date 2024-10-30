@@ -44,6 +44,7 @@
     </ClCompile>
     <ClCompile Include="Resource\player.cpp" />
     <ClCompile Include="Resource\player_state.cpp" />
+    <ClCompile Include="Resource\player_state_damage.cpp" />
     <ClCompile Include="Resource\player_state_default.cpp" />
     <ClCompile Include="Resource\player_state_manager.cpp" />
     <ClCompile Include="Resource\player_state_dash.cpp" />
@@ -83,6 +84,7 @@
     <ClInclude Include="resource\pch.h" />
     <ClInclude Include="Resource\player.h" />
     <ClInclude Include="Resource\player_state.h" />
+    <ClInclude Include="Resource\player_state_damage.h" />
     <ClInclude Include="Resource\player_state_default.h" />
     <ClInclude Include="Resource\player_state_manager.h" />
     <ClInclude Include="Resource\player_state_dash.h" />
