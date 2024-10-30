@@ -32,6 +32,18 @@ using namespace abbr;
 //============================================================================
 CPlayer_State_Dash::CPlayer_State_Dash() :
 	CPlayer_State{},
+	m_bDirection{ false },
+	m_nDashDuration{ 0 }
+{
+
+}
+
+//============================================================================
+// 方向指定コンストラクタ
+//============================================================================
+CPlayer_State_Dash::CPlayer_State_Dash(bool bDirection) :
+	CPlayer_State{},
+	m_bDirection{ bDirection },
 	m_nDashDuration{ 0 }
 {
 
@@ -95,9 +107,19 @@ void CPlayer_State_Dash::SetPosTarget_Unnamed()
 	using namespace field_manager;
 
 	// 方角を設定
-	float fDirection = m_pPlayer->GetDirection();		// 取得
-	fDirection += -m_pPlayer->GetMoveSpeed() * 20.0f;	// 変動
-	m_pPlayer->SetDirection(fDirection);				// 反映
+	float fDirection = m_pPlayer->GetDirection();
+
+	// 設定されている方角に合わせて移動
+	if (m_bDirection)
+	{
+		fDirection += m_pPlayer->GetMoveSpeed() * 5.0f;
+	}
+	else
+	{
+		fDirection += m_pPlayer->GetMoveSpeed() * -5.0f;
+	}
+
+	m_pPlayer->SetDirection(fDirection);
 
 	Vec3 NewPosTarget = VEC3_INIT;										// 新規目標座標を作成
 	NewPosTarget.x = cosf(fDirection) * CField_Manager::FIELD_RADIUS;	// X方向の座標を設定

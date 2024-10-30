@@ -88,7 +88,7 @@ void CPlayer_State_Default::Control()
 		if (CManager::GetKeyboard()->GetTrigger(DIK_RSHIFT))
 		{
 			// ダッシュをする
-			To_Dash();
+			To_Dash(false);
 		}
 	}
 	else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT) || pPad->GetJoyStickL().X > 0)
@@ -103,7 +103,7 @@ void CPlayer_State_Default::Control()
 		if (CManager::GetKeyboard()->GetTrigger(DIK_RSHIFT))
 		{
 			// ダッシュをする
-			To_Dash();
+			To_Dash(true);
 		}
 	}
 
@@ -149,10 +149,10 @@ void CPlayer_State_Default::SetPosTargetByDirection()
 //============================================================================
 // ダッシュをする
 //============================================================================
-void CPlayer_State_Default::To_Dash()
+void CPlayer_State_Default::To_Dash(bool bDirection)
 {
 	if (GetNextState() == nullptr)
 	{
-		SetNextState(DBG_NEW CPlayer_State_Dash());
+		SetNextState(DBG_NEW CPlayer_State_Dash(bDirection));
 	}
 }

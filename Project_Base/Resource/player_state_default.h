@@ -30,7 +30,7 @@ private:
 	void Control();						// 操作
 	void SetRotTargetToMoveDirection();	// 目標向きを移動方向に設定
 	void SetPosTargetByDirection();		// 方角から目標座標を設定
-	void To_Dash();						// ダッシュをする
+	void To_Dash(bool bDirection);		// ダッシュをする
 };
 
 #endif	// _PLAYER_STATE_DEFAULT_
