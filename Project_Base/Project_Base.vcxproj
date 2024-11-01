@@ -23,6 +23,7 @@
     <ClCompile Include="resource\camera.cpp" />
     <ClCompile Include="Resource\character.cpp" />
     <ClCompile Include="Resource\character_state.cpp" />
+    <ClCompile Include="Resource\character_state_manager.cpp" />
     <ClCompile Include="Resource\cubic_bezier.cpp" />
     <ClCompile Include="Resource\enemy.cpp" />
     <ClCompile Include="Resource\fade.cpp" />
@@ -68,6 +69,7 @@
     <ClInclude Include="resource\camera.h" />
     <ClInclude Include="Resource\character.h" />
     <ClInclude Include="Resource\character_state.h" />
+    <ClInclude Include="Resource\character_state_manager.h" />
     <ClInclude Include="Resource\cubic_bezier.h" />
     <ClInclude Include="Resource\enemy.h" />
     <ClInclude Include="Resource\fade.h" />

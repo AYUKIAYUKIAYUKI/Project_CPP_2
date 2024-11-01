@@ -21,9 +21,9 @@ class CCharacter_State : public CState
 {
 public:
 
-	CCharacter_State();								// デフォルトコンストラクタ
-	CCharacter_State(CCharacter* pCharacter);		// キャラクター取得コンストラクタ
-	~CCharacter_State() override;					// デストラクタ
+	CCharacter_State();							// デフォルトコンストラクタ
+	CCharacter_State(CCharacter* pCharacter);	// キャラクター取得コンストラクタ
+	~CCharacter_State() override;				// デストラクタ
 
 	virtual void Update() override = 0;	// 更新処理
 
