@@ -69,13 +69,13 @@ namespace field_manager
 		void TestDeleteAll();						// 仮の全破棄メソッド
 		void UpdateHUD();							// HUDの更新処理
 
-		CObject_HUD*		m_pMap;										// マップ
-		player::CPlayer*	m_pPlayer;									// プレイヤー	
-		CObject_HUD*		m_pPlayerLife[player::CPlayer::MAX_LIFE];	// プレイヤー	の体力
-		CObject_HUD*		m_pPlayerGauge;								// プレイヤーのゲージ
-		CObject_HUD*		m_pPlayerGaugeWindow;						// プレイヤーのゲージウィンドウ
-		CObject_X*			m_pCylinderCollider;						// 円柱判定
-		CFan*				m_pFan;										// 扇形
+		CObject_HUD*	m_pMap;								// マップ
+		CPlayer*		m_pPlayer;							// プレイヤー	
+		CObject_HUD*	m_pPlayerLife[CPlayer::MAX_LIFE];	// プレイヤーの体力
+		CObject_HUD*	m_pPlayerGauge;						// プレイヤーのゲージ
+		CObject_HUD*	m_pPlayerGaugeWindow;				// プレイヤーのゲージウィンドウ
+		CObject_X*		m_pCylinderCollider;				// 円柱判定
+		CFan*			m_pFan;								// 扇形
 
 		static CField_Manager* m_pInstance;	// 自インスタンス
 	};

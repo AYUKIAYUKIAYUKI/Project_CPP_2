@@ -26,6 +26,9 @@ public:
 	/// <summary> エネミーのデフォルト移動速度 </summary>
 	static constexpr float DEFAULT_MOVE_SPEED = 0.003f;
 
+	/// <summary> 目標値への補間強度 </summary>
+	static constexpr float COEF_ADJUST = 0.1f;
+
 	CEnemy();	// デフォルトコンストラクタ
 	~CEnemy();	// デストラクタ
 
@@ -37,9 +40,6 @@ public:
 	static CEnemy* Create();	// 生成
 
 private:
-
-	/// <summary> 目標値への補間強度 </summary>
-	static constexpr float COEF_ADJUST = 0.1f;
 
 	void AttackOnPlayer();	// プレイヤーへ攻撃
 };

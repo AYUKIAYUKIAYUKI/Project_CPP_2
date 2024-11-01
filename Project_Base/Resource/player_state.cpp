@@ -31,7 +31,7 @@ CPlayer_State::CPlayer_State() :
 //============================================================================
 // プレイヤー取得コンストラクタ
 //============================================================================
-CPlayer_State::CPlayer_State(player::CPlayer* pPlayer) :
+CPlayer_State::CPlayer_State(CPlayer* pPlayer) :
 	CState{},
 	m_pPlayer{ pPlayer }
 {
@@ -77,10 +77,10 @@ void CPlayer_State::SetNextState(CPlayer_State* pState)
 //============================================================================
 // プレイヤーを取得
 //============================================================================
-player::CPlayer* CPlayer_State::RetrievePlayer()
+CPlayer* CPlayer_State::RetrievePlayer()
 {
 	// プレイヤーを格納
-	player::CPlayer* pPlayer = nullptr;
+	CPlayer* pPlayer = nullptr;
 
 	// プレイヤーを検索
 	if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)

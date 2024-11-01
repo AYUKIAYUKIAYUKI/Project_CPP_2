@@ -22,7 +22,7 @@ class CPlayer_State : public CState
 public:
 
 	CPlayer_State();							// デフォルトコンストラクタ
-	CPlayer_State(player::CPlayer* pPlayer);	// プレイヤー取得コンストラクタ
+	CPlayer_State(CPlayer* pPlayer);	// プレイヤー取得コンストラクタ
 	~CPlayer_State() override;					// デストラクタ
 
 	virtual void Update() override = 0;	// 更新処理
@@ -32,11 +32,11 @@ public:
 
 protected:
 
-	player::CPlayer* m_pPlayer;	// プレイヤー
+	CPlayer* m_pPlayer;	// プレイヤー
 
 private:
 
-	player::CPlayer* RetrievePlayer();	// プレイヤーを取得
+	CPlayer* RetrievePlayer();	// プレイヤーを取得
 
 	CPlayer_State* m_pNextState;	// 次のステート
 };

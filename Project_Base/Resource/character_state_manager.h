@@ -16,7 +16,7 @@ class CCharacter_State;
 //****************************************************
 // プレイヤーステートマネージャークラス
 //****************************************************
-class CCharacter_State_Manager final
+class CCharacter_State_Manager
 {
 public:
 
