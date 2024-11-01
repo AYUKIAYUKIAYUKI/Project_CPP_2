@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Resource\block.cpp" />
     <ClCompile Include="resource\camera.cpp" />
+    <ClCompile Include="Resource\character.cpp" />
     <ClCompile Include="Resource\cubic_bezier.cpp" />
     <ClCompile Include="Resource\enemy.cpp" />
     <ClCompile Include="Resource\fade.cpp" />
@@ -64,6 +65,7 @@
   <ItemGroup>
     <ClInclude Include="Resource\block.h" />
     <ClInclude Include="resource\camera.h" />
+    <ClInclude Include="Resource\character.h" />
     <ClInclude Include="Resource\cubic_bezier.h" />
     <ClInclude Include="Resource\enemy.h" />
     <ClInclude Include="Resource\fade.h" />
