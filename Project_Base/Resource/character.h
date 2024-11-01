@@ -20,8 +20,8 @@ class CCharacter : public CObject_X
 {
 public:
 
-	CCharacter();			// デフォルトコンストラクタ
-	~CCharacter() override;	// デストラクタ
+	CCharacter();					// デフォルトコンストラクタ
+	virtual ~CCharacter() override;	// デストラクタ
 
 	HRESULT Init() override;	// 初期設定
 	void	Uninit() override;	// 終了設定

@@ -21,9 +21,9 @@ class CPlayer_State : public CState
 {
 public:
 
-	CPlayer_State();							// デフォルトコンストラクタ
+	CPlayer_State();					// デフォルトコンストラクタ
 	CPlayer_State(CPlayer* pPlayer);	// プレイヤー取得コンストラクタ
-	~CPlayer_State() override;					// デストラクタ
+	virtual ~CPlayer_State() override;	// デストラクタ
 
 	virtual void Update() override = 0;	// 更新処理
 

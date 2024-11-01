@@ -23,7 +23,7 @@ public:
 
 	CCharacter_State();							// デフォルトコンストラクタ
 	CCharacter_State(CCharacter* pCharacter);	// キャラクター取得コンストラクタ
-	~CCharacter_State() override;				// デストラクタ
+	virtual ~CCharacter_State() override;		// デストラクタ
 
 	virtual void Update() override = 0;	// 更新処理
 

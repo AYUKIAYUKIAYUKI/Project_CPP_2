@@ -20,8 +20,8 @@ class CCharacter_State_Manager
 {
 public:
 
-	CCharacter_State_Manager();		// デフォルトコンストラクタ
-	~CCharacter_State_Manager();	// デストラクタ
+	CCharacter_State_Manager();				// デフォルトコンストラクタ
+	virtual ~CCharacter_State_Manager();	// デストラクタ
 
 	void Release();				// 破棄
 	void Update();				// 更新処理
