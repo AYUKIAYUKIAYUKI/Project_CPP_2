@@ -10,10 +10,13 @@
 //****************************************************
 #include "character.h"
 
+#include "field_manager.h"
+
 //****************************************************
 // usingディレクティブ
 //****************************************************
 using namespace abbr;
+using namespace field_manager;
 
 //============================================================================
 // 
@@ -72,6 +75,12 @@ void CCharacter::Uninit()
 //============================================================================
 void CCharacter::Update()
 {
+	// 目標向きを移動方向に揃える
+	SetRotTargetToMoveDirection();
+
+	// 目標座標を方角の変動に揃える
+	SetPosTargetByDirection();
+
 	// 目標値への補正
 	CorrectToTarget();
 
@@ -176,6 +185,28 @@ void CCharacter::SetLife(int nLife)
 // privateメンバ
 // 
 //============================================================================
+
+//============================================================================
+// 目標向きを移動方向に揃える
+//============================================================================
+void CCharacter::SetRotTargetToMoveDirection()
+{
+	Vec3 NewRotTarget = VEC3_INIT;						// 新しい目標向きを作成
+	const Vec3& MoveVec = m_PosTarget - GetPos();		// 移動方向のベクトルを作成
+	NewRotTarget.y = atan2f(-MoveVec.x, -MoveVec.z);	// 目標向きを移動方向に
+	SetRotTarget(NewRotTarget);							// 目標向きを反映
+}
+
+//============================================================================
+// 目標座標を方角の変動に揃える
+//============================================================================
+void CCharacter::SetPosTargetByDirection()
+{
+	Vec3 NewPosTarget = VEC3_INIT;										// 新規目標座標を作成
+	NewPosTarget.x = cosf(m_fDirection) * CField_Manager::FIELD_RADIUS;	// X方向の座標を設定
+	NewPosTarget.z = sinf(m_fDirection) * CField_Manager::FIELD_RADIUS;	// Z方向の座標を設定
+	SetPosTarget(NewPosTarget);											// 目標座標を反映
+}
 
 //============================================================================
 // 目標値への補正

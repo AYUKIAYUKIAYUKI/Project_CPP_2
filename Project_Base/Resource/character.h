@@ -21,7 +21,7 @@ class CCharacter : public CObject_X
 public:
 
 	CCharacter();			// デフォルトコンストラクタ
-	~CCharacter()override;	// デストラクタ
+	~CCharacter() override;	// デストラクタ
 
 	HRESULT Init() override;	// 初期設定
 	void	Uninit() override;	// 終了設定
@@ -45,8 +45,10 @@ public:
 
 private:
 
-	void CorrectToTarget();	// 目標値への補正
-	void AdjustLife();		// 体力の調整
+	void SetRotTargetToMoveDirection();	// 目標向きを移動方向に揃える
+	void SetPosTargetByDirection();		// 目標座標を方角の変動に揃える
+	void CorrectToTarget();				// 目標値への補正
+	void AdjustLife();					// 体力の調整
 
 	float		m_fCorrectionCoef;	// 補正係数
 	float		m_fDirection;		// 方角
