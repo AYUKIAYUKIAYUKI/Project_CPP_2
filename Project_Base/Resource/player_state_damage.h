@@ -32,7 +32,7 @@ private:
 
 	int m_nDamageDuration;	// ダメージ継続期間
 
-	void To_Default();	// 元に戻る
+	void To_Default();	// ステート - 通常状態へ
 };
 
 #endif	// _PLAYER_STATE_DAMAGE_

@@ -36,7 +36,7 @@ private:
 
 	void SetRotTargetToMoveDirection();	// 目標向きを移動方向に設定
 	void SetPosTarget_Unnamed();		// 目標座標をダッシュ方向に増加
-	void To_Default();					// 元に戻る
+	void To_Default();					// ステート - 通常状態へ
 };
 
 #endif	// _PLAYER_STATE_DASH_

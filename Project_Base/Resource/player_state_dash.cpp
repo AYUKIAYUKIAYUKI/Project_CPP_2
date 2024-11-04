@@ -74,7 +74,7 @@ void CPlayer_State_Dash::Update()
 	// 継続期間が最大に到達で
 	if (m_nDashDuration >= MAX_DASH_DURATION)
 	{
-		// 元に戻る
+		// 通常状態へ
 		To_Default();
 	}
 }
@@ -128,7 +128,7 @@ void CPlayer_State_Dash::SetPosTarget_Unnamed()
 }
 
 //============================================================================
-// 元に戻る
+// ステート - 通常状態へ
 //============================================================================
 void CPlayer_State_Dash::To_Default()
 {

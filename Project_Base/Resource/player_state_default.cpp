@@ -54,6 +54,11 @@ void CPlayer_State_Default::Update()
 {
 	// 操作
 	Control();
+
+	// 重力
+	//Vec3 NewPosTarget = m_pCharacter->GetPosTarget();
+	//NewPosTarget.y += field_manager::CField_Manager::FIELD_GRAVITY;
+	//m_pCharacter->SetPosTarget(NewPosTarget);
 }
 
 //============================================================================
@@ -84,7 +89,7 @@ void CPlayer_State_Default::Control()
 
 		if (CManager::GetKeyboard()->GetTrigger(DIK_RSHIFT))
 		{
-			// ダッシュをする
+			// ダッシュ状態へ
 			To_Dash(false);
 		}
 	}
@@ -96,16 +101,13 @@ void CPlayer_State_Default::Control()
 
 		if (CManager::GetKeyboard()->GetTrigger(DIK_RSHIFT))
 		{
-			// ダッシュをする
+			// ダッシュ状態へ
 			To_Dash(true);
 		}
 	}
 
 	// 方角を反映
 	m_pCharacter->SetDirection(fDirection);
-
-	// 目標座標を方角に合わせて設定
-	//this->SetPosTargetByDirection();
 }
 
 //============================================================================
@@ -141,7 +143,7 @@ void CPlayer_State_Default::SetPosTargetByDirection()
 }
 
 //============================================================================
-// ダッシュをする
+// ステート - ダッシュ状態へ
 //============================================================================
 void CPlayer_State_Default::To_Dash(bool bDirection)
 {
