@@ -82,9 +82,6 @@ void CPlayer_State_Default::Control()
 		// 方角を変動
 		fDirection += -fMoveSpeed;
 
-		// 目標向きを移動方向に設定
-		SetRotTargetToMoveDirection();
-
 		if (CManager::GetKeyboard()->GetTrigger(DIK_RSHIFT))
 		{
 			// ダッシュをする
@@ -97,9 +94,6 @@ void CPlayer_State_Default::Control()
 		 // 方角を変動
 		fDirection += fMoveSpeed;
 
-		// 目標向きを移動方向に設定
-		SetRotTargetToMoveDirection();
-
 		if (CManager::GetKeyboard()->GetTrigger(DIK_RSHIFT))
 		{
 			// ダッシュをする
@@ -111,7 +105,7 @@ void CPlayer_State_Default::Control()
 	m_pCharacter->SetDirection(fDirection);
 
 	// 目標座標を方角に合わせて設定
-	SetPosTargetByDirection();
+	//this->SetPosTargetByDirection();
 }
 
 //============================================================================

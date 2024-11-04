@@ -29,7 +29,7 @@ using namespace field_manager;
 //============================================================================
 CCharacter::CCharacter() :
 	CObject_X{},
-	m_fCorrectionCoef{ 1.0f },
+	m_fCorrectionCoef{ 0.0f },
 	m_fDirection{ 0.0f },
 	m_fMoveSpeed{ 0.0f },
 	m_PosTarget{ VEC3_INIT },
@@ -52,6 +52,9 @@ CCharacter::~CCharacter()
 //============================================================================
 HRESULT CCharacter::Init()
 {
+	// 補正係数を設定
+	m_fCorrectionCoef = 0.1f;
+
 	// Xオブジェクトの初期設定
 	if (FAILED(CObject_X::Init()))
 	{
@@ -191,10 +194,8 @@ void CCharacter::SetLife(int nLife)
 //============================================================================
 void CCharacter::SetRotTargetToMoveDirection()
 {
-	Vec3 NewRotTarget = VEC3_INIT;						// 新しい目標向きを作成
-	const Vec3& MoveVec = m_PosTarget - GetPos();		// 移動方向のベクトルを作成
-	NewRotTarget.y = atan2f(-MoveVec.x, -MoveVec.z);	// 目標向きを移動方向に
-	SetRotTarget(NewRotTarget);							// 目標向きを反映
+	const Vec3& MoveVec = m_PosTarget - GetPos();	// 移動方向のベクトルを作成
+	m_RotTarget.y = atan2f(-MoveVec.x, -MoveVec.z);	// 目標向きを移動方向に
 }
 
 //============================================================================
@@ -202,10 +203,8 @@ void CCharacter::SetRotTargetToMoveDirection()
 //============================================================================
 void CCharacter::SetPosTargetByDirection()
 {
-	Vec3 NewPosTarget = VEC3_INIT;										// 新規目標座標を作成
-	NewPosTarget.x = cosf(m_fDirection) * CField_Manager::FIELD_RADIUS;	// X方向の座標を設定
-	NewPosTarget.z = sinf(m_fDirection) * CField_Manager::FIELD_RADIUS;	// Z方向の座標を設定
-	SetPosTarget(NewPosTarget);											// 目標座標を反映
+	m_PosTarget.x = cosf(m_fDirection) * CField_Manager::FIELD_RADIUS;	// X方向の座標を設定
+	m_PosTarget.z = sinf(m_fDirection) * CField_Manager::FIELD_RADIUS;	// Z方向の座標を設定
 }
 
 //============================================================================

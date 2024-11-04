@@ -63,6 +63,9 @@ HRESULT CPlayer::Init()
 	// ‰Šú•ûŠp‚ğİ’è
 	SetDirection(D3DX_PI * -0.5f);
 
+	// ‰ŠúˆÚ“®‘¬“x‚ğİ’è
+	SetMoveSpeed(DEFAULT_MOVE_SPEED);
+
 	// ‰Šú‘Ì—Í‚ğİ’è
 	SetLife(MAX_LIFE);
 
@@ -151,6 +154,8 @@ void CPlayer::Draw()
 //============================================================================
 void CPlayer::To_Damage(int nDamage)
 {
+	nDamage;
+
 	//m_nLife += -nDamage;
 
 	//if (m_nLife < 0)
