@@ -37,18 +37,34 @@ CCharacter_State::CCharacter_State() :
 //============================================================================
 CCharacter_State::~CCharacter_State()
 {
-#if 0
+	if (m_pCharacter != nullptr)
+	{
+#if 0	// 取得したキャラクターオブジェクトの破棄はオブジェクトクラスに委ねます、ポインタの初期化のみ
+		
+		// 終了処理
+		m_pCharacter->Uninit();
+
+		// メモリを解放
+		delete m_pCharacter;
+
+#endif
+
+		// ポインタを初期化
+		m_pCharacter = nullptr;
+	}
 
 	if (m_pNextState != nullptr)
 	{
+#if 0	// 変更予定のステートオブジェクトの破棄はオブジェクトクラスに委ねます、ポインタの初期化のみ
+
 		// メモリを解放
 		delete m_pNextState;
 
-		//  ポインタを初期化
+#endif
+
+		// ポインタを初期化
 		m_pNextState = nullptr;
 	}
-
-#endif
 }
 
 //============================================================================
