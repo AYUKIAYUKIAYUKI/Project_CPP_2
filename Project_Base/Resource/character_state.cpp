@@ -55,7 +55,7 @@ CCharacter_State::~CCharacter_State()
 
 	if (m_pNextState != nullptr)
 	{
-#if 0	// 変更予定のステートオブジェクトの破棄はオブジェクトクラスに委ねます、ポインタの初期化のみ
+#if 0	// 変更予定のステートオブジェクトは破棄はキャラクターステートマネージャークラスに委ねます、ポインタの初期化のみ
 
 		// メモリを解放
 		delete m_pNextState;

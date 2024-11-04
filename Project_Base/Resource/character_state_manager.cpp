@@ -84,13 +84,13 @@ void CCharacter_State_Manager::CheckChangeState()
 	// 次のステートが存在していれば
 	if (m_pState->GetNextState() != nullptr)
 	{
-		// 変更先のステートをコピー
+		// 変更先のステートを取得しておき
 		CCharacter_State* NextState = m_pState->GetNextState();
 
-		// 終了処理を呼び、現在のステートを初期化する
+		// 終了処理を呼び、現在のステートを破棄する
 		Uninit();
 
-		// 状態を変更する
+		// ステートを入れ替える
 		m_pState = NextState;
 	}
 }
