@@ -26,6 +26,9 @@ public:
 	void Release();				// 破棄
 	void Update();				// 更新処理
 	void CheckChangeState();	// ステートの変更を確認
+	void To_Damage();			// ステート - ダメージへ
+
+	CCharacter_State* GetNowState();	// 現在のステートを取得
 
 	static CCharacter_State_Manager* Create(CCharacter_State* pState);	// 生成
 

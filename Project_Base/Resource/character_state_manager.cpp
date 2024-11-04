@@ -12,6 +12,8 @@
 #include "character_state.h"
 #include "renderer.h"
 
+#include "player_state_damage.h"
+
 //****************************************************
 // usingディレクティブ
 //****************************************************
@@ -81,7 +83,7 @@ void CCharacter_State_Manager::Update()
 //============================================================================
 void CCharacter_State_Manager::CheckChangeState()
 {
-	// 次のステートが存在していれば
+	// 変更予定のステートが存在しているならば
 	if (m_pState->GetNextState() != nullptr)
 	{
 		// 変更先のステートを取得しておき
@@ -93,6 +95,27 @@ void CCharacter_State_Manager::CheckChangeState()
 		// ステートを入れ替える
 		m_pState = NextState;
 	}
+}
+
+//============================================================================
+// ステート - ダメージ状態へ
+//============================================================================
+void CCharacter_State_Manager::To_Damage()
+{
+	// 次のステートが存在していなければ
+	if (m_pState->GetNextState() == nullptr)
+	{
+		// 変更予定のステートにダメージ状態を生成
+		m_pState->SetNextState(DBG_NEW CPlayer_State_Damage());
+	}
+}
+
+//============================================================================
+// 現在のステートを取得
+//============================================================================
+CCharacter_State* CCharacter_State_Manager::GetNowState()
+{
+	return m_pState;
 }
 
 //============================================================================

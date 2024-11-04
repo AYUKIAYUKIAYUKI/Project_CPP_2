@@ -11,6 +11,7 @@
 #include "enemy.h"
 
 #include "player.h"
+#include "player_state_damage.h"
 
 #include "renderer.h"
 
@@ -73,7 +74,7 @@ void CEnemy::Update()
 	// 方角の取得
 	float fNewDirection = GetDirection();
 	CUtility::AdjustDirection(fNewDirection);
-	fNewDirection += DEFAULT_MOVE_SPEED;
+	fNewDirection += -DEFAULT_MOVE_SPEED * 3.0f;
 	SetDirection(fNewDirection);
 
 	// プレイヤーへの攻撃
@@ -133,22 +134,27 @@ CEnemy* CEnemy::Create()
 // プレイヤーへ攻撃
 //============================================================================
 void CEnemy::AttackOnPlayer()
-{
+{		
+	// プレイヤーのポインタを作成
 	CPlayer* pPlayer = nullptr;
 
 	// プレイヤーを検索
 	if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
 	{
-		// プレイヤーへのポインタを保持
+		// プレイヤーオブジェクトを保持
 		pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+
+		// 既にダメージ状態の場合は処理を終了
+		if (typeid(*pPlayer->GetNowState()) == typeid(CPlayer_State_Damage))
+		{
+			return;
+		}
 
 		// プレイヤーの持つ円柱範囲内に侵入していたら
 		if (CUtility::CylinderAndPoint(pPlayer->GetPos(), 10.0f, 100.0f, GetPos()))
 		{
-			// 体力を減少
-			int nLife = pPlayer->GetLife();
-			nLife--;
-			pPlayer->SetLife(nLife);
+			// ダメージ状態へ
+			pPlayer->To_Damage(-1);
 		}
 	}
 	else

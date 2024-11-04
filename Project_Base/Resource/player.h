@@ -37,7 +37,9 @@ public:
 	void	Uninit() override;		// 終了設定
 	void	Update() override;		// 更新処理
 	void	Draw() override;		// 描画処理
-	void	To_Damage(int nDamage);	// ダメージ状態へ
+	void	To_Damage(int nDamage);	// ステート - ダメージ状態へ
+
+	CCharacter_State* GetNowState();	// 現在のステートを取得
 
 	static CPlayer* Create();	// 生成
 
