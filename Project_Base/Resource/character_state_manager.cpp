@@ -66,7 +66,7 @@ void CCharacter_State_Manager::Update()
 	// ステートの変更確認
 	CheckChangeState();
 
-#if 0
+#if 1
 #ifdef _DEBUG
 
 	// ステートの中身がどの派生クラスか表示
