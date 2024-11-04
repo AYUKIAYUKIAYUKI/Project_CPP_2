@@ -49,7 +49,6 @@
     <ClCompile Include="Resource\player_state.cpp" />
     <ClCompile Include="Resource\player_state_damage.cpp" />
     <ClCompile Include="Resource\player_state_default.cpp" />
-    <ClCompile Include="Resource\player_state_manager.cpp" />
     <ClCompile Include="Resource\player_state_dash.cpp" />
     <ClCompile Include="Resource\quadratic_bezier.cpp" />
     <ClCompile Include="resource\renderer.cpp" />
@@ -92,7 +91,6 @@
     <ClInclude Include="Resource\player_state.h" />
     <ClInclude Include="Resource\player_state_damage.h" />
     <ClInclude Include="Resource\player_state_default.h" />
-    <ClInclude Include="Resource\player_state_manager.h" />
     <ClInclude Include="Resource\player_state_dash.h" />
     <ClInclude Include="Resource\quadratic_bezier.h" />
     <ClInclude Include="resource\renderer.h" />
