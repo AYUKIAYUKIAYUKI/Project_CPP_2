@@ -9,6 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "player.h"
+#include "player_state_default.h"
 
 // インプット取得
 #include "manager.h"
@@ -34,7 +35,8 @@ using namespace abbr;
 // デフォルトコンストラクタ
 //============================================================================
 CPlayer::CPlayer() :
-	CCharacter{}
+	CCharacter{},
+	m_pStateManager{ nullptr }
 {
 
 }
@@ -52,11 +54,11 @@ CPlayer::~CPlayer()
 //============================================================================
 HRESULT CPlayer::Init()
 {
-	// プレイヤーステートマネージャーの生成
-	//if (!m_pPlayerStateManager)
-	//{
-	//	m_pPlayerStateManager = CPlayer_State_Manager::Create();
-	//}
+	// ステートマネージャーの生成
+	if (!m_pStateManager)
+	{
+		m_pStateManager = CCharacter_State_Manager::Create(DBG_NEW CPlayer_State_Default());
+	}
 
 	// 初期方角を設定
 	SetDirection(D3DX_PI * -0.5f);
@@ -78,15 +80,15 @@ HRESULT CPlayer::Init()
 //============================================================================
 void CPlayer::Uninit()
 {
-	// プレイヤーステートマネージャーの破棄
-	//if (m_pPlayerStateManager)
-	//{
-	//	// 解放
-	//	m_pPlayerStateManager->Release();
-	//	
-	//	// ポインタを初期化
-	//	m_pPlayerStateManager = nullptr;
-	//}
+	// ステートマネージャーの破棄
+	if (m_pStateManager)
+	{
+		// 解放
+		m_pStateManager->Release();
+		
+		// ポインタを初期化
+		m_pStateManager = nullptr;
+	}
 
 	// キャラクタークラスの終了処理
 	CCharacter::Uninit();
@@ -97,8 +99,8 @@ void CPlayer::Uninit()
 //============================================================================
 void CPlayer::Update()
 {		
-	// プレイヤーステートマネージャーの更新
-	//m_pPlayerStateManager->Update();
+	// ステートマネージャーの更新
+	m_pStateManager->Update();
 	
 #ifdef _DEBUG
 

@@ -22,28 +22,14 @@ using namespace abbr;
 //============================================================================
 
 //============================================================================
-// デフォルトコンストラクタ
+// コンストラクタ
 //============================================================================
 CCharacter_State::CCharacter_State() :
 	CState{},
 	m_pCharacter{ nullptr },
 	m_pNextState{ nullptr }
 {
-	// キャラクターを取得
-	m_pCharacter = RetrieveCharacter();
-}
 
-//============================================================================
-// キャラクター取得コンストラクタ
-//============================================================================
-CCharacter_State::CCharacter_State(CCharacter* pCharacter) :
-	CState{},
-	m_pCharacter{ pCharacter }
-{
-	if (pCharacter == nullptr)
-	{
-		assert(false && "キャラクターステートがキャラクターポインタを取得失敗");
-	}
 }
 
 //============================================================================
@@ -52,6 +38,7 @@ CCharacter_State::CCharacter_State(CCharacter* pCharacter) :
 CCharacter_State::~CCharacter_State()
 {
 #if 0
+
 	if (m_pNextState != nullptr)
 	{
 		// メモリを解放
@@ -60,6 +47,7 @@ CCharacter_State::~CCharacter_State()
 		//  ポインタを初期化
 		m_pNextState = nullptr;
 	}
+
 #endif
 }
 
@@ -69,19 +57,4 @@ CCharacter_State::~CCharacter_State()
 CCharacter_State* CCharacter_State::GetNextState()
 {
 	return m_pNextState;
-}
-
-//============================================================================
-// 
-// privateメンバ
-// 
-//============================================================================
-
-//============================================================================
-// キャラクターポインタを取得
-//============================================================================
-CCharacter* CCharacter_State::RetrieveCharacter()
-{
-	// ？
-	return nullptr;
 }

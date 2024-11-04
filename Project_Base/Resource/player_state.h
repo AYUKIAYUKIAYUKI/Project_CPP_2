@@ -11,13 +11,13 @@
 //****************************************************
 // インクルードファイル
 //****************************************************
-#include "state.h"
+#include "character_state.h"
 #include "player.h"
 
 //****************************************************
 // プレイヤーステートクラス
 //****************************************************
-class CPlayer_State : public CState
+class CPlayer_State : public CCharacter_State
 {
 public:
 
@@ -27,18 +27,9 @@ public:
 
 	virtual void Update() override = 0;	// 更新処理
 
-	CPlayer_State* GetNextState();				// 次のステートを取得
-	void SetNextState(CPlayer_State* pState);	// 次のステートを設定
-
-protected:
-
-	CPlayer* m_pPlayer;	// プレイヤー
-
 private:
 
-	CPlayer* RetrievePlayer();	// プレイヤーを取得
-
-	CPlayer_State* m_pNextState;	// 次のステート
+	CPlayer* RetrievePlayer();	// プレイヤーポインタを取得
 };
 
 #endif	// _PLAYER_STATE_

@@ -90,10 +90,10 @@ void CPlayer_State_Dash::Update()
 //============================================================================
 void CPlayer_State_Dash::SetRotTargetToMoveDirection()
 {
-	Vec3 NewRotTarget = m_pPlayer->GetRotTarget();							// 目標向きを取得
-	const Vec3& MoveVec = m_pPlayer->GetPosTarget() - m_pPlayer->GetPos();	// 移動方向のベクトルを作成
-	NewRotTarget.y = atan2f(-MoveVec.x, -MoveVec.z);						// 目標向きを移動方向に
-	m_pPlayer->SetRotTarget(NewRotTarget);									// 目標向きを反映
+	Vec3 NewRotTarget = m_pCharacter->GetRotTarget();								// 目標向きを取得
+	const Vec3& MoveVec = m_pCharacter->GetPosTarget() - m_pCharacter->GetPos();	// 移動方向のベクトルを作成
+	NewRotTarget.y = atan2f(-MoveVec.x, -MoveVec.z);								// 目標向きを移動方向に
+	m_pCharacter->SetRotTarget(NewRotTarget);										// 目標向きを反映
 }
 
 //============================================================================
@@ -107,24 +107,24 @@ void CPlayer_State_Dash::SetPosTarget_Unnamed()
 	using namespace field_manager;
 
 	// 方角を設定
-	float fDirection = m_pPlayer->GetDirection();
+	float fDirection = m_pCharacter->GetDirection();
 
 	// 設定されている方角に合わせて移動
 	if (m_bDirection)
 	{
-		fDirection += m_pPlayer->GetMoveSpeed() * 5.0f;
+		fDirection += m_pCharacter->GetMoveSpeed() * 5.0f;
 	}
 	else
 	{
-		fDirection += m_pPlayer->GetMoveSpeed() * -5.0f;
+		fDirection += m_pCharacter->GetMoveSpeed() * -5.0f;
 	}
 
-	m_pPlayer->SetDirection(fDirection);
+	m_pCharacter->SetDirection(fDirection);
 
 	Vec3 NewPosTarget = VEC3_INIT;										// 新規目標座標を作成
 	NewPosTarget.x = cosf(fDirection) * CField_Manager::FIELD_RADIUS;	// X方向の座標を設定
 	NewPosTarget.z = sinf(fDirection) * CField_Manager::FIELD_RADIUS;	// Z方向の座標を設定
-	m_pPlayer->SetPosTarget(NewPosTarget);								// 目標座標を反映
+	m_pCharacter->SetPosTarget(NewPosTarget);							// 目標座標を反映
 }
 
 //============================================================================

@@ -98,18 +98,18 @@ void CCharacter_State_Manager::CheckChangeState()
 //============================================================================
 // 生成
 //============================================================================
-CCharacter_State_Manager* CCharacter_State_Manager::Create()
+CCharacter_State_Manager* CCharacter_State_Manager::Create(CCharacter_State* pState)
 {
-	// プレイヤーステートマネージャーを生成
+	// ステートマネージャーを生成
 	CCharacter_State_Manager* pNewInstance = DBG_NEW CCharacter_State_Manager();
 
 	if (pNewInstance == nullptr)
 	{ // 生成失敗
-		assert(false && "プレイヤーステートマネージャーの生成に失敗");
+		assert(false && "ステートマネージャーの生成に失敗");
 	}
 
 	// 初期設定
-	pNewInstance->Init();
+	pNewInstance->Init(pState);
 
 	return pNewInstance;
 }
@@ -123,13 +123,12 @@ CCharacter_State_Manager* CCharacter_State_Manager::Create()
 //============================================================================
 // 初期設定
 //============================================================================
-HRESULT CCharacter_State_Manager::Init()
+HRESULT CCharacter_State_Manager::Init(CCharacter_State* pState)
 {
 	// 初期状態を生成
 	if (m_pState == nullptr)
 	{
-		/* オーバーライドしてください */
-		//m_pState = DBG_NEW CCharacter_State();
+		m_pState = pState;
 
 		return S_OK;
 	}

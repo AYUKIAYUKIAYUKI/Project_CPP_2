@@ -12,6 +12,7 @@
 // インクルードファイル
 //****************************************************
 #include "character.h"
+#include "character_state_manager.h"
 
 //****************************************************
 // プレイヤークラス
@@ -39,6 +40,10 @@ public:
 	void	To_Damage(int nDamage);	// ダメージ状態へ
 
 	static CPlayer* Create();	// 生成
+
+private:
+
+	CCharacter_State_Manager* m_pStateManager;	// ステートマネージャー
 };
 
 #endif // _PLAYER_H_

@@ -27,12 +27,12 @@ public:
 	void Update();				// 更新処理
 	void CheckChangeState();	// ステートの変更を確認
 
-	static CCharacter_State_Manager* Create();	// 生成
+	static CCharacter_State_Manager* Create(CCharacter_State* pState);	// 生成
 
 private:
 
-	virtual HRESULT Init();	// 初期設定
-	void	Uninit();		// 終了設定
+	HRESULT Init(CCharacter_State* pState);	// 初期設定
+	void	Uninit();						// 終了設定
 
 	CCharacter_State* m_pState;	// ステートのポインタ
 };

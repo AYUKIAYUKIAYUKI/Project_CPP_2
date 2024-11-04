@@ -71,9 +71,9 @@ void CPlayer_State_Default::Control()
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();	// キーボード
 	CInputPad* pPad = CManager::GetPad();					// パッド
 
-	// プレイヤーパラメータ用
-	float fDirection = m_pPlayer->GetDirection();			// 方角を取得
-	const float& fMoveSpeed = m_pPlayer->GetMoveSpeed();	// 移動速度を取得
+	// プレイヤーのパラメータを取得
+	float fDirection = m_pCharacter->GetDirection();		// 方角を取得
+	const float& fMoveSpeed = m_pCharacter->GetMoveSpeed();	// 移動速度を取得
 
 	// X軸の入力
 	if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::LEFT) || pPad->GetJoyStickL().X < 0)
@@ -108,7 +108,7 @@ void CPlayer_State_Default::Control()
 	}
 
 	// 方角を反映
-	m_pPlayer->SetDirection(fDirection);
+	m_pCharacter->SetDirection(fDirection);
 
 	// 目標座標を方角に合わせて設定
 	SetPosTargetByDirection();
@@ -121,10 +121,10 @@ void CPlayer_State_Default::SetRotTargetToMoveDirection()
 {
 	/* キー入力の判定外でこの関数を呼ぶと、座標移動の終わりがけの慣性力で向きが狂う */
 
-	Vec3 NewRotTarget = m_pPlayer->GetRotTarget();							// 目標向きを取得
-	const Vec3& MoveVec = m_pPlayer->GetPosTarget() - m_pPlayer->GetPos();	// 移動方向のベクトルを作成
-	NewRotTarget.y = atan2f(-MoveVec.x, -MoveVec.z);						// 目標向きを移動方向に
-	m_pPlayer->SetRotTarget(NewRotTarget);									// 目標向きを反映
+	Vec3 NewRotTarget = m_pCharacter->GetRotTarget();								// 目標向きを取得
+	const Vec3& MoveVec = m_pCharacter->GetPosTarget() - m_pCharacter->GetPos();	// 移動方向のベクトルを作成
+	NewRotTarget.y = atan2f(-MoveVec.x, -MoveVec.z);								// 目標向きを移動方向に
+	m_pCharacter->SetRotTarget(NewRotTarget);										// 目標向きを反映
 }
 
 //============================================================================
@@ -138,12 +138,12 @@ void CPlayer_State_Default::SetPosTargetByDirection()
 	using namespace field_manager;
 
 	// 方角を取得
-	const float& fDirection = m_pPlayer->GetDirection();
+	const float& fDirection = m_pCharacter->GetDirection();
 
 	Vec3 NewPosTarget = VEC3_INIT;										// 新規目標座標を作成
 	NewPosTarget.x = cosf(fDirection) * CField_Manager::FIELD_RADIUS;	// X方向の座標を設定
 	NewPosTarget.z = sinf(fDirection) * CField_Manager::FIELD_RADIUS;	// Z方向の座標を設定
-	m_pPlayer->SetPosTarget(NewPosTarget);								// 目標座標を反映
+	m_pCharacter->SetPosTarget(NewPosTarget);							// 目標座標を反映
 }
 
 //============================================================================

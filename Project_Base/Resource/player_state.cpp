@@ -20,20 +20,17 @@
 // デフォルトコンストラクタ
 //============================================================================
 CPlayer_State::CPlayer_State() :
-	CState{},
-	m_pPlayer{ nullptr },
-	m_pNextState{ nullptr }
+	CCharacter_State{}
 {
 	// プレイヤーを取得
-	m_pPlayer = RetrievePlayer();
+	m_pCharacter = RetrievePlayer();
 }
 
 //============================================================================
 // プレイヤー取得コンストラクタ
 //============================================================================
 CPlayer_State::CPlayer_State(CPlayer* pPlayer) :
-	CState{},
-	m_pPlayer{ pPlayer }
+	CCharacter_State{}
 {
 	if (pPlayer == nullptr)
 	{
@@ -46,7 +43,8 @@ CPlayer_State::CPlayer_State(CPlayer* pPlayer) :
 //============================================================================
 CPlayer_State::~CPlayer_State()
 {
-#if 0	// 
+#if 0
+
 	if (m_pNextState != nullptr)
 	{
 		// メモリを解放
@@ -55,31 +53,22 @@ CPlayer_State::~CPlayer_State()
 		//  ポインタを初期化
 		m_pNextState = nullptr;
 	}
+
 #endif
 }
 
 //============================================================================
-// 次のステートを取得
+// 
+// privateメンバ
+// 
 //============================================================================
-CPlayer_State* CPlayer_State::GetNextState()
-{
-	return m_pNextState;
-}
-
-//============================================================================
-// 次のステートを設定
-//============================================================================
-void CPlayer_State::SetNextState(CPlayer_State* pState)
-{
-	m_pNextState = pState;
-}
 
 //============================================================================
 // プレイヤーを取得
 //============================================================================
 CPlayer* CPlayer_State::RetrievePlayer()
 {
-	// プレイヤーを格納
+	// プレイヤーオブジェクトのポインタを格納
 	CPlayer* pPlayer = nullptr;
 
 	// プレイヤーを検索

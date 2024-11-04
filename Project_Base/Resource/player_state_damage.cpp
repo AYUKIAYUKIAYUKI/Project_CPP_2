@@ -53,18 +53,18 @@ void CPlayer_State_Damage::Update()
 	// 点滅
 	if (m_nDamageDuration % 2 == 0)
 	{
-		m_pPlayer->SetAlpha(0.25f);
+		m_pCharacter->SetAlpha(0.25f);
 	}
 	else
 	{
-		m_pPlayer->SetAlpha(1.0f);
+		m_pCharacter->SetAlpha(1.0f);
 	}
 
 	// 継続期間が最大に到達で
 	if (m_nDamageDuration >= MAX_DASH_DURATION)
 	{
 		// 通常カラーに設定
-		m_pPlayer->SetAlpha(1.0f);
+		m_pCharacter->SetAlpha(1.0f);
 
 		// 元に戻る
 		To_Default();
