@@ -104,6 +104,8 @@ void CCamera::Update()
 //============================================================================
 void CCamera::SetCamera()
 {
+#if 0	// バッファのクリアはレンダラーに委ねる
+
 	// デバイスを取得
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
 
@@ -114,6 +116,8 @@ void CCamera::SetCamera()
 		D3DCOLOR_RGBA(0, 0, 0, 0),
 		1.0f,
 		0);
+
+#endif
 
 	// プロジェクション行列を計算
 	CalcMtxProjection();
