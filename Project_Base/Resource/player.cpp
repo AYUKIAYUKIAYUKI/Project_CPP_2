@@ -151,7 +151,7 @@ void CPlayer::Draw()
 #if 1	// ステンシルバッファにプレイヤーのシルエットを描画する
 
 	// ステンシルバッファを有効化
-	CRenderer::GetInstance()->GetDeviece()->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+	//CRenderer::GetInstance()->GetDeviece()->SetRenderState(D3DRS_STENCILENABLE, TRUE);
 
 	// デプスバッファの比較方法を変更し無効化
 	CRenderer::GetInstance()->GetDeviece()->SetRenderState(D3DRS_ZFUNC, D3DCMP_NEVER);
@@ -160,7 +160,7 @@ void CPlayer::Draw()
 	CCharacter::Draw();
 
 	// ステンシルバッファを無効化
-	CRenderer::GetInstance()->GetDeviece()->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+	//CRenderer::GetInstance()->GetDeviece()->SetRenderState(D3DRS_STENCILENABLE, FALSE);
 
 	// デプスバッファの比較方法を通常に戻し有効化
 	CRenderer::GetInstance()->GetDeviece()->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);

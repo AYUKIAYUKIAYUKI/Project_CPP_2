@@ -343,7 +343,7 @@ bool CField_Manager::DetectAdjacentBlock(const Vec3& Pos)
 void CField_Manager::TestDelete()
 {
 	// ミドルオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
+	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::NONE));
 
 	// ブロックタグの数をカウントする
 	while (pObj != nullptr)
@@ -388,7 +388,7 @@ void CField_Manager::TestDelete()
 void CField_Manager::TestDeleteAll()
 {
 	// ミドルオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
+	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::NONE));
 
 	// ブロックタグの数をカウントする
 	while (pObj != nullptr)

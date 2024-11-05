@@ -208,6 +208,23 @@ void CRenderer::Draw()
 		1.0f,														// この値に大してデプスバッファをクリア
 		0);															// この値でステンシルバッファをクリア
 
+	// ステンシルマスクを設定
+	m_pD3DDevice->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);
+
+	// ステンシル参照値を設定
+	m_pD3DDevice->SetRenderState(D3DRS_STENCILREF, 0x01);
+
+	// ステンシルバッファの比較方法を変更
+	m_pD3DDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_LESS);
+
+	// ステンシルバッファを無効化
+	m_pD3DDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+
+	// ステンシルテストの結果に対してのふるまいを設定する
+	m_pD3DDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILCAPS_ZERO);	// Zテスト・ステンシルテストに成功
+	m_pD3DDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILCAPS_KEEP);	// Zテストのみ失敗
+	m_pD3DDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILCAPS_KEEP);	// Zテスト・ステンシルテストに失敗
+
 #else
 
 	// 画面バッファクリア

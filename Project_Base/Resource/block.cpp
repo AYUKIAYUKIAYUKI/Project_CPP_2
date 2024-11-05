@@ -26,7 +26,7 @@
 // デフォルトコンストラクタ
 //============================================================================
 CBlock::CBlock() :
-	CObject_X{ static_cast<int>(CObject::LAYER::MIDDLE) },
+	CObject_X{  },
 	m_pTest{ nullptr }
 {
 	// 判定表示の生成
