@@ -206,7 +206,8 @@ void CRenderer::Draw()
 		(D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),	// クリアするサーフェスを指定する
 		D3DCOLOR_RGBA(0, 0, 0, 0),									// このカラーでターゲットをクリア
 		1.0f,														// この値に大してデプスバッファをクリア
-		0);															// この値でステンシルバッファをクリア
+		//255);														// この値でステンシルバッファをクリア
+		255);														// この値でステンシルバッファをクリア
 
 	// ステンシルマスクを設定
 	m_pD3DDevice->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);
@@ -218,7 +219,7 @@ void CRenderer::Draw()
 	m_pD3DDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_LESS);
 
 	// ステンシルバッファを無効化
-	m_pD3DDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+	m_pD3DDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
 
 	// ステンシルテストの結果に対してのふるまいを設定する
 	m_pD3DDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILCAPS_ZERO);	// Zテスト・ステンシルテストに成功
