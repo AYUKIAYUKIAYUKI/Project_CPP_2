@@ -302,6 +302,27 @@ void CObject::DrawAll()
 			// 次のオブジェクトのポインタをコピー
 			CObject* pNext = pObj->m_pNext;
 
+#if 1	// あああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+
+			// デバイスを取得
+			auto pDev = CRenderer::GetInstance()->GetDeviece();
+
+			// ステンシルマスクを設定
+			pDev->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);
+
+			// ステンシル参照値を設定
+			pDev->SetRenderState(D3DRS_STENCILREF, 0x01);
+
+			// ステンシルバッファの比較方法を変更
+			pDev->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);
+
+			// ステンシルテストの結果に対してのふるまいを設定する
+			pDev->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILCAPS_KEEP);	// Zテスト・ステンシルテストに成功
+			pDev->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILCAPS_KEEP);	// Zテストのみ失敗
+			pDev->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILCAPS_KEEP);	// Zテスト・ステンシルテストに失敗
+
+#endif
+
 			// 描画処理
 			pObj->Draw();
 

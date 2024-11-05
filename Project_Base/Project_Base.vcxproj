@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="mask_rectangle.cpp" />
     <ClCompile Include="mesh_dome.cpp" />
     <ClCompile Include="Resource\block.cpp" />
     <ClCompile Include="resource\camera.cpp" />
@@ -65,6 +66,7 @@
     <ClCompile Include="Resource\utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="mask_rectangle.h" />
     <ClInclude Include="mesh_dome.h" />
     <ClInclude Include="Resource\block.h" />
     <ClInclude Include="resource\camera.h" />

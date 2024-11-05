@@ -207,34 +207,9 @@ void CRenderer::Draw()
 		D3DCOLOR_RGBA(0, 0, 0, 0),									// このカラーでターゲットをクリア
 		1.0f,														// この値に大してデプスバッファをクリア
 		0);															// この値でステンシルバッファをクリア
-		//255);														// この値でステンシルバッファをクリア
 
-	// ステンシルマスクを設定
-	m_pD3DDevice->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);
-
-	// ステンシル参照値を設定
-	m_pD3DDevice->SetRenderState(D3DRS_STENCILREF, 0x01);
-
-	// ステンシルバッファの比較方法を変更
-	m_pD3DDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_GREATER);
-
-	// ステンシルバッファへの描画を有効化
+	// ステンシルバッファへの書き込みを有効化
 	m_pD3DDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-
-	// ステンシルテストの結果に対してのふるまいを設定する
-#if 1
-
-	m_pD3DDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILCAPS_ZERO);		// Zテスト・ステンシルテストに成功
-	m_pD3DDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILCAPS_REPLACE);	// Zテストのみ失敗
-	m_pD3DDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILCAPS_REPLACE);	// Zテスト・ステンシルテストに失敗
-
-#else
-
-	m_pD3DDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILCAPS_REPLACE);	// Zテスト・ステンシルテストに成功
-	m_pD3DDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILCAPS_ZERO);		// Zテストのみ失敗
-	m_pD3DDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILCAPS_ZERO);		// Zテスト・ステンシルテストに失敗
-
-#endif
 
 #else
 
