@@ -236,9 +236,6 @@ void CRenderer::Draw()
 		// シーンの専用描画
 		CManager::GetScene()->Draw();
 
-		// 四角形マスクの描画
-		CManager::GetMask_Rectangle()->Draw();
-
 		// デバッグ表示
 		PrintDebug();
 

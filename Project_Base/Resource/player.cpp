@@ -13,6 +13,7 @@
 
 // インプット取得
 #include "manager.h"
+#include "mask_rectangle.h"
 
 // フィールドマネージャー
 #include "field_manager.h"
@@ -146,7 +147,7 @@ void CPlayer::Update()
 void CPlayer::Draw()
 {
 	// キャラクタークラスの描画処理
-	CCharacter::Draw();
+	//CCharacter::Draw();
 
 #if 1	// ステンシルバッファにプレイヤーのシルエットを描画する
 
@@ -157,7 +158,7 @@ void CPlayer::Draw()
 	pDev->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);
 
 	// ステンシル参照値を設定
-	pDev->SetRenderState(D3DRS_STENCILREF, 0x02);
+	pDev->SetRenderState(D3DRS_STENCILREF, 0x01);
 
 	// ステンシルバッファの比較方法を変更
 	pDev->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_GREATEREQUAL);
@@ -169,6 +170,18 @@ void CPlayer::Draw()
 
 	// キャラクタークラスの描画処理 (ステンシルバッファ)
 	CCharacter::Draw();
+
+	// ステンシルマスクを設定
+	pDev->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);
+
+	// ステンシル参照値を設定
+	pDev->SetRenderState(D3DRS_STENCILREF, 0x02);
+
+	// ステンシルバッファの比較方法を変更
+	pDev->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_LESSEQUAL);
+
+	// 四角形マスクの描画
+	CManager::GetMask_Rectangle()->Draw();
 
 #endif
 

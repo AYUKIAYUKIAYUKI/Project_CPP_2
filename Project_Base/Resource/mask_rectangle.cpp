@@ -63,7 +63,7 @@ HRESULT CMask_Rectangle::Init()
 	m_Pos = { SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f };
 
 	// ÉTÉCÉYÇÃê›íË
-	m_Size = { SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f };
+	m_Size = { SCREEN_WIDTH * 0.25f, SCREEN_HEIGHT * 0.25f, 0.0f };
 
 	return S_OK;
 }
