@@ -21,6 +21,11 @@
 #include "model_X_manager.h"
 
 //****************************************************
+// プリプロセッサディレクティブ
+//****************************************************
+#define ENABLE_STENCIL_BUFFER 1	// ステンシルバッファの有効化
+
+//****************************************************
 // 静的メンバ変数の初期化
 //****************************************************
 CRenderer* CRenderer::m_pRenderer = nullptr;	// レンダラー
@@ -76,7 +81,11 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 	d3dpp.BackBufferCount = 1;									// バックバッファの数
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;					// ダブルバッファの切り替え(映像信号に同期)
 	d3dpp.EnableAutoDepthStencil = TRUE;						// デプスバッファとステンシルバッファを作成
+#if ENABLE_STENCIL_BUFFER
+	d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;				// デプスバッファとして24bit、ステンシルバッファとして8bitを使用する
+#else
 	d3dpp.AutoDepthStencilFormat = D3DFMT_D16;					// デプスバッファとして16bitを使う
+#endif
 	d3dpp.Windowed = bWindiw;									// ウインドウモード
 	d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;	// リフレッシュレート
 	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;	// インターバル
