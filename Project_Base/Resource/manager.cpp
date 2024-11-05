@@ -15,6 +15,8 @@
 #include "renderer.h"
 #include "sound.h"
 
+#include "mask_rectangle.h"
+
 //****************************************************
 // usingディレクティブ
 //****************************************************
@@ -23,6 +25,7 @@ using namespace camera;
 //****************************************************
 // 静的メンバの初期化
 //****************************************************
+CMask_Rectangle* CManager::m_pMask_Rectangle= nullptr;
 CCamera* CManager::m_pCamera = nullptr;				// カメラ管理
 CLight* CManager::m_pLight = nullptr;				// ライト管理
 CInputKeyboard* CManager::m_pKeyboard = nullptr;	// キーボード管理
@@ -60,6 +63,9 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	{
 		return E_FAIL;
 	}
+
+	// 四角形マスクの生成
+	m_pMask_Rectangle = CMask_Rectangle::Create(CTexture_Manager::TYPE::MAP);
 
 	// フェードの初期設定
 	if (FAILED(CFade::GetInstance()->Init()))
@@ -172,6 +178,14 @@ void CManager::Uninit()
 	// サウンド破棄
 	CSound::GetInstance()->Release();
 
+	// 四角形マスクの破棄
+	if (m_pMask_Rectangle != nullptr)
+	{
+		m_pMask_Rectangle->Uninit();	// 終了処理
+		delete m_pMask_Rectangle;		// メモリを解放
+		m_pMask_Rectangle = nullptr;	// ポインタを初期化
+	}
+
 	// レンダラーの破棄
 	CRenderer::GetInstance()->Release();
 
@@ -184,6 +198,9 @@ void CManager::Uninit()
 //============================================================================
 void CManager::Update()
 {
+	// 四角形マスクの更新処理
+	m_pMask_Rectangle->Update();
+
 	// レンダラーの更新
 	CRenderer::GetInstance()->Update();
 

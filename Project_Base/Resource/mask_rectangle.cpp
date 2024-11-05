@@ -59,6 +59,12 @@ HRESULT CMask_Rectangle::Init()
 		return E_FAIL;
 	}
 
+	// 座標の設定
+	m_Pos = { SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f };
+
+	// サイズの設定
+	m_Size = { SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f };
+
 	return S_OK;
 }
 
@@ -188,7 +194,7 @@ CMask_Rectangle* CMask_Rectangle::Create(CTexture_Manager::TYPE Type)
 	// 初期設定
 	pNewInstance->Init();
 
-	return nullptr;
+	return pNewInstance;
 }
 
 //============================================================================

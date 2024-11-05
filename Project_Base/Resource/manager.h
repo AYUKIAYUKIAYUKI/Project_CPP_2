@@ -17,6 +17,11 @@
 #include "scene.h"
 
 //****************************************************
+// 前方宣言
+//****************************************************
+class CMask_Rectangle;
+
+//****************************************************
 // マネージャークラス
 //****************************************************
 class CManager final
@@ -31,6 +36,8 @@ public:
 	void Update();	// 更新処理
 	void Draw();	// 描画処理
 
+	static CMask_Rectangle* GetMask_Rectangle() { return m_pMask_Rectangle; }	// 四角形マスクの取得
+
 	static camera::CCamera* GetCamera();		// カメラ取得
 	static CLight* GetLight();					// ライト取得
 	static CInputKeyboard* GetKeyboard();		// キーボード取得
@@ -40,11 +47,12 @@ public:
 
 private:
 
-	static camera::CCamera* m_pCamera;	// カメラ管理
-	static CLight* m_pLight;			// ライト管理
-	static CInputKeyboard* m_pKeyboard;	// キーボード管理
-	static CInputPad* m_pPad;			// パッド管理
-	static CScene* m_pScene;			// シーン管理
+	static CMask_Rectangle* m_pMask_Rectangle;	// 四角形マスクのポインタ
+	static camera::CCamera* m_pCamera;			// カメラ管理
+	static CLight* m_pLight;					// ライト管理
+	static CInputKeyboard* m_pKeyboard;			// キーボード管理
+	static CInputPad* m_pPad;					// パッド管理
+	static CScene* m_pScene;					// シーン管理
 };
 
 #endif // _MANAGER_H_
