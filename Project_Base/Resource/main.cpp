@@ -94,16 +94,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 	ChangeWindowSize(hWnd);			// ウィンドウサイズの変更
 
 	// マネージャーの生成
-	g_pManager = DBG_NEW CManager();
-
-	if (g_pManager == nullptr)
-	{ // 生成失敗
-		return -1;
-	}
-
-	if (FAILED(g_pManager->Init(hInstance, hWnd, TRUE)))
-	{ // 初期化処理が失敗した場合
-		return -1;
+	if (FAILED(g_pManager->Create(hInstance, hWnd)))
+	{
+		return E_FAIL;
 	}
 
 	// 分解能を設定
@@ -178,12 +171,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 	timeEndPeriod(1);
 
 	// マネージャーの破棄
-	if (g_pManager)
-	{
-		g_pManager->Uninit();	// 終了処理
-		delete g_pManager;		// メモリを解放
-		g_pManager = nullptr;	// ポインタを初期化
-	}
+	g_pManager->Release();
 
 	return static_cast<int>(msg.wParam);
 }

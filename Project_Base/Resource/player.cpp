@@ -183,7 +183,7 @@ void CPlayer::Draw()
 	pDev->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_LESSEQUAL);
 
 	// 四角形マスクの描画
-	CManager::GetMask_Rectangle()->Draw();
+	CManager::GetManager()->GetMask_Rectangle()->Draw();
 
 #endif
 

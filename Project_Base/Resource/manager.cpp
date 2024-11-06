@@ -23,26 +23,191 @@
 using namespace abbr;
 
 //****************************************************
-// 静的メンバの初期化
+// 静的メンバ変数の初期化
 //****************************************************
-CMask_Rectangle* CManager::m_pMask_Rectangle= nullptr;
-CCamera* CManager::m_pCamera = nullptr;				// カメラ管理
-CLight* CManager::m_pLight = nullptr;				// ライト管理
-CInputKeyboard* CManager::m_pKeyboard = nullptr;	// キーボード管理
-CInputPad* CManager::m_pPad = nullptr;				// パッド管理
-CScene* CManager::m_pScene = nullptr;				// シーン管理
+CManager* CManager::m_pManager = nullptr;	// マネージャーの本体
+
+//============================================================================
+// 
+// publicメンバ
+// 
+//============================================================================
+
+//============================================================================
+// 生成
+//============================================================================
+HRESULT CManager::Create(HINSTANCE hInstance, HWND hWnd)
+{
+	// マネージャーの生成
+	if (m_pManager == nullptr)
+	{
+		m_pManager = DBG_NEW CManager();
+	}
+
+	// 生成失敗
+	if (m_pManager == nullptr)
+	{
+		return E_FAIL;
+	}
+
+	// 初期設定
+	if (FAILED(m_pManager->Init(hInstance, hWnd)))
+	{
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+//============================================================================
+// 解放
+//============================================================================
+void CManager::Release()
+{
+	if (m_pManager != nullptr)
+	{
+		m_pManager->Uninit();	// 終了処理
+		delete m_pManager;		// メモリを解放
+		m_pManager = nullptr;	// ポインタを初期化
+	}
+}
+
+//============================================================================
+// 更新処理
+//============================================================================
+void CManager::Update()
+{
+	// 四角形マスクの更新処理
+	m_pManager->m_pMask_Rectangle->Update();
+
+	// レンダラーの更新
+	CRenderer::GetInstance()->Update();
+
+	// シーンの更新
+	m_pManager->m_pScene->Update();
+
+	// ライトの更新
+	m_pManager->m_pLight->Update();
+
+	// カメラの更新
+	m_pManager->m_pCamera->Update();
+
+	// キーボードの更新
+	m_pManager->m_pKeyboard->Update();
+
+	// パッドの更新
+	m_pManager->m_pPad->Update();
+}
+
+//============================================================================
+// 描画処理
+//============================================================================
+void CManager::Draw()
+{
+	// レンダラーの描画
+	CRenderer::GetInstance()->Draw();
+}
+
+//============================================================================
+// 四角形マスクを取得
+//============================================================================
+CMask_Rectangle* CManager::GetMask_Rectangle() const
+{
+	return m_pMask_Rectangle;
+}
+
+//============================================================================
+// カメラを取得
+//============================================================================
+CCamera* CManager::GetCamera() const
+{
+	return m_pCamera;
+}
+
+//============================================================================
+// ライトを取得
+//============================================================================
+CLight* CManager::GetLight() const
+{
+	return m_pLight;
+}
+
+//============================================================================
+// シーンを取得
+//============================================================================
+CScene* CManager::GetScene() const
+{
+	return m_pScene;
+}
+
+//============================================================================
+// シーンの設定
+//============================================================================
+void CManager::SetScene(CScene::MODE Mode)
+{
+	// 現在のシーンを破棄
+	if (m_pScene != nullptr)
+	{
+		m_pScene->Uninit();
+		delete m_pScene;
+		m_pScene = nullptr;
+	}
+
+	// 新たなシーンを設定
+	m_pScene = CScene::Create(Mode);
+
+	// 生成失敗
+	if (!m_pScene)
+	{
+		assert(false);
+	}
+
+	// 初期設定
+	m_pScene->Init();
+}
+
+//============================================================================
+// マネージャーを取得
+//============================================================================
+CManager* CManager::GetManager()
+{
+	return m_pManager;
+}
+
+//============================================================================
+// キーボードを取得
+//============================================================================
+CInputKeyboard* CManager::GetKeyboard()
+{
+	return m_pManager->m_pKeyboard;
+}
+
+//============================================================================
+// パッドを取得
+//============================================================================
+CInputPad* CManager::GetPad()
+{
+	return m_pManager->m_pPad;
+}
+
+//============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
 
 //============================================================================
 // デフォルトコンストラクタ
 //============================================================================
-CManager::CManager()
+CManager::CManager() :
+	m_pKeyboard{ nullptr },
+	m_pPad{ nullptr },
+	m_pMask_Rectangle{ nullptr },
+	m_pCamera{ nullptr },
+	m_pLight{ nullptr },
+	m_pScene{ nullptr }
 {
-	// 念のため静的メンバの初期化
-	m_pCamera = nullptr;
-	m_pLight = nullptr;
-	m_pKeyboard = nullptr;
-	m_pPad = nullptr;
-	m_pScene = nullptr;
+
 }
 
 //============================================================================
@@ -56,10 +221,10 @@ CManager::~CManager()
 //============================================================================
 // 初期設定
 //============================================================================
-HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
+HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 {
 	// レンダラーの生成
-	if (FAILED(CRenderer::GetInstance()->Init(hWnd, bWindow)))
+	if (FAILED(CRenderer::GetInstance()->Init(hWnd, TRUE)))
 	{
 		return E_FAIL;
 	}
@@ -80,7 +245,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	}
 
 	// カメラの生成
-	m_pCamera = DBG_NEW CCamera;
+	m_pCamera = DBG_NEW CCamera();
 
 	if (m_pCamera == nullptr)
 	{ // 生成失敗
@@ -91,7 +256,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pCamera->Init();
 
 	// ライトの生成
-	m_pLight = DBG_NEW CLight;
+	m_pLight = DBG_NEW CLight();
 
 	if (m_pLight == nullptr)
 	{ // 生成失敗
@@ -113,7 +278,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pKeyboard->Init(hInstance, hWnd);
 
 	// パッドの生成
-	m_pPad = DBG_NEW CInputPad;
+	m_pPad = DBG_NEW CInputPad();
 
 	if (m_pPad == nullptr)
 	{ // 生成失敗
@@ -191,106 +356,4 @@ void CManager::Uninit()
 
 	// レンダラーの破棄
 	CRenderer::GetInstance()->Release();
-}
-
-//============================================================================
-// 更新処理
-//============================================================================
-void CManager::Update()
-{
-	// 四角形マスクの更新処理
-	m_pMask_Rectangle->Update();
-
-	// レンダラーの更新
-	CRenderer::GetInstance()->Update();
-
-	// シーンの更新
-	m_pScene->Update();
-
-	// ライトの更新
-	m_pLight->Update();
-
-	// カメラの更新
-	m_pCamera->Update();
-
-	// キーボードの更新
-	m_pKeyboard->Update();
-
-	// パッドの更新
-	m_pPad->Update();
-}
-
-//============================================================================
-// 描画処理
-//============================================================================
-void CManager::Draw()
-{
-	// レンダラーの描画
-	CRenderer::GetInstance()->Draw();
-}
-
-//============================================================================
-// カメラ取得
-//============================================================================
-CCamera* CManager::GetCamera()
-{
-	return m_pCamera;
-}
-
-//============================================================================
-// ライト取得
-//============================================================================
-CLight* CManager::GetLight()
-{
-	return m_pLight;
-}
-
-//============================================================================
-// キーボード取得
-//============================================================================
-CInputKeyboard* CManager::GetKeyboard()
-{
-	return m_pKeyboard;
-}
-
-//============================================================================
-// パッド取得
-//============================================================================
-CInputPad* CManager::GetPad()
-{
-	return m_pPad;
-}
-
-//============================================================================
-// シーン取得
-//============================================================================
-CScene* CManager::GetScene()
-{
-	return m_pScene;
-}
-
-//============================================================================
-// シーン設定
-//============================================================================
-void CManager::SetScene(CScene::MODE mode)
-{
-	// 現在のシーンを破棄
-	if (m_pScene != nullptr)
-	{
-		m_pScene->Uninit();
-		delete m_pScene;
-		m_pScene = nullptr;
-	}
-
-	// 新たなシーンを設定
-	m_pScene = CScene::Create(mode);
-
-	// 生成失敗
-	if (!m_pScene)
-	{
-		assert(false);
-	}
-
-	// 初期設定
-	m_pScene->Init();
 }

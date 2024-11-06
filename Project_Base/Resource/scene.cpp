@@ -72,7 +72,7 @@ void CScene::Update()
 #ifdef _DEBUG
 	// 現在のシーンのクラスを表示
 	/* typeid(*this)だとバグっちゃう */
-	std::string Name{ typeid(*CManager::GetScene()).name() };
+	std::string Name{ typeid(*CManager::GetManager()->GetScene()).name() };
 	CRenderer::GetInstance()->SetDebugString("現在のシーンのクラス -> " + Name);
 #endif	// _DEBUG
 }
@@ -134,7 +134,7 @@ CScene* CScene::Create(MODE mode)
 	//pScene->Init();
 
 	// シーン切り替えのたびにカメラリセット
-	CManager::GetCamera()->Init();
+	CManager::GetManager()->GetCamera()->Init();
 
 	return pScene;
 }

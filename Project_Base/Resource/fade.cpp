@@ -245,7 +245,7 @@ void CFade::FadeIn()
 			m_bFadeIn = false;
 
 			// 次のシーンへ変更
-			CManager::SetScene(m_NextMode);
+			CManager::GetManager()->SetScene(m_NextMode);
 
 			// フェードアウトを開始
 			m_bFadeOut = true;

@@ -29,39 +29,46 @@ class CManager final
 {
 public:
 
+	// <function>
+	HRESULT Create(HINSTANCE hInstance, HWND hWnd);	// 生成
+	void	Release();								// 解放
+	void	Update();								// 更新処理
+	void	Draw();									// 描画処理
+
+	// <getter>
+	CMask_Rectangle*	GetMask_Rectangle() const;	// 四角形マスクを取得
+	CCamera*			GetCamera() const;			// カメラを取得
+	CLight*				GetLight() const;			// ライトを取得
+	CScene*				GetScene() const;			// シーンを取得
+	
+	// <setter>
+	void SetScene(CScene::MODE Mode);	// シーンの設定
+
+	// <static getter>
+	static CManager*		GetManager();	// マネージャーを取得
+	static CInputKeyboard*	GetKeyboard();	// キーボードを取得
+	static CInputPad*		GetPad();		// パッドを取得
+
+private:
+
 	// <special function>
 	CManager();		// デフォルトコンストラクタ
 	~CManager();	// デストラクタ
 
 	// <function>
-	HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow);	// 初期設定
-	void	Uninit();											// 終了処理
-	void	Update();											// 更新処理
-	void	Draw();												// 描画処理
+	HRESULT Init(HINSTANCE hInstance, HWND hWnd);	// 初期設定
+	void	Uninit();								// 終了処理
 
-	// 四角形マスクの取得
-	static CMask_Rectangle* GetMask_Rectangle()
-	{ return m_pMask_Rectangle; }
-	
-	// <static getter>
-	static CCamera*			GetCamera();	// カメラ取得
-	static CLight*			GetLight();		// ライト取得
-	static CInputKeyboard*	GetKeyboard();	// キーボード取得
-	static CInputPad*		GetPad();		// パッド取得
-	static CScene*			GetScene();		// シーン取得
-	
-	// <static setter>
-	static void SetScene(CScene::MODE mode);	// シーン設定
+	// <datas>
+	CInputKeyboard*		m_pKeyboard;		// キーボード
+	CInputPad*			m_pPad;				// パッド
+	CMask_Rectangle*	m_pMask_Rectangle;	// 四角形マスクのポインタ
+	CCamera*			m_pCamera;			// カメラ
+	CLight*				m_pLight;			// ライト
+	CScene*				m_pScene;			// シーン
 
-private:
-
-	// <static datas>
-	static CMask_Rectangle*	m_pMask_Rectangle;	// 四角形マスクのポインタ
-	static CCamera*			m_pCamera;			// カメラ管理
-	static CLight*			m_pLight;			// ライト管理
-	static CInputKeyboard*	m_pKeyboard;		// キーボード管理
-	static CInputPad*		m_pPad;				// パッド管理
-	static CScene*			m_pScene;			// シーン管理
+	// <static data>
+	static CManager* m_pManager;	// マネージャーの本体
 };
 
 #endif // _MANAGER_H_

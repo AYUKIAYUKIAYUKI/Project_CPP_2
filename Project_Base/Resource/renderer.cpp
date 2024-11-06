@@ -209,13 +209,13 @@ void CRenderer::Draw()
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 	{
 		// カメラをセット
-		CManager::GetCamera()->SetCamera();
+		CManager::GetManager()->GetCamera()->SetCamera();
 
 		// 全オブジェクトの描画
 		CObject::DrawAll();
 
 		// シーンの専用描画
-		CManager::GetScene()->Draw();
+		CManager::GetManager()->GetScene()->Draw();
 
 		// デバッグ表示
 		PrintDebug();
