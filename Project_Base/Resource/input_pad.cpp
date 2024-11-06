@@ -25,8 +25,9 @@
 // デフォルトコンストラクタ
 //============================================================================
 CInputPad::CInputPad() :
-	m_aKeyState{},			// プレス情報
-	m_aKeyStateTrigger{}	// トリガー情報
+	m_aKeyState{},
+	m_aKeyStateTrigger{},
+	m_aKeyStateRelease{}
 {
 
 }
@@ -59,6 +60,9 @@ HRESULT CInputPad::Init(HINSTANCE hInstance, HWND hWnd)
 	// トリガー情報クリア
 	memset(&m_aKeyStateTrigger, 0, sizeof(XINPUT_STATE));
 
+	// リリース情報クリア
+	memset(&m_aKeyStateRelease, 0, sizeof(XINPUT_STATE));
+
 	// XInputのステート設定を有効にする
 	XInputEnable(true);
 
@@ -82,9 +86,9 @@ void CInputPad::Uninit()
 //============================================================================
 void CInputPad::Update()
 {
-	XINPUT_STATE StateJoypad = {};	// コントローラの入力情報
+	XINPUT_STATE StateJoypad = {};	// パッドの入力情報
 
-	// コントローラの状態を取得
+	// パッドの状態を取得
 	if (XInputGetState(0, &StateJoypad) == ERROR_SUCCESS)
 	{
 #if LEFT_JOYSTICK_CONVERT	// 左スティック入力を変換
@@ -99,13 +103,14 @@ void CInputPad::Update()
 
 #endif	// LEFT_JOYSTICK_CONVERT
 
-		// コントローラのトリガー情報を保存
-		m_aKeyStateTrigger.Gamepad.wButtons = (m_aKeyState.Gamepad.wButtons ^ StateJoypad.Gamepad.wButtons) & StateJoypad.Gamepad.wButtons;
-		m_aKeyStateTrigger.Gamepad.bLeftTrigger = (m_aKeyState.Gamepad.bLeftTrigger ^ StateJoypad.Gamepad.bLeftTrigger) & StateJoypad.Gamepad.bLeftTrigger;
-		m_aKeyStateTrigger.Gamepad.bRightTrigger = (m_aKeyState.Gamepad.bRightTrigger ^ StateJoypad.Gamepad.bRightTrigger) & StateJoypad.Gamepad.bRightTrigger;
+		// パッドのリリース情報を保存
+		m_aKeyStateRelease.Gamepad.wButtons = m_aKeyStateRelease.Gamepad.wButtons ^ ~StateJoypad.Gamepad.wButtons;
 
-		// コントローラのプレス情報を保存
-		m_aKeyState = StateJoypad;
+		// パッドのトリガー情報を保存
+		m_aKeyStateTrigger.Gamepad.wButtons = ~m_aKeyStateTrigger.Gamepad.wButtons ^ StateJoypad.Gamepad.wButtons;
+
+		// パッドのプレス情報を保存
+		m_aKeyState.Gamepad.wButtons = StateJoypad.Gamepad.wButtons;
 	}
 }
 
@@ -123,6 +128,14 @@ bool CInputPad::GetPress(JOYKEY Key)
 bool CInputPad::GetTrigger(JOYKEY Key)
 {
 	return (m_aKeyStateTrigger.Gamepad.wButtons & (0x01 << static_cast<int>(Key))) ? true : false;
+}
+
+//============================================================================
+// リリース情報取得
+//============================================================================
+bool CInputPad::GetRelease(JOYKEY Key)
+{
+	return (m_aKeyStateRelease.Gamepad.wButtons & (0x01 << static_cast<int>(Key))) ? true : false;
 }
 
 //============================================================================
