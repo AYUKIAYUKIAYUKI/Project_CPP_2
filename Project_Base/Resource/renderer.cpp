@@ -38,129 +38,6 @@ CRenderer* CRenderer::m_pRenderer = nullptr;	// レンダラーの本体
 //============================================================================
 
 //============================================================================
-// 初期設定
-//============================================================================
-HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
-{
-	D3DDISPLAYMODE d3ddm;			// ディスプレイモード
-	D3DPRESENT_PARAMETERS d3dpp;	// プレゼンテーションパラメータ
-
-	// Direct3Dオブジェクトの生成
-	m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
-
-	if (m_pD3D == nullptr)
-	{ // 生成に失敗した場合
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm)))
-	{ // 現在のディスプレイモードを取得
-		return E_FAIL;
-	}
-
-	// デバイスのプレゼンテーションパラメータの設定
-	ZeroMemory(&d3dpp, sizeof(d3dpp));			// パラメータのゼロクリア
-	d3dpp.BackBufferWidth = SCREEN_WIDTH;		// ゲームサイズ(幅)
-	d3dpp.BackBufferHeight = SCREEN_HEIGHT;		// ゲームサイズ(高さ)
-	d3dpp.BackBufferFormat = d3ddm.Format;		// バックバッファの形式
-	d3dpp.BackBufferCount = 1;					// バックバッファの数
-	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;	// ダブルバッファの切り替え(映像信号に同期)
-	d3dpp.EnableAutoDepthStencil = TRUE;		// デプスバッファとステンシルバッファを作成
-
-#if ENABLE_STENCIL_BUFFER
-
-	d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;	// デプスバッファとして24bit、ステンシルバッファとして8bitを使用する
-
-#else
-
-	d3dpp.AutoDepthStencilFormat = D3DFMT_D16;		./ デプスバッファとして16bitを使う
-
-#endif
-
-	d3dpp.Windowed = bWindiw;									// ウインドウモード
-	d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;	// リフレッシュレート
-	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;	// インターバル
-
-	// Direct3Dデバイスの生成行程①
-	if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
-		D3DDEVTYPE_HAL,
-		hWnd,
-		D3DCREATE_HARDWARE_VERTEXPROCESSING,
-		&d3dpp,
-		&m_pD3DDevice)))
-	{
-		// Direct3Dデバイスの生成行程②
-		if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
-			D3DDEVTYPE_HAL,
-			hWnd,
-			D3DCREATE_SOFTWARE_VERTEXPROCESSING,
-			&d3dpp,
-			&m_pD3DDevice)))
-		{
-			// Direct3Dデバイスの生成行程③
-			if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
-				D3DDEVTYPE_REF,
-				hWnd,
-				D3DCREATE_SOFTWARE_VERTEXPROCESSING,
-				&d3dpp,
-				&m_pD3DDevice)))
-			{
-				return E_FAIL;
-			}
-		}
-	}
-
-	// レンダーステートの初期設定
-	m_pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-	m_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	m_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	m_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
-	// テクスチャステージステートの初期設定
-	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
-
-	// フォントを生成
-	D3DXCreateFont(m_pD3DDevice, 22, 0, FW_HEAVY, 1,
-		FALSE, SHIFTJIS_CHARSET,
-		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH,
-		"Terminal", &m_pFont);
-
-	// テクスチャマネージャー初期設定
-	if (FAILED(CTexture_Manager::GetInstance()->Load()))
-	{
-		return E_FAIL;
-	}
-
-	// Xモデルマネージャー初期設定
-	if (FAILED(CModel_X_Manager::GetInstance()->Load()))
-	{
-		return E_FAIL;
-	}
-
-	return S_OK;
-}
-
-//============================================================================
-// 解放
-//============================================================================
-void CRenderer::Release()
-{
-	if (m_pRenderer != nullptr)
-	{
-		// 終了処理
-		m_pRenderer->Uninit();
-
-		// メモリを解放
-		delete m_pRenderer;
-
-		// ポインタを初期化
-		m_pRenderer = nullptr;
-	}
-}
-
-//============================================================================
 // 更新処理
 //============================================================================
 void CRenderer::Update()
@@ -258,16 +135,56 @@ void CRenderer::PrintDebug()
 }
 
 //============================================================================
-// レンダラーの取得
+// 生成
 //============================================================================
-CRenderer* CRenderer::GetInstance()
+HRESULT CRenderer::Create(HWND hWnd, BOOL bWindow)
 {
-	if (m_pRenderer == nullptr)
+	if (m_pRenderer != nullptr)
 	{
-		// 生成
-		m_pRenderer->Create();
+		assert(false && "レンダラーは既に作成されているか、ダングリングしています");
 	}
 
+	// レンダラーを生成
+	m_pRenderer = DBG_NEW CRenderer();
+
+	if (m_pRenderer == nullptr)
+	{
+		assert(false && "レンダラーの生成に失敗");
+	}
+
+	// レンダラーの初期設定
+	if (FAILED(m_pRenderer->Init(hWnd, bWindow)))
+	{
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+//============================================================================
+// 解放
+//============================================================================
+void CRenderer::Release()
+{
+	// レンダラーの破棄
+	if (m_pRenderer != nullptr)
+	{
+		// レンダラー終了処理
+		m_pRenderer->Uninit();
+
+		// メモリを解放
+		delete m_pRenderer;
+
+		// ポインタを初期化
+		m_pRenderer = nullptr;
+	}
+}
+
+//============================================================================
+// レンダラーの取得
+//============================================================================
+CRenderer* CRenderer::GetRenderer()
+{
 	return m_pRenderer;
 }
 
@@ -276,7 +193,7 @@ CRenderer* CRenderer::GetInstance()
 //============================================================================
 LPDIRECT3DDEVICE9 CRenderer::GetDeviece()
 {
-	return GetInstance()->m_pD3DDevice;
+	return m_pRenderer->m_pD3DDevice;
 }
 
 //============================================================================
@@ -284,7 +201,7 @@ LPDIRECT3DDEVICE9 CRenderer::GetDeviece()
 //============================================================================
 void CRenderer::SetDebugString(std::string Str)
 {
-	GetInstance()->m_DebugStr += Str + "\n";
+	m_pRenderer->m_DebugStr += Str + "\n";
 }
 
 //============================================================================
@@ -292,7 +209,7 @@ void CRenderer::SetDebugString(std::string Str)
 //============================================================================
 void CRenderer::SetTimeString(std::string Str, int nCnt)
 {
-	GetInstance()->m_TimeStr.push_back({ Str, nCnt });
+	m_pRenderer->m_TimeStr.push_back({ Str, nCnt });
 }
 
 //============================================================================
@@ -323,22 +240,116 @@ CRenderer::~CRenderer()
 }
 
 //============================================================================
-// 生成
+// 初期設定
 //============================================================================
-void CRenderer::Create()
+HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 {
-	if (m_pRenderer != nullptr)
-	{
-		assert(false && "レンダラーは既に作成されているか、ダングリングしています");
+	D3DDISPLAYMODE d3ddm;			// ディスプレイモード
+	D3DPRESENT_PARAMETERS d3dpp;	// プレゼンテーションパラメータ
+
+	// Direct3Dオブジェクトの生成
+	m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
+
+	if (m_pD3D == nullptr)
+	{ // 生成に失敗した場合
+		return E_FAIL;
 	}
 
-	// インスタンスを生成
-	m_pRenderer = DBG_NEW CRenderer();
-
-	if (m_pRenderer == nullptr)
-	{
-		assert(false && "レンダラーの生成に失敗");
+	if (FAILED(m_pD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm)))
+	{ // 現在のディスプレイモードを取得
+		return E_FAIL;
 	}
+
+	// デバイスのプレゼンテーションパラメータの設定
+	ZeroMemory(&d3dpp, sizeof(d3dpp));			// パラメータのゼロクリア
+	d3dpp.BackBufferWidth = SCREEN_WIDTH;		// ゲームサイズ(幅)
+	d3dpp.BackBufferHeight = SCREEN_HEIGHT;		// ゲームサイズ(高さ)
+	d3dpp.BackBufferFormat = d3ddm.Format;		// バックバッファの形式
+	d3dpp.BackBufferCount = 1;					// バックバッファの数
+	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;	// ダブルバッファの切り替え(映像信号に同期)
+	d3dpp.EnableAutoDepthStencil = TRUE;		// デプスバッファとステンシルバッファを作成
+
+#if ENABLE_STENCIL_BUFFER
+
+	d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;	// デプスバッファとして24bit、ステンシルバッファとして8bitを使用する
+
+#else
+
+	d3dpp.AutoDepthStencilFormat = D3DFMT_D16;	// デプスバッファとして16bitを使う
+
+#endif
+
+	d3dpp.Windowed = bWindiw;									// ウインドウモード
+	d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;	// リフレッシュレート
+	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;	// インターバル
+
+	// Direct3Dデバイスの生成行程①
+	if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
+		D3DDEVTYPE_HAL,
+		hWnd,
+		D3DCREATE_HARDWARE_VERTEXPROCESSING,
+		&d3dpp,
+		&m_pD3DDevice)))
+	{
+		// Direct3Dデバイスの生成行程②
+		if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
+			D3DDEVTYPE_HAL,
+			hWnd,
+			D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+			&d3dpp,
+			&m_pD3DDevice)))
+		{
+			// Direct3Dデバイスの生成行程③
+			if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
+				D3DDEVTYPE_REF,
+				hWnd,
+				D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+				&d3dpp,
+				&m_pD3DDevice)))
+			{
+				return E_FAIL;
+			}
+		}
+	}
+
+	// レンダーステートの初期設定
+	m_pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	m_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	m_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	m_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+	// テクスチャステージステートの初期設定
+	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+
+	// フォントを生成
+	D3DXCreateFont(m_pD3DDevice,
+		22,
+		0,
+		FW_HEAVY,
+		1,
+		FALSE,
+		SHIFTJIS_CHARSET,
+		OUT_DEFAULT_PRECIS,
+		DEFAULT_QUALITY,
+		DEFAULT_PITCH,
+		"Terminal",
+		&m_pFont);
+
+	// テクスチャマネージャー初期設定
+	if (FAILED(CTexture_Manager::GetInstance()->Load()))
+	{
+		return E_FAIL;
+	}
+
+	// Xモデルマネージャー初期設定
+	if (FAILED(CModel_X_Manager::GetInstance()->Load()))
+	{
+		return E_FAIL;
+	}
+
+	return S_OK;
 }
 
 //============================================================================

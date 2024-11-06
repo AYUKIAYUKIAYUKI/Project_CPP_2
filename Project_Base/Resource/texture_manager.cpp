@@ -32,7 +32,7 @@ HRESULT CTexture_Manager::Load()
 	}
 
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev{ CRenderer::GetInstance()->GetDeviece() };
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetRenderer()->GetDeviece();
 
 	for (int i = 0; i < static_cast<int>(TYPE::MAX); i++)
 	{

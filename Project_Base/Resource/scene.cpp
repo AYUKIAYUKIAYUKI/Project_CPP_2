@@ -73,7 +73,7 @@ void CScene::Update()
 	// 現在のシーンのクラスを表示
 	/* typeid(*this)だとバグっちゃう */
 	std::string Name{ typeid(*CManager::GetManager()->GetScene()).name() };
-	CRenderer::GetInstance()->SetDebugString("現在のシーンのクラス -> " + Name);
+	CRenderer::GetRenderer()->SetDebugString("現在のシーンのクラス -> " + Name);
 #endif	// _DEBUG
 }
 

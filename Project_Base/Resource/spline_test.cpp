@@ -161,7 +161,7 @@ void CSpline_Test::Update()
 void CSpline_Test::Draw()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetRenderer()->GetDeviece();
 
 	// ライトをオフ
 	pDev->SetRenderState(D3DRS_LIGHTING, FALSE);
@@ -208,7 +208,7 @@ void CSpline_Test::Draw()
 HRESULT CSpline_Test::CreateVtxBuff()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetRenderer()->GetDeviece();
 
 	// 頂点バッファの生成
 	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * m_nNumVtx,

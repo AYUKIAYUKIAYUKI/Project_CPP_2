@@ -207,7 +207,7 @@ HRESULT CRender_Collision::CreateVtxBuff()
 HRESULT CRender_Collision::CreateIdxBuff()
 {
 	// インデックスバッファの生成
-	CRenderer::GetInstance()->GetDeviece()->CreateIndexBuffer(sizeof(WORD) * m_nNumIdx,
+	CRenderer::GetRenderer()->GetDeviece()->CreateIndexBuffer(sizeof(WORD) * m_nNumIdx,
 		D3DUSAGE_WRITEONLY,
 		D3DFMT_INDEX16,
 		D3DPOOL_MANAGED,

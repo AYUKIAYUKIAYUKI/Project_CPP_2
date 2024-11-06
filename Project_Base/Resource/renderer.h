@@ -15,15 +15,23 @@ class CRenderer final
 {
 public:
 
+	// <special function>
+	CRenderer(const CRenderer&) = delete;				// コピーコンストラクタ
+	CRenderer& operator=(const CRenderer&) = delete;	// コピー代入演算子
+	CRenderer(CRenderer&&) = delete;					// ムーブコンストラクタ
+	CRenderer& operator=(CRenderer&&) = delete;			// ムーブ代入演算子
+
 	// <function>
-	HRESULT Init(HWND hWnd, BOOL bWindiw);	// 初期設定
-	void	Release();						// 解放
-	void	Update();						// 更新処理
-	void	Draw();							// 描画処理
-	void	PrintDebug();					// デバッグ表示
+	void Update();		// 更新処理
+	void Draw();		// 描画処理
+	void PrintDebug();	// デバッグ表示
+
+	// <static function>
+	static HRESULT	Create(HWND hWnd, BOOL bWindiw);	// 生成
+	static void		Release();							// 破棄
 
 	// <static getter>
-	static CRenderer*			GetInstance();	// レンダラーを取得
+	static CRenderer*			GetRenderer();	// レンダラーを取得
 	static LPDIRECT3DDEVICE9	GetDeviece();	// デバイスを取得
 
 	// <static setter>
@@ -37,8 +45,8 @@ private:
 	~CRenderer();	// デストラクタ
 
 	// <function>
-	void Create();	// 生成
-	void Uninit();	// 終了処理
+	HRESULT Init(HWND hWnd, BOOL bWindiw);	// 初期設定
+	void	Uninit();						// 終了処理
 
 	// <data>
 	LPDIRECT3D9									m_pD3D;			// Direct3D

@@ -42,7 +42,7 @@ void CManager::Update()
 	m_pMask_Rectangle->Update();
 
 	// レンダラーの更新
-	CRenderer::GetInstance()->Update();
+	CRenderer::GetRenderer()->Update();
 
 	// シーンの更新
 	m_pScene->Update();
@@ -66,7 +66,7 @@ void CManager::Update()
 void CManager::Draw()
 {
 	// レンダラーの描画
-	CRenderer::GetInstance()->Draw();
+	CRenderer::GetRenderer()->Draw();
 }
 
 //============================================================================
@@ -123,7 +123,7 @@ void CManager::SetScene(CScene::MODE Mode)
 		assert(false);
 	}
 
-	// 初期設定
+	// シーンの初期設定
 	m_pScene->Init();
 }
 
@@ -132,19 +132,20 @@ void CManager::SetScene(CScene::MODE Mode)
 //============================================================================
 HRESULT CManager::Create(HINSTANCE hInstance, HWND hWnd)
 {
-	// マネージャーの生成
-	if (m_pManager == nullptr)
+	if (m_pManager != nullptr)
 	{
-		m_pManager = DBG_NEW CManager();
+		assert(false && "マネージャーは既に作成されているか、ダングリングしています");
 	}
 
-	// 生成失敗
+	// マネージャーを生成
+	m_pManager = DBG_NEW CManager();
+
 	if (m_pManager == nullptr)
 	{
-		return E_FAIL;
+		assert(false && "マネージャーの生成に失敗");
 	}
 
-	// 初期設定
+	// マネージャーの初期設定
 	if (FAILED(m_pManager->Init(hInstance, hWnd)))
 	{
 		return E_FAIL;
@@ -158,11 +159,17 @@ HRESULT CManager::Create(HINSTANCE hInstance, HWND hWnd)
 //============================================================================
 void CManager::Release()
 {
+	// マネージャーの破棄
 	if (m_pManager != nullptr)
 	{
-		m_pManager->Uninit();	// 終了処理
-		delete m_pManager;		// メモリを解放
-		m_pManager = nullptr;	// ポインタを初期化
+		// マネージャーの終了処理
+		m_pManager->Uninit();
+
+		// メモリを解放
+		delete m_pManager;
+
+		// ポインタを初期化
+		m_pManager = nullptr;
 	}
 }
 
@@ -224,7 +231,7 @@ CManager::~CManager()
 HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 {
 	// レンダラーの生成
-	if (FAILED(CRenderer::GetInstance()->Init(hWnd, TRUE)))
+	if (FAILED(CRenderer::GetRenderer()->Create(hWnd, TRUE)))
 	{
 		return E_FAIL;
 	}
@@ -355,5 +362,5 @@ void CManager::Uninit()
 	}
 
 	// レンダラーの破棄
-	CRenderer::GetInstance()->Release();
+	CRenderer::GetRenderer()->Release();
 }
