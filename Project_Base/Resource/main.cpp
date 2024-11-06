@@ -166,7 +166,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 	timeEndPeriod(1);
 
 	// マネージャーの破棄
-	CManager::GetManager()->Release();
+	CManager::Release();
 
 	return static_cast<int>(msg.wParam);
 }

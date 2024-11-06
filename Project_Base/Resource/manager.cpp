@@ -231,7 +231,7 @@ CManager::~CManager()
 HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 {
 	// レンダラーの生成
-	if (FAILED(CRenderer::GetRenderer()->Create(hWnd, TRUE)))
+	if (FAILED(CRenderer::Create(hWnd, TRUE)))
 	{
 		return E_FAIL;
 	}
@@ -362,5 +362,5 @@ void CManager::Uninit()
 	}
 
 	// レンダラーの破棄
-	CRenderer::GetRenderer()->Release();
+	CRenderer::Release();
 }
