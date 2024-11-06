@@ -83,16 +83,20 @@ void CEnemy::Update()
 	// キャラクタークラスの更新処理
 	CCharacter::Update();
 
+#if 0
 #ifdef _DEBUG
 
-	CRenderer::GetInstance()->SetDebugString("エネミー体力　　 : " + to_string(GetLife()));
-	CRenderer::GetInstance()->SetDebugString("エネミー方角　　 : " + to_string(GetDirection() * (180 / D3DX_PI)));
-	CRenderer::GetInstance()->SetDebugString("エネミー座標　　 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
-	CRenderer::GetInstance()->SetDebugString("エネミー速度　　 : " + to_string(GetMoveSpeed()));
-	CRenderer::GetInstance()->SetDebugString("エネミー向き　　 : " + to_string(GetRot().x * (180 / D3DX_PI)) + " :  " + to_string(GetRot().y * (180 / D3DX_PI)) + " : " + to_string(GetRot().z * (180 / D3DX_PI)));
-	CRenderer::GetInstance()->SetDebugString("エネミー目標向き : " + to_string(GetRotTarget().x * (180 / D3DX_PI)) + " :  " + to_string(GetRotTarget().y * (180 / D3DX_PI)) + " : " + to_string(GetRotTarget().z * (180 / D3DX_PI)));
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+	CRenderer::SetDebugString("エネミー体力　　 : " + to_string(GetLife()));
+	CRenderer::SetDebugString("エネミー方角　　 : " + to_string(GetDirection() * (180 / D3DX_PI)));
+	CRenderer::SetDebugString("エネミー座標　　 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
+	CRenderer::SetDebugString("エネミー速度　　 : " + to_string(GetMoveSpeed()));
+	CRenderer::SetDebugString("エネミー向き　　 : " + to_string(GetRot().x * (180 / D3DX_PI)) + " :  " + to_string(GetRot().y * (180 / D3DX_PI)) + " : " + to_string(GetRot().z * (180 / D3DX_PI)));
+	CRenderer::SetDebugString("エネミー目標向き : " + to_string(GetRotTarget().x * (180 / D3DX_PI)) + " :  " + to_string(GetRotTarget().y * (180 / D3DX_PI)) + " : " + to_string(GetRotTarget().z * (180 / D3DX_PI)));
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 
 #endif // _DEBUG
+#endif
 }
 
 //============================================================================

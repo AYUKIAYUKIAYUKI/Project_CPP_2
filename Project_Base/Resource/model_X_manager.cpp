@@ -57,9 +57,12 @@ HRESULT CModel_X_Manager::Load()
 
 		if (FAILED(hr))
 		{ // 取得失敗
-#ifdef _DEBUG
+
+#ifdef _DEBUG	// 警告表示
+
 			ModelName = ModelName.substr(ModelName.find_last_of("\\") + 1, ModelName.back());
-			CRenderer::GetInstance()->SetTimeString("【警告】モデル[" + ModelName + "]は読み込みに失敗しました", 300);
+			CRenderer::SetTimeString("【警告】モデル[" + ModelName + "]は読み込みに失敗しました", 300);
+
 #endif	// _DEBUG
 
 			continue;
@@ -89,9 +92,12 @@ HRESULT CModel_X_Manager::Load()
 
 					// テクスチャ名をコピー
 					std::string TextureName{ pMat[nCntMat].pTextureFilename };
-#ifdef _DEBUG
+
+#ifdef _DEBUG	// 警告表示
+
 					ModelName = ModelName.substr(ModelName.find_last_of("\\") + 1, ModelName.back());
-					CRenderer::GetInstance()->SetTimeString("【警告】モデル[" + ModelName + "]におけるテクスチャパスの[" + TextureName + "]は生成に失敗しました", 600);
+					CRenderer::SetTimeString("【警告】モデル[" + ModelName + "]におけるテクスチャパスの[" + TextureName + "]は生成に失敗しました", 600);
+
 #endif	// _DEBUG
 
 					m_apModelTemp[nCntModel].apTex[nCntMat] = nullptr;
@@ -136,8 +142,11 @@ CModel_X_Manager::MODEL* CModel_X_Manager::GetModel(TYPE Type)
 {
 	if (m_apModelTemp[static_cast<int>(Type)].pMesh == nullptr)
 	{ // モデル取得不能
-#ifdef _DEBUG
-		CRenderer::GetInstance()->SetTimeString("【警告】モデル取得エラー", 600);
+
+#ifdef _DEBUG	// 警告表示
+
+		CRenderer::SetTimeString("【警告】モデル取得エラー", 600);
+
 #endif	// _DEBUG
 	}
 
@@ -210,8 +219,11 @@ D3DXVECTOR3 CModel_X_Manager::ImportSize(std::string filename)
 
 	if (!file)
 	{ // 展開に失敗
-#ifdef _DEBUG
-		CRenderer::GetInstance()->SetTimeString("【警告】モデル[" + filename + "]はサイズ読み込みに失敗しました", 600);
+
+#ifdef _DEBUG	// 警告表示
+
+		CRenderer::SetTimeString("【警告】モデル[" + filename + "]はサイズ読み込みに失敗しました", 600);
+
 #endif	// _DEBUG
 
 		return D3DXVECTOR3{ 0.0f, 0.0f, 0.0f, };

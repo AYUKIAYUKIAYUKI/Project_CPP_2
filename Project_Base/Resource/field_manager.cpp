@@ -231,8 +231,10 @@ void CField_Manager::TestCreate()
 	// ブロック数をカウント
 	int nCntBlock = CObject::CountSpecificObject(CObject::TYPE::BLOCK);
 
-#ifdef _DEBUG
-	CRenderer::GetInstance()->SetDebugString("ブロック数:" + to_string(nCntBlock));
+#ifdef _DEBUG	// ブロック数の表示
+
+	CRenderer::SetDebugString("ブロック数:" + to_string(nCntBlock));
+
 #endif
 
 	// ブロック数が上限に満たなければ

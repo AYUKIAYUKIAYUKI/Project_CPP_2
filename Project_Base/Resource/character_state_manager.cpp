@@ -72,7 +72,7 @@ void CCharacter_State_Manager::Update()
 #ifdef _DEBUG
 
 	// ステートの中身がどの派生クラスか表示
-	CRenderer::GetInstance()->SetDebugString("現在のキャラクターステート : 【" + static_cast<std::string>(typeid(*m_pState).name()) + "】");
+	CRenderer::SetDebugString("現在のキャラクターステート : 【" + static_cast<std::string>(typeid(*m_pState).name()) + "】");
 
 #endif	// _DEBUG
 #endif

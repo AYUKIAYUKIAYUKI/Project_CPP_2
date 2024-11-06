@@ -128,10 +128,12 @@ void CMask_Rectangle::Update()
 
 #if 0
 #ifdef _DEBUG
+
 	for (int i = 0; i < 4; ++i)
 	{
-		CRenderer::GetInstance()->SetDebugString("頂点座標 : " + std::to_string(pVtx[i].pos.x) + " :  " + std::to_string(pVtx[i].pos.y) + " : " + std::to_string(pVtx[i].pos.z));
+		CRenderer::SetDebugString("頂点座標 : " + std::to_string(pVtx[i].pos.x) + " :  " + std::to_string(pVtx[i].pos.y) + " : " + std::to_string(pVtx[i].pos.z));
 	}
+
 #endif	// _DEBUG
 #endif
 

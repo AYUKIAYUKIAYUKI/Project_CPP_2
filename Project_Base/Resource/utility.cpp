@@ -25,7 +25,7 @@ void CUtility::AdjustAngle(float& fAngle, const float& fDest)
 #ifdef _DEBUG
 
 		// どれだけの差があるか表示
-		CRenderer::GetInstance()->SetTimeString("[りれき1]現在角度と目標角度の差 : " + std::to_string(fDifference), 120);
+		CRenderer::SetTimeString("[りれき1]現在角度と目標角度の差 : " + std::to_string(fDifference), 120);
 
 #endif	// _DEBUG
 	}
@@ -36,7 +36,7 @@ void CUtility::AdjustAngle(float& fAngle, const float& fDest)
 #ifdef _DEBUG
 
 		// どれだけの差があるか表示
-		CRenderer::GetInstance()->SetTimeString("[りれき2]現在角度と目標角度の差 : " + std::to_string(fDifference), 120);
+		CRenderer::SetTimeString("[りれき2]現在角度と目標角度の差 : " + std::to_string(fDifference), 120);
 
 #endif	// _DEBUG
 	}
@@ -57,7 +57,7 @@ void CUtility::AdjustAngle(float& fAngle, const float& fDest, const float& fRadi
 #ifdef _DEBUG
 
 		// どれだけの差があるか表示
-		CRenderer::GetInstance()->SetTimeString("[りれき1]現在角度と目標角度の差 : " + std::to_string(fDifference), 120);
+		CRenderer::SetTimeString("[りれき1]現在角度と目標角度の差 : " + std::to_string(fDifference), 120);
 
 #endif	// _DEBUG
 	}
@@ -68,7 +68,7 @@ void CUtility::AdjustAngle(float& fAngle, const float& fDest, const float& fRadi
 #ifdef _DEBUG
 
 		// どれだけの差があるか表示
-		CRenderer::GetInstance()->SetTimeString("[りれき2]現在角度と目標角度の差 : " + std::to_string(fDifference), 120);
+		CRenderer::SetTimeString("[りれき2]現在角度と目標角度の差 : " + std::to_string(fDifference), 120);
 
 #endif	// _DEBUG
 	}

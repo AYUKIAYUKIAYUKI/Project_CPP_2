@@ -52,9 +52,12 @@ HRESULT CTexture_Manager::Load()
 
 		if (FAILED(hr))
 		{ // テクスチャ生成失敗
-#ifdef _DEBUG
+
+#ifdef _DEBUG	// 警告表示
+
 			TextureName = TextureName.substr(TextureName.find_last_of("\\") + 1, TextureName.back());
-			CRenderer::GetInstance()->SetTimeString("【警告】テクスチャ[" + TextureName + "]は生成に失敗しました", 300);
+			CRenderer::SetTimeString("【警告】テクスチャ[" + TextureName + "]は生成に失敗しました", 300);
+
 #endif	// _DEBUG
 		}
 	}
@@ -90,8 +93,11 @@ LPDIRECT3DTEXTURE9 CTexture_Manager::GetTexture(TYPE Type)
 {
 	if (m_apTexTemp[static_cast<int>(Type)] == nullptr)
 	{ // テクスチャ取得不能
-#ifdef _DEBUG
-		CRenderer::GetInstance()->SetTimeString("【警告】テクスチャ取得エラー", 600);
+
+#ifdef _DEBUG	// 警告表示
+
+		CRenderer::SetTimeString("【警告】テクスチャ取得エラー", 600);
+
 #endif	// _DEBUG
 	}
 

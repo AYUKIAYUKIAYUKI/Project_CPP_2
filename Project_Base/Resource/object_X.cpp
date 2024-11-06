@@ -82,9 +82,12 @@ void CObject_X::Draw()
 	// ƒ‚ƒfƒ‹‚ªİ’è‚³‚ê‚Ä‚¢‚È‚¢
 	if (m_pModel == nullptr)
 	{
-#ifdef _DEBUG
-		CRenderer::GetInstance()->SetDebugString(static_cast<std::string>("y") + typeid(*this).name() + static_cast<std::string>("‚Éƒ‚ƒfƒ‹î•ñ‚ª‚ ‚è‚Ü‚¹‚ñIz"));
+#ifdef _DEBUG	// Œx•\¦
+
+		CRenderer::SetDebugString(static_cast<std::string>("y") + typeid(*this).name() + static_cast<std::string>("‚Éƒ‚ƒfƒ‹î•ñ‚ª‚ ‚è‚Ü‚¹‚ñIz"));
+
 #endif	// _DEBUG
+
 		return;
 	}
 

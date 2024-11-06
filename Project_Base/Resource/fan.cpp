@@ -50,11 +50,13 @@ void CFan::Update()
 
 #ifdef _DEBUG
 
-	CRenderer::GetInstance()->SetDebugString("扇形の方角 : " + to_string(m_fDirection));
-	CRenderer::GetInstance()->SetDebugString("方角のベク : " + to_string(sinf(m_fDirection)) + " : " + to_string(cosf(m_fDirection)));
-	CRenderer::GetInstance()->SetDebugString("扇形の長さ : " + to_string(m_fLength));
-	CRenderer::GetInstance()->SetDebugString("扇形の範囲 : " + to_string(m_fRange));
-	CRenderer::GetInstance()->SetDebugString("範囲のベク : " + to_string(cosf(m_fRange)));
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+	CRenderer::SetDebugString("扇形の方角 : " + to_string(m_fDirection));
+	CRenderer::SetDebugString("方角のベク : " + to_string(sinf(m_fDirection)) + " : " + to_string(cosf(m_fDirection)));
+	CRenderer::SetDebugString("扇形の長さ : " + to_string(m_fLength));
+	CRenderer::SetDebugString("扇形の範囲 : " + to_string(m_fRange));
+	CRenderer::SetDebugString("範囲のベク : " + to_string(cosf(m_fRange)));
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 
 #endif // _DEBUG
 }
@@ -118,7 +120,7 @@ bool CFan::DetectInFanRange(D3DXVECTOR3 Pos)
 		if (cosf(m_fRange) <= fθ ||
 			cosf(m_fRange) >= fθ)
 		{
-			CRenderer::GetInstance()->SetDebugString("内積のなす角 : " + to_string(fθ));
+			CRenderer::SetDebugString("内積のなす角 : " + to_string(fθ));
 
 			return 1;
 		}
@@ -376,7 +378,7 @@ void CFan::SetVtx()
 
 	//for (WORD i = 0; i < NUM_VTX; ++i)
 	//{
-	//	CRenderer::GetInstance()->SetDebugString("オオオオオ : " + to_string(pVtx[i].pos.x) + " : " + to_string(pVtx[i].pos.y) + " : " + to_string(pVtx[i].pos.z));
+	//	CRenderer::SetDebugString("オオオオオ : " + to_string(pVtx[i].pos.x) + " : " + to_string(pVtx[i].pos.y) + " : " + to_string(pVtx[i].pos.z));
 	//}
 
 	// 頂点バッファをアンロックする
