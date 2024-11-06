@@ -66,6 +66,7 @@
     <ClCompile Include="Resource\utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Resource\bounding_volume.h" />
     <ClInclude Include="Resource\mask_rectangle.h" />
     <ClInclude Include="Resource\mesh_dome.h" />
     <ClInclude Include="Resource\block.h" />
