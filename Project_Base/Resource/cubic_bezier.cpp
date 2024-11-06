@@ -107,7 +107,7 @@ void CCubic_Bezier::Update()
 void CCubic_Bezier::Draw()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// ライトをオフ
 	pDev->SetRenderState(D3DRS_LIGHTING, FALSE);
@@ -142,7 +142,7 @@ void CCubic_Bezier::Draw()
 HRESULT CCubic_Bezier::CreateVtxBuff()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// 頂点バッファの生成
 	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * 2,

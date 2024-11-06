@@ -89,7 +89,7 @@ void CObject_X::Draw()
 	}
 
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// 頂点法線の自動正規化を有効に
 	pDev->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);

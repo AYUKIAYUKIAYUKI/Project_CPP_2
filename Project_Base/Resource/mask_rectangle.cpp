@@ -145,7 +145,7 @@ void CMask_Rectangle::Update()
 void CMask_Rectangle::Draw()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// 頂点バッファをデータストリームに設定
 	pDev->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_2D));
@@ -209,7 +209,7 @@ CMask_Rectangle* CMask_Rectangle::Create(CTexture_Manager::TYPE Type)
 HRESULT CMask_Rectangle::CreateVtxBuff()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// 頂点バッファの生成
 	pDev->CreateVertexBuffer(sizeof(VERTEX_2D) * NUM_VTX,

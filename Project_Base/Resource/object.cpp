@@ -305,7 +305,7 @@ void CObject::DrawAll()
 #if 1	// あああああああああああああああああああああああああああああああああああああああああああああああああああああああ
 
 			// デバイスを取得
-			auto pDev = CRenderer::GetInstance()->GetDeviece();
+			auto pDev = CRenderer::GetDeviece();
 
 			// ステンシルマスクを設定
 			pDev->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);

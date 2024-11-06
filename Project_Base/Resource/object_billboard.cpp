@@ -47,7 +47,7 @@ CObject_billboard::~CObject_billboard()
 HRESULT CObject_billboard::Init()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev{ CRenderer::GetInstance()->GetDeviece() };
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// 頂点バッファの生成
 	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * 4,
@@ -175,7 +175,7 @@ void CObject_billboard::Update()
 void CObject_billboard::Draw()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev{ CRenderer::GetInstance()->GetDeviece() };
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	//// 深度テストの比較方法の変更
 	//pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
@@ -362,7 +362,7 @@ CObject_billboard* CObject_billboard::Create()
 //============================================================================
 void CObject_billboard::SetMtxWorld()
 {
-	LPDIRECT3DDEVICE9 pDev{ CRenderer::GetInstance()->GetDeviece() };
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// 計算用行列
 	D3DXMATRIX mtxRot{}, mtxTrans{}, mtxView{};

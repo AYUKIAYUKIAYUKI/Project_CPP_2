@@ -107,7 +107,7 @@ void CCamera::SetCamera()
 #if 0	// バッファのクリアはレンダラーに委ねる
 
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// 画面バッファクリア
 	pDev->Clear(0,
@@ -371,7 +371,7 @@ void CCamera::CalcPosR()
 void CCamera::CalcMtxProjection()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// プロジェクション行列の初期化
 	D3DXMatrixIdentity(&m_MtxProjection);
@@ -404,7 +404,7 @@ void CCamera::CalcMtxProjection()
 void CCamera::CalcMtxView()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// ビュー行列の初期化
 	D3DXMatrixIdentity(&m_MtxView);

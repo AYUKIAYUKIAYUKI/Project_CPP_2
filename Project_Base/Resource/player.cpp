@@ -152,7 +152,7 @@ void CPlayer::Draw()
 #if 1	// ステンシルバッファにプレイヤーのシルエットを描画する
 
 	// デバイスを取得
-	auto pDev = CRenderer::GetInstance()->GetDeviece();
+	auto pDev = CRenderer::GetDeviece();
 
 	// ステンシルマスクを設定
 	pDev->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);

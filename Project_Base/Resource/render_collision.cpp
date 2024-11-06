@@ -104,7 +104,7 @@ void CRender_Collision::Update()
 void CRender_Collision::Draw()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// ライトをオフ
 	pDev->SetRenderState(D3DRS_LIGHTING, FALSE);
@@ -159,7 +159,7 @@ CRender_Collision* CRender_Collision::Create(CObject_X* pObj)
 HRESULT CRender_Collision::CreateVtxBuff()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// 頂点バッファの生成
 	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * m_nNumVtx,

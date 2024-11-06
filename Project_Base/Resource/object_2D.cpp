@@ -177,7 +177,7 @@ void CObject_2D::Update()
 void CObject_2D::Draw()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// 頂点バッファをデータストリームに設定
 	pDev->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_2D));
@@ -378,7 +378,7 @@ CObject_2D* CObject_2D::Create()
 HRESULT CObject_2D::CreateVtxBuff()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// 頂点バッファの生成
 	pDev->CreateVertexBuffer(sizeof(VERTEX_2D) * NUM_VTX,

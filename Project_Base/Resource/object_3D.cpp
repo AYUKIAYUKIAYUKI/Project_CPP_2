@@ -50,7 +50,7 @@ CObject_3D::~CObject_3D()
 HRESULT CObject_3D::Init()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// 頂点バッファの生成
 	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * 4,
@@ -177,7 +177,7 @@ void CObject_3D::Update()
 void CObject_3D::Draw()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// ワールド行列の設定
 	pDev->SetTransform(D3DTS_WORLD, &m_MtxWorld);

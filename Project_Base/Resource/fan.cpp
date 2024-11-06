@@ -65,7 +65,7 @@ void CFan::Update()
 void CFan::Draw()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// ライトをオフ
 	pDev->SetRenderState(D3DRS_LIGHTING, FALSE);
@@ -301,7 +301,7 @@ HRESULT CFan::Init()
 HRESULT CFan::CreateVtxBuff()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// 頂点バッファの生成
 	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * NUM_VTX,

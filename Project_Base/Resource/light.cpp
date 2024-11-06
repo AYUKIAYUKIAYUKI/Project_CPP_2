@@ -95,7 +95,7 @@ void CLight::SetTempDirection()
 void CLight::Create()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	for (int i = 0; i < MAX_LIGHT; i++)
 	{ // ライト情報初期設定
@@ -180,7 +180,7 @@ void CLight::Reset()
 void CLight::SetLight()
 {
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetInstance()->GetDeviece();
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	for (int i = 0; i < MAX_LIGHT; i++)
 	{

@@ -32,7 +32,7 @@ HRESULT CModel_X_Manager::Load()
 	}
 
 	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev{ CRenderer::GetInstance()->GetDeviece() };
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	for (int nCntModel = 0; nCntModel < static_cast<int>(TYPE::MAX); nCntModel++)
 	{
