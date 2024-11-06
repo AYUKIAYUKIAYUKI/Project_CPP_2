@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Resource\input_keyboard.cpp" />
+    <ClCompile Include="Resource\input_pad.cpp" />
     <ClCompile Include="Resource\mask_rectangle.cpp" />
     <ClCompile Include="Resource\mesh_dome.cpp" />
     <ClCompile Include="Resource\block.cpp" />
@@ -67,6 +69,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\bounding_volume.h" />
+    <ClInclude Include="Resource\input_keyboard.h" />
+    <ClInclude Include="Resource\input_pad.h" />
     <ClInclude Include="Resource\mask_rectangle.h" />
     <ClInclude Include="Resource\mesh_dome.h" />
     <ClInclude Include="Resource\block.h" />
