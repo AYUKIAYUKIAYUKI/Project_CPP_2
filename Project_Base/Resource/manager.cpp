@@ -102,7 +102,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pLight->Init();
 
 	// キーボードの生成
-	m_pKeyboard = DBG_NEW CInputKeyboard;
+	m_pKeyboard = DBG_NEW CInputKeyboard();
 
 	if (m_pKeyboard == nullptr)
 	{ // 生成失敗
@@ -121,7 +121,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	}
 
 	// パッドの初期化
-	m_pPad->Init();
+	m_pPad->Init(hInstance, hWnd);
 
 	// 最初のシーン設定
 	SetScene(CScene::MODE::TITLE);

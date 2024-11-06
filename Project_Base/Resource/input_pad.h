@@ -58,9 +58,9 @@ public:
 	~CInputPad();	// デストラクタ
 
 	// <function>
-	HRESULT Init();				// 初期設定
-	void	Uninit() override;	// 終了処理
-	void	Update() override;	// 更新処理
+	HRESULT Init(HINSTANCE hInstance, HWND hWnd);	// 初期設定
+	void	Uninit() override;						// 終了処理
+	void	Update() override;						// 更新処理
 
 	// <data>
 	bool		GetPress(JOYKEY Key);	// プレス情報取得

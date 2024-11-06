@@ -1,6 +1,6 @@
 //============================================================================
 // 
-// 入力処理管理 [input.cpp]
+// パッド入力 [input.cpp]
 // Author : 福田歩希
 // 
 //============================================================================
@@ -42,8 +42,17 @@ CInputPad::~CInputPad()
 //============================================================================
 // 初期設定
 //============================================================================
-HRESULT CInputPad::Init()
+HRESULT CInputPad::Init(HINSTANCE hInstance, HWND hWnd)
 {
+	if (m_Input == nullptr)
+	{
+		// インプットクラスの初期設定
+		if (FAILED(CInput::Init(hInstance, hWnd)))
+		{
+			return E_FAIL;
+		}
+	}
+
 	// プレス情報クリア
 	memset(&m_aKeyState, 0, sizeof(XINPUT_STATE));
 
@@ -73,10 +82,10 @@ void CInputPad::Uninit()
 //============================================================================
 void CInputPad::Update()
 {
-	XINPUT_STATE state_joypad = {};	// コントローラの入力情報
+	XINPUT_STATE StateJoypad = {};	// コントローラの入力情報
 
 	// コントローラの状態を取得
-	if (XInputGetState(0, &state_joypad) == ERROR_SUCCESS)
+	if (XInputGetState(0, &StateJoypad) == ERROR_SUCCESS)
 	{
 #if LEFT_JOYSTICK_CONVERT	// 左スティック入力を変換
 
@@ -91,12 +100,12 @@ void CInputPad::Update()
 #endif	// LEFT_JOYSTICK_CONVERT
 
 		// コントローラのトリガー情報を保存
-		m_aKeyStateTrigger.Gamepad.wButtons = (m_aKeyState.Gamepad.wButtons ^ state_joypad.Gamepad.wButtons) & state_joypad.Gamepad.wButtons;
-		m_aKeyStateTrigger.Gamepad.bLeftTrigger = (m_aKeyState.Gamepad.bLeftTrigger ^ state_joypad.Gamepad.bLeftTrigger) & state_joypad.Gamepad.bLeftTrigger;
-		m_aKeyStateTrigger.Gamepad.bRightTrigger = (m_aKeyState.Gamepad.bRightTrigger ^ state_joypad.Gamepad.bRightTrigger) & state_joypad.Gamepad.bRightTrigger;
+		m_aKeyStateTrigger.Gamepad.wButtons = (m_aKeyState.Gamepad.wButtons ^ StateJoypad.Gamepad.wButtons) & StateJoypad.Gamepad.wButtons;
+		m_aKeyStateTrigger.Gamepad.bLeftTrigger = (m_aKeyState.Gamepad.bLeftTrigger ^ StateJoypad.Gamepad.bLeftTrigger) & StateJoypad.Gamepad.bLeftTrigger;
+		m_aKeyStateTrigger.Gamepad.bRightTrigger = (m_aKeyState.Gamepad.bRightTrigger ^ StateJoypad.Gamepad.bRightTrigger) & StateJoypad.Gamepad.bRightTrigger;
 
 		// コントローラのプレス情報を保存
-		m_aKeyState = state_joypad;
+		m_aKeyState = StateJoypad;
 	}
 }
 
@@ -122,13 +131,13 @@ bool CInputPad::GetTrigger(JOYKEY Key)
 CInputPad::JOYSTICK CInputPad::GetJoyStickL(void)
 {
 	// スティックの傾きを格納
-	JOYSTICK joystickL =
+	JOYSTICK JoystickL =
 	{
 		m_aKeyState.Gamepad.sThumbLX,
 		m_aKeyState.Gamepad.sThumbLY
 	};
 
-	return joystickL;
+	return JoystickL;
 }
 
 //============================================================================
@@ -137,13 +146,13 @@ CInputPad::JOYSTICK CInputPad::GetJoyStickL(void)
 CInputPad::JOYSTICK CInputPad::GetJoyStickR(void)
 {
 	// スティックの傾きを格納
-	JOYSTICK joystickR =
+	JOYSTICK JoystickR =
 	{
 		m_aKeyState.Gamepad.sThumbRX,
 		m_aKeyState.Gamepad.sThumbRY
 	};
 
-	return joystickR;
+	return JoystickR;
 }
 
 //============================================================================

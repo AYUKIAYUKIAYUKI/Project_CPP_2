@@ -41,7 +41,7 @@ HRESULT CInputKeyboard::Init(HINSTANCE hInstance, HWND hWnd)
 {
 	if (m_Input == nullptr)
 	{
-		// DirectInputオブジェクトの生成
+		// インプットクラスの初期設定
 		if (FAILED(CInput::Init(hInstance, hWnd)))
 		{
 			return E_FAIL;
@@ -89,18 +89,18 @@ void CInputKeyboard::Uninit()
 //============================================================================
 void CInputKeyboard::Update()
 {
-	BYTE state_keyboard[MAX_KEY] = {};	// キー入力情報
+	BYTE StateKeyboard[MAX_KEY] = {};	// キー入力情報
 
 	// 入力デバイスからデータを取得
-	if (SUCCEEDED(m_pDevice->GetDeviceState(sizeof(state_keyboard), &state_keyboard[0])))
+	if (SUCCEEDED(m_pDevice->GetDeviceState(sizeof(StateKeyboard), &StateKeyboard[0])))
 	{
-		for (int i = 0; i < MAX_KEY; i++)
+		for (WORD i = 0; i < MAX_KEY; ++i)
 		{
 			// キーボードのトリガー情報を保存
-			m_aKeyStateTrigger[i] = (m_aKeyState[i] ^ state_keyboard[i]) & state_keyboard[i];
+			m_aKeyStateTrigger[i] = (m_aKeyState[i] ^ StateKeyboard[i]) & StateKeyboard[i];
 
 			// キーボードのプレス情報を保存
-			m_aKeyState[i] = state_keyboard[i];
+			m_aKeyState[i] = StateKeyboard[i];
 		}
 	}
 	else
