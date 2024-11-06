@@ -166,7 +166,7 @@ void CRenderer::Release()
 void CRenderer::Update()
 {
 	// 文字列クリア
-	m_debugStr = {};
+	m_DebugStr = {};
 
 	// 全オブジェクト更新処理
 	CObject::UpdateAll();
@@ -234,27 +234,27 @@ void CRenderer::Draw()
 void CRenderer::PrintDebug()
 {
 	// 表示位置
-	RECT rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	RECT Rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
-	for (unsigned int i = 0; i < m_timeStr.size(); i++)
+	for (WORD i = 0; i < m_TimeStr.size(); ++i)
 	{
-		if (m_timeStr[i].second > 0)
+		if (m_TimeStr[i].second > 0)
 		{
 			// 表示時間をカウントダウン
-			m_timeStr[i].second--;
+			m_TimeStr[i].second--;
 
 			// 文章をつなげる
-			m_debugStr += m_timeStr[i].first + "\n";
+			m_DebugStr += m_TimeStr[i].first + "\n";
 		}
 		else
 		{
 			// 文章を消去
-			m_timeStr.erase(m_timeStr.begin() + i);
+			m_TimeStr.erase(m_TimeStr.begin() + i);
 		}
 	}
 
-	//テキストの描画
-	m_pFont->DrawText(NULL, m_debugStr.c_str(), -1, &rect, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));
+	// テキストの描画
+	m_pFont->DrawText(NULL, m_DebugStr.c_str(), -1, &Rect, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));
 }
 
 //============================================================================
@@ -282,17 +282,17 @@ LPDIRECT3DDEVICE9 CRenderer::GetDeviece()
 //============================================================================
 // デバッグ用文字列に追加
 //============================================================================
-void CRenderer::SetDebugString(std::string str)
+void CRenderer::SetDebugString(std::string Str)
 {
-	GetInstance()->m_debugStr += str + "\n";
+	GetInstance()->m_DebugStr += Str + "\n";
 }
 
 //============================================================================
 // 時限式デバッグ文字列に追加
 //============================================================================
-void CRenderer::SetTimeString(std::string str, int nCnt)
+void CRenderer::SetTimeString(std::string Str, int nCnt)
 {
-	GetInstance()->m_timeStr.push_back({ str, nCnt });
+	GetInstance()->m_TimeStr.push_back({ Str, nCnt });
 }
 
 //============================================================================
@@ -308,8 +308,8 @@ CRenderer::CRenderer() :
 	m_pD3D{ nullptr },
 	m_pD3DDevice{ nullptr },
 	m_pFont{ nullptr },
-	m_debugStr{},
-	m_timeStr{}
+	m_DebugStr{},
+	m_TimeStr{}
 {
 
 }

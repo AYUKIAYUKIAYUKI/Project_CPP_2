@@ -27,8 +27,8 @@ public:
 	static LPDIRECT3DDEVICE9	GetDeviece();	// デバイスを取得
 
 	// <static setter>
-	static void	SetDebugString(std::string str);			// デバッグ文字列に追加
-	static void	SetTimeString(std::string str, int nCnt);	// 時限式デバッグ文字列に追加
+	static void	SetDebugString(std::string Str);			// デバッグ文字列に追加
+	static void	SetTimeString(std::string Str, int nCnt);	// 時限式デバッグ文字列に追加
 
 private:
 
@@ -44,8 +44,8 @@ private:
 	LPDIRECT3D9									m_pD3D;			// Direct3D
 	LPDIRECT3DDEVICE9							m_pD3DDevice;	// デバイス
 	LPD3DXFONT									m_pFont;		// フォント
-	std::string									m_debugStr;		// 表示用文字列
-	std::vector<std::pair<std::string, int>>	m_timeStr;		// 時限式文字列
+	std::string									m_DebugStr;		// 表示用文字列
+	std::vector<std::pair<std::string, int>>	m_TimeStr;		// 時限式文字列
 
 	// <static data>
 	static CRenderer* m_pRenderer;	// レンダラーの本体

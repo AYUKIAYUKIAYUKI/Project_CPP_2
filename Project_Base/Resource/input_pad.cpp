@@ -78,8 +78,7 @@ void CInputPad::Update()
 	// コントローラの状態を取得
 	if (XInputGetState(0, &state_joypad) == ERROR_SUCCESS)
 	{
-		// 左スティック入力を変換
-#if LEFT_JOYSTICK_CONVERT
+#if LEFT_JOYSTICK_CONVERT	// 左スティック入力を変換
 
 		// 左スティック入力を十字キーに変換
 		g_state_joypad.press.Gamepad.wButtons |= ConvertJoyStick();
