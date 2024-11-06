@@ -101,11 +101,6 @@ void CPlayer_State_Dash::SetRotTargetToMoveDirection()
 //============================================================================
 void CPlayer_State_Dash::SetPosTarget_Unnamed()
 {
-	//****************************************************
-	// usingディレクティブ
-	//****************************************************
-	using namespace field_manager;
-
 	// 方角を設定
 	float fDirection = m_pCharacter->GetDirection();
 

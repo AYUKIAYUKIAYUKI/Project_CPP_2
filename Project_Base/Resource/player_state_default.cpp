@@ -128,11 +128,6 @@ void CPlayer_State_Default::SetRotTargetToMoveDirection()
 //============================================================================
 void CPlayer_State_Default::SetPosTargetByDirection()
 {
-	//****************************************************
-	// usingディレクティブ
-	//****************************************************
-	using namespace field_manager;
-
 	// 方角を取得
 	const float& fDirection = m_pCharacter->GetDirection();
 

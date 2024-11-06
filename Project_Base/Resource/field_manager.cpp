@@ -28,12 +28,12 @@
 //****************************************************
 // usingディレクティブ
 //****************************************************
-using namespace field_manager;
+using namespace abbr;
 
 //****************************************************
 // 静的メンバ変数の初期化
 //****************************************************
-CField_Manager* CField_Manager::m_pInstance = nullptr;
+CField_Manager* CField_Manager::m_pField_Manager = nullptr;	// フィールドマネージャーの本体
 
 //============================================================================
 // 
@@ -97,16 +97,16 @@ HRESULT CField_Manager::Init()
 //============================================================================
 void CField_Manager::Release()
 {
-	if (m_pInstance != nullptr)
+	if (m_pField_Manager != nullptr)
 	{
 		// 終了処理
-		m_pInstance->Uninit();
+		m_pField_Manager->Uninit();
 
 		// メモリを解放
-		delete m_pInstance;
+		delete m_pField_Manager;
 
 		// ポインタを初期化
-		m_pInstance = nullptr;
+		m_pField_Manager = nullptr;
 	}
 }
 
@@ -156,13 +156,13 @@ void CField_Manager::Draw()
 //============================================================================
 CField_Manager* CField_Manager::GetInstance()
 {
-	if (m_pInstance == nullptr)
+	if (m_pField_Manager == nullptr)
 	{
 		// 生成
-		m_pInstance->Create();
+		m_pField_Manager->Create();
 	}
 
-	return m_pInstance;
+	return m_pField_Manager;
 }
 
 //============================================================================
@@ -201,13 +201,13 @@ CField_Manager::~CField_Manager()
 //============================================================================
 void CField_Manager::Create()
 {
-	if (m_pInstance != nullptr)
+	if (m_pField_Manager != nullptr)
 	{ // 二重生成禁止
 		assert(false);
 	}
 
 	// インスタンスを生成
-	m_pInstance = DBG_NEW CField_Manager();
+	m_pField_Manager = DBG_NEW CField_Manager();
 }
 
 //============================================================================
@@ -306,7 +306,7 @@ void CField_Manager::TestCreate()
 //============================================================================
 // 隣接し合うブロックを検出
 //============================================================================
-bool CField_Manager::DetectAdjacentBlock(const Vec3& Pos)
+bool CField_Manager::DetectAdjacentBlock(const D3DXVECTOR3& Pos)
 {
 	// ミドルオブジェクトを取得
 	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
