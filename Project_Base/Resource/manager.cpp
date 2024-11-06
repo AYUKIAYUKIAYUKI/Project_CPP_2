@@ -34,69 +34,30 @@ CManager* CManager::m_pManager = nullptr;	// マネージャーの本体
 //============================================================================
 
 //============================================================================
-// 生成
-//============================================================================
-HRESULT CManager::Create(HINSTANCE hInstance, HWND hWnd)
-{
-	// マネージャーの生成
-	if (m_pManager == nullptr)
-	{
-		m_pManager = DBG_NEW CManager();
-	}
-
-	// 生成失敗
-	if (m_pManager == nullptr)
-	{
-		return E_FAIL;
-	}
-
-	// 初期設定
-	if (FAILED(m_pManager->Init(hInstance, hWnd)))
-	{
-		return E_FAIL;
-	}
-
-	return S_OK;
-}
-
-//============================================================================
-// 解放
-//============================================================================
-void CManager::Release()
-{
-	if (m_pManager != nullptr)
-	{
-		m_pManager->Uninit();	// 終了処理
-		delete m_pManager;		// メモリを解放
-		m_pManager = nullptr;	// ポインタを初期化
-	}
-}
-
-//============================================================================
 // 更新処理
 //============================================================================
 void CManager::Update()
 {
 	// 四角形マスクの更新処理
-	m_pManager->m_pMask_Rectangle->Update();
+	m_pMask_Rectangle->Update();
 
 	// レンダラーの更新
 	CRenderer::GetInstance()->Update();
 
 	// シーンの更新
-	m_pManager->m_pScene->Update();
+	m_pScene->Update();
 
 	// ライトの更新
-	m_pManager->m_pLight->Update();
+	m_pLight->Update();
 
 	// カメラの更新
-	m_pManager->m_pCamera->Update();
+	m_pCamera->Update();
 
 	// キーボードの更新
-	m_pManager->m_pKeyboard->Update();
+	m_pKeyboard->Update();
 
 	// パッドの更新
-	m_pManager->m_pPad->Update();
+	m_pPad->Update();
 }
 
 //============================================================================
@@ -164,6 +125,45 @@ void CManager::SetScene(CScene::MODE Mode)
 
 	// 初期設定
 	m_pScene->Init();
+}
+
+//============================================================================
+// 生成
+//============================================================================
+HRESULT CManager::Create(HINSTANCE hInstance, HWND hWnd)
+{
+	// マネージャーの生成
+	if (m_pManager == nullptr)
+	{
+		m_pManager = DBG_NEW CManager();
+	}
+
+	// 生成失敗
+	if (m_pManager == nullptr)
+	{
+		return E_FAIL;
+	}
+
+	// 初期設定
+	if (FAILED(m_pManager->Init(hInstance, hWnd)))
+	{
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+//============================================================================
+// 解放
+//============================================================================
+void CManager::Release()
+{
+	if (m_pManager != nullptr)
+	{
+		m_pManager->Uninit();	// 終了処理
+		delete m_pManager;		// メモリを解放
+		m_pManager = nullptr;	// ポインタを初期化
+	}
 }
 
 //============================================================================

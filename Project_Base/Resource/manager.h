@@ -29,11 +29,15 @@ class CManager final
 {
 public:
 
+	// <special function>
+	CManager(const CManager&) = delete;				// コピーコンストラクタ
+	CManager& operator=(const CManager&) = delete;	// コピー代入演算子
+	CManager(CManager&&) = delete;					// ムーブコンストラクタ
+	CManager& operator=(CManager&&) = delete;		// ムーブ代入演算子
+
 	// <function>
-	HRESULT Create(HINSTANCE hInstance, HWND hWnd);	// 生成
-	void	Release();								// 解放
-	void	Update();								// 更新処理
-	void	Draw();									// 描画処理
+	void Update();	// 更新処理
+	void Draw();	// 描画処理
 
 	// <getter>
 	CMask_Rectangle*	GetMask_Rectangle() const;	// 四角形マスクを取得
@@ -43,6 +47,10 @@ public:
 	
 	// <setter>
 	void SetScene(CScene::MODE Mode);	// シーンの設定
+
+	// <static function>
+	static HRESULT Create(HINSTANCE hInstance, HWND hWnd);	// 生成
+	static void	Release();									// 解放
 
 	// <static getter>
 	static CManager*		GetManager();	// マネージャーを取得

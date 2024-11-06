@@ -27,11 +27,6 @@
 // メモリリーク検出用
 #define _CRTDBG_MAP_ALLOC
 
-//****************************************************
-// グローバル宣言
-//****************************************************
-CManager* g_pManager = nullptr;	// マネージャー管理
-
 //***************************************************
 // プロトタイプ宣言
 //****************************************************
@@ -94,7 +89,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 	ChangeWindowSize(hWnd);			// ウィンドウサイズの変更
 
 	// マネージャーの生成
-	if (FAILED(g_pManager->Create(hInstance, hWnd)))
+	if (FAILED(CManager::Create(hInstance, hWnd)))
 	{
 		return E_FAIL;
 	}
@@ -150,7 +145,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 				dwExecLastTime = dwCurrentTime;
 
 				// 更新処理
-				g_pManager->Update();
+				CManager::GetManager()->Update();
 
 #ifdef _DEBUG	// FPS表示
 
@@ -159,7 +154,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 #endif	// _DEBUG
 
 				// 描画処理
-				g_pManager->Draw();
+				CManager::GetManager()->Draw();
 
 				// フレームカウントを加算
 				dwFrameCount++;
@@ -171,7 +166,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 	timeEndPeriod(1);
 
 	// マネージャーの破棄
-	g_pManager->Release();
+	CManager::GetManager()->Release();
 
 	return static_cast<int>(msg.wParam);
 }
