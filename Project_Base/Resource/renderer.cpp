@@ -29,28 +29,13 @@
 //****************************************************
 // 静的メンバ変数の初期化
 //****************************************************
-CRenderer* CRenderer::m_pRenderer = nullptr;	// レンダラー
+CRenderer* CRenderer::m_pRenderer = nullptr;	// レンダラーの本体
 
 //============================================================================
-// コンストラクタ
+// 
+// publicメンバ
+// 
 //============================================================================
-CRenderer::CRenderer() :
-	m_pD3D{ nullptr },				// Direct3D
-	m_pD3DDevice{ nullptr },		// デバイス
-	m_pFont{ nullptr },				// フォント
-	m_debugStr{},					// 表示用文字列
-	m_timeStr{}						// 時限式文字列
-{
-
-}
-
-//============================================================================
-// デストラクタ
-//============================================================================
-CRenderer::~CRenderer()
-{
-
-}
 
 //============================================================================
 // 初期設定
@@ -74,8 +59,7 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 	}
 
 	// デバイスのプレゼンテーションパラメータの設定
-	ZeroMemory(&d3dpp, sizeof(d3dpp));	// パラメータのゼロクリア
-
+	ZeroMemory(&d3dpp, sizeof(d3dpp));			// パラメータのゼロクリア
 	d3dpp.BackBufferWidth = SCREEN_WIDTH;		// ゲームサイズ(幅)
 	d3dpp.BackBufferHeight = SCREEN_HEIGHT;		// ゲームサイズ(高さ)
 	d3dpp.BackBufferFormat = d3ddm.Format;		// バックバッファの形式
@@ -126,19 +110,16 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 		}
 	}
 
-	// レンダーステートの設定
+	// レンダーステートの初期設定
 	m_pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 	m_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	m_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	m_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
-	// テクスチャステージステートの設定
+	// テクスチャステージステートの初期設定
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
-
-	// ?
-	//ID3DXAllocateHierarchy;
 
 	// フォントを生成
 	D3DXCreateFont(m_pD3DDevice, 22, 0, FW_HEAVY, 1,
@@ -295,7 +276,7 @@ CRenderer* CRenderer::GetInstance()
 //============================================================================
 LPDIRECT3DDEVICE9 CRenderer::GetDeviece()
 {
-	return m_pD3DDevice;
+	return GetInstance()->m_pD3DDevice;
 }
 
 //============================================================================
@@ -303,7 +284,7 @@ LPDIRECT3DDEVICE9 CRenderer::GetDeviece()
 //============================================================================
 void CRenderer::SetDebugString(std::string str)
 {
-	m_debugStr += str + "\n";
+	GetInstance()->m_debugStr += str + "\n";
 }
 
 //============================================================================
@@ -311,7 +292,34 @@ void CRenderer::SetDebugString(std::string str)
 //============================================================================
 void CRenderer::SetTimeString(std::string str, int nCnt)
 {
-	m_timeStr.push_back({ str, nCnt });
+	GetInstance()->m_timeStr.push_back({ str, nCnt });
+}
+
+//============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
+
+//============================================================================
+// コンストラクタ
+//============================================================================
+CRenderer::CRenderer() :
+	m_pD3D{ nullptr },
+	m_pD3DDevice{ nullptr },
+	m_pFont{ nullptr },
+	m_debugStr{},
+	m_timeStr{}
+{
+
+}
+
+//============================================================================
+// デストラクタ
+//============================================================================
+CRenderer::~CRenderer()
+{
+
 }
 
 //============================================================================
@@ -320,12 +328,17 @@ void CRenderer::SetTimeString(std::string str, int nCnt)
 void CRenderer::Create()
 {
 	if (m_pRenderer != nullptr)
-	{ // 二重生成禁止
-		assert(false);
+	{
+		assert(false && "レンダラーは既に作成されているか、ダングリングしています");
 	}
 
 	// インスタンスを生成
-	m_pRenderer = DBG_NEW CRenderer{};
+	m_pRenderer = DBG_NEW CRenderer();
+
+	if (m_pRenderer == nullptr)
+	{
+		assert(false && "レンダラーの生成に失敗");
+	}
 }
 
 //============================================================================

@@ -58,7 +58,7 @@ CManager::~CManager()
 //============================================================================
 HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 {
-	// レンダラーの初期設定
+	// レンダラーの生成
 	if (FAILED(CRenderer::GetInstance()->Init(hWnd, bWindow)))
 	{
 		return E_FAIL;
@@ -178,6 +178,9 @@ void CManager::Uninit()
 	// サウンド破棄
 	CSound::GetInstance()->Release();
 
+	// フェードの破棄
+	CFade::GetInstance()->Release();
+
 	// 四角形マスクの破棄
 	if (m_pMask_Rectangle != nullptr)
 	{
@@ -188,9 +191,6 @@ void CManager::Uninit()
 
 	// レンダラーの破棄
 	CRenderer::GetInstance()->Release();
-
-	// フェードの破棄
-	CFade::GetInstance()->Release();
 }
 
 //============================================================================
@@ -207,11 +207,11 @@ void CManager::Update()
 	// シーンの更新
 	m_pScene->Update();
 
-	// カメラの更新
-	m_pCamera->Update();
-
 	// ライトの更新
 	m_pLight->Update();
+
+	// カメラの更新
+	m_pCamera->Update();
 
 	// キーボードの更新
 	m_pKeyboard->Update();
