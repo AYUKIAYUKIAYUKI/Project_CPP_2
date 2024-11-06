@@ -144,7 +144,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 				// 現在時刻を保存
 				dwExecLastTime = dwCurrentTime;
 
-				// 更新処理
+				// マネージャーの更新処理
 				CManager::GetManager()->Update();
 
 #ifdef _DEBUG	// FPS表示
@@ -153,7 +153,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 
 #endif	// _DEBUG
 
-				// 描画処理
+				// マネージャーの描画処理
 				CManager::GetManager()->Draw();
 
 				// フレームカウントを加算

@@ -340,7 +340,7 @@ void CManager::Uninit()
 		m_pCamera = nullptr;	// ポインタを初期化
 	}
 
-	// サウンド破棄
+	// サウンドの破棄
 	CSound::GetInstance()->Release();
 
 	// フェードの破棄

@@ -70,7 +70,7 @@ private:
 	// <datas>
 	CInputKeyboard*		m_pKeyboard;		// キーボード
 	CInputPad*			m_pPad;				// パッド
-	CMask_Rectangle*	m_pMask_Rectangle;	// 四角形マスクのポインタ
+	CMask_Rectangle*	m_pMask_Rectangle;	// 四角形マスク
 	CCamera*			m_pCamera;			// カメラ
 	CLight*				m_pLight;			// ライト
 	CScene*				m_pScene;			// シーン
