@@ -79,6 +79,13 @@ void CPlayer_State_Default::Control()
 	// プレイヤーのパラメータを取得
 	float fDirection = m_pCharacter->GetDirection();		// 方角を取得
 	const float& fMoveSpeed = m_pCharacter->GetMoveSpeed();	// 移動速度を取得
+	
+	// トリガー入力の検証
+	if (pKeyboard->GetRelease(DIK_1))
+	{
+		// 座標を原点に
+		m_pCharacter->SetPos(VEC3_INIT);
+	}
 
 	// X軸の入力
 	if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::LEFT) || pPad->GetJoyStickL().X < 0)
@@ -87,7 +94,7 @@ void CPlayer_State_Default::Control()
 		// 方角を変動
 		fDirection += -fMoveSpeed;
 
-		if (CManager::GetKeyboard()->GetTrigger(DIK_RSHIFT))
+		if (pKeyboard->GetTrigger(DIK_RSHIFT))
 		{
 			// ダッシュ状態へ
 			To_Dash(false);
@@ -99,7 +106,7 @@ void CPlayer_State_Default::Control()
 		 // 方角を変動
 		fDirection += fMoveSpeed;
 
-		if (CManager::GetKeyboard()->GetTrigger(DIK_RSHIFT))
+		if (pKeyboard->GetTrigger(DIK_RSHIFT))
 		{
 			// ダッシュ状態へ
 			To_Dash(true);

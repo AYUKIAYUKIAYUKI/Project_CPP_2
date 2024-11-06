@@ -21,7 +21,8 @@
 //============================================================================
 CInputKeyboard::CInputKeyboard() :
 	m_aKeyState{},
-	m_aKeyStateTrigger{}
+	m_aKeyStateTrigger{},
+	m_aKeyStateRelease{}
 {
 
 }
@@ -96,8 +97,11 @@ void CInputKeyboard::Update()
 	{
 		for (WORD i = 0; i < MAX_KEY; ++i)
 		{
+			// キーボードのリリース情報を保存
+			m_aKeyStateRelease[i] = m_aKeyState[i] & ~StateKeyboard[i];
+
 			// キーボードのトリガー情報を保存
-			m_aKeyStateTrigger[i] = (m_aKeyState[i] ^ StateKeyboard[i]) & StateKeyboard[i];
+			m_aKeyStateTrigger[i] = ~m_aKeyState[i] & StateKeyboard[i];
 
 			// キーボードのプレス情報を保存
 			m_aKeyState[i] = StateKeyboard[i];
@@ -124,4 +128,12 @@ bool CInputKeyboard::GetPress(int nKey)
 bool CInputKeyboard::GetTrigger(int nKey)
 {
 	return ((m_aKeyStateTrigger[nKey] & 0x80) != 0) ? true : false;
+}
+
+//============================================================================
+// リリース情報取得
+//============================================================================
+bool CInputKeyboard::GetRelease(int nKey)
+{
+	return ((m_aKeyStateRelease[nKey] & 0x80) != 0) ? true : false;
 }
