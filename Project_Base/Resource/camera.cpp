@@ -23,7 +23,7 @@
 //****************************************************
 // usingディレクティブ
 //****************************************************
-using namespace camera;
+using namespace abbr;
 
 //============================================================================
 // デフォルトコンストラクタ
@@ -133,7 +133,7 @@ void CCamera::SetCamera()
 //============================================================================
 // 座標を取得
 //============================================================================
-const Vec3& CCamera::GetPos() const
+const D3DXVECTOR3& CCamera::GetPos() const
 {
 	return m_Pos;
 }
@@ -141,7 +141,7 @@ const Vec3& CCamera::GetPos() const
 //============================================================================
 // 座標を設定
 //============================================================================
-void CCamera::SetPos(Vec3 Pos)
+void CCamera::SetPos(D3DXVECTOR3 Pos)
 {
 	m_Pos = Pos;
 }
@@ -149,7 +149,7 @@ void CCamera::SetPos(Vec3 Pos)
 //============================================================================
 // 目標座標を取得
 //============================================================================
-const Vec3& CCamera::GetPosTarget() const
+const D3DXVECTOR3& CCamera::GetPosTarget() const
 {
 	return m_PosTarget;
 }
@@ -157,7 +157,7 @@ const Vec3& CCamera::GetPosTarget() const
 //============================================================================
 // 目標座標を設定
 //============================================================================
-void CCamera::SetPosTarget(Vec3 PosTarget)
+void CCamera::SetPosTarget(D3DXVECTOR3 PosTarget)
 {
 	m_PosTarget = PosTarget;
 }
@@ -165,7 +165,7 @@ void CCamera::SetPosTarget(Vec3 PosTarget)
 //============================================================================
 // 向きを取得
 //============================================================================
-const Vec3& CCamera::GetRot() const
+const D3DXVECTOR3& CCamera::GetRot() const
 {
 	return m_Rot;
 }
@@ -173,7 +173,7 @@ const Vec3& CCamera::GetRot() const
 //============================================================================
 // 向きを設定
 //============================================================================
-void CCamera::SetRot(Vec3 Rot)
+void CCamera::SetRot(D3DXVECTOR3 Rot)
 {
 	m_Rot = Rot;
 }
@@ -181,7 +181,7 @@ void CCamera::SetRot(Vec3 Rot)
 //============================================================================
 // 目標向きを取得
 //============================================================================
-const Vec3& CCamera::GetRotTarget() const
+const D3DXVECTOR3& CCamera::GetRotTarget() const
 {
 	return m_RotTarget;
 }
@@ -189,7 +189,7 @@ const Vec3& CCamera::GetRotTarget() const
 //============================================================================
 // 目標向きを設定
 //============================================================================
-void CCamera::SetRotTarget(Vec3 RotTarget)
+void CCamera::SetRotTarget(D3DXVECTOR3 RotTarget)
 {
 	m_RotTarget = RotTarget;
 }
