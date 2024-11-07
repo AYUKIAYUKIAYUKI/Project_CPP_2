@@ -44,28 +44,36 @@ public:
 		MAX,
 	};
 
+	// <special function>
 	CObject();												// デフォルトコンストラクタ
 	CObject(int nPriority = static_cast<int>(LAYER::NONE));	// 描画優先度指定コンストラクタ
 	virtual ~CObject() = 0;									// デストラクタ
 
+	// <function>
+	void SetRelease();	// 解放予約設定
+	void Release();		// 個別解放処理
+
+	// <virtual function>
 	virtual HRESULT	Init() = 0;		// 初期設定
 	virtual void	Uninit() = 0;	// 終了処理
 	virtual void	Update() = 0;	// 更新処理
 	virtual void	Draw() = 0;		// 描画処理
-	void			SetRelease();	// 解放予約設定
-	void			Release();		// 個別解放処理
 
+	// <getter/setter>
 	const TYPE& GetType() const;	// タイプを取得
 	void SetType(TYPE Type);		// タイプを設定
 
+	// <getter>
 	CObject* GetPrev();	// 前のオブジェクトのポインタを取得
 	CObject* GetNext();	// 次のオブジェクトのポインタを取得
 
+	// <static function>
 	static void ReleaseAll();		// 全オブジェクト解放処理
 	static void UpdateAll();		// 全オブジェクト更新処理
 	static void LateUpdateAll();	// 全オブジェクト後更新処理
 	static void DrawAll();			// 全オブジェクト描画処理
 
+	// <static getter>
 	static CObject* GetTopObject();					// 先頭オブジェクトのポインタ取得
 	static CObject* GetTopObject(int nPriority);	// 先頭オブジェクトのポインタ取得
 	static CObject* FindSpecificObject(TYPE Type);	// 特定タイプのオブジェクト探す
@@ -73,12 +81,14 @@ public:
 
 private:
 
+	// <data>
 	int		 m_nPriority;	// 描画優先度
 	CObject* m_pPrev;		// 前のオブジェクトのポインタ
 	CObject* m_pNext;		// 次のオブジェクトのポインタ
 	TYPE	 m_Type;		// タイプ識別 
 	bool	 m_bDeath;		// 死亡フラグ
 
+	// <static data>
 	static int		m_nNumAll;								// オブジェクト総数
 	static CObject* m_pTop[static_cast<int>(LAYER::MAX)];	// 先頭オブジェクトのポインタ
 	static CObject* m_pCur[static_cast<int>(LAYER::MAX)];	// 終端オブジェクトのポインタ
