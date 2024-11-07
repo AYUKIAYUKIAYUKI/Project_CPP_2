@@ -9,6 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "object_X.h"
+#include "render_collision.h"
 
 // デバイス取得用
 #include "renderer.h"
@@ -32,13 +33,18 @@
 CObject_X::CObject_X(LAYER Priority) :
 	CObject{ Priority },
 	m_pModel{ nullptr },
+	m_pRender_Collision{ nullptr },
 	m_Pos{ 0.0f, 0.0f, 0.0f },
 	m_Rot{ 0.0f, 0.0f, 0.0f },
 	m_Size{ 0.0f, 0.0f, 0.0f },
 	m_fScale{ SCALE_INIT },
 	m_fAlpha{ ALPHA_INIT }
 {
-	D3DXMatrixIdentity(&m_MtxWorld);	// ワールド行列
+	// 判定表示を生成
+	m_pRender_Collision = CRender_Collision::Create(this);
+
+	// ワールド行列を初期化
+	D3DXMatrixIdentity(&m_MtxWorld);
 }
 
 //============================================================================
@@ -62,7 +68,15 @@ HRESULT CObject_X::Init()
 //============================================================================
 void CObject_X::Uninit()
 {
+	// 判定表示の破棄
+	if (m_pRender_Collision != nullptr)
+	{
+		// 判定表示の破棄予約
+		m_pRender_Collision->SetRelease();
 
+		// ポインタを初期化
+		m_pRender_Collision = nullptr;
+	}
 }
 
 //============================================================================
@@ -167,23 +181,27 @@ void CObject_X::BindModel(CModel_X_Manager::MODEL* pModel)
 //============================================================================
 void CObject_X::BindModel(CModel_X_Manager::TYPE Type)
 {
+	// モデルを取得して設定
 	m_pModel = CModel_X_Manager::GetInstance()->GetModel(Type);
+
+	// 設定されたモデルのサイズを取得
+	m_Size = m_pModel->Size;
 }
 
 //============================================================================
-// 座標取得
+// サイズ取得
 //============================================================================
-const D3DXVECTOR3& CObject_X::GetPos() const
+const D3DXVECTOR3& CObject_X::GetSize() const
 {
-	return m_Pos;
+	return m_Size;
 }
 
 //============================================================================
-// 座標設定
+// サイズ設定
 //============================================================================
-void CObject_X::SetPos(D3DXVECTOR3 Pos)
+void CObject_X::SetSize(D3DXVECTOR3 Size)
 {
-	m_Pos = Pos;
+	m_Size = Size;
 }
 
 //============================================================================
@@ -203,19 +221,19 @@ void CObject_X::SetRot(D3DXVECTOR3 Rot)
 }
 
 //============================================================================
-// サイズ取得
+// 座標取得
 //============================================================================
-const D3DXVECTOR3& CObject_X::GetSize() const
+const D3DXVECTOR3& CObject_X::GetPos() const
 {
-	return m_Size;
+	return m_Pos;
 }
 
 //============================================================================
-// サイズ設定
+// 座標設定
 //============================================================================
-void CObject_X::SetSize(D3DXVECTOR3 Size)
+void CObject_X::SetPos(D3DXVECTOR3 Pos)
 {
-	m_Size = Size;
+	m_Pos = Pos;
 }
 
 //============================================================================
@@ -258,11 +276,14 @@ CObject_X* CObject_X::Create()
 	// インスタンスを生成
 	CObject_X* pObjectX = DBG_NEW CObject_X();
 
-	// 生成出来ていたら初期設定
-	if (pObjectX != nullptr)
+	// 生成失敗
+	if (pObjectX == nullptr)
 	{
-		pObjectX->Init();
+		assert(false && "Xオブジェクトの生成に失敗しました");
 	}
+
+	// Xオブジェクトの初期設定
+	pObjectX->Init();
 
 	return pObjectX;
 }
@@ -275,11 +296,14 @@ CObject_X* CObject_X::Create(LAYER Priority)
 	// インスタンスを生成
 	CObject_X* pObjectX = DBG_NEW CObject_X(Priority);
 
-	// 生成出来ていたら初期設定
-	if (pObjectX != nullptr)
+	// 生成失敗
+	if (pObjectX == nullptr)
 	{
-		pObjectX->Init();
+		assert(false && "Xオブジェクトの生成に失敗しました");
 	}
+
+	// Xオブジェクトの初期設定
+	pObjectX->Init();
 
 	return pObjectX;
 }

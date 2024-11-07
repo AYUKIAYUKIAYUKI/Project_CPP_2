@@ -154,7 +154,7 @@ CRender_Collision* CRender_Collision::Create(CObject_X* pRef)
 	CRender_Collision* pRender_Collision = DBG_NEW CRender_Collision(LAYER::FRONT);
 
 	// 生成失敗
-	if (pRender_Collision != nullptr)
+	if (pRender_Collision == nullptr)
 	{
 		assert(false && "判定表示の生成に失敗しました");
 	}
@@ -210,7 +210,7 @@ HRESULT CRender_Collision::CreateVtxBuff()
 		pVtx[wNumVtx].nor = VEC3_INIT;
 
 		// 頂点色の設定
-		pVtx[wNumVtx].col = XCOL_INIT;
+		pVtx[wNumVtx].col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
 
 		// テクスチャ座標の設定
 		pVtx[wNumVtx].tex = VEC2_INIT;

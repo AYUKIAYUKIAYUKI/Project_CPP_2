@@ -16,7 +16,10 @@
 // Xモデル情報用
 #include "model_X_manager.h"
 
-
+//****************************************************
+// 前方宣言
+//****************************************************
+class CRender_Collision;
 
 //****************************************************
 // Xオブジェクトクラス
@@ -40,16 +43,16 @@ public:
 	void BindModel(CModel_X_Manager::TYPE Type);		// もっとモデル割当
 
 	// <getter/setter>
-	const D3DXVECTOR3& GetPos() const;	// 座標取得
-	void SetPos(D3DXVECTOR3 Pos);		// 座標設定
+	const D3DXVECTOR3& GetSize() const;	// サイズ取得
+	void SetSize(D3DXVECTOR3 Size);		// サイズ設定
 
 	// <getter/setter>
 	const D3DXVECTOR3& GetRot() const;	// 向き取得
 	void SetRot(D3DXVECTOR3 Rot);		// 向き設定
 
 	// <getter/setter>
-	const D3DXVECTOR3& GetSize() const;	// サイズ取得
-	void SetSize(D3DXVECTOR3 Size);		// サイズ設定
+	const D3DXVECTOR3& GetPos() const;	// 座標取得
+	void SetPos(D3DXVECTOR3 Pos);		// 座標設定
 
 	// <getter/setter>
 	const float& GetScale() const;	// 縮尺取得
@@ -75,15 +78,14 @@ private:
 	void SetMtxWorld();	// ワールド行列設定
 
 	// <data>
-	CModel_X_Manager::MODEL* m_pModel;	// モデル情報
-
-	// <data>
-	D3DXVECTOR3 m_Pos;		// 位置
-	D3DXVECTOR3 m_Rot;		// 向き
-	D3DXVECTOR3 m_Size;		// サイズ
-	float		m_fScale;	// 縮尺
-	float		m_fAlpha;	// アルファ値
-	D3DXMATRIX	m_MtxWorld;	// ワールド行列
+	CModel_X_Manager::MODEL*	m_pModel;				// モデル情報
+	CRender_Collision*			m_pRender_Collision;	// 判定表示
+	D3DXVECTOR3					m_Size;					// サイズ
+	D3DXVECTOR3					m_Rot;					// 向き
+	D3DXVECTOR3					m_Pos;					// 座標
+	float						m_fScale;				// 縮尺
+	float						m_fAlpha;				// アルファ値
+	D3DXMATRIX					m_MtxWorld;				// ワールド行列
 };
 
 #endif // _OBJECT_X_H_
