@@ -221,9 +221,10 @@ void CCamera::BranchMode()
 		m_bTrack = !m_bTrack;
 	}
 	
-	if (CManager::GetKeyboard()->GetTrigger(DIK_F2))
+	if (CManager::GetKeyboard()->GetPress(DIK_F2))
 	{
-		m_fAdjust = 600.0f;
+		m_Rot.x = -D3DX_PI * 0.55f;
+		m_fAdjust = 0.0f;
 	}
 	else if (CManager::GetKeyboard()->GetRelease(DIK_F2))
 	{

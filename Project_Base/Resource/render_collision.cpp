@@ -305,7 +305,7 @@ void CRender_Collision::SetVtx()
 	// 回転行列を作成
 	MtxRot._11 = cosf(Rot.y) * Size.x;
 	MtxRot._13 = sinf(Rot.y) * Size.z;
-	MtxRot._31 = -sinf(Rot.y) * Size.x;
+	MtxRot._31 = sinf(Rot.y) * Size.x;
 	MtxRot._33 = cosf(Rot.y) * Size.z;
 
 	// 最終的な頂点座標を作成
@@ -323,14 +323,14 @@ void CRender_Collision::SetVtx()
 	pVtx[6].pos = { -Size.x, -Size.y, +Size.z };
 	pVtx[7].pos = { +Size.x, -Size.y, +Size.z };
 #elif 1
-	pVtx[0].pos = { VtxPosX, +Size.y, VtxPosZ };
-	pVtx[1].pos = { VtxPosX, +Size.y, VtxPosZ };
-	pVtx[2].pos = { VtxPosX, -Size.y, VtxPosZ };
-	pVtx[3].pos = { VtxPosX, -Size.y, VtxPosZ };
-	pVtx[4].pos = { VtxPosX, +Size.y, VtxPosZ };
-	pVtx[5].pos = { VtxPosX, +Size.y, VtxPosZ };
-	pVtx[6].pos = { VtxPosX, -Size.y, VtxPosZ };
-	pVtx[7].pos = { VtxPosX, -Size.y, VtxPosZ };
+	pVtx[0].pos = { -VtxPosX, +Size.y, -Size.z };
+	pVtx[1].pos = { +VtxPosX, +Size.y, -Size.z };
+	pVtx[2].pos = { -VtxPosX, -Size.y, -Size.z };
+	pVtx[3].pos = { +VtxPosX, -Size.y, -Size.z };
+	pVtx[4].pos = { -VtxPosX, +Size.y, +Size.z };
+	pVtx[5].pos = { +VtxPosX, +Size.y, +Size.z };
+	pVtx[6].pos = { -VtxPosX, -Size.y, +Size.z };
+	pVtx[7].pos = { +VtxPosX, -Size.y, +Size.z };
 #elif 0
 	pVtx[0].pos = { -VtxPosX, +Size.y, -VtxPosZ };
 	pVtx[1].pos = { +VtxPosX, +Size.y, -VtxPosZ };
@@ -338,6 +338,15 @@ void CRender_Collision::SetVtx()
 	pVtx[3].pos = { +VtxPosX, -Size.y, -VtxPosZ };
 	pVtx[4].pos = { -VtxPosX, +Size.y, +VtxPosZ };
 	pVtx[5].pos = { +VtxPosX, +Size.y, +VtxPosZ };
+	pVtx[6].pos = { -VtxPosX, -Size.y, +VtxPosZ };
+	pVtx[7].pos = { +VtxPosX, -Size.y, +VtxPosZ };
+#elif 0
+	pVtx[0].pos = { -10.0f, +10.0f, -10.0f };
+	pVtx[1].pos = { +10.0f, +10.0f, -10.0f };
+	pVtx[2].pos = { -VtxPosX, -Size.y, -VtxPosZ };
+	pVtx[3].pos = { +VtxPosX, -Size.y, -VtxPosZ };
+	pVtx[4].pos = { -10.0f, +10.0f, +10.0f };
+	pVtx[5].pos = { +10.0f, +10.0f, +10.0f };
 	pVtx[6].pos = { -VtxPosX, -Size.y, +VtxPosZ };
 	pVtx[7].pos = { +VtxPosX, -Size.y, +VtxPosZ };
 #endif
