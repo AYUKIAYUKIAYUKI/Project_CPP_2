@@ -345,7 +345,7 @@ bool CField_Manager::DetectAdjacentBlock(const D3DXVECTOR3& Pos)
 void CField_Manager::TestDelete()
 {
 	// ミドルオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(CObject::LAYER::BG);
+	CObject* pObj = CObject::GetTopObject(CObject::LAYER::MIDDLE);
 
 	// ブロックタグの数をカウントする
 	while (pObj != nullptr)

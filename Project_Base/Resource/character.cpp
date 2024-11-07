@@ -27,7 +27,7 @@ using namespace abbr;
 // デフォルトコンストラクタ
 //============================================================================
 CCharacter::CCharacter() :
-	CObject_X{},
+	CObject_X{ LAYER::BG },
 	m_fCorrectionCoef{ 0.0f },
 	m_fDirection{ 0.0f },
 	m_fMoveSpeed{ 0.0f },

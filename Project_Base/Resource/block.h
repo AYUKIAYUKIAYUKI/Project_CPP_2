@@ -31,8 +31,6 @@ public:
 	// ê∂ê¨
 	static CBlock* Create();									
 	static CBlock* Create(const D3DXVECTOR3& Pos, const D3DXVECTOR3& Rot);
-
-	CObject* m_pTest;	// âº
 };
 
 #endif // _BLOCK_H_
