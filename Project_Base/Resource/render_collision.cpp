@@ -210,7 +210,7 @@ HRESULT CRender_Collision::CreateVtxBuff()
 		pVtx[wNumVtx].nor = VEC3_INIT;
 
 		// 頂点色の設定
-		pVtx[wNumVtx].col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+		pVtx[wNumVtx].col = D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f);
 
 		// テクスチャ座標の設定
 		pVtx[wNumVtx].tex = VEC2_INIT;
