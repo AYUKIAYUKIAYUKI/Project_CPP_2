@@ -9,29 +9,34 @@
 // インクルードファイル
 //****************************************************
 #include "render_collision.h"
+#include "object_X.h"
 
 // デバイス取得用
 #include "renderer.h"
 
 //****************************************************
-// 静的メンバ変数の初期化
+// usingディレクティブ
 //****************************************************
-const int CRender_Collision::m_nNumVtx = 8;			// 頂点数
-const int CRender_Collision::m_nNumPrimitive = 12;	// 辺数
-const int CRender_Collision::m_nNumIdx = 24;		// インデックス数
+using namespace abbr;
 
 //============================================================================
-// コンストラクタ
+// 
+// publicメンバ
+// 
 //============================================================================
-CRender_Collision::CRender_Collision(CObject_X* pObj, LAYER Priority) :
-	CObject{ Priority },				// プライオリティ
-	m_pVtxBuff{ nullptr },				// 頂点バッファのポインタ
-	m_pIdxBuff{ nullptr },				// インデックスバッファのポインタ
-	m_pObj(pObj),						// オブジェクト
-	m_col{ 1.0f, 0.0f, 0.0f, 1.0f }		// 色
+
+//============================================================================
+// 描画優先度指定コンストラクタ
+//============================================================================
+CRender_Collision::CRender_Collision(LAYER Priority) :
+	CObject{ Priority },
+	m_pRef{ nullptr },
+	m_pVtxBuff{ nullptr },
+	m_pIdxBuff{ nullptr },
+	m_Col{ XCOL_INIT }
 {
 	// ワールド行列の初期化
-	D3DXMatrixIdentity(&m_mtxWorld);
+	D3DXMatrixIdentity(&m_MtxWorld);
 }
 
 //============================================================================
@@ -39,11 +44,7 @@ CRender_Collision::CRender_Collision(CObject_X* pObj, LAYER Priority) :
 //============================================================================
 CRender_Collision::~CRender_Collision()
 {
-	// 念のため終了処理
-	Uninit();
 
-	// ワールド行列の初期化
-	D3DXMatrixIdentity(&m_mtxWorld);
 }
 
 //============================================================================
@@ -119,39 +120,59 @@ void CRender_Collision::Draw()
 	pDev->SetFVF(FVF_VERTEX_3D);
 
 	// ワールドマトリックスの設定
-	pDev->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+	pDev->SetTransform(D3DTS_WORLD, &m_MtxWorld);
 
 	// テクスチャの設定
 	pDev->SetTexture(0, nullptr);
 
-	// ボックスの描画
+	// 線の描画
 	pDev->DrawIndexedPrimitive(D3DPT_LINELIST,
 		0,
 		0,
-		m_nNumVtx,			// 頂点数
+		NUM_VTX,	// 頂点数
 		0,
-		m_nNumPrimitive);	// 辺の数
+		NUM_PRIM);	// 辺の数
 	
 	// ライトをオン
 	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 
 //============================================================================
+// 対象オブジェクトの設定
+//============================================================================
+void CRender_Collision::SetRefObj(CObject_X* pRef)
+{
+	m_pRef = pRef;
+}
+
+//============================================================================
 // 生成
 //============================================================================
-CRender_Collision* CRender_Collision::Create(CObject_X* pObj)
+CRender_Collision* CRender_Collision::Create(CObject_X* pRef)
 {
-	// インスタンスを生成
-	CRender_Collision* pRender_Collision = DBG_NEW CRender_Collision{ pObj, LAYER::FRONT };
+	// 判定表示を生成
+	CRender_Collision* pRender_Collision = DBG_NEW CRender_Collision(LAYER::FRONT);
 
-	// 生成出来ていたら初期設定
+	// 生成失敗
 	if (pRender_Collision != nullptr)
 	{
-		pRender_Collision->Init();
+		assert(false && "判定表示の生成に失敗しました");
 	}
+
+	// 判定表示の初期設定
+	pRender_Collision->Init();
+
+	// 対象オブジェクトの設定
+	pRender_Collision->SetRefObj(pRef);
 
 	return pRender_Collision;
 }
+
+//============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
 
 //============================================================================
 // 頂点バッファの生成
@@ -162,7 +183,7 @@ HRESULT CRender_Collision::CreateVtxBuff()
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
 	// 頂点バッファの生成
-	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * m_nNumVtx,
+	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * NUM_VTX,
 		D3DUSAGE_WRITEONLY,
 		FVF_VERTEX_3D,
 		D3DPOOL_MANAGED,
@@ -175,24 +196,24 @@ HRESULT CRender_Collision::CreateVtxBuff()
 	}
 
 	// 頂点情報へのポインタ
-	VERTEX_3D* pVtx;
+	VERTEX_3D* pVtx = nullptr;
 
 	// 頂点バッファをロック
 	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 
-	for (int i = 0; i < m_nNumVtx; i++)
+	for (WORD wNumVtx = 0; wNumVtx < NUM_VTX; ++wNumVtx)
 	{
-		// 位置の設定
-		pVtx[i].pos = { 0.0f, 0.0f, 0.0f };
+		// 頂点座標の設定
+		pVtx[wNumVtx].pos = VEC3_INIT;
 
-		// 法線ベクトルの設定
-		pVtx[i].nor = { 0.0f, 0.0f, 0.0f };
+		// 法線ベクトル
+		pVtx[wNumVtx].nor = VEC3_INIT;
 
-		// 色の設定
-		pVtx[i].col = m_col;
+		// 頂点色の設定
+		pVtx[wNumVtx].col = XCOL_INIT;
 
-		// テクスチャの設定
-		pVtx[i].tex = { 0.0f, 0.0f };
+		// テクスチャ座標の設定
+		pVtx[wNumVtx].tex = VEC2_INIT;
 	}
 
 	// 頂点バッファをアンロックする
@@ -207,7 +228,7 @@ HRESULT CRender_Collision::CreateVtxBuff()
 HRESULT CRender_Collision::CreateIdxBuff()
 {
 	// インデックスバッファの生成
-	CRenderer::GetRenderer()->GetDeviece()->CreateIndexBuffer(sizeof(WORD) * m_nNumIdx,
+	CRenderer::GetRenderer()->GetDeviece()->CreateIndexBuffer(sizeof(WORD) * NUM_IDX,
 		D3DUSAGE_WRITEONLY,
 		D3DFMT_INDEX16,
 		D3DPOOL_MANAGED,
@@ -220,31 +241,31 @@ HRESULT CRender_Collision::CreateIdxBuff()
 	}
 
 	// インデックス情報へのポインタ
-	WORD* pIdx;
+	WORD* pIdx = nullptr;
 
 	// インデックスバッファをロック
 	m_pIdxBuff->Lock(0, 0, reinterpret_cast<void**>(&pIdx), 0);
 
 	// X軸に平行な線を引く
-	for (int i = 0; i < 8; i++, pIdx++)
+	for (WORD i = 0; i < 8; ++i, pIdx++)
 	{
-		pIdx[0] = static_cast<WORD>(i);
+		pIdx[0] = i;
 	}
 
 	// Y軸に平行な線を引く
-	for (int i = 0, j = 0; i < 4; i++, pIdx += 2)
+	for (WORD i = 0, j = 0; i < 4; ++i, pIdx += 2)
 	{
-		if (i == 2) j += 2;	// 0,1,4,5を辺の始点にするため3,4のインデックスを飛ばす
+		if (i == 2) j += 2;	// 0, 1 ,4 ,5を辺の始点にするため3, 4のインデックスを飛ばす
 
-		pIdx[0] = static_cast<WORD>(i + j);
-		pIdx[1] = static_cast<WORD>(i + 2 + j);
+		pIdx[0] = i + j;
+		pIdx[1] = i + 2 + j;
 	}
 
 	// Z軸に平行な線を引く
-	for (int i = 0; i < 4; i++, pIdx += 2)
+	for (WORD i = 0; i < 4; ++i, pIdx += 2)
 	{
-		pIdx[0] = static_cast<WORD>(i);
-		pIdx[1] = static_cast<WORD>(i + 4);
+		pIdx[0] = i;
+		pIdx[1] = i + 4;
 	}
 
 	// インデックスバッファをアンロック
@@ -253,26 +274,25 @@ HRESULT CRender_Collision::CreateIdxBuff()
 	return S_OK;
 }
 
-
 //============================================================================
 // 頂点の設定
 //============================================================================
 void CRender_Collision::SetVtx()
 {
 	// 頂点情報のポインタ
-	VERTEX_3D* pVtx;
+	VERTEX_3D* pVtx = nullptr;
 
 	// 頂点バッファをロックし頂点情報時へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 
-	pVtx[0].pos = { -m_pObj->GetSize().x, +m_pObj->GetSize().y, -m_pObj->GetSize().z };
-	pVtx[1].pos = { +m_pObj->GetSize().x, +m_pObj->GetSize().y, -m_pObj->GetSize().z };
-	pVtx[2].pos = { -m_pObj->GetSize().x, -m_pObj->GetSize().y, -m_pObj->GetSize().z };
-	pVtx[3].pos = { +m_pObj->GetSize().x, -m_pObj->GetSize().y, -m_pObj->GetSize().z };
-	pVtx[4].pos = { -m_pObj->GetSize().x, +m_pObj->GetSize().y, +m_pObj->GetSize().z };
-	pVtx[5].pos = { +m_pObj->GetSize().x, +m_pObj->GetSize().y, +m_pObj->GetSize().z };
-	pVtx[6].pos = { -m_pObj->GetSize().x, -m_pObj->GetSize().y, +m_pObj->GetSize().z };
-	pVtx[7].pos = { +m_pObj->GetSize().x, -m_pObj->GetSize().y, +m_pObj->GetSize().z };
+	pVtx[0].pos = { -m_pRef->GetSize().x, +m_pRef->GetSize().y, -m_pRef->GetSize().z };
+	pVtx[1].pos = { +m_pRef->GetSize().x, +m_pRef->GetSize().y, -m_pRef->GetSize().z };
+	pVtx[2].pos = { -m_pRef->GetSize().x, -m_pRef->GetSize().y, -m_pRef->GetSize().z };
+	pVtx[3].pos = { +m_pRef->GetSize().x, -m_pRef->GetSize().y, -m_pRef->GetSize().z };
+	pVtx[4].pos = { -m_pRef->GetSize().x, +m_pRef->GetSize().y, +m_pRef->GetSize().z };
+	pVtx[5].pos = { +m_pRef->GetSize().x, +m_pRef->GetSize().y, +m_pRef->GetSize().z };
+	pVtx[6].pos = { -m_pRef->GetSize().x, -m_pRef->GetSize().y, +m_pRef->GetSize().z };
+	pVtx[7].pos = { +m_pRef->GetSize().x, -m_pRef->GetSize().y, +m_pRef->GetSize().z };
 
 	// 頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
@@ -287,16 +307,16 @@ void CRender_Collision::SetMtxWorld()
 	D3DXMATRIX mtxRot, mtxTrans;
 
 	// ワールド行列を初期化
-	D3DXMatrixIdentity(&m_mtxWorld);
+	D3DXMatrixIdentity(&m_MtxWorld);
 
 	// 平行移動行列作成
 	D3DXMatrixTranslation(&mtxTrans,
-		m_pObj->GetPos().x,
-		m_pObj->GetPos().y,
-		m_pObj->GetPos().z);
+		m_pRef->GetPos().x,
+		m_pRef->GetPos().y,
+		m_pRef->GetPos().z);
 
 	// 平行移動行列との掛け算
-	D3DXMatrixMultiply(&m_mtxWorld,
-		&m_mtxWorld,
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
 		&mtxTrans);
 }
