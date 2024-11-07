@@ -106,18 +106,27 @@ void CPlayer::Update()
 	// ステートマネージャーの更新
 	m_pStateManager->Update();
 
+	// 目標座標にY軸の加速度を反映
+	Vec3 NewPosTarget = GetPosTarget();
+	NewPosTarget.y += GetAccelY();
+	SetPosTarget(NewPosTarget);
+
+	// 高さの補正
+	AdjustHeight();
+
 	// キャラクタークラスの更新処理
 	CCharacter::Update();
 
 #ifdef _DEBUG
 
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-	CRenderer::SetDebugString("プレイヤー体力　　 : " + to_string(GetLife()));
 	CRenderer::SetDebugString("プレイヤー方角　　 : " + to_string(GetDirection() * (180 / D3DX_PI)));
-	CRenderer::SetDebugString("プレイヤー座標　　 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
 	CRenderer::SetDebugString("プレイヤー速度　　 : " + to_string(GetMoveSpeed()));
 	CRenderer::SetDebugString("プレイヤー向き　　 : " + to_string(GetRot().x * (180 / D3DX_PI)) + " :  " + to_string(GetRot().y * (180 / D3DX_PI)) + " : " + to_string(GetRot().z * (180 / D3DX_PI)));
 	CRenderer::SetDebugString("プレイヤー目標向き : " + to_string(GetRotTarget().x * (180 / D3DX_PI)) + " :  " + to_string(GetRotTarget().y * (180 / D3DX_PI)) + " : " + to_string(GetRotTarget().z * (180 / D3DX_PI)));
+	CRenderer::SetDebugString("プレイヤー座標　　 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
+	CRenderer::SetDebugString("プレイヤー加速度　 : " + to_string(GetAccelY()));
+	CRenderer::SetDebugString("プレイヤー体力　　 : " + to_string(GetLife()));
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 
 #endif // _DEBUG
@@ -220,4 +229,28 @@ CPlayer* CPlayer::Create()
 	pNewInstance->BindModel(CModel_X_Manager::TYPE::SAMUS);
 
 	return pNewInstance;
+}
+
+//============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
+
+//============================================================================
+// 高さを補正
+//============================================================================
+void CPlayer::AdjustHeight()
+{
+	// 高さに下限を設定
+	if (GetPosTarget().y < 0.0f)
+	{
+		// 目標座標を下限に固定
+		Vec3 NewPosTarget = GetPosTarget();
+		NewPosTarget.y = 0.0f;
+		SetPosTarget(NewPosTarget);
+
+		// Y軸の加速度を無くす
+		SetAccelY(0.0f);
+	}
 }

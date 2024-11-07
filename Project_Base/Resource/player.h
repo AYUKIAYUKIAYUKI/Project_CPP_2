@@ -49,6 +49,9 @@ public:
 
 private:
 
+	// <function>
+	void AdjustHeight();	// 高さを補正
+
 	// <data>
 	CCharacter_State_Manager* m_pStateManager;	// ステートマネージャー
 };

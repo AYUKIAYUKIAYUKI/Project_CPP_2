@@ -33,6 +33,7 @@ CCharacter::CCharacter() :
 	m_fMoveSpeed{ 0.0f },
 	m_RotTarget{ VEC3_INIT },
 	m_PosTarget{ VEC3_INIT },
+	m_fAccelY{ 0.0f },
 	m_nLife{ 0 }
 {
 

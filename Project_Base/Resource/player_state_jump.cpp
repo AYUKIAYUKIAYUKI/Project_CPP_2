@@ -1,6 +1,6 @@
 //============================================================================
 //
-// プレイヤー通常ステート [player_state_default.cpp]
+// プレイヤージャンプステート [player_state_jump.cpp]
 // Author : 福田歩希
 //
 //============================================================================
@@ -8,11 +8,10 @@
 //****************************************************
 // インクルードファイル
 //****************************************************
-#include "player_state_default.h"
+#include "player_state_jump.h"
 
 // 変更先ステート
-#include "player_state_dash.h"
-#include "player_state_jump.h"
+#include "player_state_default.h"
 
 // フィールド取得用
 #include "field_manager.h"
@@ -34,7 +33,7 @@ using namespace abbr;
 //============================================================================
 // デフォルトコンストラクタ
 //============================================================================
-CPlayer_State_Default::CPlayer_State_Default() :
+CPlayer_State_Jump::CPlayer_State_Jump() :
 	CPlayer_State{}
 {
 
@@ -43,7 +42,7 @@ CPlayer_State_Default::CPlayer_State_Default() :
 //============================================================================
 // デストラクタ
 //============================================================================
-CPlayer_State_Default::~CPlayer_State_Default()
+CPlayer_State_Jump::~CPlayer_State_Jump()
 {
 
 }
@@ -51,8 +50,15 @@ CPlayer_State_Default::~CPlayer_State_Default()
 //============================================================================
 // 更新処理
 //============================================================================
-void CPlayer_State_Default::Update()
+void CPlayer_State_Jump::Update()
 {
+	// 間違いなくプレイヤーが着地している場合
+	if (m_pCharacter->GetAccelY() == 0.0f)
+	{
+		// 通常状態へ
+		To_Default();
+	}
+
 	// 操作
 	Control();
 
@@ -69,7 +75,7 @@ void CPlayer_State_Default::Update()
 //============================================================================
 // 操作
 //============================================================================
-void CPlayer_State_Default::Control()
+void CPlayer_State_Jump::Control()
 {
 	// インプット系取得
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();	// キーボード
@@ -84,31 +90,13 @@ void CPlayer_State_Default::Control()
 	{ // カメラから見て左へ
 
 		// 方角を変動
-		fDirection += -fMoveSpeed;
-
-		if (pKeyboard->GetTrigger(DIK_RSHIFT))
-		{
-			// ダッシュ状態へ
-			To_Dash(false);
-		}
+		fDirection += -fMoveSpeed * 0.5f;
 	}
 	else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT) || pPad->GetJoyStickL().X > 0)
 	{ // カメラから見て右へ
-		
+
 		 // 方角を変動
-		fDirection += fMoveSpeed;
-
-		if (pKeyboard->GetTrigger(DIK_RSHIFT))
-		{
-			// ダッシュ状態へ
-			To_Dash(true);
-		}
-	}
-
-	if (pKeyboard->GetTrigger(DIK_SPACE))
-	{
-		// ジャンプ状態へ
-		To_Jump();
+		fDirection += fMoveSpeed * 0.5f;
 	}
 
 	// 方角を反映
@@ -116,38 +104,12 @@ void CPlayer_State_Default::Control()
 }
 
 //============================================================================
-// ステート - ダッシュ状態へ
+// ステート - 通常状態へ
 //============================================================================
-void CPlayer_State_Default::To_Dash(bool bDirection)
+void CPlayer_State_Jump::To_Default()
 {
 	if (GetNextState() == nullptr)
 	{
-		SetNextState(DBG_NEW CPlayer_State_Dash(bDirection));
-	}
-}
-
-//============================================================================
-// ステート - ダッシュ状態へ
-//============================================================================
-void CPlayer_State_Default::To_Jump()
-{
-	if (GetNextState() == nullptr)
-	{
-		// Y軸の加速度を大幅に増加
-		//m_pCharacter->SetAccelY(m_pCharacter->GetAccelY() + CPlayer_State_Jump::AMOUNT_JUMPACCEL);
-
-		// JSONファイルを読み取り展開
-		std::ifstream ifs("Data\\JSON\\debug_param.json");
-
-		// JSONデータをパース
-		JSON Json;
-		ifs >> Json;
-
-		auto Jump = Json["Jump"];
-
-		// Y軸の加速度を大幅に増加
-		m_pCharacter->SetAccelY(m_pCharacter->GetAccelY() + Jump);
-
-		SetNextState(DBG_NEW CPlayer_State_Jump());
+		SetNextState(DBG_NEW CPlayer_State_Default());
 	}
 }

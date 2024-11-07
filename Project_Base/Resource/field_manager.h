@@ -37,7 +37,7 @@ public:
 	static constexpr int MAX_BLOCK = 25;
 
 	/// <summary> d—Í </summary>
-	static constexpr float FIELD_GRAVITY = -0.025f;
+	static constexpr float FIELD_GRAVITY = -1.0f;
 
 	// <function>
 	HRESULT Init();	// ‰Šúİ’è
