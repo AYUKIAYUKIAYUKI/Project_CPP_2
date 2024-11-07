@@ -155,7 +155,7 @@ void CEnemy::AttackOnPlayer()
 		}
 
 		// プレイヤーの持つ円柱範囲内に侵入していたら
-		if (CUtility::CylinderAndPoint(pPlayer->GetPos(), 10.0f, 100.0f, GetPos()))
+		if (CUtility::CylinderAndPoint(pPlayer->GetPos(), 10.0f, 20.0f, GetPos()))
 		{
 			// ダメージ状態へ
 			pPlayer->To_Damage(-1);

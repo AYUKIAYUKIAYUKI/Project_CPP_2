@@ -185,3 +185,29 @@ bool CUtility::CylinderAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusS
 
 	return 0;
 }
+
+//============================================================================
+// JSONファイルの展開
+//============================================================================
+nlohmann::json CUtility::OpenJsonFile(std::string FilePath)
+{
+	// JSONファイルを読み取り展開
+	std::ifstream ifs(FilePath);
+
+	// ファイルが展開出来ていたら
+	if (ifs.good())
+	{
+		// JSONデータをパース
+		nlohmann::json Json;
+		ifs >> Json;
+
+		// JSONオブジェクトを引き渡す
+		return Json;
+	}
+	else
+	{
+		CRenderer::SetTimeString("JSONファイル【" + FilePath + "】の展開に失敗しました", 90);
+	}
+
+	return nullptr;
+}

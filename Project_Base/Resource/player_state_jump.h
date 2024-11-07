@@ -21,7 +21,7 @@ class CPlayer_State_Jump : public CPlayer_State
 public:
 
 	/// <summary> ジャンプ一回当たりの増加加速度 </summary>
-	static constexpr float AMOUNT_JUMPACCEL = 5.0f;
+	static constexpr float AMOUNT_JUMPACCEL = 8.0f;
 
 	// <special function>
 	CPlayer_State_Jump();			// デフォルトコンストラクタ
@@ -32,9 +32,17 @@ public:
 
 private:
 
+	/// <summary> 最大延長猶予 </summary>
+	static constexpr int MAX_JUMPREMAIN_DURATION = 20;
+
 	// <function>
-	void Control();		// 操作
-	void To_Default();	// ステート - 通常状態へ
+	void Control();			// 操作
+	void AdjustGravity();	// 重力の補正
+	void To_Default();		// ステート - 通常状態へ
+
+	// <data>
+	int		m_nJumpRemainDuration;	// 入力延長期間
+	bool	m_bEndRemain;			// 延長判定
 };
 
 #endif	// _PLAYER_STATE_JUMP_

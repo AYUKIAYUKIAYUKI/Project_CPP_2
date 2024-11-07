@@ -106,11 +106,6 @@ void CPlayer::Update()
 	// ステートマネージャーの更新
 	m_pStateManager->Update();
 
-	// 目標座標にY軸の加速度を反映
-	Vec3 NewPosTarget = GetPosTarget();
-	NewPosTarget.y += GetAccelY();
-	SetPosTarget(NewPosTarget);
-
 	// 高さの補正
 	AdjustHeight();
 
@@ -242,13 +237,18 @@ CPlayer* CPlayer::Create()
 //============================================================================
 void CPlayer::AdjustHeight()
 {
+	// 座標をY軸の加速度文変動する
+	Vec3 NewPos = GetPos();
+	NewPos.y += GetAccelY();
+	SetPos(NewPos);
+
 	// 高さに下限を設定
-	if (GetPosTarget().y < 0.0f)
+	if (GetPos().y < 0.0f)
 	{
-		// 目標座標を下限に固定
-		Vec3 NewPosTarget = GetPosTarget();
-		NewPosTarget.y = 0.0f;
-		SetPosTarget(NewPosTarget);
+		// 座標を下限に固定
+		Vec3 NewPos = GetPos();
+		NewPos.y = 0.0f;
+		SetPos(NewPos);
 
 		// Y軸の加速度を無くす
 		SetAccelY(0.0f);

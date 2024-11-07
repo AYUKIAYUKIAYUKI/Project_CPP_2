@@ -39,6 +39,9 @@ public:
 	// 円柱とAABBの衝突判定
 	static bool CylinderAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTarget);
 
+	// Jsonファイルの展開
+	static nlohmann::json OpenJsonFile(std::string FilePath);
+
 	// 乱数生成
 	template <typename T> static T GetRandomValue();
 

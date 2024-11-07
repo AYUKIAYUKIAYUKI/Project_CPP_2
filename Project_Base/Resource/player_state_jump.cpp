@@ -34,7 +34,9 @@ using namespace abbr;
 // デフォルトコンストラクタ
 //============================================================================
 CPlayer_State_Jump::CPlayer_State_Jump() :
-	CPlayer_State{}
+	CPlayer_State{},
+	m_nJumpRemainDuration{ 0 },
+	m_bEndRemain{ false }
 {
 
 }
@@ -53,7 +55,7 @@ CPlayer_State_Jump::~CPlayer_State_Jump()
 void CPlayer_State_Jump::Update()
 {
 	// 間違いなくプレイヤーが着地している場合
-	if (m_pCharacter->GetAccelY() == 0.0f)
+	if (m_pCharacter->GetAccelY() == 0.0f && m_pCharacter->GetPos().y == 0.0f)	// 一時的に
 	{
 		// 通常状態へ
 		To_Default();
@@ -62,8 +64,8 @@ void CPlayer_State_Jump::Update()
 	// 操作
 	Control();
 
-	// 重力加速
-	m_pCharacter->SetAccelY(m_pCharacter->GetAccelY() + CField_Manager::FIELD_GRAVITY);
+	// 重力の補正
+	AdjustGravity();
 }
 
 //============================================================================
@@ -101,6 +103,33 @@ void CPlayer_State_Jump::Control()
 
 	// 方角を反映
 	m_pCharacter->SetDirection(fDirection);
+}
+
+//============================================================================
+// 重力の補正
+//============================================================================
+void CPlayer_State_Jump::AdjustGravity()
+{
+	// 入力延長期間
+	m_nJumpRemainDuration++;
+
+	// ジャンプの入力をやめるか、入力の継続期間が最大延長猶予に達すると延長を終了する
+	if (CManager::GetKeyboard()->GetRelease(DIK_SPACE) || m_nJumpRemainDuration > MAX_JUMPREMAIN_DURATION)
+	{
+		m_bEndRemain = true;
+	}
+
+	// 重力加速
+	if (!m_bEndRemain)
+	{
+		// ジャンプ延長中はわずかに重力に逆らう
+		m_pCharacter->SetAccelY(m_pCharacter->GetAccelY() + -CField_Manager::FIELD_GRAVITY * 0.25f);
+	}
+	else
+	{
+		// 延長期間が終了すると通常の重力加速を行う
+		m_pCharacter->SetAccelY(m_pCharacter->GetAccelY() + CField_Manager::FIELD_GRAVITY);
+	}
 }
 
 //============================================================================

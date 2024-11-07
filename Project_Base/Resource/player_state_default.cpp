@@ -134,19 +134,7 @@ void CPlayer_State_Default::To_Jump()
 	if (GetNextState() == nullptr)
 	{
 		// Y軸の加速度を大幅に増加
-		//m_pCharacter->SetAccelY(m_pCharacter->GetAccelY() + CPlayer_State_Jump::AMOUNT_JUMPACCEL);
-
-		// JSONファイルを読み取り展開
-		std::ifstream ifs("Data\\JSON\\debug_param.json");
-
-		// JSONデータをパース
-		JSON Json;
-		ifs >> Json;
-
-		auto Jump = Json["Jump"];
-
-		// Y軸の加速度を大幅に増加
-		m_pCharacter->SetAccelY(m_pCharacter->GetAccelY() + Jump);
+		m_pCharacter->SetAccelY(m_pCharacter->GetAccelY() + CPlayer_State_Jump::AMOUNT_JUMPACCEL);
 
 		SetNextState(DBG_NEW CPlayer_State_Jump());
 	}
