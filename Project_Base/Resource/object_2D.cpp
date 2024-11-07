@@ -30,9 +30,9 @@ CObject_2D::CObject_2D(LAYER Priority) :
 	CObject{ Priority },
 	m_pVtxBuff{ nullptr },
 	m_pTex{ nullptr },
-	m_Pos{ VEC3_INIT },
-	m_Rot{ VEC3_INIT },
 	m_Size{ VEC3_INIT },
+	m_Rot{ VEC3_INIT },
+	m_Pos{ VEC3_INIT },
 	m_Col{ XCOL_INIT },
 	m_fLength{ 0.0f },
 	m_fAngle{ 0.0f },
@@ -51,9 +51,9 @@ CObject_2D::CObject_2D(CTexture_Manager::TYPE Type) :
 	CObject{ LAYER::UI },
 	m_pVtxBuff{ nullptr },
 	m_pTex{ nullptr },
-	m_Pos{ VEC3_INIT },
-	m_Rot{ VEC3_INIT },
 	m_Size{ VEC3_INIT },
+	m_Rot{ VEC3_INIT },
+	m_Pos{ VEC3_INIT },
 	m_Col{ XCOL_INIT },
 	m_fLength{ 0.0f },
 	m_fAngle{ 0.0f },
@@ -213,35 +213,11 @@ void CObject_2D::BindTex(CTexture_Manager::TYPE Type)
 }
 
 //============================================================================
-// 座標取得
-//============================================================================
-const D3DXVECTOR3& CObject_2D::GetPos() const
-{
-	return m_Pos;
-}
-
-//============================================================================
-// 座標設定
-//============================================================================
-void CObject_2D::SetPos(D3DXVECTOR3 Pos)
-{
-	m_Pos = Pos;
-}
-
-//============================================================================
 // 向き取得
 //============================================================================
 const D3DXVECTOR3& CObject_2D::GetRot()const
 {
 	return m_Rot;
-}
-
-//============================================================================
-// 向き設定
-//============================================================================
-void CObject_2D::SetRot(D3DXVECTOR3 Rot)
-{
-	m_Rot = Rot;
 }
 
 //============================================================================
@@ -258,6 +234,30 @@ const D3DXVECTOR3& CObject_2D::GetSize() const
 void CObject_2D::SetSize(D3DXVECTOR3 Size)
 {
 	m_Size = Size;
+}
+
+//============================================================================
+// 向き設定
+//============================================================================
+void CObject_2D::SetRot(D3DXVECTOR3 Rot)
+{
+	m_Rot = Rot;
+}
+
+//============================================================================
+// 座標取得
+//============================================================================
+const D3DXVECTOR3& CObject_2D::GetPos() const
+{
+	return m_Pos;
+}
+
+//============================================================================
+// 座標設定
+//============================================================================
+void CObject_2D::SetPos(D3DXVECTOR3 Pos)
+{
+	m_Pos = Pos;
 }
 
 //============================================================================
@@ -362,7 +362,7 @@ CObject_2D* CObject_2D::Create()
 		assert(false && "2Dオブジェクトの生成に失敗");
 	}
 
-	// 初期設定
+	// 2Dオブジェクトの初期設定
 	pNewInstance->Init();
 
 	return pNewInstance;

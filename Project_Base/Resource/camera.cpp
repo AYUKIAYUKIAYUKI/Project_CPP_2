@@ -40,7 +40,7 @@ CCamera::CCamera() :
 	m_fDistance{ 0.0f },
 	m_VecU{ 0.0f, 1.0f, 0.0f },
 	m_fAdjust{ 0.0f },
-	m_bTrack{ false }
+	m_bTrack{ true }
 {
 	// 行列を初期化
 	D3DXMatrixIdentity(&m_MtxProjection);	// プロジェクション行列
