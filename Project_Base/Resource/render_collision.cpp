@@ -285,14 +285,21 @@ void CRender_Collision::SetVtx()
 	// 頂点バッファをロックし頂点情報時へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 
-	pVtx[0].pos = { -m_pRef->GetSize().x, +m_pRef->GetSize().y, -m_pRef->GetSize().z };
-	pVtx[1].pos = { +m_pRef->GetSize().x, +m_pRef->GetSize().y, -m_pRef->GetSize().z };
-	pVtx[2].pos = { -m_pRef->GetSize().x, -m_pRef->GetSize().y, -m_pRef->GetSize().z };
-	pVtx[3].pos = { +m_pRef->GetSize().x, -m_pRef->GetSize().y, -m_pRef->GetSize().z };
-	pVtx[4].pos = { -m_pRef->GetSize().x, +m_pRef->GetSize().y, +m_pRef->GetSize().z };
-	pVtx[5].pos = { +m_pRef->GetSize().x, +m_pRef->GetSize().y, +m_pRef->GetSize().z };
-	pVtx[6].pos = { -m_pRef->GetSize().x, -m_pRef->GetSize().y, +m_pRef->GetSize().z };
-	pVtx[7].pos = { +m_pRef->GetSize().x, -m_pRef->GetSize().y, +m_pRef->GetSize().z };
+	// サイズをコピー
+	const Vec3& Size = m_pRef->GetSize();
+
+	// 向きをコピー
+	const Vec3& Rot = m_pRef->GetRot();
+
+	// 頂点座標を設定
+	pVtx[0].pos = { -Size.x, +Size.y, -Size.z };
+	pVtx[1].pos = { +Size.x, +Size.y, -Size.z };
+	pVtx[2].pos = { -Size.x, -Size.y, -Size.z };
+	pVtx[3].pos = { +Size.x, -Size.y, -Size.z };
+	pVtx[4].pos = { -Size.x, +Size.y, +Size.z };
+	pVtx[5].pos = { +Size.x, +Size.y, +Size.z };
+	pVtx[6].pos = { -Size.x, -Size.y, +Size.z };
+	pVtx[7].pos = { +Size.x, -Size.y, +Size.z };
 
 	// 頂点バッファをアンロック
 	m_pVtxBuff->Unlock();

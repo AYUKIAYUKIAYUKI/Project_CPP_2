@@ -64,7 +64,7 @@ HRESULT CCamera::Init()
 	m_fDistance = 300.0f;
 
 	// 俯瞰度合いを設定
-	m_fAdjust = 50.0f;
+	m_fAdjust = 75.0f;
 
 	return S_OK;
 }
@@ -220,6 +220,15 @@ void CCamera::BranchMode()
 	{
 		m_bTrack = !m_bTrack;
 	}
+	
+	if (CManager::GetKeyboard()->GetTrigger(DIK_F2))
+	{
+		m_fAdjust = 600.0f;
+	}
+	else if (CManager::GetKeyboard()->GetRelease(DIK_F2))
+	{
+		m_fAdjust = 75.0f;
+	}
 
 	if (m_bTrack)
 	{ // 追従カメラモード
@@ -237,7 +246,7 @@ void CCamera::BranchMode()
 			m_RotTarget = VEC3_INIT;							// (カメラの目標向きをリセット)
 			m_RotTarget.y = atan2f(NegVec.x, NegVec.z);			// カメラの目標向きを逆位置ベクトル方向に
 			CUtility::AdjustAngle(m_Rot.y, m_RotTarget.y);		// 角度の差を補正
-			m_fDistance = 200.0f;								// 間距離を固定
+			m_fDistance = 300.0f;								// 間距離を固定
 		}
 	}
 	else
