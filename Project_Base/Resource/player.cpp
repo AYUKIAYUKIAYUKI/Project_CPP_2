@@ -58,7 +58,7 @@ HRESULT CPlayer::Init()
 	// ステートマネージャーの生成
 	if (!m_pStateManager)
 	{
-		m_pStateManager = CCharacter_State_Manager::Create(DBG_NEW CPlayer_State_Default());
+		m_pStateManager = CCharacter_State_Manager::Create(DBG_NEW CPlayer_State_Default());	// 初期ステートを設定しておく
 	}
 
 	// 初期方角を設定
@@ -105,26 +105,6 @@ void CPlayer::Update()
 {		
 	// ステートマネージャーの更新
 	m_pStateManager->Update();
-	
-#ifdef _DEBUG
-
-	// 新しい体力情報を作成
-	int nNewLife = GetLife();
-
-	// 体力を変動
-	if (CManager::GetKeyboard()->GetTrigger(DIK_1))
-	{
-		nNewLife > 0 ? nNewLife += -1 : nNewLife = 0;
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_2))
-	{
-		nNewLife < MAX_LIFE ? nNewLife += 1 : nNewLife = MAX_LIFE;
-	}
-
-	// 変動した体力情報を反映
-	SetLife(nNewLife);
-
-#endif // _DEBUG
 
 	// キャラクタークラスの更新処理
 	CCharacter::Update();

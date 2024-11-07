@@ -31,8 +31,8 @@ CCharacter::CCharacter() :
 	m_fCorrectionCoef{ 0.0f },
 	m_fDirection{ 0.0f },
 	m_fMoveSpeed{ 0.0f },
-	m_PosTarget{ VEC3_INIT },
 	m_RotTarget{ VEC3_INIT },
+	m_PosTarget{ VEC3_INIT },
 	m_nLife{ 0 }
 {
 
@@ -135,6 +135,22 @@ void CCharacter::SetMoveSpeed(float fMoveSpeed)
 }
 
 //============================================================================
+// 目標向きを取得
+//============================================================================
+const D3DXVECTOR3& CCharacter::GetRotTarget() const
+{
+	return m_RotTarget;
+}
+
+//============================================================================
+// 目標向きを設定
+//============================================================================
+void CCharacter::SetRotTarget(D3DXVECTOR3 RotTarget)
+{
+	m_RotTarget = RotTarget;
+}
+
+//============================================================================
 // 目標座標を取得
 //============================================================================
 const D3DXVECTOR3& CCharacter::GetPosTarget() const
@@ -151,19 +167,19 @@ void CCharacter::SetPosTarget(D3DXVECTOR3 PosTarget)
 }
 
 //============================================================================
-// 目標向きを取得
+// Y軸の加速度を取得
 //============================================================================
-const D3DXVECTOR3& CCharacter::GetRotTarget() const
+const float& CCharacter::GetAccelY() const
 {
-	return m_RotTarget;
+	return m_fAccelY;
 }
 
 //============================================================================
-// 目標向きを設定
+// Y軸の加速度を設定
 //============================================================================
-void CCharacter::SetRotTarget(D3DXVECTOR3 RotTarget)
+void CCharacter::SetAccelY(float fAccelY)
 {
-	m_RotTarget = RotTarget;
+	m_fAccelY = fAccelY;
 }
 
 //============================================================================
@@ -193,16 +209,16 @@ void CCharacter::SetLife(int nLife)
 //============================================================================
 void CCharacter::CorrectToTarget()
 {
-	// 目標座標へ移動
-	Vec3 NewPos = GetPos();
-	NewPos += (m_PosTarget - NewPos) * m_fCorrectionCoef;
-	SetPos(NewPos);
-
 	// 目標向きへ補正
 	Vec3 NewRot = GetRot();
 	CUtility::AdjustAngle(NewRot.y, m_RotTarget.y);	// 角度の差を補正
 	NewRot += (m_RotTarget - NewRot) * m_fCorrectionCoef;
 	SetRot(NewRot);
+
+	// 目標座標へ移動
+	Vec3 NewPos = GetPos();
+	NewPos += (m_PosTarget - NewPos) * m_fCorrectionCoef;
+	SetPos(NewPos);
 }
 
 //============================================================================

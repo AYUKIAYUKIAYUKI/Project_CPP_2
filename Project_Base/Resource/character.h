@@ -39,12 +39,16 @@ public:
 	void SetMoveSpeed(float fMoveSpeed);	// 移動速度を設定
 
 	// <getter/setter>
+	const D3DXVECTOR3& GetRotTarget() const;	// 目標向きを取得
+	void SetRotTarget(D3DXVECTOR3 RotTarget);	// 目標向きを設定
+
+	// <getter/setter>
 	const D3DXVECTOR3& GetPosTarget() const;	// 目標座標を取得
 	void SetPosTarget(D3DXVECTOR3 PosTarget);	// 目標座標を設定
 
 	// <getter/setter>
-	const D3DXVECTOR3& GetRotTarget() const;	// 目標向きを取得
-	void SetRotTarget(D3DXVECTOR3 RotTarget);	// 目標向きを設定
+	const float& GetAccelY() const;	// Y軸の加速度を取得
+	void SetAccelY(float fAccelY);	// Y軸の加速度を設定
 
 	// <getter/setter>
 	const int& GetLife() const;	// 体力を取得
@@ -64,8 +68,9 @@ private:
 	float		m_fCorrectionCoef;	// 補正係数
 	float		m_fDirection;		// 方角
 	float		m_fMoveSpeed;		// 移動速度
-	D3DXVECTOR3	m_PosTarget;		// 目標座標
 	D3DXVECTOR3	m_RotTarget;		// 目標向き
+	D3DXVECTOR3	m_PosTarget;		// 目標座標
+	float		m_fAccelY;			// Y軸の加速度
 	int			m_nLife;			// 体力
 };
 
