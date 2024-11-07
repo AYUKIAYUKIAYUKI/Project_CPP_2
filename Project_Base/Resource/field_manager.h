@@ -34,7 +34,7 @@ public:
 	static constexpr float GENERATE_RANGE_RADIUS = 350.0f;
 
 	/// <summary> 最大ブロック数 </summary>
-	static constexpr int MAX_BLOCK = 25;
+	static constexpr int MAX_BLOCK = 20;
 
 	/// <summary> 重力 </summary>
 	static constexpr float FIELD_GRAVITY = -0.5f;
@@ -57,6 +57,7 @@ private:
 	// <function>
 	void Create();										// 生成
 	void Uninit();										// 終了処理
+	void TestCircle();									// 仮の回転生成
 	void TestCreate();									// 仮の生成メソッド
 	bool DetectAdjacentBlock(const D3DXVECTOR3& Pos);	// 隣接し合うブロックを検出
 	void TestDelete();									// 仮の破棄メソッド

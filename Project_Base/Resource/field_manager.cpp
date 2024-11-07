@@ -1,6 +1,6 @@
 //============================================================================
 // 
-// フィールドマネージャー [field_manager.cpp]
+// フィールドマネージャー [field_manager.cpp]79
 // Author : 福田歩希
 // 
 //============================================================================
@@ -24,6 +24,12 @@
 #include "block.h"
 #include "object_HUD.h"
 #include "player.h"
+
+//****************************************************
+// プリプロセッサディレクティブ
+//****************************************************
+#define SHOW_CYLINDER_COLLIDER 0	// 円柱判定の表示切り替え
+#define CHANGE_FIELRDCREATE_STYLE 1	// ブロックの生成方法切り替え
 
 //****************************************************
 // usingディレクティブ
@@ -77,6 +83,8 @@ HRESULT CField_Manager::Init()
 	m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergaugewindow.json");
 	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAYERGAUGEWINDOW);
 
+#if SHOW_CYLINDER_COLLIDER
+
 	// 円柱の判定を生成
 	m_pCylinderCollider = CObject_X::Create(CObject::LAYER::BACK);
 	m_pCylinderCollider->Init();
@@ -86,8 +94,17 @@ HRESULT CField_Manager::Init()
 	m_pCylinderCollider->SetScale(GENERATE_RANGE_RADIUS);
 	m_pCylinderCollider->SetAlpha(0.5f);
 
+#endif	// SHOW_CYLINDER_COLLIDER
+
 	// 扇形を生成
 	m_pFan = CFan::Create();
+
+#if CHANGE_FIELRDCREATE_STYLE
+
+	// 円の生成
+	TestCircle();
+
+#endif	// CHANGE_FIELRDCREATE_STYLE
 
 	return S_OK;
 }
@@ -121,11 +138,15 @@ void CField_Manager::Update()
 	// 扇形の更新処理
 	m_pFan->Update();
 
+#if !CHANGE_FIELRDCREATE_STYLE
+
 	// 仮の生成メソッド
 	TestCreate();
 
 	// 仮の破棄メソッド
 	TestDelete();
+
+#endif	// CHANGE_FIELRDCREATE_STYLE
 
 	if (CManager::GetKeyboard()->GetTrigger(DIK_DELETE))
 	{
@@ -224,6 +245,34 @@ void CField_Manager::Uninit()
 }
 
 //============================================================================
+// 円の生成メソッド
+//============================================================================
+void CField_Manager::TestCircle()
+{
+	float fDirection = 0.0f;						// 方角
+	float fAdder = (D3DX_PI * 2.0f) / MAX_BLOCK;	// 増加量
+
+	for (WORD i = 0; i < MAX_BLOCK; ++i)
+	{
+		// 生成用の座標を決定
+		Vec3 NewPos = VEC3_INIT;
+		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
+		NewPos.y = 10.0f;
+		NewPos.z = -sinf(fDirection) * FIELD_RADIUS;
+		
+		// 生成用の向きを決定
+		Vec3 NewRot = VEC3_INIT;
+		NewRot.y = fDirection;
+
+		// ブロックを生成
+		CBlock::Create(NewPos, NewRot);
+
+		// 方角を増加
+		fDirection += fAdder;
+	}
+}
+
+//============================================================================
 // 仮の生成メソッド
 //============================================================================
 void CField_Manager::TestCreate()
@@ -292,7 +341,7 @@ void CField_Manager::TestCreate()
 			} while (!CUtility::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, NewPos, 10.0f));
 
 			// 向きを決定
-			NewRot.y = -(fDirection + fRandomRange);
+			NewRot.y = 0.0f;
 
 			// ブロックを生成
 			CBlock::Create(NewPos, NewRot);

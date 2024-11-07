@@ -291,7 +291,29 @@ void CRender_Collision::SetVtx()
 	// 向きをコピー
 	const Vec3& Rot = m_pRef->GetRot();
 
+	// 回転行列を定義
+	struct Mtx_Rot
+	{
+		float _11, _13, _31, _33;
+	};
+
+	Mtx_Rot MtxRot = 
+	{
+		0.0f, 0.0f, 0.0f, 0.0f
+	};
+
+	// 回転行列を作成
+	MtxRot._11 = cosf(Rot.y) * Size.x;
+	MtxRot._13 = sinf(Rot.y) * Size.z;
+	MtxRot._31 = -sinf(Rot.y) * Size.x;
+	MtxRot._33 = cosf(Rot.y) * Size.z;
+
+	// 最終的な頂点座標を作成
+	float VtxPosX = MtxRot._11 + MtxRot._13;
+	float VtxPosZ = MtxRot._31 + MtxRot._33;
+
 	// 頂点座標を設定
+#if 0
 	pVtx[0].pos = { -Size.x, +Size.y, -Size.z };
 	pVtx[1].pos = { +Size.x, +Size.y, -Size.z };
 	pVtx[2].pos = { -Size.x, -Size.y, -Size.z };
@@ -300,6 +322,25 @@ void CRender_Collision::SetVtx()
 	pVtx[5].pos = { +Size.x, +Size.y, +Size.z };
 	pVtx[6].pos = { -Size.x, -Size.y, +Size.z };
 	pVtx[7].pos = { +Size.x, -Size.y, +Size.z };
+#elif 1
+	pVtx[0].pos = { VtxPosX, +Size.y, VtxPosZ };
+	pVtx[1].pos = { VtxPosX, +Size.y, VtxPosZ };
+	pVtx[2].pos = { VtxPosX, -Size.y, VtxPosZ };
+	pVtx[3].pos = { VtxPosX, -Size.y, VtxPosZ };
+	pVtx[4].pos = { VtxPosX, +Size.y, VtxPosZ };
+	pVtx[5].pos = { VtxPosX, +Size.y, VtxPosZ };
+	pVtx[6].pos = { VtxPosX, -Size.y, VtxPosZ };
+	pVtx[7].pos = { VtxPosX, -Size.y, VtxPosZ };
+#elif 0
+	pVtx[0].pos = { -VtxPosX, +Size.y, -VtxPosZ };
+	pVtx[1].pos = { +VtxPosX, +Size.y, -VtxPosZ };
+	pVtx[2].pos = { -VtxPosX, -Size.y, -VtxPosZ };
+	pVtx[3].pos = { +VtxPosX, -Size.y, -VtxPosZ };
+	pVtx[4].pos = { -VtxPosX, +Size.y, +VtxPosZ };
+	pVtx[5].pos = { +VtxPosX, +Size.y, +VtxPosZ };
+	pVtx[6].pos = { -VtxPosX, -Size.y, +VtxPosZ };
+	pVtx[7].pos = { +VtxPosX, -Size.y, +VtxPosZ };
+#endif
 
 	// 頂点バッファをアンロック
 	m_pVtxBuff->Unlock();

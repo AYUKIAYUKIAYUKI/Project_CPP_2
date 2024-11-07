@@ -247,7 +247,6 @@ void CPlayer::AdjustHeight()
 	if (GetPos().y < 0.0f)
 	{
 		// À•W‚ð‰ºŒÀ‚ÉŒÅ’è
-		Vec3 NewPos = GetPos();
 		NewPos.y = 0.0f;
 		SetPos(NewPos);
 
