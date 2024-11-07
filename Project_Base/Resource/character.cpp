@@ -77,11 +77,11 @@ void CCharacter::Uninit()
 //============================================================================
 void CCharacter::Update()
 {
-	// 目標向きを移動方向に揃える
-	SetRotTargetToMoveDirection();
+	// 目標向きを移動方向から自動で設定
+	AutoSetRotTarget();
 
-	// 目標座標を方角の変動に揃える
-	SetPosTargetByDirection();
+	// 目標座標を方角から自動で設定
+	AutoSetPosTarget();
 
 	// 目標値への補正
 	CorrectToTarget();
@@ -189,24 +189,6 @@ void CCharacter::SetLife(int nLife)
 //============================================================================
 
 //============================================================================
-// 目標向きを移動方向に揃える
-//============================================================================
-void CCharacter::SetRotTargetToMoveDirection()
-{
-	const Vec3& MoveVec = m_PosTarget - GetPos();	// 移動方向のベクトルを作成
-	m_RotTarget.y = atan2f(-MoveVec.x, -MoveVec.z);	// 目標向きを移動方向に
-}
-
-//============================================================================
-// 目標座標を方角の変動に揃える
-//============================================================================
-void CCharacter::SetPosTargetByDirection()
-{
-	m_PosTarget.x = cosf(m_fDirection) * CField_Manager::FIELD_RADIUS;	// X方向の座標を設定
-	m_PosTarget.z = sinf(m_fDirection) * CField_Manager::FIELD_RADIUS;	// Z方向の座標を設定
-}
-
-//============================================================================
 // 目標値への補正
 //============================================================================
 void CCharacter::CorrectToTarget()
@@ -221,6 +203,24 @@ void CCharacter::CorrectToTarget()
 	CUtility::AdjustAngle(NewRot.y, m_RotTarget.y);	// 角度の差を補正
 	NewRot += (m_RotTarget - NewRot) * m_fCorrectionCoef;
 	SetRot(NewRot);
+}
+
+//============================================================================
+// 目標向きを移動方向から自動で設定
+//============================================================================
+void CCharacter::AutoSetRotTarget()
+{
+	const Vec3& MoveVec = m_PosTarget - GetPos();	// 移動方向のベクトルを作成
+	m_RotTarget.y = atan2f(-MoveVec.x, -MoveVec.z);	// 目標向きを移動方向に
+}
+
+//============================================================================
+// 目標座標を方角から自動で設定
+//============================================================================
+void CCharacter::AutoSetPosTarget()
+{
+	m_PosTarget.x = cosf(m_fDirection) * CField_Manager::FIELD_RADIUS;	// X方向の座標を設定
+	m_PosTarget.z = sinf(m_fDirection) * CField_Manager::FIELD_RADIUS;	// Z方向の座標を設定
 }
 
 //============================================================================
