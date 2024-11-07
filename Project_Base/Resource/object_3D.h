@@ -23,8 +23,8 @@ class CObject_3D : public CObject
 {
 public:
 
-	CObject_3D(int nPriority = static_cast<int>(LAYER::NONE));	// 描画優先度指定コンストラクタ
-	~CObject_3D() override;										// デストラクタ
+	CObject_3D(LAYER Priority = LAYER::BG);	// 描画優先度指定コンストラクタ
+	~CObject_3D() override;					// デストラクタ
 
 	HRESULT	Init() override;	// 初期設定
 	void	Uninit() override;	// 終了処理

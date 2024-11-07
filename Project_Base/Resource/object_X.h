@@ -23,8 +23,8 @@ class CObject_X : public CObject
 {
 public:
 
-	CObject_X(int nPriority = static_cast<int>(LAYER::NONE));	// 描画優先度指定コンストラクタ
-	~CObject_X() override;										// デストラクタ
+	CObject_X(LAYER Priority = LAYER::BG);	// 描画優先度指定コンストラクタ
+	~CObject_X() override;					// デストラクタ
 
 	HRESULT	Init() override;	// 初期設定
 	void	Uninit() override;	// 終了処理
@@ -50,7 +50,7 @@ public:
 	void SetAlpha(float fAlpha);	// アルファ値設定
 
 	static CObject_X* Create();					// 生成
-	static CObject_X* Create(int nPriority);	// 生成
+	static CObject_X* Create(LAYER Priority);	// 生成
 
 private:
 

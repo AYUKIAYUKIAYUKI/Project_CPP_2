@@ -26,8 +26,8 @@ using namespace abbr;
 //============================================================================
 // 描画優先度指定コンストラクタ
 //============================================================================
-CObject_HUD::CObject_HUD(int nPriority) :
-	CObject_2D{ nPriority },
+CObject_HUD::CObject_HUD(LAYER Priority) :
+	CObject_2D{ Priority },
 	m_fCorrectionCoef{ 0.0f },
 	m_PosTarget{ VEC3_INIT },
 	m_RotTarget{ VEC3_INIT },

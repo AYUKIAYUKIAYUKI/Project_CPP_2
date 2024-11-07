@@ -54,7 +54,7 @@ HRESULT CGame::Init()
 	CEnemy::Create();
 
 	/* ステージ代わりの円筒 */
-	CObject_X* pTest = CObject_X::Create(static_cast<int>(CObject::LAYER::BACK));
+	CObject_X* pTest = CObject_X::Create(CObject::LAYER::BACK);
 	pTest->BindModel(CModel_X_Manager::TYPE::CYLINDER);
 	pTest->SetPos({ 0.0f, -10.0f, 0.0f });
 	pTest->SetScale(8.5f);

@@ -35,8 +35,7 @@ public:
 	//****************************************************
 	enum class LAYER
 	{
-		NONE = 0,	// 無し
-		BG,			// 背景
+		BG = 0,		// 背景
 		BACK,		// 後方
 		MIDDLE,		// 中央
 		FRONT,		// 前方
@@ -45,9 +44,9 @@ public:
 	};
 
 	// <special function>
-	CObject();												// デフォルトコンストラクタ
-	CObject(int nPriority = static_cast<int>(LAYER::NONE));	// 描画優先度指定コンストラクタ
-	virtual ~CObject() = 0;									// デストラクタ
+	CObject();								// デフォルトコンストラクタ
+	CObject(LAYER Priority = LAYER::BG);	// 描画優先度指定コンストラクタ
+	virtual ~CObject() = 0;					// デストラクタ
 
 	// <function>
 	void SetRelease();	// 解放予約設定
@@ -76,13 +75,14 @@ public:
 	// <static getter>
 	static CObject* GetTopObject();					// 先頭オブジェクトのポインタ取得
 	static CObject* GetTopObject(int nPriority);	// 先頭オブジェクトのポインタ取得
+	static CObject* GetTopObject(LAYER Priority);	// 先頭オブジェクトのポインタ取得
 	static CObject* FindSpecificObject(TYPE Type);	// 特定タイプのオブジェクト探す
 	static int		CountSpecificObject(TYPE Type);	// 特定タイプのオブジェクト数を取得
 
 private:
 
 	// <data>
-	int		 m_nPriority;	// 描画優先度
+	WORD	 m_wPriority;	// 描画優先度
 	CObject* m_pPrev;		// 前のオブジェクトのポインタ
 	CObject* m_pNext;		// 次のオブジェクトのポインタ
 	TYPE	 m_Type;		// タイプ識別 

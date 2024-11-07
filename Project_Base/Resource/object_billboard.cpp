@@ -16,8 +16,8 @@
 //============================================================================
 // コンストラクタ
 //============================================================================
-CObject_billboard::CObject_billboard(int nPriority) :
-	CObject{ nPriority },
+CObject_billboard::CObject_billboard(LAYER Priority) :
+	CObject{ Priority },
 	m_pVtxBuff{ nullptr },
 	m_pTex{ nullptr },
 	m_Pos{ 0.0f, 0.0f, 0.0f },			// 座標

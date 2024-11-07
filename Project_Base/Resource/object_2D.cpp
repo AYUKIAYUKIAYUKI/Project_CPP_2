@@ -26,8 +26,8 @@ using namespace abbr;
 //============================================================================
 // 描画優先度指定コンストラクタ
 //============================================================================
-CObject_2D::CObject_2D(int nPriority) :
-	CObject{ nPriority },
+CObject_2D::CObject_2D(LAYER Priority) :
+	CObject{ Priority },
 	m_pVtxBuff{ nullptr },
 	m_pTex{ nullptr },
 	m_Pos{ VEC3_INIT },
@@ -48,7 +48,7 @@ CObject_2D::CObject_2D(int nPriority) :
 // テクスチャ指定
 //============================================================================
 CObject_2D::CObject_2D(CTexture_Manager::TYPE Type) :
-	CObject{ static_cast<int>(CObject::LAYER::UI) },
+	CObject{ LAYER::UI },
 	m_pVtxBuff{ nullptr },
 	m_pTex{ nullptr },
 	m_Pos{ VEC3_INIT },

@@ -30,28 +30,28 @@ CObject* CObject::m_pCur[static_cast<int>(LAYER::MAX)] = {};	// 終端オブジェクト
 // デフォルトコンストラクタ
 //============================================================================
 CObject::CObject() :
-	m_nPriority{ static_cast<int>(LAYER::MAX) - 1 },
+	m_wPriority{ static_cast<WORD>(LAYER::BG) },
 	m_pPrev{ nullptr },
 	m_pNext{ nullptr },
 	m_Type{ TYPE::NONE },
 	m_bDeath{ false }
 {
 	// このオブジェクトをリストに登録
-	if (m_pCur[m_nPriority] == nullptr)
+	if (m_pCur[m_wPriority] == nullptr)
 	{ // 終端オブジェクトが無い (オブジェクトが1つも存在しない)
 
 		// このオブジェクトを先頭と終端に登録
-		m_pTop[m_nPriority] = this;
-		m_pCur[m_nPriority] = this;
+		m_pTop[m_wPriority] = this;
+		m_pCur[m_wPriority] = this;
 	}
 	else
 	{ // 終端オブジェクトがある
 
 		// 現在の終端をこのオブジェクトの前として登録
-		m_pPrev = m_pCur[m_nPriority];
+		m_pPrev = m_pCur[m_wPriority];
 
 		// 新たな終端としてこのオブジェクトを登録
-		m_pCur[m_nPriority] = this;
+		m_pCur[m_wPriority] = this;
 
 		// 前のオブジェクトの次にこのオブジェクトを登録
 		m_pPrev->m_pNext = this;
@@ -64,29 +64,29 @@ CObject::CObject() :
 //============================================================================
 // 描画優先度指定コンストラクタ
 //============================================================================
-CObject::CObject(int nPriority) :
-	m_nPriority{ nPriority },
+CObject::CObject(LAYER Priority) :
+	m_wPriority{ static_cast<WORD>(Priority) },
 	m_pPrev{ nullptr },
 	m_pNext{ nullptr },
 	m_Type{ TYPE::NONE },
 	m_bDeath{ false }
 {
 	// このオブジェクトをリストに登録
-	if (m_pCur[nPriority] == nullptr)
+	if (m_pCur[m_wPriority] == nullptr)
 	{ // 終端オブジェクトが無い (オブジェクトが1つも存在しない)
 		
 		// このオブジェクトを先頭と終端に登録
-		m_pTop[nPriority] = this;
-		m_pCur[nPriority] = this;
+		m_pTop[m_wPriority] = this;
+		m_pCur[m_wPriority] = this;
 	}
 	else
 	{ // 終端オブジェクトがある
 
 		// 現在の終端をこのオブジェクトの前として登録
-		m_pPrev = m_pCur[nPriority];
+		m_pPrev = m_pCur[m_wPriority];
 
 		// 新たな終端としてこのオブジェクトを登録
-		m_pCur[nPriority] = this;
+		m_pCur[m_wPriority] = this;
 
 		// 前のオブジェクトの次にこのオブジェクトを登録
 		m_pPrev->m_pNext = this;
@@ -120,7 +120,7 @@ void CObject::SetRelease()
 //============================================================================
 void CObject::Release()
 {
-	int nPriority = m_nPriority;	// プライオリティをコピーしておく
+	int nPriority = m_wPriority;	// プライオリティをコピーしておく
 
 	if (m_pPrev == nullptr)
 	{ // 前のオブジェクトが無い (このオブジェクトが先頭)
@@ -347,6 +347,14 @@ CObject* CObject::GetTopObject()
 CObject* CObject::GetTopObject(int nPriority)
 {
 	return m_pTop[nPriority];
+}
+
+//============================================================================
+// 先頭オブジェクトのポインタ取得
+//============================================================================
+CObject* CObject::GetTopObject(LAYER Priority)
+{
+	return m_pTop[static_cast<WORD>(Priority)];
 }
 
 //============================================================================

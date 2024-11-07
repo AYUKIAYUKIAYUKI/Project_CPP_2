@@ -78,7 +78,7 @@ HRESULT CField_Manager::Init()
 	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAYERGAUGEWINDOW);
 
 	// 円柱の判定を生成
-	m_pCylinderCollider = CObject_X::Create(static_cast<int>(CObject::LAYER::BACK));
+	m_pCylinderCollider = CObject_X::Create(CObject::LAYER::BACK);
 	m_pCylinderCollider->Init();
 	m_pCylinderCollider->BindModel(CModel_X_Manager::TYPE::CYLINDERCOLLIDER);
 	m_pCylinderCollider->SetPos(m_pPlayer->GetPos());
@@ -345,7 +345,7 @@ bool CField_Manager::DetectAdjacentBlock(const D3DXVECTOR3& Pos)
 void CField_Manager::TestDelete()
 {
 	// ミドルオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::NONE));
+	CObject* pObj = CObject::GetTopObject(CObject::LAYER::BG);
 
 	// ブロックタグの数をカウントする
 	while (pObj != nullptr)
@@ -390,7 +390,7 @@ void CField_Manager::TestDelete()
 void CField_Manager::TestDeleteAll()
 {
 	// ミドルオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::NONE));
+	CObject* pObj = CObject::GetTopObject(CObject::LAYER::BG);
 
 	// ブロックタグの数をカウントする
 	while (pObj != nullptr)

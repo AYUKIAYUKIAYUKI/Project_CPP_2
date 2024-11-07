@@ -22,8 +22,8 @@ class CRender_Collision : public CObject
 {
 public:
 
-	CRender_Collision(CObject_X* pObj, int nPriority = static_cast<int>(LAYER::FRONT));	// コンストラクタ
-	~CRender_Collision() override;	// デストラクタ
+	CRender_Collision(CObject_X* pObj, LAYER Priority = LAYER::FRONT);	// コンストラクタ
+	~CRender_Collision() override;										// デストラクタ
 
 	HRESULT Init() override;	// 初期設定
 	void Uninit() override;		// 終了処理

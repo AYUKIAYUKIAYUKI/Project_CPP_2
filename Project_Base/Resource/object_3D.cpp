@@ -22,8 +22,8 @@
 //============================================================================
 // コンストラクタ
 //============================================================================
-CObject_3D::CObject_3D(int nPriority) :
-	CObject{ nPriority },
+CObject_3D::CObject_3D(LAYER Priority) :
+	CObject{ Priority },
 	m_pVtxBuff{ nullptr },
 	m_pTex{ nullptr },
 	m_Pos{ 0.0f, 0.0f, 0.0f },

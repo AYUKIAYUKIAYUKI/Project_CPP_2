@@ -23,8 +23,8 @@ class CObject_billboard : public CObject
 {
 public:
 
-	CObject_billboard(int nPriority = static_cast<int>(LAYER::NONE));	// コンストラクタ
-	~CObject_billboard() override;										// デストラクタ
+	CObject_billboard(LAYER Priority = LAYER::BG);	// コンストラクタ
+	~CObject_billboard() override;					// デストラクタ
 
 	HRESULT Init() override;	// 初期設定
 	void Uninit() override;		// 終了処理

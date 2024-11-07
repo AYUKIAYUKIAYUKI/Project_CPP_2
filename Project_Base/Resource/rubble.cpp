@@ -18,7 +18,7 @@
 // コンストラクタ
 //============================================================================
 CRubble::CRubble() :
-	CObject_X{ static_cast<int>(LAYER::MIDDLE) },
+	CObject_X{ LAYER::MIDDLE },
 	m_Velocity{ 0.0f, 0.0f, 0.0f }
 {
 

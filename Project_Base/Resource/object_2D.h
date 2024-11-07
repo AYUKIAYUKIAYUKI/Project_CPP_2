@@ -23,9 +23,9 @@ class CObject_2D : public CObject
 {
 public:
 
-	CObject_2D(int nPriority = static_cast<int>(LAYER::UI));	// 描画優先度指定コンストラクタ
-	CObject_2D(CTexture_Manager::TYPE Type);					// テクスチャ指定コンストラクタ
-	~CObject_2D() override;										// デストラクタ
+	CObject_2D(LAYER Priority = LAYER::UI);		// 描画優先度指定コンストラクタ
+	CObject_2D(CTexture_Manager::TYPE Type);	// テクスチャ指定コンストラクタ
+	~CObject_2D() override;						// デストラクタ
 
 	HRESULT	Init() override;	// 初期設定
 	void	Uninit() override;	// 終了処理

@@ -20,8 +20,8 @@ class CObject_HUD : public CObject_2D
 {
 public:
 
-	CObject_HUD(int nPriority = static_cast<int>(LAYER::UI));	// 描画優先度指定コンストラクタ
-	~CObject_HUD() override;									// デストラクタ
+	CObject_HUD(LAYER Priority = LAYER::UI);	// 描画優先度指定コンストラクタ
+	~CObject_HUD() override;					// デストラクタ
 
 	HRESULT	Init() override;	// 初期設定
 	void	Uninit() override;	// 終了処理

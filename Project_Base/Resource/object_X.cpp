@@ -29,8 +29,8 @@
 //============================================================================
 // コンストラクタ
 //============================================================================
-CObject_X::CObject_X(int nPriority) :
-	CObject{ nPriority },
+CObject_X::CObject_X(LAYER Priority) :
+	CObject{ Priority },
 	m_pModel{ nullptr },
 	m_Pos{ 0.0f, 0.0f, 0.0f },
 	m_Rot{ 0.0f, 0.0f, 0.0f },
@@ -270,10 +270,10 @@ CObject_X* CObject_X::Create()
 //============================================================================
 // 生成
 //============================================================================
-CObject_X* CObject_X::Create(int nPriority)
+CObject_X* CObject_X::Create(LAYER Priority)
 {
 	// インスタンスを生成
-	CObject_X* pObjectX = DBG_NEW CObject_X(nPriority);
+	CObject_X* pObjectX = DBG_NEW CObject_X(Priority);
 
 	// 生成出来ていたら初期設定
 	if (pObjectX != nullptr)

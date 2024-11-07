@@ -23,8 +23,8 @@ const int CRender_Collision::m_nNumIdx = 24;		// インデックス数
 //============================================================================
 // コンストラクタ
 //============================================================================
-CRender_Collision::CRender_Collision(CObject_X* pObj, int nPriority) :
-	CObject{ nPriority },				// プライオリティ
+CRender_Collision::CRender_Collision(CObject_X* pObj, LAYER Priority) :
+	CObject{ Priority },				// プライオリティ
 	m_pVtxBuff{ nullptr },				// 頂点バッファのポインタ
 	m_pIdxBuff{ nullptr },				// インデックスバッファのポインタ
 	m_pObj(pObj),						// オブジェクト
@@ -142,7 +142,7 @@ void CRender_Collision::Draw()
 CRender_Collision* CRender_Collision::Create(CObject_X* pObj)
 {
 	// インスタンスを生成
-	CRender_Collision* pRender_Collision = DBG_NEW CRender_Collision{ pObj, static_cast<int>(LAYER::FRONT) };
+	CRender_Collision* pRender_Collision = DBG_NEW CRender_Collision{ pObj, LAYER::FRONT };
 
 	// 生成出来ていたら初期設定
 	if (pRender_Collision != nullptr)
