@@ -318,21 +318,15 @@ void CRender_Collision::SetVtx()
 
 	// 頂点座標を設定
 #if 0
-	pVtx[0].pos = { VtxPosX, +Size.y, -Size.z };
-	pVtx[1].pos = { VtxPosX, +Size.y, -Size.z };
-	pVtx[2].pos = { VtxPosX, -Size.y, -Size.z };
-	pVtx[3].pos = { VtxPosX, -Size.y, -Size.z };
-	pVtx[4].pos = { VtxPosX, +Size.y, +Size.z };
-	pVtx[5].pos = { VtxPosX, +Size.y, +Size.z };
-	pVtx[6].pos = { VtxPosX, -Size.y, +Size.z };
-	pVtx[7].pos = { VtxPosX, -Size.y, +Size.z };
-#elif 0
 	pVtx[0].pos = { -VtxPosX, +Size.y, -VtxPosZ };
 	pVtx[1].pos = { +VtxPosX, +Size.y, -VtxPosZ };
+
 	pVtx[2].pos = { -VtxPosX, -Size.y, -VtxPosZ };
 	pVtx[3].pos = { +VtxPosX, -Size.y, -VtxPosZ };
+
 	pVtx[4].pos = { -VtxPosX, +Size.y, +VtxPosZ };
 	pVtx[5].pos = { +VtxPosX, +Size.y, +VtxPosZ };
+
 	pVtx[6].pos = { -VtxPosX, -Size.y, +VtxPosZ };
 	pVtx[7].pos = { +VtxPosX, -Size.y, +VtxPosZ };
 #elif 1
@@ -343,11 +337,13 @@ void CRender_Collision::SetVtx()
 	// 各頂点の位置を回転させた後にサイズを掛けて配置
 	pVtx[0].pos = { (-cosY * Size.x - sinY * Size.z), +Size.y, (-sinY * Size.x + cosY * Size.z) };
 	pVtx[1].pos = { (cosY * Size.x - sinY * Size.z), +Size.y, (sinY * Size.x + cosY * Size.z) };
+
 	pVtx[2].pos = { (-cosY * Size.x - sinY * Size.z), -Size.y, (-sinY * Size.x + cosY * Size.z) };
 	pVtx[3].pos = { (cosY * Size.x - sinY * Size.z), -Size.y, (sinY * Size.x + cosY * Size.z) };
 
 	pVtx[4].pos = { (-cosY * Size.x + sinY * Size.z), +Size.y, (-sinY * Size.x - cosY * Size.z) };
 	pVtx[5].pos = { (cosY * Size.x + sinY * Size.z), +Size.y, (sinY * Size.x - cosY * Size.z) };
+
 	pVtx[6].pos = { (-cosY * Size.x + sinY * Size.z), -Size.y, (-sinY * Size.x - cosY * Size.z) };
 	pVtx[7].pos = { (cosY * Size.x + sinY * Size.z), -Size.y, (sinY * Size.x - cosY * Size.z) };
 #endif
