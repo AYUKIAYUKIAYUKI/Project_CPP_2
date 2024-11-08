@@ -75,7 +75,8 @@ private:
 	static constexpr float ALPHA_INIT = 1.0f;
 
 	// <function>
-	void SetMtxWorld();	// ワールド行列設定
+	void AdjustRotAngle();	// 向きを調整する
+	void SetMtxWorld();		// ワールド行列設定
 
 	// <data>
 	CModel_X_Manager::MODEL*	m_pModel;				// モデル情報

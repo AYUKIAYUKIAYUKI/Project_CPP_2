@@ -297,40 +297,35 @@ void CRender_Collision::SetVtx()
 		float _11, _13, _31, _33;
 	};
 
+	// 回転行列を作成
 	Mtx_Rot MtxRot = 
 	{
 		0.0f, 0.0f, 0.0f, 0.0f
 	};
 
-	// 回転行列を作成
-	MtxRot._11 = cosf(Rot.y) * Size.x;
-	MtxRot._13 = sinf(Rot.y) * Size.z;
-	MtxRot._31 = sinf(Rot.y) * Size.x;
-	MtxRot._33 = cosf(Rot.y) * Size.z;
+	// 向きから回転行列を作成
+	MtxRot._11 = cosf(Rot.y);
+	MtxRot._13 = sinf(Rot.y);
+	MtxRot._31 = -sinf(Rot.y);
+	MtxRot._33 = cosf(Rot.y);
 
-	// 最終的な頂点座標を作成
-	float VtxPosX = MtxRot._11 + MtxRot._13;
+	// 回転後のX・Z頂点座標の作成
+	float VtxPosX = MtxRot._11 + MtxRot._31;
 	float VtxPosZ = MtxRot._31 + MtxRot._33;
+
+	VtxPosX *= Size.x;
+	VtxPosZ *= Size.z;
 
 	// 頂点座標を設定
 #if 0
-	pVtx[0].pos = { -Size.x, +Size.y, -Size.z };
-	pVtx[1].pos = { +Size.x, +Size.y, -Size.z };
-	pVtx[2].pos = { -Size.x, -Size.y, -Size.z };
-	pVtx[3].pos = { +Size.x, -Size.y, -Size.z };
-	pVtx[4].pos = { -Size.x, +Size.y, +Size.z };
-	pVtx[5].pos = { +Size.x, +Size.y, +Size.z };
-	pVtx[6].pos = { -Size.x, -Size.y, +Size.z };
-	pVtx[7].pos = { +Size.x, -Size.y, +Size.z };
-#elif 1
-	pVtx[0].pos = { -VtxPosX, +Size.y, -Size.z };
-	pVtx[1].pos = { +VtxPosX, +Size.y, -Size.z };
-	pVtx[2].pos = { -VtxPosX, -Size.y, -Size.z };
-	pVtx[3].pos = { +VtxPosX, -Size.y, -Size.z };
-	pVtx[4].pos = { -VtxPosX, +Size.y, +Size.z };
-	pVtx[5].pos = { +VtxPosX, +Size.y, +Size.z };
-	pVtx[6].pos = { -VtxPosX, -Size.y, +Size.z };
-	pVtx[7].pos = { +VtxPosX, -Size.y, +Size.z };
+	pVtx[0].pos = { VtxPosX, +Size.y, -Size.z };
+	pVtx[1].pos = { VtxPosX, +Size.y, -Size.z };
+	pVtx[2].pos = { VtxPosX, -Size.y, -Size.z };
+	pVtx[3].pos = { VtxPosX, -Size.y, -Size.z };
+	pVtx[4].pos = { VtxPosX, +Size.y, +Size.z };
+	pVtx[5].pos = { VtxPosX, +Size.y, +Size.z };
+	pVtx[6].pos = { VtxPosX, -Size.y, +Size.z };
+	pVtx[7].pos = { VtxPosX, -Size.y, +Size.z };
 #elif 0
 	pVtx[0].pos = { -VtxPosX, +Size.y, -VtxPosZ };
 	pVtx[1].pos = { +VtxPosX, +Size.y, -VtxPosZ };
@@ -340,15 +335,21 @@ void CRender_Collision::SetVtx()
 	pVtx[5].pos = { +VtxPosX, +Size.y, +VtxPosZ };
 	pVtx[6].pos = { -VtxPosX, -Size.y, +VtxPosZ };
 	pVtx[7].pos = { +VtxPosX, -Size.y, +VtxPosZ };
-#elif 0
-	pVtx[0].pos = { -10.0f, +10.0f, -10.0f };
-	pVtx[1].pos = { +10.0f, +10.0f, -10.0f };
-	pVtx[2].pos = { -VtxPosX, -Size.y, -VtxPosZ };
-	pVtx[3].pos = { +VtxPosX, -Size.y, -VtxPosZ };
-	pVtx[4].pos = { -10.0f, +10.0f, +10.0f };
-	pVtx[5].pos = { +10.0f, +10.0f, +10.0f };
-	pVtx[6].pos = { -VtxPosX, -Size.y, +VtxPosZ };
-	pVtx[7].pos = { +VtxPosX, -Size.y, +VtxPosZ };
+#elif 1
+	// 回転角度に基づき cos と sin を計算
+	float cosY = cosf(-Rot.y);
+	float sinY = sinf(-Rot.y);
+
+	// 各頂点の位置を回転させた後にサイズを掛けて配置
+	pVtx[0].pos = { (-cosY * Size.x - sinY * Size.z), +Size.y, (-sinY * Size.x + cosY * Size.z) };
+	pVtx[1].pos = { (cosY * Size.x - sinY * Size.z), +Size.y, (sinY * Size.x + cosY * Size.z) };
+	pVtx[2].pos = { (-cosY * Size.x - sinY * Size.z), -Size.y, (-sinY * Size.x + cosY * Size.z) };
+	pVtx[3].pos = { (cosY * Size.x - sinY * Size.z), -Size.y, (sinY * Size.x + cosY * Size.z) };
+
+	pVtx[4].pos = { (-cosY * Size.x + sinY * Size.z), +Size.y, (-sinY * Size.x - cosY * Size.z) };
+	pVtx[5].pos = { (cosY * Size.x + sinY * Size.z), +Size.y, (sinY * Size.x - cosY * Size.z) };
+	pVtx[6].pos = { (-cosY * Size.x + sinY * Size.z), -Size.y, (-sinY * Size.x - cosY * Size.z) };
+	pVtx[7].pos = { (cosY * Size.x + sinY * Size.z), -Size.y, (sinY * Size.x - cosY * Size.z) };
 #endif
 
 	// 頂点バッファをアンロック

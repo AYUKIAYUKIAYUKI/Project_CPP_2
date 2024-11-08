@@ -110,8 +110,25 @@ void CRenderer::Draw()
 //============================================================================
 void CRenderer::PrintDebug()
 {
+	// 表示範囲調整用
+	static WORD wAdjustHeight = 0;
+
+	// 表示範囲変動
+	if (CManager::GetKeyboard()->GetPress(DIK_NUMPAD2))
+	{
+		wAdjustHeight > 0 ? wAdjustHeight -= 5 : wAdjustHeight = 0;
+	}
+	else if (CManager::GetKeyboard()->GetPress(DIK_NUMPAD8))
+	{
+		wAdjustHeight += 5;
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_NUMPAD0))
+	{
+		wAdjustHeight = 0;
+	}
+
 	// 表示位置
-	RECT Rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	RECT Rect = { 0, 0 - wAdjustHeight, SCREEN_WIDTH, SCREEN_HEIGHT - wAdjustHeight };
 
 	for (WORD i = 0; i < m_TimeStr.size(); ++i)
 	{
