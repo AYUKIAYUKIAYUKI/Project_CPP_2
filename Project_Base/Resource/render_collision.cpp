@@ -291,45 +291,13 @@ void CRender_Collision::SetVtx()
 	// 向きをコピー
 	const Vec3& Rot = m_pRef->GetRot();
 
-	// 回転行列を定義
-	struct Mtx_Rot
-	{
-		float _11, _13, _31, _33;
-	};
-
-	// 回転行列を作成
-	Mtx_Rot MtxRot = 
-	{
-		0.0f, 0.0f, 0.0f, 0.0f
-	};
-
-	// 向きから回転行列を作成
-	MtxRot._11 = cosf(Rot.y);
-	MtxRot._13 = sinf(Rot.y);
-	MtxRot._31 = -sinf(Rot.y);
-	MtxRot._33 = cosf(Rot.y);
-
-	// 回転後のX・Z頂点座標の作成
-	float VtxPosX = MtxRot._11 + MtxRot._31;
-	float VtxPosZ = MtxRot._31 + MtxRot._33;
-
-	VtxPosX *= Size.x;
-	VtxPosZ *= Size.z;
-
-	// 頂点座標を設定
 #if 0
-	pVtx[0].pos = { -VtxPosX, +Size.y, -VtxPosZ };
-	pVtx[1].pos = { +VtxPosX, +Size.y, -VtxPosZ };
-
-	pVtx[2].pos = { -VtxPosX, -Size.y, -VtxPosZ };
-	pVtx[3].pos = { +VtxPosX, -Size.y, -VtxPosZ };
-
-	pVtx[4].pos = { -VtxPosX, +Size.y, +VtxPosZ };
-	pVtx[5].pos = { +VtxPosX, +Size.y, +VtxPosZ };
-
-	pVtx[6].pos = { -VtxPosX, -Size.y, +VtxPosZ };
-	pVtx[7].pos = { +VtxPosX, -Size.y, +VtxPosZ };
-#elif 1
+	// 頂点座標を設定
+	for (WORD i = 0; i < NUM_VTX; ++i)
+	{
+		pVtx[i].pos = CUtility::RotateRectAroundY(i, Rot.y, Size);
+	}
+#else 
 	// 回転角度に基づき cos と sin を計算
 	float cosY = cosf(-Rot.y);
 	float sinY = sinf(-Rot.y);

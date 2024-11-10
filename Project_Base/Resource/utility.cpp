@@ -11,6 +11,46 @@
 #include "renderer.h"
 
 //============================================================================
+// 象限に応じて、単位立方体用の頂点の座標を作成
+//============================================================================
+D3DXVECTOR3 SetCubeVtxFromQuadrant(WORD wIdx)
+{
+	D3DXVECTOR3 VtxPos = { 0.0f, 0.0f, 0.0f };
+
+	switch (wIdx)
+	{
+	case 0: VtxPos = { -1.0f, +1.0f, -1.0f }; break;
+	case 1: VtxPos = { +1.0f, +1.0f, -1.0f }; break;
+	case 2: VtxPos = { -1.0f, -1.0f, -1.0f }; break;
+	case 3: VtxPos = { +1.0f, -1.0f, -1.0f }; break;
+	case 4: VtxPos = { -1.0f, +1.0f, +1.0f }; break;
+	case 5: VtxPos = { +1.0f, +1.0f, +1.0f }; break;
+	case 6: VtxPos = { -1.0f, -1.0f, +1.0f }; break;
+	case 7: VtxPos = { +1.0f, -1.0f, +1.0f }; break;
+	default: CRenderer::SetTimeString("象限の判定に対応していない番号が渡されました：" + std::to_string(wIdx), 120); break;
+	}
+
+	return VtxPos;
+}
+
+//============================================================================
+// 直方体をY軸で回転させる
+//============================================================================
+D3DXVECTOR3 RotateRectAroundY(const WORD& wIdx, const float& fDirection, const D3DXVECTOR3& Size)
+{
+	// 象限に応じて、頂点の座標を作成
+	const D3DXVECTOR3& VtxPos = SetCubeVtxFromQuadrant(wIdx);
+
+	// Y軸の回転量からsinとcosの値を計算
+	const float& fSinY = sinf(-fDirection), fCosY = cosf(-fDirection);
+
+	// 回転行列を用いて、頂点座標をXZ平面で回転指せる
+	
+
+	return VtxPos;
+}
+
+//============================================================================
 // 角度の差の補正(ラジアン)
 //============================================================================
 void CUtility::AdjustAngle(float& fAngle, const float& fDest)

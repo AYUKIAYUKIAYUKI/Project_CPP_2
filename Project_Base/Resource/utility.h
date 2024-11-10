@@ -15,6 +15,12 @@ class CUtility final
 {
 public:
 
+	// 象限に応じて、単位立方体の頂点の座標を作成
+	static D3DXVECTOR3 SetCubeVtxFromQuadrant(WORD wIdx);
+
+	// 直方体をY軸で回転させる
+	static D3DXVECTOR3 RotateRectAroundY(const WORD& wIdx, const float& fDirection, const D3DXVECTOR3& Size);
+
 	// 角度の差の補正(ラジアン)
 	static void AdjustAngle(float& fAngle, const float& fDest);
 
