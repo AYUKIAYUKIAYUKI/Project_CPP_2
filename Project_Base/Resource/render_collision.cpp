@@ -291,13 +291,30 @@ void CRender_Collision::SetVtx()
 	// 向きをコピー
 	const Vec3& Rot = m_pRef->GetRot();
 
-#if 0
-	// 頂点座標を設定
+#if 1
+	// 各頂点の位置を回転させた後にサイズを掛けて配置
 	for (WORD i = 0; i < NUM_VTX; ++i)
 	{
 		pVtx[i].pos = CUtility::RotateRectAroundY(i, Rot.y, Size);
 	}
-#else 
+#elif 0
+	// 回転角度に基づき cos と sin を計算
+	float cosY = cosf(-Rot.y);
+	float sinY = sinf(-Rot.y);
+
+	// 各頂点の位置を回転させた後にサイズを掛けて配置
+	pVtx[0].pos = { (-1.0f * cosY * Size.x) + (-1.0f * sinY * Size.z), Size.y, -(-(-1.0f) * sinY * Size.x) + -(-1.0f * cosY * Size.z) };
+	pVtx[1].pos = { (1.0f * cosY * Size.x) + (-1.0f * sinY * Size.z), Size.y, -(-(1.0f) * sinY * Size.x) + -(-1.0f * cosY * Size.z) };
+
+	pVtx[2].pos = { (-1.0f * cosY * Size.x) + (-1.0f * sinY * Size.z), -Size.y, -(-(-1.0f) * sinY * Size.x) + -(-1.0f * cosY * Size.z) };
+	pVtx[3].pos = { (1.0f * cosY * Size.x) + (-1.0f * sinY * Size.z), -Size.y, -(-(1.0f) * sinY * Size.x) + -(-1.0f * cosY * Size.z) };
+
+	pVtx[4].pos = { (-1.0f * cosY * Size.x) + (1.0f * sinY * Size.z), Size.y, -(-(-1.0f) * sinY * Size.x) + (-1.0f * cosY * Size.z) };
+	pVtx[5].pos = { (1.0f * cosY * Size.x) + (1.0f * sinY * Size.z), Size.y, (sinY * Size.x - cosY * Size.z) };
+
+	pVtx[6].pos = { (-1.0f * cosY * Size.x) + (1.0f * sinY * Size.z), -Size.y, (-sinY * Size.x - cosY * Size.z) };
+	pVtx[7].pos = { (1.0f * cosY * Size.x) + (1.0f * sinY * Size.z), -Size.y, (sinY * Size.x - cosY * Size.z) };
+#elif 0
 	// 回転角度に基づき cos と sin を計算
 	float cosY = cosf(-Rot.y);
 	float sinY = sinf(-Rot.y);

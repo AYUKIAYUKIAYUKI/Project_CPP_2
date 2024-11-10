@@ -87,6 +87,11 @@ void CBlock::Uninit()
 //============================================================================
 void CBlock::Update()
 {
+	// すぐにけせ
+	Vec3 NewRot = GetRot();
+	NewRot.y += D3DX_PI * 0.001f;
+	SetRot(NewRot);
+
 	// 基底クラスの更新処理
 	CObject_X::Update();
 

@@ -13,10 +13,11 @@
 //============================================================================
 // 象限に応じて、単位立方体用の頂点の座標を作成
 //============================================================================
-D3DXVECTOR3 SetCubeVtxFromQuadrant(WORD wIdx)
+const D3DXVECTOR3& CUtility::SetCubeVtxFromQuadrant(const WORD& wIdx)
 {
 	D3DXVECTOR3 VtxPos = { 0.0f, 0.0f, 0.0f };
 
+	// 渡された頂点の象限に応じて、符号を返す
 	switch (wIdx)
 	{
 	case 0: VtxPos = { -1.0f, +1.0f, -1.0f }; break;
@@ -36,18 +37,22 @@ D3DXVECTOR3 SetCubeVtxFromQuadrant(WORD wIdx)
 //============================================================================
 // 直方体をY軸で回転させる
 //============================================================================
-D3DXVECTOR3 RotateRectAroundY(const WORD& wIdx, const float& fDirection, const D3DXVECTOR3& Size)
+const D3DXVECTOR3& CUtility::RotateRectAroundY(const WORD& wIdx, const float& fDirection, const D3DXVECTOR3& Size)
 {
 	// 象限に応じて、頂点の座標を作成
 	const D3DXVECTOR3& VtxPos = SetCubeVtxFromQuadrant(wIdx);
 
 	// Y軸の回転量からsinとcosの値を計算
-	const float& fSinY = sinf(-fDirection), fCosY = cosf(-fDirection);
+	const float& fSinY = sinf(fDirection), fCosY = cosf(fDirection);
 
-	// 回転行列を用いて、頂点座標をXZ平面で回転指せる
-	
+	// 回転行列を用いて、頂点座標をXZ平面で回転させる
+	const D3DXVECTOR3& ResultPos = {
+		VtxPos.x * fCosY * Size.x + VtxPos.z * fSinY * Size.z,
+		VtxPos.y * Size.y,
+		-VtxPos.x * fSinY * Size.x + VtxPos.z * fCosY * Size.z
+	};
 
-	return VtxPos;
+	return ResultPos;
 }
 
 //============================================================================
