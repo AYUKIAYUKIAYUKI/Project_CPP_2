@@ -33,37 +33,24 @@ public:
 	HRESULT Init() override;	// 初期設定
 	void	Uninit() override;	// 終了処理
 	void	Update() override;	// 更新処理
-	void	Draw() override;	// 描画処理
+	
+	// <virtual function>
+	virtual void Draw() override = 0;	// 描画処理
 
 	// <setter>
 	void SetRefObj(CObject_X* pRef);	// 対象オブジェクトの設定
 
-	// <static function>
-	static CRender_Collision* Create(CObject_X* pRef);	// 生成
+protected:
+
+	// <data>
+	CObject_X*	m_pRef;		// 対象オブジェクト
+	D3DXCOLOR	m_Col;		// 色
+	D3DXMATRIX	m_MtxWorld;	// ワールド行列
 
 private:
 
-	/// <summary> 頂点数 </summary>
-	static constexpr WORD NUM_VTX = 8;
-	
-	/// <summary> プリミティブ数 </summary>
-	static constexpr WORD NUM_PRIM = 12;
-	
-	/// <summary> インデックス数 </summary>
-	static constexpr WORD NUM_IDX = 24;
-
 	// <function>
-	HRESULT CreateVtxBuff();	// 頂点バッファの生成
-	HRESULT CreateIdxBuff();	// インデックスバッファの生成
-	void	SetVtx();			// 頂点の設定
-	void	SetMtxWorld();		// ワールド行列設定
-
-	// <data>
-	CObject_X*				m_pRef;		// 対象オブジェクト
-	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	// 頂点バッファのポインタ
-	LPDIRECT3DINDEXBUFFER9	m_pIdxBuff;	// インデックスバッファのポインタ
-	D3DXCOLOR				m_Col;		// 色
-	D3DXMATRIX				m_MtxWorld;	// ワールド行列
+	void SetMtxWorld();	// ワールド行列設定
 };
 
 #endif	// _RENDER_COLLISION_H_

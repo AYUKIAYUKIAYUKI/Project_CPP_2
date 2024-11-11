@@ -26,7 +26,7 @@ using namespace abbr;
 //============================================================================
 CBounding_Box::CBounding_Box() :
 	m_Size{ VEC3_INIT },
-	m_pRender_Box{ nullptr }
+	m_pRenderBox{ nullptr }
 {
 	
 }
@@ -36,7 +36,7 @@ CBounding_Box::CBounding_Box() :
 //============================================================================
 CBounding_Box::CBounding_Box(CObject_X* pObj) :
 	m_Size{ VEC3_INIT },
-	m_pRender_Box{ CRender_Collision::Create(pObj) }
+	m_pRenderBox{ CRender_Box::Create(pObj) }
 {
 
 }
@@ -47,13 +47,13 @@ CBounding_Box::CBounding_Box(CObject_X* pObj) :
 CBounding_Box::~CBounding_Box()
 {
 	// ボックス表示の破棄
-	if (m_pRender_Box != nullptr)
+	if (m_pRenderBox != nullptr)
 	{
 		// 破棄予約
-		m_pRender_Box->SetRelease();
+		m_pRenderBox->SetRelease();
 
 		// ポインタを初期化
-		m_pRender_Box = nullptr;
+		m_pRenderBox = nullptr;
 	}
 }
 

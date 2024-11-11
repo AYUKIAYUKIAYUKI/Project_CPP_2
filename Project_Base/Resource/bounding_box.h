@@ -12,7 +12,7 @@
 // インクルードファイル
 //****************************************************
 #include "bounding_volume.h"
-#include "render_collision.h"
+#include "render_box.h"
 
 //****************************************************
 // バウンディングボックスクラス
@@ -33,8 +33,8 @@ public:
 private:
 
 	// <data>
-	D3DXVECTOR3			m_Size;			// サイズ
-	CRender_Collision*	m_pRender_Box;	// ボックス表示
+	D3DXVECTOR3		m_Size;			// サイズ
+	CRender_Box*	m_pRenderBox;	// ボックス表示
 };
 
 #endif	// _BOUNDING_BOX_H_

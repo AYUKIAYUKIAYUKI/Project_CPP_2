@@ -39,9 +39,6 @@ CObject_X::CObject_X(LAYER Priority) :
 	m_fScale{ SCALE_INIT },
 	m_fAlpha{ ALPHA_INIT }
 {
-	// 判定表示を生成
-	m_pRender_Collision = CRender_Collision::Create(this);
-
 	// ワールド行列を初期化
 	D3DXMatrixIdentity(&m_MtxWorld);
 }

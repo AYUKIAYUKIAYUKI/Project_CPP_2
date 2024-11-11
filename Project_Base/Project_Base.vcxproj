@@ -60,7 +60,9 @@
     <ClCompile Include="Resource\player_state_jump.cpp" />
     <ClCompile Include="Resource\quadratic_bezier.cpp" />
     <ClCompile Include="resource\renderer.cpp" />
+    <ClCompile Include="Resource\render_box.cpp" />
     <ClCompile Include="Resource\render_collision.cpp" />
+    <ClCompile Include="Resource\render_sphere.cpp" />
     <ClCompile Include="Resource\result.cpp" />
     <ClCompile Include="Resource\rubble.cpp" />
     <ClCompile Include="Resource\scene.cpp" />
@@ -110,7 +112,9 @@
     <ClInclude Include="Resource\player_state_jump.h" />
     <ClInclude Include="Resource\quadratic_bezier.h" />
     <ClInclude Include="resource\renderer.h" />
+    <ClInclude Include="Resource\render_box.h" />
     <ClInclude Include="Resource\render_collision.h" />
+    <ClInclude Include="Resource\render_sphere.h" />
     <ClInclude Include="Resource\result.h" />
     <ClInclude Include="Resource\rubble.h" />
     <ClInclude Include="Resource\scene.h" />
