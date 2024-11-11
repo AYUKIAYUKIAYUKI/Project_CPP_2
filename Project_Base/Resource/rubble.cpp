@@ -155,9 +155,6 @@ CRubble* CRubble::Create(int nType, D3DXVECTOR3 Pos, D3DXVECTOR3 Velocity)
 	// モデルを設定
 	pRubble->BindModel(Model);
 
-	// サイズを設定
-	pRubble->SetSize(Model->Size);
-
 	// 描画される前に一度更新しておく
 	pRubble->Update();
 

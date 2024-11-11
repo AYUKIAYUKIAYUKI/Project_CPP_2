@@ -14,6 +14,11 @@
 #include "object_X.h"
 
 //****************************************************
+// 前方宣言
+//****************************************************
+class CBounding_Box;
+
+//****************************************************
 // ブロッククラス
 //****************************************************
 class CBlock : public CObject_X
@@ -28,9 +33,13 @@ public:
 	void Update() override;		// 更新処理
 	void Draw() override;		// 描画処理
 
-	// 生成
-	static CBlock* Create();									
-	static CBlock* Create(const D3DXVECTOR3& Pos, const D3DXVECTOR3& Rot);
+	D3DXVECTOR3 GetSize() const override;	// サイズを取得
+
+	static CBlock* Create(const D3DXVECTOR3& Pos, const D3DXVECTOR3& Rot);	// 生成
+
+private:
+
+	CBounding_Box* m_pBndBox;	// バウンディングボックス
 };
 
 #endif // _BLOCK_H_

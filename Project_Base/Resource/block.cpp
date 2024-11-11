@@ -9,14 +9,10 @@
 // インクルードファイル
 //****************************************************
 #include "block.h"
-
-#include "renderer.h"
-
-// オブジェクト用
+#include "bounding_box.h"
 #include "rubble.h"
 
-// 判定可視化用
-#include "render_collision.h"
+#include "renderer.h"
 
 //****************************************************
 // usingディレクティブ
@@ -33,7 +29,8 @@ using namespace abbr;
 // デフォルトコンストラクタ
 //============================================================================
 CBlock::CBlock() :
-	CObject_X{ LAYER::MIDDLE }
+	CObject_X{ LAYER::MIDDLE },
+	m_pBndBox{ DBG_NEW CBounding_Box(this) }
 {
 
 }
@@ -43,6 +40,16 @@ CBlock::CBlock() :
 //============================================================================
 CBlock::~CBlock()
 {
+	// バウンディングボックスの破棄
+	if (m_pBndBox != nullptr)
+	{
+		// メモリを解放
+		delete m_pBndBox;
+
+		// ポインタを初期化
+		m_pBndBox = nullptr;
+	}
+
 #if 1
 	for (int i = 0; i < 2; i++)
 	{
@@ -119,23 +126,11 @@ void CBlock::Draw()
 }
 
 //============================================================================
-// 生成
+// サイズを取得
 //============================================================================
-CBlock* CBlock::Create()
+D3DXVECTOR3 CBlock::GetSize() const
 {
-	// インスタンスを生成
-	CBlock* pNewInstance = DBG_NEW CBlock();
-
-	// タイプを設定
-	pNewInstance->SetType(TYPE::NONE);
-
-	// 初期設定
-	pNewInstance->Init();
-
-	// モデルを設定
-	pNewInstance->BindModel(CModel_X_Manager::TYPE::TEST);
-
-	return pNewInstance;
+	return m_pBndBox->GetSize();
 }
 
 //============================================================================
@@ -162,7 +157,7 @@ CBlock* CBlock::Create(const D3DXVECTOR3& Pos, const D3DXVECTOR3& Rot)
 	pNewInstance->BindModel(CModel_X_Manager::TYPE::TEST);
 
 	// サイズを設定
-	pNewInstance->SetSize(D3DXVECTOR3(10.0f, 10.0f, 10.0f));
+	pNewInstance->m_pBndBox->SetSize(pNewInstance->GetModel()->Size);
 
 	// 描画前に1度更新
 	pNewInstance->Update();

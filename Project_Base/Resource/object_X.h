@@ -38,13 +38,10 @@ public:
 	void	Update() override;	// 更新処理
 	void	Draw() override;	// 描画処理
 
-	// <setter>
+	// <getter/setter>
+	CModel_X_Manager::MODEL* GetModel();				// モデル取得
 	void BindModel(CModel_X_Manager::MODEL* pModel);	// モデル割当
 	void BindModel(CModel_X_Manager::TYPE Type);		// もっとモデル割当
-
-	// <getter/setter>
-	const D3DXVECTOR3& GetSize() const;	// サイズ取得
-	void SetSize(D3DXVECTOR3 Size);		// サイズ設定
 
 	// <getter/setter>
 	const D3DXVECTOR3& GetRot() const;	// 向き取得
@@ -61,6 +58,10 @@ public:
 	// <getter/setter>
 	const float& GetAlpha() const;	// アルファ値取得
 	void SetAlpha(float fAlpha);	// アルファ値設定
+
+	// <virtual getter>
+	virtual float GetRadius() const;		// 半径を取得
+	virtual D3DXVECTOR3 GetSize() const;	// サイズを取得
 
 	// <static function>
 	static CObject_X* Create();					// 生成
@@ -81,7 +82,6 @@ private:
 	// <data>
 	CModel_X_Manager::MODEL*	m_pModel;				// モデル情報
 	CRender_Collision*			m_pRender_Collision;	// 判定表示
-	D3DXVECTOR3					m_Size;					// サイズ
 	D3DXVECTOR3					m_Rot;					// 向き
 	D3DXVECTOR3					m_Pos;					// 座標
 	float						m_fScale;				// 縮尺
