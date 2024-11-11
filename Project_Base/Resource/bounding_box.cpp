@@ -25,6 +25,7 @@ using namespace abbr;
 // コンストラクタ
 //============================================================================
 CBounding_Box::CBounding_Box() :
+	CBounding_Volume{},
 	m_Size{ VEC3_INIT },
 	m_pRenderBox{ nullptr }
 {
@@ -35,6 +36,7 @@ CBounding_Box::CBounding_Box() :
 // ボックス表示コンストラクタ
 //============================================================================
 CBounding_Box::CBounding_Box(CObject_X* pObj) :
+	CBounding_Volume{},
 	m_Size{ VEC3_INIT },
 	m_pRenderBox{ CRender_Box::Create(pObj) }
 {

@@ -25,6 +25,7 @@ using namespace abbr;
 // コンストラクタ
 //============================================================================
 CBounding_Sphere::CBounding_Sphere() :
+	CBounding_Volume{},
 	m_fRadius{ 0.0f }
 {
 
