@@ -13,7 +13,7 @@
 //============================================================================
 // 象限に応じて、単位立方体用の頂点の座標を作成
 //============================================================================
-const D3DXVECTOR3& CUtility::SetCubeVtxFromQuadrant(const WORD& wIdx)
+D3DXVECTOR3 CUtility::SetCubeVtxFromQuadrant(const WORD& wIdx)
 {
 	D3DXVECTOR3 VtxPos = { 0.0f, 0.0f, 0.0f };
 
@@ -37,7 +37,7 @@ const D3DXVECTOR3& CUtility::SetCubeVtxFromQuadrant(const WORD& wIdx)
 //============================================================================
 // 直方体をY軸で回転させる
 //============================================================================
-const D3DXVECTOR3& CUtility::RotateRectAroundY(const WORD& wIdx, const float& fDirection, const D3DXVECTOR3& Size)
+D3DXVECTOR3 CUtility::RotateRectAroundY(const WORD& wIdx, const float& fDirection, const D3DXVECTOR3& Size)
 {
 	// 象限に応じて、頂点の座標を作成
 	const D3DXVECTOR3& VtxPos = SetCubeVtxFromQuadrant(wIdx);
@@ -50,6 +50,24 @@ const D3DXVECTOR3& CUtility::RotateRectAroundY(const WORD& wIdx, const float& fD
 		VtxPos.x * fCosY * Size.x + VtxPos.z * fSinY * Size.z,
 		VtxPos.y * Size.y,
 		-VtxPos.x * fSinY * Size.x + VtxPos.z * fCosY * Size.z
+	};
+
+	return ResultPos;
+}
+
+//============================================================================
+// 直方体のY軸の回転を打ち消す
+//============================================================================
+D3DXVECTOR3 CUtility::InverseRotateRectAroundY(const float& fDirection, const D3DXVECTOR3& VtxPos)
+{
+	// Y軸の逆の回転量からsinとcosの値を計算
+	const float& fSinY = sinf(-fDirection), fCosY = cosf(-fDirection);
+
+	// 回転行列の逆を用いて、XZ平面で回転した頂点の座標を元に戻す
+	const D3DXVECTOR3& ResultPos = {
+		VtxPos.x * fCosY + VtxPos.z * fSinY,
+		VtxPos.y,
+		-VtxPos.x * fSinY + VtxPos.z * fCosY
 	};
 
 	return ResultPos;

@@ -16,10 +16,13 @@ class CUtility final
 public:
 
 	// 象限に応じて、単位立方体の頂点の座標を作成
-	static const D3DXVECTOR3& SetCubeVtxFromQuadrant(const WORD& wIdx);
+	static D3DXVECTOR3 SetCubeVtxFromQuadrant(const WORD& wIdx);
 
 	// 直方体をY軸で回転させる
-	static const D3DXVECTOR3& RotateRectAroundY(const WORD& wIdx, const float& fDirection, const D3DXVECTOR3& Size);
+	static D3DXVECTOR3 RotateRectAroundY(const WORD& wIdx, const float& fDirection, const D3DXVECTOR3& Size);
+
+	// 直方体のY軸の回転を打ち消す
+	static D3DXVECTOR3 InverseRotateRectAroundY(const float& fDirection, const D3DXVECTOR3& VtxPos);
 
 	// 角度の差の補正(ラジアン)
 	static void AdjustAngle(float& fAngle, const float& fDest);
