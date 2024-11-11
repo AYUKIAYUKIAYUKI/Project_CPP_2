@@ -16,8 +16,8 @@ class CBounding_Volume
 public:
 
 	// <special function>
-	CBounding_Volume();				// デフォルトコンストラクタ
-	virtual ~CBounding_Volume();	// デストラクタ
+	CBounding_Volume();					// デフォルトコンストラクタ
+	virtual ~CBounding_Volume() = 0;	// デストラクタ
 
 	// <getter/setter>
 	const D3DXVECTOR3& GetCenterPos() const;	// 中心点を取得
