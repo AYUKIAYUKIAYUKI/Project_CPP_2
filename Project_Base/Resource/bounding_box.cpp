@@ -46,7 +46,15 @@ CBounding_Box::CBounding_Box(CObject_X* pObj) :
 //============================================================================
 CBounding_Box::~CBounding_Box()
 {
-	/* ボックス表示の破棄はオブジェクトクラスに委ねます */
+	// ボックス表示の破棄
+	if (m_pRender_Box != nullptr)
+	{
+		// 破棄予約
+		m_pRender_Box->SetRelease();
+
+		// ポインタを初期化
+		m_pRender_Box = nullptr;
+	}
 }
 
 //============================================================================
