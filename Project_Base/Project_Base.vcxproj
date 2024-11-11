@@ -19,6 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Resource\bounding_box.cpp" />
+    <ClCompile Include="Resource\bounding_sphere.cpp" />
+    <ClCompile Include="Resource\bounding_volume.cpp" />
     <ClCompile Include="Resource\input_keyboard.cpp" />
     <ClCompile Include="Resource\input_pad.cpp" />
     <ClCompile Include="Resource\mask_rectangle.cpp" />
@@ -69,6 +72,8 @@
     <ClCompile Include="Resource\utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Resource\bounding_box.h" />
+    <ClInclude Include="Resource\bounding_sphere.h" />
     <ClInclude Include="Resource\bounding_volume.h" />
     <ClInclude Include="Resource\input_keyboard.h" />
     <ClInclude Include="Resource\input_pad.h" />

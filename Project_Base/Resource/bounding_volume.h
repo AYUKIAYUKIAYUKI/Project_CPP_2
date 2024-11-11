@@ -8,12 +8,25 @@
 #ifndef _BOUNDING_VOLUME_H_
 #define _BOUNDING_VOLUME_H_	// 二重インクルード防止
 
-////****************************************************
-//// ボックス用パラメータの構造体を定義
-////****************************************************
-//struct Bounding_Box
-//{
-//	D3DXVECTOR3 Size;	// サイズ
-//};
+//****************************************************
+// バウンディングボリュームクラス
+//****************************************************
+class CBounding_Volume
+{
+public:
+
+	// <special function>
+	CBounding_Volume();				// デフォルトコンストラクタ
+	virtual ~CBounding_Volume();	// デストラクタ
+
+	// <getter/setter>
+	const D3DXVECTOR3& GetCenterPos() const;	// 中心点を取得
+	void SetCenterPos(D3DXVECTOR3 Pos);			// 中心点を設定
+
+private:
+
+	// <data>
+	D3DXVECTOR3 m_CenterPos;	// 中心点
+};
 
 #endif	// _BOUNDING_VOLUME_H_
