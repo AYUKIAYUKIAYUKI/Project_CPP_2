@@ -54,6 +54,9 @@ HRESULT CRender_Sphere::Init()
 		return E_FAIL;
 	}
 
+	// •\Ž¦‚Ì“§–¾“x‚ðÝ’è
+	m_pSphere->SetAlpha(0.5f);
+
 	return S_OK;
 }
 

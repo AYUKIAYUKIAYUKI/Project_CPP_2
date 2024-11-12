@@ -44,7 +44,6 @@ protected:
 
 	// <data>
 	CObject_X*	m_pRef;		// 対象オブジェクト
-	D3DXCOLOR	m_Col;		// 色
 	D3DXMATRIX	m_MtxWorld;	// ワールド行列
 
 private:

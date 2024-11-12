@@ -30,8 +30,7 @@ using namespace abbr;
 //============================================================================
 CRender_Collision::CRender_Collision(LAYER Priority) :
 	CObject{ Priority },
-	m_pRef{ nullptr },
-	m_Col{ XCOL_INIT }
+	m_pRef{ nullptr }
 {
 	// ƒ[ƒ‹ƒhs—ñ‚Ì‰Šú‰»
 	D3DXMatrixIdentity(&m_MtxWorld);
