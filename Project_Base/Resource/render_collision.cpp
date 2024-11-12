@@ -90,7 +90,7 @@ void CRender_Collision::SetRefObj(CObject_X* pRef)
 void CRender_Collision::SetMtxWorld()
 {
 	// 計算用行列
-	D3DXMATRIX mtxRot, mtxTrans;
+	D3DXMATRIX mtxTrans;
 
 	// ワールド行列を初期化
 	D3DXMatrixIdentity(&m_MtxWorld);

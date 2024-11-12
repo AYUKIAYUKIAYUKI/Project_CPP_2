@@ -12,6 +12,7 @@
 // インクルードファイル
 //****************************************************
 #include "bounding_volume.h"
+#include "render_sphere.h"
 
 //****************************************************
 // バウンディングスフィアクラス
@@ -21,8 +22,9 @@ class CBounding_Sphere : public CBounding_Volume
 public:
 
 	// <special function>
-	CBounding_Sphere();				// デフォルトコンストラクタ
-	~CBounding_Sphere() override;	// デストラクタ
+	CBounding_Sphere();					// デフォルトコンストラクタ
+	CBounding_Sphere(CObject_X* pObj);	// スフィア表示コンストラクタ
+	~CBounding_Sphere() override;		// デストラクタ
 
 	// <getter/setter>
 	const float& GetRadius() const;	// 半径を取得
@@ -31,7 +33,8 @@ public:
 private:
 
 	// <data>
-	float m_fRadius;	// 半径
+	float m_fRadius;					// 半径
+	CRender_Sphere* m_pRenderSphere;	// スフィア表示
 };
 
 #endif	// _BOUNDING_SPHERE_H_

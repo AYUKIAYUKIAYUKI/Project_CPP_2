@@ -15,6 +15,11 @@
 #include "character_state_manager.h"
 
 //****************************************************
+// 前方宣言
+//****************************************************
+class CBounding_Sphere;
+
+//****************************************************
 // プレイヤークラス
 //****************************************************
 class CPlayer : public CCharacter
@@ -42,6 +47,7 @@ public:
 	void	To_Damage(int nDamage);	// ステート - ダメージ状態へ
 
 	// <getter>
+	float GetRadius() const override;	// 半径を取得
 	CCharacter_State* GetNowState();	// 現在のステートを取得
 
 	// <static function>
@@ -53,7 +59,8 @@ private:
 	void AdjustHeight();	// 高さを補正
 
 	// <data>
-	CCharacter_State_Manager* m_pStateManager;	// ステートマネージャー
+	CBounding_Sphere*			m_pBndSphere;		// バウンディングスフィア
+	CCharacter_State_Manager*	m_pStateManager;	// ステートマネージャー
 };
 
 #endif // _PLAYER_H_

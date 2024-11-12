@@ -313,6 +313,29 @@ CObject_X* CObject_X::Create(LAYER Priority)
 }
 
 //============================================================================
+// 生成
+//============================================================================
+CObject_X* CObject_X::Create(LAYER Priority, CModel_X_Manager::TYPE Type)
+{
+	// インスタンスを生成
+	CObject_X* pObjectX = DBG_NEW CObject_X(Priority);
+
+	// 生成失敗
+	if (pObjectX == nullptr)
+	{
+		assert(false && "Xオブジェクトの生成に失敗しました");
+	}
+
+	// Xオブジェクトの初期設定
+	pObjectX->Init();
+
+	// モデルを設定
+	pObjectX->BindModel(Type);
+
+	return pObjectX;
+}
+
+//============================================================================
 // 
 // privateメンバ
 // 

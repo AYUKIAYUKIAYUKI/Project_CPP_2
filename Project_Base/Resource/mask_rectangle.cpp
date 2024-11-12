@@ -63,7 +63,7 @@ HRESULT CMask_Rectangle::Init()
 	m_Pos = { SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f };
 
 	// サイズの設定
-	m_Size = { SCREEN_WIDTH * 0.25f, SCREEN_HEIGHT * 0.25f, 0.0f };
+	m_Size = { SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f };
 
 	return S_OK;
 }
@@ -241,7 +241,7 @@ HRESULT CMask_Rectangle::CreateVtxBuff()
 		pVtx[wNumVtx].rhw = 1.0f;
 
 		// 頂点色の設定
-		pVtx[wNumVtx].col = XCOL_INIT;
+		pVtx[wNumVtx].col = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
 
 		// テクスチャ座標の設定
 		pVtx[wNumVtx].tex = VEC2_INIT;

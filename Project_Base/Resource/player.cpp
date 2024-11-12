@@ -9,6 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "player.h"
+#include "bounding_sphere.h"
 #include "player_state_default.h"
 
 // インプット取得
@@ -37,6 +38,7 @@ using namespace abbr;
 //============================================================================
 CPlayer::CPlayer() :
 	CCharacter{},
+	m_pBndSphere{ DBG_NEW CBounding_Sphere(this) },
 	m_pStateManager{ nullptr }
 {
 
@@ -47,7 +49,15 @@ CPlayer::CPlayer() :
 //============================================================================
 CPlayer::~CPlayer()
 {
+	// バウンディングスフィアの破棄
+	if (m_pBndSphere != nullptr)
+	{
+		// メモリを解放
+		delete m_pBndSphere;
 
+		// ポインタを初期化
+		m_pBndSphere = nullptr;
+	}
 }
 
 //============================================================================
@@ -198,6 +208,14 @@ void CPlayer::To_Damage(int nDamage)
 }
 
 //============================================================================
+// 半径を取得
+//============================================================================
+float CPlayer::GetRadius() const
+{
+	return m_pBndSphere->GetRadius();
+}
+
+//============================================================================
 // 現在のステートを取得
 //============================================================================
 CCharacter_State* CPlayer::GetNowState()
@@ -222,6 +240,9 @@ CPlayer* CPlayer::Create()
 
 	// モデルを設定
 	pNewInstance->BindModel(CModel_X_Manager::TYPE::SAMUS);
+
+	// サイズを設定
+	pNewInstance->m_pBndSphere->SetRadius(10.0f);
 
 	return pNewInstance;
 }

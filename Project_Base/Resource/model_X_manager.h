@@ -29,6 +29,8 @@ public:
 		RUBBLE_02,			// ‚ª‚ê‚«02
 		CYLINDERCOLLIDER,	// cylinder collider
 		SPHERE,				// sphere
+		RENDER_SPHERE,		// render sphere
+		RENDER_CYLINDER,	// render cylinder
 		MAX,
 	};
 

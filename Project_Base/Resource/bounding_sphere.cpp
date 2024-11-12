@@ -26,7 +26,19 @@ using namespace abbr;
 //============================================================================
 CBounding_Sphere::CBounding_Sphere() :
 	CBounding_Volume{},
-	m_fRadius{ 0.0f }
+	m_fRadius{ 0.0f },
+	m_pRenderSphere{ nullptr }
+{
+
+}
+
+//============================================================================
+// スフィア表示コンストラクタ
+//============================================================================
+CBounding_Sphere::CBounding_Sphere(CObject_X* pObj) :
+	CBounding_Volume{},
+	m_fRadius{ 0.0f },
+	m_pRenderSphere{ CRender_Sphere::Create(pObj) }
 {
 
 }
