@@ -221,8 +221,6 @@ bool CUtility::SphereAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSel
 	}
 
 	return 0;
-
-	return 0;
 }
 
 //============================================================================

@@ -96,7 +96,7 @@ void CBlock::Update()
 {
 	// すぐにけせ
 	Vec3 NewRot = GetRot();
-	NewRot.y += D3DX_PI * 0.001f;
+	NewRot.y += D3DX_PI * 0.005f;
 	SetRot(NewRot);
 
 	// 基底クラスの更新処理
@@ -154,7 +154,7 @@ CBlock* CBlock::Create(const D3DXVECTOR3& Pos, const D3DXVECTOR3& Rot)
 	pNewInstance->SetRot(Rot);
 
 	// モデルを設定
-	pNewInstance->BindModel(CModel_X_Manager::TYPE::TEST);
+	pNewInstance->BindModel(CModel_X_Manager::TYPE::TEST2);
 
 	// サイズを設定
 	pNewInstance->m_pBndBox->SetSize(pNewInstance->GetModel()->Size);

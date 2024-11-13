@@ -20,22 +20,32 @@ class CMesh_Dome : public CObject
 {
 public:
 
-	/// <summary> プレイヤーの最大体力 </summary>
-	static constexpr int MAX_LIFE = 5;
-
-	/// <summary> プレイヤーのデフォルト移動速度 </summary>
-	static constexpr float DEFAULT_MOVE_SPEED = 0.005f;
-
-	/// <summary> 目標値への補間強度 </summary>
-	static constexpr float COEF_ADJUST = 0.1f;
-
+	// <special funvtion>
 	CMesh_Dome();	// デフォルトコンストラクタ
 	~CMesh_Dome();	// デストラクタ
 
+	// <function>
 	HRESULT Init() override;		// 初期設定
 	void	Uninit() override;		// 終了設定
 	void	Update() override;		// 更新処理
 	void	Draw() override;		// 描画処理
+
+	// <static function>
+	static CMesh_Dome* Create();	// 生成
+
+private:
+
+	// <function>
+	HRESULT CreateVtxBuff();	// 頂点バッファの生成
+	HRESULT CreateIdxBuff();	// インデックスバッファの生成
+	void	SetVtx();			// 頂点の設定
+	void	SetMtxWorld();		// ワールド行列の設定
+
+	// <data>
+	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	// 頂点バッファのポインタ
+	LPDIRECT3DINDEXBUFFER9	m_pIdxBuff;	// インデックスバッファのポインタ
+	D3DXVECTOR3				m_Pos;		// 座標
+	D3DXMATRIX				m_MtxWorld;	// ワールド行列
 };
 
 #endif // _MESH_DOME_H_

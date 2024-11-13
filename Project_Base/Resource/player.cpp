@@ -299,25 +299,24 @@ void CPlayer::HitCheck()
 			const Vec3& BoxSize = pBlock->GetSize();
 			const Vec3& BoxPos = pBlock->GetPos();
 			const float& fBoxDirection = pBlock->GetRot().y;
+			
+			// ボックスの中心点からスフィアの座標への相対座標を計算
+			const Vec3& RelativePos = GetPos() - BoxPos;
 
-			// まず、中心点とAABBで衝突判定を行う
-			if (CUtility::SphereAndAABB(GetPos(), m_pBndSphere->GetRadius(), BoxPos, BoxSize))
+			// 相対座標に、ブロックの回転角度分の逆回転行列をかける
+			const Vec3& SpherePos = CUtility::RotatePointAroundY(-fBoxDirection, RelativePos);
+
+			// 回転を考慮した後で、スフィアとボックスの当たり判定を行う \
+			(ボックスを原点においたときの相対座標で距離を判定しているため、ターゲット座標の引数は原点)
+			if (CUtility::SphereAndAABB(SpherePos, m_pBndSphere->GetRadius(), VEC3_INIT, BoxSize))
 			{
-				// プレイヤーのバウンディングスフィアの中心点に、ブロックの回転角度分の逆回転行列をかける (今回はプレイヤーの座標)
-				const Vec3& SpherePos = CUtility::RotatePointAroundY(-fBoxDirection, GetPos());
-
-				// 軌跡を表示していく
+				/* 一時的に軌跡を表示していく */
 				auto Test = CObject_X::Create(CObject::LAYER::FRONT, CModel_X_Manager::TYPE::SPHERE);
 				Test->SetPos(SpherePos);
 
-				// 回転した
-				if (CUtility::SphereAndAABB(SpherePos, m_pBndSphere->GetRadius(), BoxPos, BoxSize))
-				{
-
-				}
-
 				m_pBndSphere->ChangeModel(CModel_X_Manager::TYPE::RENDER_SPHERE_HIT);
 				bDetected = 1;
+
 				break;
 			}
 		}

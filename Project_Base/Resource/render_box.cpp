@@ -293,7 +293,6 @@ void CRender_Box::SetVtx()
 	for (WORD i = 0; i < NUM_VTX; ++i)
 	{
 		pVtx[i].pos = CUtility::RotateBoxAroundY(i, Rot.y, Size);
-		pVtx[i].pos = CUtility::InverseRotateBoxAroundY(Rot.y, pVtx[i].pos);	/* すぐに消せ */
 	}
 
 	// 頂点バッファをアンロック

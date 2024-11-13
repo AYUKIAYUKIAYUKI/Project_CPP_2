@@ -21,6 +21,7 @@ public:
 	enum class TYPE
 	{
 		TEST = 0,			// テスト
+		TEST2,				// テスト2
 		CYLINDER,			// cylinder
 		SAMUS,				// サムス
 		ENEMY,				// 敵
