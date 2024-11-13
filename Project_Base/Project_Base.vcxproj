@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Resource\bounding_box.cpp" />
+    <ClCompile Include="Resource\bounding_cylinder.cpp" />
     <ClCompile Include="Resource\bounding_sphere.cpp" />
     <ClCompile Include="Resource\bounding_volume.cpp" />
     <ClCompile Include="Resource\input_keyboard.cpp" />
@@ -62,6 +63,7 @@
     <ClCompile Include="resource\renderer.cpp" />
     <ClCompile Include="Resource\render_box.cpp" />
     <ClCompile Include="Resource\render_collision.cpp" />
+    <ClCompile Include="Resource\render_cylinder.cpp" />
     <ClCompile Include="Resource\render_sphere.cpp" />
     <ClCompile Include="Resource\result.cpp" />
     <ClCompile Include="Resource\rubble.cpp" />
@@ -75,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\bounding_box.h" />
+    <ClInclude Include="Resource\bounding_cylinder.h" />
     <ClInclude Include="Resource\bounding_sphere.h" />
     <ClInclude Include="Resource\bounding_volume.h" />
     <ClInclude Include="Resource\input_keyboard.h" />
@@ -114,6 +117,7 @@
     <ClInclude Include="resource\renderer.h" />
     <ClInclude Include="Resource\render_box.h" />
     <ClInclude Include="Resource\render_collision.h" />
+    <ClInclude Include="Resource\render_cylinder.h" />
     <ClInclude Include="Resource\render_sphere.h" />
     <ClInclude Include="Resource\result.h" />
     <ClInclude Include="Resource\rubble.h" />
