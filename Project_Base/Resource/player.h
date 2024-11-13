@@ -17,7 +17,7 @@
 //****************************************************
 // 前方宣言
 //****************************************************
-class CBounding_Sphere;
+class CBounding_Cylinder;
 
 //****************************************************
 // プレイヤークラス
@@ -48,6 +48,7 @@ public:
 
 	// <getter>
 	float GetRadius() const override;	// 半径を取得
+	float GetHeight() const override;	// 高さを取得
 	CCharacter_State* GetNowState();	// 現在のステートを取得
 
 	// <static function>
@@ -60,7 +61,7 @@ private:
 	void AdjustHeight();	// 高さを補正
 
 	// <data>
-	CBounding_Sphere*			m_pBndSphere;		// バウンディングスフィア
+	CBounding_Cylinder*			m_pBndCylinder;		// バウンディングシリンダー
 	CCharacter_State_Manager*	m_pStateManager;	// ステートマネージャー
 };
 

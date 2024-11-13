@@ -20,19 +20,20 @@ public:
 	//****************************************************
 	enum class TYPE
 	{
-		TEST = 0,			// テスト
-		TEST2,				// テスト2
-		CYLINDER,			// cylinder
-		SAMUS,				// サムス
-		ENEMY,				// 敵
-		RUBBLE_00,			// がれき00
-		RUBBLE_01,			// がれき01
-		RUBBLE_02,			// がれき02
-		CYLINDERCOLLIDER,	// cylinder collider
-		SPHERE,				// sphere
-		RENDER_SPHERE,		// render sphere
-		RENDER_SPHERE_HIT,	// render sphere hit
-		RENDER_CYLINDER,	// render cylinder
+		TEST = 0,				// テスト
+		TEST2,					// テスト2
+		CYLINDER,				// cylinder
+		SAMUS,					// サムス
+		ENEMY,					// 敵
+		RUBBLE_00,				// がれき00
+		RUBBLE_01,				// がれき01
+		RUBBLE_02,				// がれき02
+		CYLINDERCOLLIDER,		// cylinder collider
+		SPHERE,					// sphere
+		RENDER_SPHERE,			// render sphere
+		RENDER_SPHERE_HIT,		// render sphere hit
+		RENDER_CYLINDER,		// render cylinder
+		RENDER_CYLINDER_HIT,	// render cylinder hit
 		MAX,
 	};
 

@@ -11,3 +11,4 @@ sphere.x
 render_sphere.x
 render_sphere_hit.x
 render_cylinder.x
+render_cylinder_hit.x

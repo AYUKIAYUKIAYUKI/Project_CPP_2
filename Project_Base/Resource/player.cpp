@@ -9,7 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "player.h"
-#include "bounding_sphere.h"
+#include "bounding_cylinder.h"
 #include "player_state_default.h"
 
 #include "manager.h"
@@ -36,7 +36,7 @@ using namespace abbr;
 //============================================================================
 CPlayer::CPlayer() :
 	CCharacter{},
-	m_pBndSphere{ DBG_NEW CBounding_Sphere(this) },
+	m_pBndCylinder{ DBG_NEW CBounding_Cylinder(this) },
 	m_pStateManager{ nullptr }
 {
 
@@ -47,14 +47,14 @@ CPlayer::CPlayer() :
 //============================================================================
 CPlayer::~CPlayer()
 {
-	// バウンディングスフィアの破棄
-	if (m_pBndSphere != nullptr)
+	// バウンディングシリンダーの破棄
+	if (m_pBndCylinder != nullptr)
 	{
 		// メモリを解放
-		delete m_pBndSphere;
+		delete m_pBndCylinder;
 
 		// ポインタを初期化
-		m_pBndSphere = nullptr;
+		m_pBndCylinder = nullptr;
 	}
 }
 
@@ -213,7 +213,15 @@ void CPlayer::To_Damage(int nDamage)
 //============================================================================
 float CPlayer::GetRadius() const
 {
-	return m_pBndSphere->GetRadius();
+	return m_pBndCylinder->GetRadius();
+}
+
+//============================================================================
+// 高さを取得
+//============================================================================
+float CPlayer::GetHeight() const
+{
+	return m_pBndCylinder->GetHeight();
 }
 
 //============================================================================
@@ -242,9 +250,13 @@ CPlayer* CPlayer::Create()
 	// モデルを設定
 	pNewInstance->BindModel(CModel_X_Manager::TYPE::SAMUS);
 
-	// サイズを設定
-	pNewInstance->m_pBndSphere->SetRadius(10.0f);
+	// 半径を設定
+	float fRad = 0.0f;
+	pNewInstance->GetModel()->Size.x > pNewInstance->GetModel()->Size.z ? fRad = pNewInstance->GetModel()->Size.x : fRad = pNewInstance->GetModel()->Size.z;
+	pNewInstance->m_pBndCylinder->SetRadius(fRad);
 
+	// 高さを設定
+	pNewInstance->m_pBndCylinder->SetHeight(pNewInstance->GetModel()->Size.y);
 	return pNewInstance;
 }
 
@@ -276,27 +288,28 @@ void CPlayer::HitCheck()
 			continue;
 		}
 
-		// バウンディングスフィアのパラメータをコピー
-		const Vec3& SpherePos = GetPos();
-		const float& SphereRadius = GetRadius();
+		// バウンディングシリンダーのパラメータをコピー
+		const Vec3& CylinderPos = GetPos();
+		const float& CylinderRadius = GetRadius();
+		const float& CylinderHeight = GetHeight();
 
 		// バウンディングボックスのパラメータをコピー
 		const Vec3& BoxSize = pBlock->GetSize();
 		const Vec3& BoxPos = pBlock->GetPos();
 		const float& fBoxDirection = pBlock->GetRot().y;
 
-		// ボックスの中心点からスフィアの座標への相対座標を計算
-		const Vec3& RelativePos = SpherePos - BoxPos;
+		// ボックスの中心点からシリンダーの座標への相対座標を計算
+		const Vec3& RelativePos = CylinderPos - BoxPos;
 
 		// 相対座標に、ボックスの回転角度分を打ち消す回転行列を適用
 		const Vec3& ResultPos = CUtility::RotatePointAroundY(-fBoxDirection, RelativePos);
 
-		// ボックスの回転量を打ち消したと仮定し、スフィアの相対座標を用いて衝突判定
-		// (ボックスの座標に関わらず、仮定したAABBとスフィアの相対距離で判定するだけなので、渡すボックス座標は原点にする)
-		if (CUtility::SphereAndAABB(ResultPos, SphereRadius, VEC3_INIT, BoxSize))
+		// ボックスの回転量を打ち消したと仮定し、シリンダーの相対座標を用いて衝突判定
+		// (ボックスの座標に関わらず、仮定したAABBとシリンダーの相対距離で判定するだけなので、渡すボックス座標は原点にする)
+		if (CUtility::CylinderAndAABB(ResultPos, CylinderRadius, CylinderHeight, VEC3_INIT, BoxSize))
 		{
 			// 判定表示を赤色に
-			m_pBndSphere->ChangeModel(CModel_X_Manager::TYPE::RENDER_SPHERE_HIT);
+			m_pBndCylinder->ChangeModel(CModel_X_Manager::TYPE::RENDER_CYLINDER_HIT);
 				
 			// 衝突があったことを検出
 			bDetect = 1;
@@ -311,7 +324,7 @@ void CPlayer::HitCheck()
 	if (!bDetect)
 	{
 		// 判定表示を通常色に戻す
-		m_pBndSphere->ChangeModel(CModel_X_Manager::TYPE::RENDER_SPHERE);
+		m_pBndCylinder->ChangeModel(CModel_X_Manager::TYPE::RENDER_CYLINDER);
 	}
 }
 

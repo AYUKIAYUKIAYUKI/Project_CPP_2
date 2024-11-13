@@ -60,8 +60,9 @@ public:
 	void SetAlpha(float fAlpha);	// アルファ値設定
 
 	// <virtual getter>
-	virtual float GetRadius() const;		// 半径を取得
 	virtual D3DXVECTOR3 GetSize() const;	// サイズを取得
+	virtual float GetRadius() const;		// 半径を取得
+	virtual float GetHeight() const;		// 高さを取得
 
 	// <static function>
 	static CObject_X* Create();												// 生成

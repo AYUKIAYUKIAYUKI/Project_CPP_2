@@ -15,7 +15,7 @@
 #include "model_X_manager.h"
 
 //****************************************************
-// 判定表示クラス
+// スフィア判定表示クラス
 //****************************************************
 class CRender_Sphere : public CRender_Collision
 {
@@ -23,7 +23,7 @@ public:
 
 	// <special function>
 	CRender_Sphere(LAYER Priority = LAYER::FRONT);	// 描画優先度指定コンストラクタ
-	~CRender_Sphere() override;					// デストラクタ
+	~CRender_Sphere() override;						// デストラクタ
 
 	// <function>
 	HRESULT Init() override;	// 初期設定

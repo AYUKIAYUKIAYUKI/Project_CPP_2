@@ -108,7 +108,7 @@ CRender_Sphere* CRender_Sphere::Create(CObject_X* pRef)
 	// 生成失敗
 	if (pRender_Collision == nullptr)
 	{
-		assert(false && "ボックス表示の生成に失敗しました");
+		assert(false && "スフィア表示の生成に失敗しました");
 	}
 
 	// 判定表示の初期設定
