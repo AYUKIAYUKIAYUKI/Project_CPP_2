@@ -1,112 +1,300 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Resource\bounding_box.cpp" />
-    <ClCompile Include="Resource\bounding_sphere.cpp" />
-    <ClCompile Include="Resource\bounding_volume.cpp" />
-    <ClCompile Include="Resource\input_keyboard.cpp" />
-    <ClCompile Include="Resource\input_pad.cpp" />
     <ClCompile Include="Resource\mask_rectangle.cpp" />
     <ClCompile Include="Resource\mesh_dome.cpp" />
-    <ClCompile Include="Resource\block.cpp" />
     <ClCompile Include="resource\camera.cpp" />
-    <ClCompile Include="Resource\character.cpp" />
-    <ClCompile Include="Resource\character_state.cpp" />
-    <ClCompile Include="Resource\character_state_manager.cpp" />
     <ClCompile Include="Resource\cubic_bezier.cpp" />
-    <ClCompile Include="Resource\enemy.cpp" />
-    <ClCompile Include="Resource\fade.cpp" />
     <ClCompile Include="Resource\fan.cpp" />
     <ClCompile Include="Resource\field_manager.cpp" />
-    <ClCompile Include="Resource\game.cpp" />
-    <ClCompile Include="resource\input.cpp" />
     <ClCompile Include="resource\light.cpp" />
     <ClCompile Include="resource\main.cpp" />
-    <ClCompile Include="resource\manager.cpp" />
-    <ClCompile Include="Resource\model_X_manager.cpp" />
-    <ClCompile Include="resource\object.cpp" />
-    <ClCompile Include="resource\object_2D.cpp" />
-    <ClCompile Include="resource\object_3D.cpp" />
-    <ClCompile Include="Resource\object_billboard.cpp" />
-    <ClCompile Include="Resource\object_HUD.cpp" />
-    <ClCompile Include="resource\object_X.cpp" />
     <ClCompile Include="resource\pch.cpp" />
-    <ClCompile Include="Resource\player.cpp" />
-    <ClCompile Include="Resource\player_state.cpp" />
-    <ClCompile Include="Resource\player_state_damage.cpp" />
-    <ClCompile Include="Resource\player_state_default.cpp" />
-    <ClCompile Include="Resource\player_state_dash.cpp" />
-    <ClCompile Include="Resource\player_state_jump.cpp" />
     <ClCompile Include="Resource\quadratic_bezier.cpp" />
-    <ClCompile Include="resource\renderer.cpp" />
-    <ClCompile Include="Resource\render_box.cpp" />
-    <ClCompile Include="Resource\render_collision.cpp" />
-    <ClCompile Include="Resource\render_sphere.cpp" />
-    <ClCompile Include="Resource\result.cpp" />
-    <ClCompile Include="Resource\rubble.cpp" />
-    <ClCompile Include="Resource\scene.cpp" />
-    <ClCompile Include="resource\sound.cpp" />
     <ClCompile Include="Resource\spline_test.cpp" />
-    <ClCompile Include="Resource\state.cpp" />
-    <ClCompile Include="resource\texture_manager.cpp" />
-    <ClCompile Include="Resource\title.cpp" />
     <ClCompile Include="Resource\utility.cpp" />
+    <ClCompile Include="Resource\bounding_box.cpp">
+      <Filter>&lt;Collider&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\bounding_cylinder.cpp">
+      <Filter>&lt;Collider&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\bounding_sphere.cpp">
+      <Filter>&lt;Collider&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\bounding_volume.cpp">
+      <Filter>&lt;Collider&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\render_box.cpp">
+      <Filter>&lt;Collider&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\render_collision.cpp">
+      <Filter>&lt;Collider&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\render_cylinder.cpp">
+      <Filter>&lt;Collider&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\render_sphere.cpp">
+      <Filter>&lt;Collider&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\title.cpp">
+      <Filter>&lt;Scene&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\scene.cpp">
+      <Filter>&lt;Scene&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\result.cpp">
+      <Filter>&lt;Scene&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\game.cpp">
+      <Filter>&lt;Scene&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="resource\object.cpp">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="resource\object_2D.cpp">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="resource\object_3D.cpp">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\object_billboard.cpp">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\object_HUD.cpp">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="resource\object_X.cpp">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="resource\input.cpp">
+      <Filter>&lt;System&gt;\&lt;Input&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\input_keyboard.cpp">
+      <Filter>&lt;System&gt;\&lt;Input&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\input_pad.cpp">
+      <Filter>&lt;System&gt;\&lt;Input&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="resource\texture_manager.cpp">
+      <Filter>&lt;System&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="resource\renderer.cpp">
+      <Filter>&lt;System&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="resource\sound.cpp">
+      <Filter>&lt;System&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\model_X_manager.cpp">
+      <Filter>&lt;System&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="resource\manager.cpp">
+      <Filter>&lt;System&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\fade.cpp">
+      <Filter>&lt;System&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\character.cpp">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\character_state.cpp">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\character_state_manager.cpp">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\enemy.cpp">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Enemy&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\player.cpp">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\player_state.cpp">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\player_state_damage.cpp">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\player_state_dash.cpp">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\player_state_default.cpp">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\player_state_jump.cpp">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\block.cpp">
+      <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\rubble.cpp">
+      <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\state.cpp">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Resource\bounding_box.h" />
-    <ClInclude Include="Resource\bounding_sphere.h" />
-    <ClInclude Include="Resource\bounding_volume.h" />
-    <ClInclude Include="Resource\input_keyboard.h" />
-    <ClInclude Include="Resource\input_pad.h" />
     <ClInclude Include="Resource\mask_rectangle.h" />
     <ClInclude Include="Resource\mesh_dome.h" />
-    <ClInclude Include="Resource\block.h" />
     <ClInclude Include="resource\camera.h" />
-    <ClInclude Include="Resource\character.h" />
-    <ClInclude Include="Resource\character_state.h" />
-    <ClInclude Include="Resource\character_state_manager.h" />
     <ClInclude Include="Resource\cubic_bezier.h" />
-    <ClInclude Include="Resource\enemy.h" />
-    <ClInclude Include="Resource\fade.h" />
     <ClInclude Include="Resource\fan.h" />
     <ClInclude Include="Resource\field_manager.h" />
-    <ClInclude Include="Resource\game.h" />
-    <ClInclude Include="resource\input.h" />
     <ClInclude Include="resource\light.h" />
     <ClInclude Include="resource\main.h" />
-    <ClInclude Include="resource\manager.h" />
-    <ClInclude Include="Resource\model_X_manager.h" />
-    <ClInclude Include="resource\object.h" />
-    <ClInclude Include="resource\object_2D.h" />
-    <ClInclude Include="resource\object_3D.h" />
-    <ClInclude Include="Resource\object_billboard.h" />
-    <ClInclude Include="Resource\object_HUD.h" />
-    <ClInclude Include="resource\object_X.h" />
     <ClInclude Include="resource\pch.h" />
-    <ClInclude Include="Resource\player.h" />
-    <ClInclude Include="Resource\player_state.h" />
-    <ClInclude Include="Resource\player_state_damage.h" />
-    <ClInclude Include="Resource\player_state_default.h" />
-    <ClInclude Include="Resource\player_state_dash.h" />
-    <ClInclude Include="Resource\player_state_jump.h" />
     <ClInclude Include="Resource\quadratic_bezier.h" />
-    <ClInclude Include="resource\renderer.h" />
-    <ClInclude Include="Resource\render_box.h" />
-    <ClInclude Include="Resource\render_collision.h" />
-    <ClInclude Include="Resource\render_sphere.h" />
-    <ClInclude Include="Resource\result.h" />
-    <ClInclude Include="Resource\rubble.h" />
-    <ClInclude Include="Resource\scene.h" />
-    <ClInclude Include="resource\sound.h" />
     <ClInclude Include="Resource\spline_test.h" />
-    <ClInclude Include="Resource\state.h" />
-    <ClInclude Include="resource\texture_manager.h" />
-    <ClInclude Include="Resource\title.h" />
     <ClInclude Include="Resource\utility.h" />
+    <ClInclude Include="Resource\bounding_box.h">
+      <Filter>&lt;Collider&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\bounding_cylinder.h">
+      <Filter>&lt;Collider&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\bounding_sphere.h">
+      <Filter>&lt;Collider&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\bounding_volume.h">
+      <Filter>&lt;Collider&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\render_box.h">
+      <Filter>&lt;Collider&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\render_collision.h">
+      <Filter>&lt;Collider&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\render_cylinder.h">
+      <Filter>&lt;Collider&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\render_sphere.h">
+      <Filter>&lt;Collider&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\title.h">
+      <Filter>&lt;Scene&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\scene.h">
+      <Filter>&lt;Scene&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\result.h">
+      <Filter>&lt;Scene&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\game.h">
+      <Filter>&lt;Scene&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\object.h">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\object_2D.h">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\object_3D.h">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\object_billboard.h">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\object_HUD.h">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\object_X.h">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\input.h">
+      <Filter>&lt;System&gt;\&lt;Input&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\input_keyboard.h">
+      <Filter>&lt;System&gt;\&lt;Input&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\input_pad.h">
+      <Filter>&lt;System&gt;\&lt;Input&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\texture_manager.h">
+      <Filter>&lt;System&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\renderer.h">
+      <Filter>&lt;System&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\sound.h">
+      <Filter>&lt;System&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\model_X_manager.h">
+      <Filter>&lt;System&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\manager.h">
+      <Filter>&lt;System&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\fade.h">
+      <Filter>&lt;System&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\character.h">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\character_state.h">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\character_state_manager.h">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\enemy.h">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Enemy&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\player.h">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\player_state.h">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\player_state_damage.h">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\player_state_dash.h">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\player_state_default.h">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\player_state_jump.h">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\block.h">
+      <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\rubble.h">
+      <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\state.h">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Scene&gt;">
       <UniqueIdentifier>{bbc8e6b6-eda4-4574-8892-2f94771dc113}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;Object&gt;">
+      <UniqueIdentifier>{97e60c37-3cab-4a6f-9f00-80e1d7f38c4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;Collider&gt;">
+      <UniqueIdentifier>{cc2a84be-c2e8-4e66-9acd-6a0f5ebd1d2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;System&gt;">
+      <UniqueIdentifier>{e8e0c940-d826-4680-a5f3-8bc400344620}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;System&gt;\&lt;Input&gt;">
+      <UniqueIdentifier>{671f83ae-673a-4a83-83fd-d45193394866}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;Object&gt;\&lt;Character&gt;">
+      <UniqueIdentifier>{936f6653-9f8b-4497-87fd-a78f47b730b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;Object&gt;\&lt;Character&gt;\&lt;Enemy&gt;">
+      <UniqueIdentifier>{4a13d1eb-45a8-4384-99a5-74eff050a7b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;">
+      <UniqueIdentifier>{439af8f7-27a7-4e67-b858-d6e348818fce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;Object&gt;\&lt;Stage&gt;">
+      <UniqueIdentifier>{181bc8d0-f873-4338-b08a-ac0133216b0f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
