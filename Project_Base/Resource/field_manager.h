@@ -34,7 +34,7 @@ public:
 	static constexpr float GENERATE_RANGE_RADIUS = 350.0f;
 
 	/// <summary> 最大ブロック数 </summary>
-	static constexpr int MAX_BLOCK = 1;
+	static constexpr int MAX_BLOCK = 25;
 
 	/// <summary> 重力 </summary>
 	static constexpr float FIELD_GRAVITY = -0.5f;

@@ -56,8 +56,8 @@ public:
 private:
 
 	// <function>
-	void AdjustHeight();	// 高さを補正
 	void HitCheck();		// 当たり判定
+	void AdjustHeight();	// 高さを補正
 
 	// <data>
 	CBounding_Sphere*			m_pBndSphere;		// バウンディングスフィア

@@ -255,6 +255,67 @@ CPlayer* CPlayer::Create()
 //============================================================================
 
 //============================================================================
+// 当たり判定
+//============================================================================
+void CPlayer::HitCheck()
+{
+	// 衝突の有無を検出
+	bool bDetect = false;
+
+	// ミドルオブジェクトを取得
+	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
+
+	while (pObj != nullptr)
+	{
+		// ブロッククラスにダウンキャスト
+		CBlock* pBlock = CObject::DownCast<CBlock>(pObj);
+
+		// キャスト失敗で
+		if (!pBlock)
+		{
+			continue;
+		}
+
+		// バウンディングスフィアのパラメータをコピー
+		const Vec3& SpherePos = GetPos();
+		const float& SphereRadius = GetRadius();
+
+		// バウンディングボックスのパラメータをコピー
+		const Vec3& BoxSize = pBlock->GetSize();
+		const Vec3& BoxPos = pBlock->GetPos();
+		const float& fBoxDirection = pBlock->GetRot().y;
+
+		// ボックスの中心点からスフィアの座標への相対座標を計算
+		const Vec3& RelativePos = SpherePos - BoxPos;
+
+		// 相対座標に、ボックスの回転角度分を打ち消す回転行列を適用
+		const Vec3& ResultPos = CUtility::RotatePointAroundY(-fBoxDirection, RelativePos);
+
+		// ボックスの回転量を打ち消したと仮定し、スフィアの相対座標を用いて衝突判定
+		// (ボックスの座標に関わらず、仮定したAABBとスフィアの相対距離で判定するだけなので、渡すボックス座標は原点にする)
+		if (CUtility::SphereAndAABB(ResultPos, SphereRadius, VEC3_INIT, BoxSize))
+		{
+			// 判定表示を赤色に
+			m_pBndSphere->ChangeModel(CModel_X_Manager::TYPE::RENDER_SPHERE_HIT);
+				
+			// 衝突があったことを検出
+			bDetect = 1;
+				
+			break;
+		}
+
+		pObj = pObj->GetNext();
+	}
+
+	// 何にも衝突していなければ
+	if (!bDetect)
+	{
+		// 判定表示を通常色に戻す
+		m_pBndSphere->ChangeModel(CModel_X_Manager::TYPE::RENDER_SPHERE);
+	}
+}
+
+//============================================================================
 // 高さを補正
 //============================================================================
 void CPlayer::AdjustHeight()
@@ -273,59 +334,5 @@ void CPlayer::AdjustHeight()
 
 		// Y軸の加速度を無くす
 		SetAccelY(0.0f);
-	}
-}
-
-//============================================================================
-// 当たり判定
-//============================================================================
-void CPlayer::HitCheck()
-{
-	// 衝突検出
-	bool bDetected = false;
-
-	// ミドルオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
-
-	while (pObj != nullptr)
-	{
-		// ブロッククラスにダウンキャスト
-		CBlock* pBlock = CObject::DownCast<CBlock>(pObj);
-
-		// 成功していれば
-		if (pBlock)
-		{
-			// バウンディングボックスのパラメータを取得
-			const Vec3& BoxSize = pBlock->GetSize();
-			const Vec3& BoxPos = pBlock->GetPos();
-			const float& fBoxDirection = pBlock->GetRot().y;
-			
-			// ボックスの中心点からスフィアの座標への相対座標を計算
-			const Vec3& RelativePos = GetPos() - BoxPos;
-
-			// 相対座標に、ブロックの回転角度分の逆回転行列をかける
-			const Vec3& SpherePos = CUtility::RotatePointAroundY(-fBoxDirection, RelativePos);
-
-			// 回転を考慮した後で、スフィアとボックスの当たり判定を行う \
-			(ボックスを原点においたときの相対座標で距離を判定しているため、ターゲット座標の引数は原点)
-			if (CUtility::SphereAndAABB(SpherePos, m_pBndSphere->GetRadius(), VEC3_INIT, BoxSize))
-			{
-				/* 一時的に軌跡を表示していく */
-				auto Test = CObject_X::Create(CObject::LAYER::FRONT, CModel_X_Manager::TYPE::SPHERE);
-				Test->SetPos(SpherePos);
-
-				m_pBndSphere->ChangeModel(CModel_X_Manager::TYPE::RENDER_SPHERE_HIT);
-				bDetected = 1;
-
-				break;
-			}
-		}
-
-		pObj = pObj->GetNext();
-	}
-
-	if (!bDetected)
-	{
-		m_pBndSphere->ChangeModel(CModel_X_Manager::TYPE::RENDER_SPHERE);
 	}
 }
