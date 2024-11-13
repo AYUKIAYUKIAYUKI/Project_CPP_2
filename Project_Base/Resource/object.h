@@ -79,6 +79,9 @@ public:
 	static CObject* FindSpecificObject(TYPE Type);	// 特定タイプのオブジェクト探す
 	static int		CountSpecificObject(TYPE Type);	// 特定タイプのオブジェクト数を取得
 
+	// <>
+	template <typename T> static T* DownCast(CObject* pBase);	// オブジェクト派生専用ダウンキャスト
+
 private:
 
 	// <data>
@@ -93,5 +96,28 @@ private:
 	static CObject* m_pTop[static_cast<int>(LAYER::MAX)];	// 先頭オブジェクトのポインタ
 	static CObject* m_pCur[static_cast<int>(LAYER::MAX)];	// 終端オブジェクトのポインタ
 };
+
+//============================================================================
+// オブジェクト派生専用ダウンキャスト
+//============================================================================
+template <typename T> T* CObject::DownCast(CObject* pBase)
+{
+	// 渡されたオブジェクトをチェック
+	if (typeid(*pBase) != typeid(T))
+	{
+		return nullptr;
+	}
+
+	// 指定されたクラスにダウンキャスト
+	T* pNew = dynamic_cast<T*>(pBase);
+
+	// ダウンキャスト失敗
+	if (!pNew)
+	{
+		return nullptr;
+	}
+	
+	return pNew;
+}
 
 #endif // _OBJECT_H_

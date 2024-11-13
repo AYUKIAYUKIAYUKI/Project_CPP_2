@@ -12,14 +12,12 @@
 #include "bounding_sphere.h"
 #include "player_state_default.h"
 
-// インプット取得
 #include "manager.h"
 #include "mask_rectangle.h"
 
-// フィールドマネージャー
+#include "block.h"
 #include "field_manager.h"
 
-// デバッグ表示用
 #include "renderer.h"
 
 //****************************************************
@@ -115,6 +113,9 @@ void CPlayer::Update()
 {		
 	// ステートマネージャーの更新
 	m_pStateManager->Update();
+
+	// 当たり判定
+	HitCheck();
 
 	// 高さの補正
 	AdjustHeight();
@@ -272,5 +273,46 @@ void CPlayer::AdjustHeight()
 
 		// Y軸の加速度を無くす
 		SetAccelY(0.0f);
+	}
+}
+
+//============================================================================
+// 当たり判定
+//============================================================================
+void CPlayer::HitCheck()
+{
+	// ミドルオブジェクトを取得
+	//CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
+	CObject* pObj = CObject::GetTopObject();
+
+	while (pObj != nullptr)
+	{
+		// ブロッククラスにダウンキャスト
+		CBlock* pBlock = CObject::DownCast<CBlock>(pObj);
+
+		// 成功していれば
+		if (pBlock)
+		{
+			// バウンディングボックスのパラメータを取得
+			const Vec3& BoxSize = pBlock->GetSize();
+			const Vec3& BoxPos = pBlock->GetPos();
+			const float& fBoxDirection = pBlock->GetRot().y;
+
+			// プレイヤーのバウンディングスフィアの中心点に、ブロックの回転角度分の逆回転行列をかける
+			const Vec3& SpherePos = CUtility::RotatePointAroundY(fBoxDirection, m_pBndSphere->GetCenterPos());
+
+			// 中心点とAABBで衝突判定を行う
+			if (CUtility::SphereAndAABB(SpherePos, m_pBndSphere->GetRadius(), BoxPos, BoxSize))
+			{
+				const D3DXCOLOR& Col = { 1.0f, 0.0f, 0.0f, 0.0f };
+				m_pBndSphere->SetColRenderSphere(Col);
+			}
+			else
+			{
+
+			}
+		}
+
+		pObj = pObj->GetNext();
 	}
 }

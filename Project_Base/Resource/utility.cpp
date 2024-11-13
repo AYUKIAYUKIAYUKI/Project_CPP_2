@@ -35,9 +35,27 @@ D3DXVECTOR3 CUtility::SetCubeVtxFromQuadrant(const WORD& wIdx)
 }
 
 //============================================================================
+// “_‚ðYŽ²‚Å‰ñ“]‚³‚¹‚é
+//============================================================================
+D3DXVECTOR3 CUtility::RotatePointAroundY(const float& fDirection, const D3DXVECTOR3& Pos)
+{
+	// YŽ²‚Ì‰ñ“]—Ê‚©‚çsin‚Æcos‚Ì’l‚ðŒvŽZ
+	const float& fSinY = sinf(fDirection), fCosY = cosf(fDirection);
+
+	// ‰ñ“]s—ñ‚ð—p‚¢‚ÄA’¸“_À•W‚ðXZ•½–Ê‚Å‰ñ“]‚³‚¹‚é
+	const D3DXVECTOR3& ResultPos = {
+		Pos.x * fCosY + Pos.z * fSinY,
+		Pos.y,
+		-Pos.x * fSinY + Pos.z * fCosY
+	};
+
+	return ResultPos;
+}
+
+//============================================================================
 // ’¼•û‘Ì‚ðYŽ²‚Å‰ñ“]‚³‚¹‚é
 //============================================================================
-D3DXVECTOR3 CUtility::RotateRectAroundY(const WORD& wIdx, const float& fDirection, const D3DXVECTOR3& Size)
+D3DXVECTOR3 CUtility::RotateBoxAroundY(const WORD& wIdx, const float& fDirection, const D3DXVECTOR3& Size)
 {
 	// ÛŒÀ‚É‰ž‚¶‚ÄA’¸“_‚ÌÀ•W‚ðì¬
 	const D3DXVECTOR3& VtxPos = SetCubeVtxFromQuadrant(wIdx);
@@ -58,7 +76,7 @@ D3DXVECTOR3 CUtility::RotateRectAroundY(const WORD& wIdx, const float& fDirectio
 //============================================================================
 // ’¼•û‘Ì‚ÌYŽ²‚Ì‰ñ“]‚ð‘Å‚¿Á‚·
 //============================================================================
-D3DXVECTOR3 CUtility::InverseRotateRectAroundY(const float& fDirection, const D3DXVECTOR3& VtxPos)
+D3DXVECTOR3 CUtility::InverseRotateBoxAroundY(const float& fDirection, const D3DXVECTOR3& VtxPos)
 {
 	// YŽ²‚Ì‹t‚Ì‰ñ“]—Ê‚©‚çsin‚Æcos‚Ì’l‚ðŒvŽZ
 	const float& fSinY = sinf(-fDirection), fCosY = cosf(-fDirection);
@@ -170,7 +188,7 @@ void CUtility::AdjustDirection(float& fAngle1, float& fAngle2)
 }
 
 //============================================================================
-// ‹…Œ`‚Ç‚¤‚µ‚ÌÕ“Ë”»’è
+// ‹…‚Ç‚¤‚µ‚ÌÕ“Ë”»’è
 //============================================================================
 bool CUtility::OnlySphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget)
 {
@@ -182,6 +200,27 @@ bool CUtility::OnlySphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, 
 	{
 		return 1;
 	}
+
+	return 0;
+}
+
+//============================================================================
+// ‹…‚ÆAABB‚ÌÕ“Ë”»’è
+//============================================================================
+bool CUtility::SphereAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTarget)
+{
+	// ‘S‚Ä‚ÌŽ²•ûŒü‚©‚ç‚¨ŒÝ‚¢‚É‚ß‚èž‚ñ‚Å‚¢‚é‚Æ‚«Õ“Ë
+	if (PosSelf.x + fRadiusSelf > PosTarget.x - SizeTarget.x &&
+		PosSelf.x - fRadiusSelf < PosTarget.x + SizeTarget.x &&
+		PosSelf.y + fRadiusSelf > PosTarget.y - SizeTarget.y &&
+		PosSelf.y - fRadiusSelf < PosTarget.y + SizeTarget.y &&
+		PosSelf.z + fRadiusSelf > PosTarget.z - SizeTarget.z &&
+		PosSelf.z - fRadiusSelf < PosTarget.z + SizeTarget.z)
+	{
+		return 1;
+	}
+
+	return 0;
 
 	return 0;
 }

@@ -30,6 +30,9 @@ public:
 	void	Update() override;	// 更新処理
 	void	Draw() override;	// 描画処理
 
+	// <setter>
+	void SetColRenderSphere(D3DXCOLOR Col);	// スフィア表示の色を設定
+
 	// <static function>
 	static CRender_Sphere* Create(CObject_X* pRef);	// 生成
 

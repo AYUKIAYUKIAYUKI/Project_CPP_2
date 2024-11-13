@@ -26,9 +26,13 @@ public:
 	CBounding_Sphere(CObject_X* pObj);	// スフィア表示コンストラクタ
 	~CBounding_Sphere() override;		// デストラクタ
 
+	// <setter>
+	void SetColRenderSphere(D3DXCOLOR Col);	// スフィア表示の色を設定
+
 	// <getter/setter>
 	const float& GetRadius() const;	// 半径を取得
 	void SetRadius(float fRad);		// 半径を設定
+
 
 private:
 

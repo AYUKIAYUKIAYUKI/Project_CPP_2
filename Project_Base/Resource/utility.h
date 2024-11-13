@@ -18,11 +18,14 @@ public:
 	// 象限に応じて、単位立方体の頂点の座標を作成
 	static D3DXVECTOR3 SetCubeVtxFromQuadrant(const WORD& wIdx);
 
-	// 直方体をY軸で回転させる
-	static D3DXVECTOR3 RotateRectAroundY(const WORD& wIdx, const float& fDirection, const D3DXVECTOR3& Size);
+	// 点をY軸で回転させる
+	static D3DXVECTOR3 RotatePointAroundY(const float& fDirection, const D3DXVECTOR3& Pos);
 
-	// 直方体のY軸の回転を打ち消す
-	static D3DXVECTOR3 InverseRotateRectAroundY(const float& fDirection, const D3DXVECTOR3& VtxPos);
+	// 箱をY軸で回転させる
+	static D3DXVECTOR3 RotateBoxAroundY(const WORD& wIdx, const float& fDirection, const D3DXVECTOR3& Size);
+
+	// 箱のY軸の回転を打ち消す
+	static D3DXVECTOR3 InverseRotateBoxAroundY(const float& fDirection, const D3DXVECTOR3& VtxPos);
 
 	// 角度の差の補正(ラジアン)
 	static void AdjustAngle(float& fAngle, const float& fDest);
@@ -38,6 +41,9 @@ public:
 
 	// 球どうしの衝突判定
 	static bool OnlySphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget);
+
+	// 球とAABBの当たり判定
+	static bool SphereAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTaret);
 
 	// 円柱と点の衝突判定
 	static bool CylinderAndPoint(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget);
@@ -85,7 +91,7 @@ template <typename T> T CUtility::GetRandomValue()
 //============================================================================
 template <typename T1, typename T2> T1* CUtility::DownCast(T1* pDest, T2* pBase)
 {
-	pDest;
+	pDest;	/* 警告回避 */
 
 	// 引数のオブジェクトを指定されたクラスにダウンキャスト
 	T1* pObj{ dynamic_cast<T1*>(pBase) };

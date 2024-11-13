@@ -292,7 +292,7 @@ void CRender_Box::SetVtx()
 	// 回転行列を用いて頂点座標をセット
 	for (WORD i = 0; i < NUM_VTX; ++i)
 	{
-		pVtx[i].pos = CUtility::RotateRectAroundY(i, Rot.y, Size);
+		pVtx[i].pos = CUtility::RotateBoxAroundY(i, Rot.y, Size);
 	}
 
 	// 頂点バッファをアンロック

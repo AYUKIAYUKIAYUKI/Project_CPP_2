@@ -56,6 +56,10 @@ public:
 	void SetScale(float fScale);	// 縮尺設定
 
 	// <getter/setter>
+	const D3DXCOLOR& GetCol() const;	// 色取得
+	void Setcol(D3DXCOLOR Col);			// 色設定
+
+	// <getter/setter>
 	const float& GetAlpha() const;	// アルファ値取得
 	void SetAlpha(float fAlpha);	// アルファ値設定
 
