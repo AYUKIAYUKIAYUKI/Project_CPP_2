@@ -13,6 +13,7 @@
 //****************************************************
 #include "bounding_volume.h"
 #include "render_sphere.h"
+#include "model_X_manager.h"
 
 //****************************************************
 // バウンディングスフィアクラス
@@ -27,12 +28,11 @@ public:
 	~CBounding_Sphere() override;		// デストラクタ
 
 	// <setter>
-	void SetColRenderSphere(D3DXCOLOR Col);	// スフィア表示の色を設定
+	void ChangeModel(CModel_X_Manager::TYPE Type);	// モデルを変更
 
 	// <getter/setter>
 	const float& GetRadius() const;	// 半径を取得
 	void SetRadius(float fRad);		// 半径を設定
-
 
 private:
 

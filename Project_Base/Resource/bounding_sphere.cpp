@@ -52,11 +52,11 @@ CBounding_Sphere::~CBounding_Sphere()
 }
 
 //============================================================================
-// スフィア表示の色を設定
+// モデルを変更
 //============================================================================
-void CBounding_Sphere::SetColRenderSphere(D3DXCOLOR Col)
+void CBounding_Sphere::ChangeModel(CModel_X_Manager::TYPE Type)
 {
-	m_pRenderSphere->SetColRenderSphere(Col);
+	m_pRenderSphere->ChangeModel(Type);
 }
 
 //============================================================================

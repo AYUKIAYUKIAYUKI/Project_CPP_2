@@ -249,7 +249,7 @@ void CField_Manager::Uninit()
 //============================================================================
 void CField_Manager::TestCircle()
 {
-	float fDirection = 0.0f;						// •ûŠp
+	float fDirection = D3DX_PI * 0.5f;				// •ûŠp
 	float fAdder = (D3DX_PI * 2.0f) / MAX_BLOCK;	// ‘‰Á—Ê
 
 	for (WORD i = 0; i < MAX_BLOCK; ++i)

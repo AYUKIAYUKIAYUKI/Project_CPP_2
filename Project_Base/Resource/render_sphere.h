@@ -12,6 +12,7 @@
 // インクルードファイル
 //****************************************************
 #include "render_collision.h"
+#include "model_X_manager.h"
 
 //****************************************************
 // 判定表示クラス
@@ -31,7 +32,7 @@ public:
 	void	Draw() override;	// 描画処理
 
 	// <setter>
-	void SetColRenderSphere(D3DXCOLOR Col);	// スフィア表示の色を設定
+	void ChangeModel(CModel_X_Manager::TYPE Type);	// モデルを変更
 
 	// <static function>
 	static CRender_Sphere* Create(CObject_X* pRef);	// 生成

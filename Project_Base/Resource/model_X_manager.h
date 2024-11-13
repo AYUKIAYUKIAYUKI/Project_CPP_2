@@ -30,6 +30,7 @@ public:
 		CYLINDERCOLLIDER,	// cylinder collider
 		SPHERE,				// sphere
 		RENDER_SPHERE,		// render sphere
+		RENDER_SPHERE_HIT,	// render sphere hit
 		RENDER_CYLINDER,	// render cylinder
 		MAX,
 	};

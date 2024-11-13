@@ -90,11 +90,11 @@ void CRender_Sphere::Draw()
 }
 
 //============================================================================
-// スフィア表示の色を設定
+// モデルを変更
 //============================================================================
-void CRender_Sphere::SetColRenderSphere(D3DXCOLOR Col)
+void CRender_Sphere::ChangeModel(CModel_X_Manager::TYPE Type)
 {
-	m_pSphere->SetCol(Col);
+	m_pSphere->BindModel(Type);
 }
 
 //============================================================================

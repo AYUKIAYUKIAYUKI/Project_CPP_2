@@ -281,9 +281,11 @@ void CPlayer::AdjustHeight()
 //============================================================================
 void CPlayer::HitCheck()
 {
+	// 衝突検出
+	bool bDetected = false;
+
 	// ミドルオブジェクトを取得
-	//CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
-	CObject* pObj = CObject::GetTopObject();
+	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
 
 	while (pObj != nullptr)
 	{
@@ -298,21 +300,33 @@ void CPlayer::HitCheck()
 			const Vec3& BoxPos = pBlock->GetPos();
 			const float& fBoxDirection = pBlock->GetRot().y;
 
-			// プレイヤーのバウンディングスフィアの中心点に、ブロックの回転角度分の逆回転行列をかける
-			const Vec3& SpherePos = CUtility::RotatePointAroundY(fBoxDirection, m_pBndSphere->GetCenterPos());
-
-			// 中心点とAABBで衝突判定を行う
-			if (CUtility::SphereAndAABB(SpherePos, m_pBndSphere->GetRadius(), BoxPos, BoxSize))
+			// まず、中心点とAABBで衝突判定を行う
+			if (CUtility::SphereAndAABB(GetPos(), m_pBndSphere->GetRadius(), BoxPos, BoxSize))
 			{
-				const D3DXCOLOR& Col = { 1.0f, 0.0f, 0.0f, 0.0f };
-				m_pBndSphere->SetColRenderSphere(Col);
-			}
-			else
-			{
+				// プレイヤーのバウンディングスフィアの中心点に、ブロックの回転角度分の逆回転行列をかける (今回はプレイヤーの座標)
+				const Vec3& SpherePos = CUtility::RotatePointAroundY(-fBoxDirection, GetPos());
 
+				// 軌跡を表示していく
+				auto Test = CObject_X::Create(CObject::LAYER::FRONT, CModel_X_Manager::TYPE::SPHERE);
+				Test->SetPos(SpherePos);
+
+				// 回転した
+				if (CUtility::SphereAndAABB(SpherePos, m_pBndSphere->GetRadius(), BoxPos, BoxSize))
+				{
+
+				}
+
+				m_pBndSphere->ChangeModel(CModel_X_Manager::TYPE::RENDER_SPHERE_HIT);
+				bDetected = 1;
+				break;
 			}
 		}
 
 		pObj = pObj->GetNext();
+	}
+
+	if (!bDetected)
+	{
+		m_pBndSphere->ChangeModel(CModel_X_Manager::TYPE::RENDER_SPHERE);
 	}
 }
