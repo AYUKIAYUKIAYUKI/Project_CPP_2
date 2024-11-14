@@ -51,7 +51,7 @@ HRESULT CGame::Init()
 	CPlayer::Create();
 
 	/* エネミーを仮生成 */
-	//CEnemy::Create();
+	CEnemy::Create();
 
 	/* ステージ代わりの円筒 */
 	CObject_X* pTest = CObject_X::Create(CObject::LAYER::BACK);

@@ -47,9 +47,10 @@ public:
 	void	To_Damage(int nDamage);	// ステート - ダメージ状態へ
 
 	// <getter>
-	float GetRadius() const override;	// 半径を取得
-	float GetHeight() const override;	// 高さを取得
-	CCharacter_State* GetNowState();	// 現在のステートを取得
+	float GetRadius() const override;						// 半径を取得
+	float GetHeight() const override;						// 高さを取得
+	const CBounding_Cylinder* const GetBndCylinder() const;	// バウンディングシリンダーを取得
+	CCharacter_State* GetNowState();						// 現在のステートを取得
 
 	// <static function>
 	static CPlayer* Create();	// 生成

@@ -27,10 +27,11 @@ using namespace abbr;
 //============================================================================
 
 //============================================================================
-// デフォルトコンストラクタ
+// コンストラクタ
 //============================================================================
 CEnemy::CEnemy() :
-	CCharacter{}
+	CCharacter{},
+	m_pBndCylinder{ DBG_NEW CBounding_Cylinder(this) }
 {
 
 }
@@ -40,7 +41,15 @@ CEnemy::CEnemy() :
 //============================================================================
 CEnemy::~CEnemy()
 {
+	// バウンディングシリンダーの破棄
+	if (m_pBndCylinder != nullptr)
+	{
+		// メモリを解放
+		delete m_pBndCylinder;
 
+		// ポインタを初期化
+		m_pBndCylinder = nullptr;
+	}
 }
 
 //============================================================================
@@ -71,6 +80,9 @@ void CEnemy::Uninit()
 //============================================================================
 void CEnemy::Update()
 {
+	// 当たり判定の中心点を設定
+	m_pBndCylinder->SetCenterPos(GetPos());
+
 	// 方角の取得
 	float fNewDirection = GetDirection();
 	utility::AdjustDirection(fNewDirection);
@@ -109,6 +121,22 @@ void CEnemy::Draw()
 }
 
 //============================================================================
+// 半径を取得
+//============================================================================
+float CEnemy::GetRadius() const
+{
+	return m_pBndCylinder->GetRadius();
+}
+
+//============================================================================
+// 高さを取得
+//============================================================================
+float CEnemy::GetHeight() const
+{
+	return m_pBndCylinder->GetHeight();
+}
+
+//============================================================================
 // 生成
 //============================================================================
 CEnemy* CEnemy::Create()
@@ -124,6 +152,14 @@ CEnemy* CEnemy::Create()
 
 	// モデルを設定
 	pNewInstance->BindModel(CModel_X_Manager::TYPE::ENEMY);
+
+	// 半径を設定
+	float fRad = 0.0f;
+	pNewInstance->GetModel()->Size.x > pNewInstance->GetModel()->Size.z ? fRad = pNewInstance->GetModel()->Size.x : fRad = pNewInstance->GetModel()->Size.z;
+	pNewInstance->m_pBndCylinder->SetRadius(fRad);
+
+	// 高さを設定
+	pNewInstance->m_pBndCylinder->SetHeight(pNewInstance->GetModel()->Size.y);
 
 	return pNewInstance;
 }
@@ -148,17 +184,26 @@ void CEnemy::AttackOnPlayer()
 		// プレイヤーオブジェクトを保持
 		pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
 
-		// 既にダメージ状態の場合は処理を終了
-		if (typeid(*pPlayer->GetNowState()) == typeid(CPlayer_State_Damage))
-		{
-			return;
-		}
-
 		// プレイヤーの持つ円柱範囲内に侵入していたら
-		if (collision::CylinderAndPoint(pPlayer->GetPos(), 10.0f, 20.0f, GetPos()))
+		if (collision::HitCylinderToCylinder(m_pBndCylinder, pPlayer->GetBndCylinder()))
 		{
+			// 既にダメージ状態の場合は処理を終了
+			/* この条件式は判定表示の色を戻すためにここにありますが、本来は当たり判定前にこちらを判定します */
+			if (typeid(*pPlayer->GetNowState()) == typeid(CPlayer_State_Damage))
+			{
+				return;
+			}
+
+			/* 判定表示を赤色に */
+			m_pBndCylinder->ChangeModel(CModel_X_Manager::TYPE::RENDER_CYLINDER_HIT);
+
 			// ダメージ状態へ
 			pPlayer->To_Damage(-1);
+		}
+		else
+		{
+			/* 判定表示を通常色に戻す */
+			m_pBndCylinder->ChangeModel(CModel_X_Manager::TYPE::RENDER_CYLINDER);
 		}
 	}
 	else

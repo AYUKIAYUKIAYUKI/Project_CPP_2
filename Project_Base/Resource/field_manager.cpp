@@ -339,7 +339,7 @@ void CField_Manager::TestCreate()
 #else
 				NewPos = { 0.0f,0.0f, FIELD_RADIUS };
 #endif
-			} while (!collision::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, NewPos, 10.0f));
+			} while (!collision::HitCylinderToSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, NewPos, 10.0f));
 
 			// Œü‚«‚ðŒˆ’è
 			NewRot.y = 0.0f;
@@ -413,7 +413,7 @@ void CField_Manager::TestDelete()
 				m_pCylinderCollider->SetRot(m_pPlayer->GetRot());
 
 				// ‹t‚ÉA‰~’Œ”ÍˆÍŠO‚Ìê‡Á‹Ž
-				if (!collision::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, pBlock->GetPos(), 10.0f))
+				if (!collision::HitCylinderToSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, pBlock->GetPos(), 10.0f))
 				{
 					pBlock->SetRelease();
 				}

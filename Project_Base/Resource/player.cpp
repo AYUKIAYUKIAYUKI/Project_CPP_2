@@ -109,7 +109,10 @@ void CPlayer::Uninit()
 // 更新処理
 //============================================================================
 void CPlayer::Update()
-{		
+{
+	// 当たり判定の中心点を設定
+	m_pBndCylinder->SetCenterPos(GetPos());
+
 	// ステートマネージャーの更新
 	m_pStateManager->Update();
 
@@ -224,6 +227,14 @@ float CPlayer::GetHeight() const
 }
 
 //============================================================================
+// バウンディングシリンダーを取得
+//============================================================================
+const CBounding_Cylinder* const CPlayer::GetBndCylinder() const
+{
+	return m_pBndCylinder;
+}
+
+//============================================================================
 // 現在のステートを取得
 //============================================================================
 CCharacter_State* CPlayer::GetNowState()
@@ -256,6 +267,7 @@ CPlayer* CPlayer::Create()
 
 	// 高さを設定
 	pNewInstance->m_pBndCylinder->SetHeight(pNewInstance->GetModel()->Size.y);
+
 	return pNewInstance;
 }
 
@@ -305,7 +317,7 @@ void CPlayer::HitCheck()
 
 		// ボックスの回転量を打ち消したと仮定し、シリンダーの相対座標を用いて衝突判定
 		// (ボックスの座標に関わらず、仮定したAABBとシリンダーの相対距離で判定するだけなので、渡すボックス座標は原点にする)
-		if (collision::CylinderAndAABB(ResultPos, CylinderRadius, CylinderHeight, VEC3_INIT, BoxSize))
+		if (collision::HitCylinderToAABB(ResultPos, CylinderRadius, CylinderHeight, VEC3_INIT, BoxSize))
 		{
 			// 判定表示を赤色に
 			m_pBndCylinder->ChangeModel(CModel_X_Manager::TYPE::RENDER_CYLINDER_HIT);

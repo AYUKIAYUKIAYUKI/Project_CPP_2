@@ -20,22 +20,25 @@
 //****************************************************
 namespace collision
 {
-	// ‹…‚Ç‚¤‚µ‚ÌÕ“Ë”»’è
-	bool OnlySphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget);
+	// ‹…“¯m
+	bool HitSphereToSphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget);
 
-	// ‹…‚ÆAABB‚Ì“–‚½‚è”»’è
-	bool SphereAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTaret);
+	// ‹…‚ÆAABB
+	bool HitSphereToAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTaret);
 
-	// ‰~’Œ‚Æ“_‚ÌÕ“Ë”»’è
-	bool CylinderAndPoint(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget);
+	// ‰~’Œ“¯m
+	bool HitCylinderToCylinder(const CBounding_Cylinder* const Self, const CBounding_Cylinder* const Other);
 
-	// ‰~’Œ‚Æ‹…‚ÌÕ“Ë”»’è
-	bool CylinderAndSphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget);
+	// ‰~’Œ‚Æ“_
+	bool HitCylinderToPoint(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget);
 
-	// ‰~’Œ‚ÆAABB‚ÌÕ“Ë”»’è
-	bool CylinderAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTarget);
+	// ‰~’Œ‚Æ‹…
+	bool HitCylinderToSphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget);
 
-	// ‰~’Œ‚ÆAABB‚ÌÕ“Ë–Ê‚ğæ“¾
+	// ‰~’Œ‚ÆAABB
+	bool HitCylinderToAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTarget);
+
+	// ‰~’Œ‚ÆAABB
 	int GetCylinderAndAABB(const D3DXVECTOR3& SelfOldPos, const D3DXVECTOR3& SelfNowPos, const float& fSelfRadius, const float& fSelfHeight, const D3DXVECTOR3& OtherPos, const D3DXVECTOR3& OtherSize);
 };
 
