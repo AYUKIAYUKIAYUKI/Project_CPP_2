@@ -34,10 +34,6 @@ public:
 	const float& GetDirection() const;		// 方角を取得
 	void SetDirection(float fDirection);	// 方角を設定
 
-		// <getter/setter>
-	const float& GetOldDirection() const;		// 過去の方角を取得
-	void SetOldDirection(float fDirection);	// 過去の方角を設定
-
 	// <getter/setter>
 	const float& GetMoveSpeed() const;		// 移動速度を取得
 	void SetMoveSpeed(float fMoveSpeed);	// 移動速度を設定
@@ -58,7 +54,7 @@ public:
 	const int& GetLife() const;	// 体力を取得
 	void SetLife(int nLife);	// 体力を設定
 
-private:
+protected:
 
 	// <function>
 	void CorrectToTarget();		// 目標値への補正
@@ -68,10 +64,11 @@ private:
 	virtual void AutoSetRotTarget();	// 目標向きを移動方向から自動で設定
 	virtual void AutoSetPosTarget();	// 目標座標を方角から自動で設定
 
+private:
+
 	// <data>
 	float		m_fCorrectionCoef;	// 補正係数
 	float		m_fDirection;		// 方角
-	float		m_fOldDirection;	// 過去の方角
 	float		m_fMoveSpeed;		// 移動速度
 	D3DXVECTOR3	m_RotTarget;		// 目標向き
 	D3DXVECTOR3	m_PosTarget;		// 目標座標

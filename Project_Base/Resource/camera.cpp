@@ -231,6 +231,16 @@ void CCamera::BranchMode()
 		m_fAdjust = 75.0f;
 	}
 
+	if (CManager::GetKeyboard()->GetPress(DIK_F3))
+	{
+		m_Rot.x = 0.0f;
+		m_fAdjust = 0.0f;
+	}
+	else if (CManager::GetKeyboard()->GetRelease(DIK_F3))
+	{
+		m_fAdjust = 75.0f;
+	}
+
 	if (m_bTrack)
 	{ // 追従カメラモード
 

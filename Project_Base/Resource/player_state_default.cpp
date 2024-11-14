@@ -134,7 +134,7 @@ void CPlayer_State_Default::To_Jump()
 	if (GetNextState() == nullptr)
 	{
 		// YŽ²‚Ì‰Á‘¬“x‚ð‘å•‚É‘‰Á
-		m_pCharacter->SetAccelY(m_pCharacter->GetAccelY() + CPlayer_State_Jump::AMOUNT_JUMPACCEL);
+		m_pCharacter->SetAccelY(CPlayer_State_Jump::AMOUNT_JUMPACCEL);
 
 		SetNextState(DBG_NEW CPlayer_State_Jump());
 	}

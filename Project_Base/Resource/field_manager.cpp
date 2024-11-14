@@ -7,7 +7,7 @@
 
 //****************************************************
 // インクルードファイル
-//****************************************************
+//****************************************************797977
 #include "field_manager.h"
 #include "fan.h"
 
@@ -258,12 +258,13 @@ void CField_Manager::TestCircle()
 		// 生成用の座標を決定
 		Vec3 NewPos = VEC3_INIT;
 		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
-		NewPos.y = 10.0f;
+		//NewPos.y = -15.0f;
+		NewPos.y = 30.0f;
 		NewPos.z = -sinf(fDirection) * FIELD_RADIUS;
 		
 		// 生成用の向きを決定
 		Vec3 NewRot = VEC3_INIT;
-		NewRot.y = fDirection;
+		NewRot.y = fDirection + D3DX_PI * 0.5f;
 
 		// ブロックを生成
 		CBlock::Create(NewPos, NewRot);
@@ -407,8 +408,7 @@ void CField_Manager::TestDelete()
 				CBlock* pBlock = nullptr;
 				pBlock = utility::DownCast(pBlock, pObj);
 
-				// 破棄方法の変更
-#if 1
+#if 1			// 破棄方法の変更
 				m_pCylinderCollider->SetPos(m_pPlayer->GetPos());
 				m_pCylinderCollider->SetRot(m_pPlayer->GetRot());
 

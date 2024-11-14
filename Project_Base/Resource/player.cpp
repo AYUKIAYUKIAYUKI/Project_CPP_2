@@ -116,11 +116,11 @@ void CPlayer::Update()
 	// ステートマネージャーの更新
 	m_pStateManager->Update();
 
-	// 当たり判定
-	HitCheck();
-
 	// 高さの補正
 	AdjustHeight();
+
+	// 当たり判定
+	HitCheck();
 
 	// キャラクタークラスの更新処理
 	CCharacter::Update();
@@ -132,7 +132,8 @@ void CPlayer::Update()
 	CRenderer::SetDebugString("プレイヤー速度　　 : " + to_string(GetMoveSpeed()));
 	CRenderer::SetDebugString("プレイヤー向き　　 : " + to_string(GetRot().x * (180 / D3DX_PI)) + " :  " + to_string(GetRot().y * (180 / D3DX_PI)) + " : " + to_string(GetRot().z * (180 / D3DX_PI)));
 	CRenderer::SetDebugString("プレイヤー目標向き : " + to_string(GetRotTarget().x * (180 / D3DX_PI)) + " :  " + to_string(GetRotTarget().y * (180 / D3DX_PI)) + " : " + to_string(GetRotTarget().z * (180 / D3DX_PI)));
-	CRenderer::SetDebugString("プレイヤー座標　　 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
+	CRenderer::SetDebugString("プレイヤー現在座標 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
+	CRenderer::SetDebugString("プレイヤー目標座標 : " + to_string(GetPosTarget().x) + " :  " + to_string(GetPosTarget().y) + " : " + to_string(GetPosTarget().z));
 	CRenderer::SetDebugString("プレイヤー加速度　 : " + to_string(GetAccelY()));
 	CRenderer::SetDebugString("プレイヤー体力　　 : " + to_string(GetLife()));
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
@@ -278,6 +279,28 @@ CPlayer* CPlayer::Create()
 //============================================================================
 
 //============================================================================
+// 高さを補正
+//============================================================================
+void CPlayer::AdjustHeight()
+{
+	// 目標座標をY軸の加速度分変動する
+	Vec3 NewPosTarget = GetPosTarget();
+	NewPosTarget.y += GetAccelY();
+	SetPosTarget(NewPosTarget);
+
+	// 高さの目標に下限を設定
+	if (GetPosTarget().y < 0.0f)
+	{
+		// 目標座標を下限に固定
+		NewPosTarget.y = 0.0f;
+		SetPosTarget(NewPosTarget);
+
+		// Y軸方向の加速度を初期化
+		SetAccelY(0.0f);
+	}
+}
+
+//============================================================================
 // 当たり判定
 //============================================================================
 void CPlayer::HitCheck()
@@ -300,7 +323,8 @@ void CPlayer::HitCheck()
 		}
 
 		// バウンディングシリンダーのパラメータをコピー
-		const Vec3& CylinderPos = GetPos();
+		const Vec3& CylinderPosTarget = GetPosTarget();
+		const Vec3& CylinderOldPos = GetPos();
 		const float& CylinderRadius = GetRadius();
 		const float& CylinderHeight = GetHeight();
 
@@ -310,10 +334,12 @@ void CPlayer::HitCheck()
 		const float& fBoxDirection = pBlock->GetRot().y;
 
 		// ボックスの中心点からシリンダーの座標への相対座標を計算
-		const Vec3& RelativePos = CylinderPos - BoxPos;
+		const Vec3& RelativePos = CylinderPosTarget - BoxPos;
+		const Vec3& RelativeOldPos = CylinderOldPos - BoxPos;
 
 		// 相対座標に、ボックスの回転角度分を打ち消す回転行列を適用
 		const Vec3& ResultPos = utility::RotatePointAroundY(-fBoxDirection, RelativePos);
+		const Vec3& ResultOldPos = utility::RotatePointAroundY(-fBoxDirection, RelativeOldPos);
 
 		// ボックスの回転量を打ち消したと仮定し、シリンダーの相対座標を用いて衝突判定
 		// (ボックスの座標に関わらず、仮定したAABBとシリンダーの相対距離で判定するだけなので、渡すボックス座標は原点にする)
@@ -324,7 +350,41 @@ void CPlayer::HitCheck()
 				
 			// 衝突があったことを検出
 			bDetect = 1;
-				
+			
+			// 衝突面を判定
+			int nIdx = collision::GetCylinderToAABB(ResultOldPos, ResultPos, CylinderRadius, CylinderHeight, VEC3_INIT, BoxSize);
+
+			switch (nIdx)
+			{
+			case 0:
+				break;
+
+			case 1:
+			{
+				// Y軸方向の加速度を初期化
+				SetAccelY(0.0f);
+
+				// 新しい目標座標を作成
+				Vec3 NewPosTarget = { CylinderPosTarget.x, BoxPos.y + BoxSize.y, CylinderPosTarget.z };
+			 
+				// 目標座標を反映
+				SetPosTarget(NewPosTarget);
+			
+				break;
+			}
+			case 2:
+				break;
+
+			case 3:
+				break;
+
+			case 4:
+				break;
+
+			default:
+				break;
+			}
+
 			break;
 		}
 
@@ -336,27 +396,5 @@ void CPlayer::HitCheck()
 	{
 		// 判定表示を通常色に戻す
 		m_pBndCylinder->ChangeModel(CModel_X_Manager::TYPE::RENDER_CYLINDER);
-	}
-}
-
-//============================================================================
-// 高さを補正
-//============================================================================
-void CPlayer::AdjustHeight()
-{
-	// 座標をY軸の加速度文変動する
-	Vec3 NewPos = GetPos();
-	NewPos.y += GetAccelY();
-	SetPos(NewPos);
-
-	// 高さに下限を設定
-	if (GetPos().y < 0.0f)
-	{
-		// 座標を下限に固定
-		NewPos.y = 0.0f;
-		SetPos(NewPos);
-
-		// Y軸の加速度を無くす
-		SetAccelY(0.0f);
 	}
 }

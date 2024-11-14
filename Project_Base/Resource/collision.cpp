@@ -208,12 +208,18 @@ int collision::GetCylinderToAABB(const Vec3& SelfOldPos, const Vec3& SelfNowPos,
 		// ã‚É‚¢‚½
 		if (SelfOldPos.y > OtherPos.y)
 		{
+#ifdef _DEBUG
+			CRenderer::SetTimeString("[‚è‚ê‚«]Õ“Ë–Ê : ã", 60);
+#endif	// _DEBUG
 			return 1;
 		}
 
 		// ‰º‚É‚¢‚½
 		if (SelfOldPos.y < OtherPos.y)
 		{
+#ifdef _DEBUG
+			CRenderer::SetTimeString("[‚è‚ê‚«]Õ“Ë–Ê : ‰º", 60);
+#endif	// _DEBUG
 			return 2;
 		}
 	}
@@ -223,12 +229,18 @@ int collision::GetCylinderToAABB(const Vec3& SelfOldPos, const Vec3& SelfNowPos,
 		// ¶‚É‚¢‚½
 		if (SelfOldPos.x < OtherPos.x)
 		{
+#ifdef _DEBUG
+			CRenderer::SetTimeString("[‚è‚ê‚«]Õ“Ë–Ê : ¶", 60);
+#endif	// _DEBUG
 			return 3;
 		}
 
 		// ‰E‚É‚¢‚½
 		if (SelfOldPos.x > OtherPos.x)
 		{
+#ifdef _DEBUG
+			CRenderer::SetTimeString("[‚è‚ê‚«]Õ“Ë–Ê : ‰E", 60);
+#endif	// _DEBUG
 			return 4;
 		}
 	}

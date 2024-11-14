@@ -30,7 +30,6 @@ CCharacter::CCharacter() :
 	CObject_X{ LAYER::BG },
 	m_fCorrectionCoef{ 0.0f },
 	m_fDirection{ 0.0f },
-	m_fOldDirection{ 0.0f },
 	m_fMoveSpeed{ 0.0f },
 	m_RotTarget{ VEC3_INIT },
 	m_PosTarget{ VEC3_INIT },
@@ -54,7 +53,7 @@ CCharacter::~CCharacter()
 HRESULT CCharacter::Init()
 {
 	// 補正係数を設定
-	m_fCorrectionCoef = 0.1f;
+	m_fCorrectionCoef = 0.5f;
 
 	// Xオブジェクトの初期設定
 	if (FAILED(CObject_X::Init()))
@@ -79,10 +78,10 @@ void CCharacter::Uninit()
 //============================================================================
 void CCharacter::Update()
 {
-	// 目標向きを移動方向から自動で設定
+	// 自動で目標向きを移動方向に向ける
 	AutoSetRotTarget();
 
-	// 目標座標を方角から自動で設定
+	// 自動で目標座標を変動した方角に合わせる
 	AutoSetPosTarget();
 
 	// 目標値への補正
@@ -93,9 +92,6 @@ void CCharacter::Update()
 
 	// Xオブジェクトの更新処理
 	CObject_X::Update();
-
-	// 方角を保存
-	m_fOldDirection = m_fDirection;
 }
 
 //============================================================================
@@ -121,22 +117,6 @@ const float& CCharacter::GetDirection() const
 void CCharacter::SetDirection(float fDirection)
 {
 	m_fDirection = fDirection;
-}
-
-//============================================================================
-// 過去の方角を取得
-//============================================================================
-const float& CCharacter::GetOldDirection() const
-{
-	return m_fOldDirection;
-}
-
-//============================================================================
-// 過去の方角を設定
-//============================================================================
-void CCharacter::SetOldDirection(float fOldDirection)
-{
-	m_fOldDirection = fOldDirection;
 }
 
 //============================================================================
@@ -221,7 +201,7 @@ void CCharacter::SetLife(int nLife)
 
 //============================================================================
 // 
-// privateメンバ
+// protectedメンバ
 // 
 //============================================================================
 
@@ -243,6 +223,18 @@ void CCharacter::CorrectToTarget()
 }
 
 //============================================================================
+// 体力の調整
+//============================================================================
+void CCharacter::AdjustLife()
+{
+	// 最低値を下回らないように調整
+	if (m_nLife < 0)
+	{
+		m_nLife = 0;
+	}
+}
+
+//============================================================================
 // 目標向きを移動方向から自動で設定
 //============================================================================
 void CCharacter::AutoSetRotTarget()
@@ -258,16 +250,4 @@ void CCharacter::AutoSetPosTarget()
 {
 	m_PosTarget.x = cosf(m_fDirection) * CField_Manager::FIELD_RADIUS;	// X方向の座標を設定
 	m_PosTarget.z = sinf(m_fDirection) * CField_Manager::FIELD_RADIUS;	// Z方向の座標を設定
-}
-
-//============================================================================
-// 体力の調整
-//============================================================================
-void CCharacter::AdjustLife()
-{
-	// 最低値を下回らないように調整
-	if (m_nLife < 0)
-	{
-		m_nLife = 0;
-	}
 }
