@@ -12,7 +12,6 @@
     <ClCompile Include="resource\pch.cpp" />
     <ClCompile Include="Resource\quadratic_bezier.cpp" />
     <ClCompile Include="Resource\spline_test.cpp" />
-    <ClCompile Include="Resource\utility.cpp" />
     <ClCompile Include="Resource\bounding_box.cpp">
       <Filter>&lt;Collider&gt;</Filter>
     </ClCompile>
@@ -133,7 +132,12 @@
     <ClCompile Include="Resource\state.cpp">
       <Filter>&lt;Object&gt;</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\collision.cpp" />
+    <ClCompile Include="Resource\utility.cpp">
+      <Filter>&lt;utility&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\collision.cpp">
+      <Filter>&lt;utility&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -147,7 +151,6 @@
     <ClInclude Include="resource\pch.h" />
     <ClInclude Include="Resource\quadratic_bezier.h" />
     <ClInclude Include="Resource\spline_test.h" />
-    <ClInclude Include="Resource\utility.h" />
     <ClInclude Include="Resource\bounding_box.h">
       <Filter>&lt;Collider&gt;</Filter>
     </ClInclude>
@@ -268,7 +271,12 @@
     <ClInclude Include="Resource\state.h">
       <Filter>&lt;Object&gt;</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\collision.h" />
+    <ClInclude Include="Resource\utility.h">
+      <Filter>&lt;utility&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\collision.h">
+      <Filter>&lt;utility&gt;</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Scene&gt;">
@@ -297,6 +305,9 @@
     </Filter>
     <Filter Include="&lt;Object&gt;\&lt;Stage&gt;">
       <UniqueIdentifier>{181bc8d0-f873-4338-b08a-ac0133216b0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;utility&gt;">
+      <UniqueIdentifier>{07c8b80b-d72f-4cd8-8cb3-d5880e69bd8f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

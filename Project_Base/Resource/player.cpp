@@ -12,12 +12,11 @@
 #include "bounding_cylinder.h"
 #include "player_state_default.h"
 
+#include "block.h"
+#include "collision.h"
+#include "field_manager.h"
 #include "manager.h"
 #include "mask_rectangle.h"
-
-#include "block.h"
-#include "field_manager.h"
-
 #include "renderer.h"
 
 //****************************************************
@@ -306,7 +305,7 @@ void CPlayer::HitCheck()
 
 		// ボックスの回転量を打ち消したと仮定し、シリンダーの相対座標を用いて衝突判定
 		// (ボックスの座標に関わらず、仮定したAABBとシリンダーの相対距離で判定するだけなので、渡すボックス座標は原点にする)
-		if (utility::CylinderAndAABB(ResultPos, CylinderRadius, CylinderHeight, VEC3_INIT, BoxSize))
+		if (collision::CylinderAndAABB(ResultPos, CylinderRadius, CylinderHeight, VEC3_INIT, BoxSize))
 		{
 			// 判定表示を赤色に
 			m_pBndCylinder->ChangeModel(CModel_X_Manager::TYPE::RENDER_CYLINDER_HIT);

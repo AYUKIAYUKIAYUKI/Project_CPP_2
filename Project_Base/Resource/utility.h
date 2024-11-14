@@ -37,24 +37,6 @@ namespace utility
 	// 向きの範囲の補正(ラジアン)
 	void AdjustDirection(float& fAngle1, float& fAngle2);
 
-	// 球どうしの衝突判定
-	bool OnlySphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget);
-
-	// 球とAABBの当たり判定
-	bool SphereAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTaret);
-
-	// 円柱と点の衝突判定
-	bool CylinderAndPoint(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget);
-
-	// 円柱と球の衝突判定
-	bool CylinderAndSphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget);
-
-	// 円柱とAABBの衝突判定
-	bool CylinderAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTarget);
-
-	// 円柱とAABBの衝突面を取得
-	int GetCylinderAndAABB(const D3DXVECTOR3& SelfOldPos, const D3DXVECTOR3& SelfNowPos, const float& fSelfRadius, const float& fSelfHeight, const D3DXVECTOR3& OtherPos, const D3DXVECTOR3& OtherSize);
-
 	// Jsonファイルの展開
 	nlohmann::json OpenJsonFile(std::string FilePath);
 

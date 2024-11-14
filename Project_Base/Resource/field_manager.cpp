@@ -22,6 +22,7 @@
 
 // オブジェクト用
 #include "block.h"
+#include "collision.h"
 #include "object_HUD.h"
 #include "player.h"
 
@@ -338,7 +339,7 @@ void CField_Manager::TestCreate()
 #else
 				NewPos = { 0.0f,0.0f, FIELD_RADIUS };
 #endif
-			} while (!utility::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, NewPos, 10.0f));
+			} while (!collision::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, NewPos, 10.0f));
 
 			// 向きを決定
 			NewRot.y = 0.0f;
@@ -412,7 +413,7 @@ void CField_Manager::TestDelete()
 				m_pCylinderCollider->SetRot(m_pPlayer->GetRot());
 
 				// 逆に、円柱範囲外の場合消去
-				if (!utility::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, pBlock->GetPos(), 10.0f))
+				if (!collision::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, pBlock->GetPos(), 10.0f))
 				{
 					pBlock->SetRelease();
 				}

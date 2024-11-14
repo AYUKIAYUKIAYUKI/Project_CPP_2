@@ -10,9 +10,9 @@
 //****************************************************
 #include "enemy.h"
 
+#include "collision.h"
 #include "player.h"
 #include "player_state_damage.h"
-
 #include "renderer.h"
 
 //****************************************************
@@ -155,7 +155,7 @@ void CEnemy::AttackOnPlayer()
 		}
 
 		// プレイヤーの持つ円柱範囲内に侵入していたら
-		if (utility::CylinderAndPoint(pPlayer->GetPos(), 10.0f, 20.0f, GetPos()))
+		if (collision::CylinderAndPoint(pPlayer->GetPos(), 10.0f, 20.0f, GetPos()))
 		{
 			// ダメージ状態へ
 			pPlayer->To_Damage(-1);
