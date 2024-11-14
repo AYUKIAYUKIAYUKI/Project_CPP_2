@@ -57,7 +57,7 @@ HRESULT CGame::Init()
 	CObject_X* pTest = CObject_X::Create(CObject::LAYER::BACK);
 	pTest->BindModel(CModel_X_Manager::TYPE::CYLINDER);
 	pTest->SetPos({ 0.0f, -10.0f, 0.0f });
-	pTest->SetScale(8.5f);
+	pTest->SetScale({ 8.5f, 8.5f, 8.5f });
 
 	// フィールドマネージャーの初期設定
 	CField_Manager::GetInstance()->Init();

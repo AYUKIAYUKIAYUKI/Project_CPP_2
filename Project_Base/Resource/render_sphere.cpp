@@ -1,6 +1,6 @@
 //============================================================================
 // 
-// スフィア表示 [render_sphere.cpp]
+// スフィア表示 [render_sphere.cpp]7979
 // Author : 福田歩希
 // 
 //============================================================================
@@ -75,7 +75,9 @@ void CRender_Sphere::Uninit()
 void CRender_Sphere::Update()
 {
 	// 判定のサイズに合わせてスケールを拡大
-	m_pSphere->SetScale(m_pRef->GetRadius());
+	const float& fRad = m_pRef->GetRadius();
+	const Vec3& Scale = { fRad, fRad, fRad };
+	m_pSphere->SetScale(Scale);
 
 	// オブジェクトの座標に判定を表示
 	m_pSphere->SetPos(m_pRef->GetPos());

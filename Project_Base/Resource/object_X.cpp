@@ -41,7 +41,7 @@ CObject_X::CObject_X(LAYER Priority) :
 	m_pRender_Collision{ nullptr },
 	m_Pos{ VEC3_INIT },
 	m_Rot{ VEC3_INIT },
-	m_fScale{ SCALE_INIT },
+	m_Scale{ 1.0f, 1.0f, 1.0f },
 	m_fAlpha{ ALPHA_INIT }
 {
 	// ÉèÅ[ÉãÉhçsóÒÇèâä˙âª
@@ -232,17 +232,17 @@ void CObject_X::SetPos(D3DXVECTOR3 Pos)
 //============================================================================
 // èké⁄ÇéÊìæ
 //============================================================================
-const float& CObject_X::GetScale() const
+const D3DXVECTOR3& CObject_X::GetScale() const
 {
-	return m_fScale;
+	return m_Scale;
 }
 
 //============================================================================
 // èké⁄Çê›íË
 //============================================================================
-void CObject_X::SetScale(float fScale)
+void CObject_X::SetScale(D3DXVECTOR3 Scale)
 {
-	m_fScale = fScale;
+	m_Scale = Scale;
 }
 
 //============================================================================
@@ -378,9 +378,9 @@ void CObject_X::SetMtxWorld()
 
 	// ägèkçsóÒçÏê¨
 	D3DXMatrixScaling(&mtxScale,
-		m_fScale,
-		m_fScale,
-		m_fScale);
+		m_Scale.x,
+		m_Scale.y,
+		m_Scale.z);
 
 	// ägèkçsóÒÇ∆ÇÃä|ÇØéZ
 	D3DXMatrixMultiply(&m_MtxWorld,

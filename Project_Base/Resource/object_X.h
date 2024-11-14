@@ -52,8 +52,8 @@ public:
 	void SetPos(D3DXVECTOR3 Pos);		// 座標設定
 
 	// <getter/setter>
-	const float& GetScale() const;	// 縮尺取得
-	void SetScale(float fScale);	// 縮尺設定
+	const D3DXVECTOR3& GetScale() const;	// 縮尺取得
+	void SetScale(D3DXVECTOR3 Scale);		// 縮尺設定
 
 	// <getter/setter>
 	const float& GetAlpha() const;	// アルファ値取得
@@ -71,9 +71,6 @@ public:
 
 private:
 
-	/// <summary> 縮尺初期化用 </summary>
-	static constexpr float SCALE_INIT = 1.0f;
-
 	/// <summary> アルファ値初期化用 </summary>
 	static constexpr float ALPHA_INIT = 1.0f;
 
@@ -86,7 +83,7 @@ private:
 	CRender_Collision*			m_pRender_Collision;	// 判定表示
 	D3DXVECTOR3					m_Rot;					// 向き
 	D3DXVECTOR3					m_Pos;					// 座標
-	float						m_fScale;				// 縮尺
+	D3DXVECTOR3					m_Scale;				// 縮尺
 	float						m_fAlpha;				// アルファ値
 	D3DXMATRIX					m_MtxWorld;				// ワールド行列
 };

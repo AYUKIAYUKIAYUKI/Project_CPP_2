@@ -75,7 +75,9 @@ void CRender_Cylinder::Uninit()
 void CRender_Cylinder::Update()
 {
 	// 判定のサイズに合わせてスケールを拡大
-	m_pCylinder->SetScale(m_pRef->GetRadius());
+	const float& fRad = m_pRef->GetRadius(), fHeight = m_pRef->GetHeight();
+	const Vec3& Scale = { fRad, fHeight, fRad };
+	m_pCylinder->SetScale(Scale);
 
 	// オブジェクトの座標に判定を表示
 	m_pCylinder->SetPos(m_pRef->GetPos());
