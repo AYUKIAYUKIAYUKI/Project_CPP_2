@@ -9,6 +9,7 @@
 // ƒCƒ“ƒNƒ‹[ƒhƒtƒ@ƒCƒ‹
 //****************************************************
 #include "collision.h"
+#include "renderer.h"
 
 //============================================================================
 // ‹…“¯Žm
@@ -125,7 +126,7 @@ bool collision::HitCylinderToSphere(const CBounding_Cylinder* const Self, const 
 //============================================================================
 // ‰~’Œ‚Æ‹…
 //============================================================================
-bool collision::HitCylinderToSphere(const D3DXVECTOR3& SelfPos, const float& fSelfRadius, const float& fSelfHeight, const D3DXVECTOR3& OtherPos, const float& fOtherRadius)
+bool collision::HitCylinderToSphere(const Vec3& SelfPos, const float& fSelfRadius, const float& fSelfHeight, const Vec3& OtherPos, const float& fOtherRadius)
 {
 	// ‚¨ŒÝ‚¢‚Ì‹——£‚ðŒvŽZ
 	const Vec3& Distance = OtherPos - SelfPos;
@@ -149,15 +150,19 @@ bool collision::HitCylinderToSphere(const D3DXVECTOR3& SelfPos, const float& fSe
 //============================================================================
 // ‰~’Œ‚ÆAABB
 //============================================================================
-bool collision::HitCylinderToAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTarget)
+bool collision::HitCylinderToAABB(const CBounding_Cylinder* const Self, const CBounding_Box* const Other)
 {
+	// ƒpƒ‰ƒ[ƒ^‚ðƒRƒs[
+	const Vec3& SelfPos = Self->GetCenterPos(), OtherPos = Other->GetCenterPos(), OtherSize = Other->GetSize();
+	const float& fSelfRadius = Self->GetRadius(), fSelfHeight = Self->GetHeight();
+
 	// ‘S‚Ä‚ÌŽ²•ûŒü‚Ö‚ÌŽË‰e“¯Žm‚ªd‚È‚Á‚Ä‚¢‚ê‚ÎÕ“Ë
-	if (PosSelf.x + fRadiusSelf > PosTarget.x - SizeTarget.x &&
-		PosSelf.x - fRadiusSelf < PosTarget.x + SizeTarget.x &&
-		PosSelf.y + fHeight > PosTarget.y - SizeTarget.y &&
-		PosSelf.y < PosTarget.y + SizeTarget.y &&
-		PosSelf.z + fRadiusSelf > PosTarget.z - SizeTarget.z &&
-		PosSelf.z - fRadiusSelf < PosTarget.z + SizeTarget.z)
+	if (SelfPos.x + fSelfRadius > OtherPos.x - OtherSize.x &&
+		SelfPos.x - fSelfRadius < OtherPos.x + OtherSize.x &&
+		SelfPos.y + fSelfHeight > OtherPos.y - OtherSize.y &&
+		SelfPos.y < OtherPos.y + OtherSize.y &&
+		SelfPos.z + fSelfRadius > OtherPos.z - OtherSize.z &&
+		SelfPos.z - fSelfRadius < OtherPos.z + OtherSize.z)
 	{
 		return 1;
 	}
@@ -168,9 +173,28 @@ bool collision::HitCylinderToAABB(const D3DXVECTOR3& PosSelf, const float& fRadi
 //============================================================================
 // ‰~’Œ‚ÆAABB
 //============================================================================
-int collision::GetCylinderAndAABB(const D3DXVECTOR3& SelfOldPos, const D3DXVECTOR3& SelfNowPos, const float& fSelfRadius, const float& fSelfHeight, const D3DXVECTOR3& OtherPos, const D3DXVECTOR3& OtherSize)
+bool collision::HitCylinderToAABB(const Vec3& SelfPos, const float& fSelfRadius, const float& fSelfHeight, const Vec3& OtherPos, const Vec3& OtherSize)
 {
-	// Õ“Ë‚ª–³‚¯‚ê‚Î
+	// ‘S‚Ä‚ÌŽ²•ûŒü‚Ö‚ÌŽË‰e“¯Žm‚ªd‚È‚Á‚Ä‚¢‚ê‚ÎÕ“Ë
+	if (SelfPos.x + fSelfRadius > OtherPos.x - OtherSize.x &&
+		SelfPos.x - fSelfRadius < OtherPos.x + OtherSize.x &&
+		SelfPos.y + fSelfHeight > OtherPos.y - OtherSize.y &&
+		SelfPos.y < OtherPos.y + OtherSize.y &&
+		SelfPos.z + fSelfRadius > OtherPos.z - OtherSize.z &&
+		SelfPos.z - fSelfRadius < OtherPos.z + OtherSize.z)
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
+//============================================================================
+// ‰~’Œ‚ÆAABB‚ÌÕ“Ë–Ê‚ðŽæ“¾
+//============================================================================
+int collision::GetCylinderToAABB(const Vec3& SelfOldPos, const Vec3& SelfNowPos, const float& fSelfRadius, const float& fSelfHeight, const Vec3& OtherPos, const Vec3& OtherSize)
+{
+	// Õ“ËŽ©‘Ì‚ª–³‚¯‚ê‚Î
 	if (!HitCylinderToAABB(SelfNowPos, fSelfRadius, fSelfHeight, OtherPos, OtherSize))
 	{
 		return 0;
