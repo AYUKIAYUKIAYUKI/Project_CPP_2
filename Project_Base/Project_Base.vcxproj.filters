@@ -133,6 +133,7 @@
     <ClCompile Include="Resource\state.cpp">
       <Filter>&lt;Object&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\collision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -267,6 +268,7 @@
     <ClInclude Include="Resource\state.h">
       <Filter>&lt;Object&gt;</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\collision.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Scene&gt;">

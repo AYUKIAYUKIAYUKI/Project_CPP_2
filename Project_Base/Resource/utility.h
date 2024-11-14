@@ -9,56 +9,54 @@
 #define _UTILITY_H_	// 二重インクルード防止
 
 //****************************************************
-// 便利関数クラス
+// 名前空間utilityを定義
 //****************************************************
-class CUtility final
+namespace utility
 {
-public:
-
 	// 象限に応じて、単位立方体の頂点の座標を作成
-	static D3DXVECTOR3 SetCubeVtxFromQuadrant(const WORD& wIdx);
+	D3DXVECTOR3 SetCubeVtxFromQuadrant(const WORD& wIdx);
 
 	// 点をY軸で回転させる
-	static D3DXVECTOR3 RotatePointAroundY(const float& fDirection, const D3DXVECTOR3& Pos);
+	D3DXVECTOR3 RotatePointAroundY(const float& fDirection, const D3DXVECTOR3& Pos);
 
 	// 箱をY軸で回転させる
-	static D3DXVECTOR3 RotateBoxAroundY(const WORD& wIdx, const float& fDirection, const D3DXVECTOR3& Size);
+	D3DXVECTOR3 RotateBoxAroundY(const WORD& wIdx, const float& fDirection, const D3DXVECTOR3& Size);
 
 	// 箱のY軸の回転を打ち消す
-	static D3DXVECTOR3 InverseRotateBoxAroundY(const float& fDirection, const D3DXVECTOR3& VtxPos);
+	D3DXVECTOR3 InverseRotateBoxAroundY(const float& fDirection, const D3DXVECTOR3& VtxPos);
 
 	// 角度の差の補正(ラジアン)
-	static void AdjustAngle(float& fAngle, const float& fDest);
+	void AdjustAngle(float& fAngle, const float& fDest);
 
 	// 角度の差の補正(ラジアン)
-	static void AdjustAngle(float& fAngle, const float& fDest, const float& fRadius);
+	void AdjustAngle(float& fAngle, const float& fDest, const float& fRadius);
 
 	// 向きの範囲の補正(ラジアン)
-	static void AdjustDirection(float& fAngle);
+	void AdjustDirection(float& fAngle);
 
 	// 向きの範囲の補正(ラジアン)
-	static void AdjustDirection(float& fAngle1, float& fAngle2);
+	void AdjustDirection(float& fAngle1, float& fAngle2);
 
 	// 球どうしの衝突判定
-	static bool OnlySphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget);
+	bool OnlySphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget);
 
 	// 球とAABBの当たり判定
-	static bool SphereAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTaret);
+	bool SphereAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTaret);
 
 	// 円柱と点の衝突判定
-	static bool CylinderAndPoint(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget);
+	bool CylinderAndPoint(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget);
 
 	// 円柱と球の衝突判定
-	static bool CylinderAndSphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget);
+	bool CylinderAndSphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget);
 
 	// 円柱とAABBの衝突判定
-	static bool CylinderAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTarget);
+	bool CylinderAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTarget);
 
 	// 円柱とAABBの衝突面を取得
-	static int GetCylinderAndAABB(const D3DXVECTOR3& SelfOldPos, const D3DXVECTOR3& SelfNowPos, const float& fSelfRadius, const float& fSelfHeight, const D3DXVECTOR3& OtherPos, const D3DXVECTOR3& OtherSize);
+	int GetCylinderAndAABB(const D3DXVECTOR3& SelfOldPos, const D3DXVECTOR3& SelfNowPos, const float& fSelfRadius, const float& fSelfHeight, const D3DXVECTOR3& OtherPos, const D3DXVECTOR3& OtherSize);
 
 	// Jsonファイルの展開
-	static nlohmann::json OpenJsonFile(std::string FilePath);
+	nlohmann::json OpenJsonFile(std::string FilePath);
 
 	// 乱数生成
 	template <typename T> static T GetRandomValue();
@@ -70,7 +68,7 @@ public:
 //============================================================================
 // 乱数生成
 //============================================================================
-template <typename T> T CUtility::GetRandomValue()
+template <typename T> T utility::GetRandomValue()
 {
 	// 数値の取る範囲を設定
 	const int nRange = 180;
@@ -92,7 +90,7 @@ template <typename T> T CUtility::GetRandomValue()
 //============================================================================
 // ダウンキャスト
 //============================================================================
-template <typename T1, typename T2> T1* CUtility::DownCast(T1* pDest, T2* pBase)
+template <typename T1, typename T2> T1* utility::DownCast(T1* pDest, T2* pBase)
 {
 	pDest;	/* 警告回避 */
 

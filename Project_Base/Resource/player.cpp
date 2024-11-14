@@ -302,11 +302,11 @@ void CPlayer::HitCheck()
 		const Vec3& RelativePos = CylinderPos - BoxPos;
 
 		// 相対座標に、ボックスの回転角度分を打ち消す回転行列を適用
-		const Vec3& ResultPos = CUtility::RotatePointAroundY(-fBoxDirection, RelativePos);
+		const Vec3& ResultPos = utility::RotatePointAroundY(-fBoxDirection, RelativePos);
 
 		// ボックスの回転量を打ち消したと仮定し、シリンダーの相対座標を用いて衝突判定
 		// (ボックスの座標に関わらず、仮定したAABBとシリンダーの相対距離で判定するだけなので、渡すボックス座標は原点にする)
-		if (CUtility::CylinderAndAABB(ResultPos, CylinderRadius, CylinderHeight, VEC3_INIT, BoxSize))
+		if (utility::CylinderAndAABB(ResultPos, CylinderRadius, CylinderHeight, VEC3_INIT, BoxSize))
 		{
 			// 判定表示を赤色に
 			m_pBndCylinder->ChangeModel(CModel_X_Manager::TYPE::RENDER_CYLINDER_HIT);

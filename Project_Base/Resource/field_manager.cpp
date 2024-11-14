@@ -60,7 +60,7 @@ HRESULT CField_Manager::Init()
 	if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
 	{
 		// プレイヤーへのポインタを保持
-		m_pPlayer = CUtility::DownCast(m_pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+		m_pPlayer = utility::DownCast(m_pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
 	}
 	else
 	{
@@ -323,11 +323,11 @@ void CField_Manager::TestCreate()
 			{
 #if 1
 				// ランダムに方角をずらす
-				fRandomRange = CUtility::GetRandomValue<float>();
+				fRandomRange = utility::GetRandomValue<float>();
 
 				// 生成用の座標を決定
 				NewPos.x = cosf(fDirection + fRandomRange) * FIELD_RADIUS;
-				NewPos.y = fabsf(CUtility::GetRandomValue<float>());
+				NewPos.y = fabsf(utility::GetRandomValue<float>());
 				NewPos.z = sinf(fDirection + fRandomRange) * FIELD_RADIUS;
 
 				// ブロック同士の幅を検出
@@ -338,7 +338,7 @@ void CField_Manager::TestCreate()
 #else
 				NewPos = { 0.0f,0.0f, FIELD_RADIUS };
 #endif
-			} while (!CUtility::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, NewPos, 10.0f));
+			} while (!utility::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, NewPos, 10.0f));
 
 			// 向きを決定
 			NewRot.y = 0.0f;
@@ -366,7 +366,7 @@ bool CField_Manager::DetectAdjacentBlock(const D3DXVECTOR3& Pos)
 		{
 			// オブジェクトをブロックタグにダウンキャスト
 			CBlock* pBlock = nullptr;
-			pBlock = CUtility::DownCast(pBlock, pObj);
+			pBlock = utility::DownCast(pBlock, pObj);
 
 			// 軸方向におけるブロックの隣接を検出する
 
@@ -404,7 +404,7 @@ void CField_Manager::TestDelete()
 			{
 				// オブジェクトをブロックタグにダウンキャスト
 				CBlock* pBlock = nullptr;
-				pBlock = CUtility::DownCast(pBlock, pObj);
+				pBlock = utility::DownCast(pBlock, pObj);
 
 				// 破棄方法の変更
 #if 1
@@ -412,7 +412,7 @@ void CField_Manager::TestDelete()
 				m_pCylinderCollider->SetRot(m_pPlayer->GetRot());
 
 				// 逆に、円柱範囲外の場合消去
-				if (!CUtility::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, pBlock->GetPos(), 10.0f))
+				if (!utility::CylinderAndSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, pBlock->GetPos(), 10.0f))
 				{
 					pBlock->SetRelease();
 				}

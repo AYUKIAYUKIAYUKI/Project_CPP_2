@@ -23,6 +23,7 @@
     <ClCompile Include="Resource\bounding_cylinder.cpp" />
     <ClCompile Include="Resource\bounding_sphere.cpp" />
     <ClCompile Include="Resource\bounding_volume.cpp" />
+    <ClCompile Include="Resource\collision.cpp" />
     <ClCompile Include="Resource\input_keyboard.cpp" />
     <ClCompile Include="Resource\input_pad.cpp" />
     <ClCompile Include="Resource\mask_rectangle.cpp" />
@@ -80,6 +81,7 @@
     <ClInclude Include="Resource\bounding_cylinder.h" />
     <ClInclude Include="Resource\bounding_sphere.h" />
     <ClInclude Include="Resource\bounding_volume.h" />
+    <ClInclude Include="Resource\collision.h" />
     <ClInclude Include="Resource\input_keyboard.h" />
     <ClInclude Include="Resource\input_pad.h" />
     <ClInclude Include="Resource\mask_rectangle.h" />

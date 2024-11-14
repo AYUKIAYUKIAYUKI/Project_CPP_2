@@ -361,7 +361,7 @@ void CObject_X::AdjustRotAngle()
 {
 	while (fabsf(m_Rot.y) > D3DX_PI)
 	{
-		CUtility::AdjustDirection(m_Rot.y);
+		utility::AdjustDirection(m_Rot.y);
 	}
 }
 

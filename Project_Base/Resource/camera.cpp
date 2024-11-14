@@ -239,14 +239,14 @@ void CCamera::BranchMode()
 
 			// プレイヤータグを取得
 			CPlayer* pPlayer = nullptr;
-			pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+			pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
 
 			// カメラをプレイヤーに追従
 			m_PosTarget = pPlayer->GetPosTarget();				// 目標座標を同期
 			const Vec3& NegVec = VEC3_INIT - pPlayer->GetPos();	// プレイヤーから原点への逆位置ベクトルを作成
 			m_RotTarget = VEC3_INIT;							// (カメラの目標向きをリセット)
 			m_RotTarget.y = atan2f(NegVec.x, NegVec.z);			// カメラの目標向きを逆位置ベクトル方向に
-			CUtility::AdjustAngle(m_Rot.y, m_RotTarget.y);		// 角度の差を補正
+			utility::AdjustAngle(m_Rot.y, m_RotTarget.y);		// 角度の差を補正
 			m_fDistance = 200.0f;								// 間距離を固定
 		}
 	}
@@ -315,7 +315,7 @@ void CCamera::Control()
 void CCamera::Rotation()
 {
 	// ヨー角の範囲を制限
-	CUtility::AdjustDirection(m_RotTarget.y, m_Rot.y);
+	utility::AdjustDirection(m_RotTarget.y, m_Rot.y);
 
 	// ピッチ角の範囲を制限
 	RestrictPitch();

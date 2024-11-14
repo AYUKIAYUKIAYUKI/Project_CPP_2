@@ -73,7 +73,7 @@ void CEnemy::Update()
 {
 	// 方角の取得
 	float fNewDirection = GetDirection();
-	CUtility::AdjustDirection(fNewDirection);
+	utility::AdjustDirection(fNewDirection);
 	fNewDirection += -DEFAULT_MOVE_SPEED * 3.0f;
 	SetDirection(fNewDirection);
 
@@ -146,7 +146,7 @@ void CEnemy::AttackOnPlayer()
 	if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
 	{
 		// プレイヤーオブジェクトを保持
-		pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+		pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
 
 		// 既にダメージ状態の場合は処理を終了
 		if (typeid(*pPlayer->GetNowState()) == typeid(CPlayer_State_Damage))
@@ -155,7 +155,7 @@ void CEnemy::AttackOnPlayer()
 		}
 
 		// プレイヤーの持つ円柱範囲内に侵入していたら
-		if (CUtility::CylinderAndPoint(pPlayer->GetPos(), 10.0f, 20.0f, GetPos()))
+		if (utility::CylinderAndPoint(pPlayer->GetPos(), 10.0f, 20.0f, GetPos()))
 		{
 			// ダメージ状態へ
 			pPlayer->To_Damage(-1);

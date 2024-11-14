@@ -232,7 +232,7 @@ void CCharacter::CorrectToTarget()
 {
 	// –Ú•WŒü‚«‚Ö•â³
 	Vec3 NewRot = GetRot();
-	CUtility::AdjustAngle(NewRot.y, m_RotTarget.y);	// Šp“x‚Ì·‚ğ•â³
+	utility::AdjustAngle(NewRot.y, m_RotTarget.y);	// Šp“x‚Ì·‚ğ•â³
 	NewRot += (m_RotTarget - NewRot) * m_fCorrectionCoef;
 	SetRot(NewRot);
 

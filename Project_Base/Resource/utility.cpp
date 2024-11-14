@@ -13,7 +13,7 @@
 //============================================================================
 // 象限に応じて、単位立方体用の頂点の座標を作成
 //============================================================================
-D3DXVECTOR3 CUtility::SetCubeVtxFromQuadrant(const WORD& wIdx)
+D3DXVECTOR3 utility::SetCubeVtxFromQuadrant(const WORD& wIdx)
 {
 	D3DXVECTOR3 VtxPos = { 0.0f, 0.0f, 0.0f };
 
@@ -37,7 +37,7 @@ D3DXVECTOR3 CUtility::SetCubeVtxFromQuadrant(const WORD& wIdx)
 //============================================================================
 // 点をY軸で回転させる
 //============================================================================
-D3DXVECTOR3 CUtility::RotatePointAroundY(const float& fDirection, const D3DXVECTOR3& Pos)
+D3DXVECTOR3 utility::RotatePointAroundY(const float& fDirection, const D3DXVECTOR3& Pos)
 {
 	// Y軸の回転量からsinとcosの値を計算
 	const float& fSinY = sinf(fDirection), fCosY = cosf(fDirection);
@@ -55,7 +55,7 @@ D3DXVECTOR3 CUtility::RotatePointAroundY(const float& fDirection, const D3DXVECT
 //============================================================================
 // 直方体をY軸で回転させる
 //============================================================================
-D3DXVECTOR3 CUtility::RotateBoxAroundY(const WORD& wIdx, const float& fDirection, const D3DXVECTOR3& Size)
+D3DXVECTOR3 utility::RotateBoxAroundY(const WORD& wIdx, const float& fDirection, const D3DXVECTOR3& Size)
 {
 	// 象限に応じて、頂点の座標を作成
 	const D3DXVECTOR3& VtxPos = SetCubeVtxFromQuadrant(wIdx);
@@ -76,7 +76,7 @@ D3DXVECTOR3 CUtility::RotateBoxAroundY(const WORD& wIdx, const float& fDirection
 //============================================================================
 // 直方体のY軸の回転を打ち消す
 //============================================================================
-D3DXVECTOR3 CUtility::InverseRotateBoxAroundY(const float& fDirection, const D3DXVECTOR3& VtxPos)
+D3DXVECTOR3 utility::InverseRotateBoxAroundY(const float& fDirection, const D3DXVECTOR3& VtxPos)
 {
 	// Y軸の逆の回転量からsinとcosの値を計算
 	const float& fSinY = sinf(-fDirection), fCosY = cosf(-fDirection);
@@ -94,7 +94,7 @@ D3DXVECTOR3 CUtility::InverseRotateBoxAroundY(const float& fDirection, const D3D
 //============================================================================
 // 角度の差の補正(ラジアン)
 //============================================================================
-void CUtility::AdjustAngle(float& fAngle, const float& fDest)
+void utility::AdjustAngle(float& fAngle, const float& fDest)
 {
 	// 目標角度と現在角度との差を計算
 	const float& fDifference = fAngle - fDest;
@@ -126,7 +126,7 @@ void CUtility::AdjustAngle(float& fAngle, const float& fDest)
 //============================================================================
 // 角度の差の補正(ラジアン)
 //============================================================================
-void CUtility::AdjustAngle(float& fAngle, const float& fDest, const float& fRadius)
+void utility::AdjustAngle(float& fAngle, const float& fDest, const float& fRadius)
 {
 	// 目標角度と現在角度との差を計算
 	const float& fDifference = fAngle - fDest;
@@ -158,7 +158,7 @@ void CUtility::AdjustAngle(float& fAngle, const float& fDest, const float& fRadi
 //============================================================================
 // 向きの範囲の補正(ラジアン)
 //============================================================================
-void CUtility::AdjustDirection(float& fAngle)
+void utility::AdjustDirection(float& fAngle)
 {
 	if (fAngle > D3DX_PI)
 	{
@@ -173,7 +173,7 @@ void CUtility::AdjustDirection(float& fAngle)
 //============================================================================
 // 向きの範囲の補正(ラジアン)
 //============================================================================
-void CUtility::AdjustDirection(float& fAngle1, float& fAngle2)
+void utility::AdjustDirection(float& fAngle1, float& fAngle2)
 {
 	if (fAngle1 > D3DX_PI)
 	{
@@ -190,7 +190,7 @@ void CUtility::AdjustDirection(float& fAngle1, float& fAngle2)
 //============================================================================
 // 球どうしの衝突判定
 //============================================================================
-bool CUtility::OnlySphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget)
+bool utility::OnlySphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget)
 {
 	// 対象位置へのベクトルを算出
 	const D3DXVECTOR3& Vec = PosTarget - PosSelf;
@@ -207,7 +207,7 @@ bool CUtility::OnlySphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, 
 //============================================================================
 // 球とAABBの衝突判定
 //============================================================================
-bool CUtility::SphereAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTarget)
+bool utility::SphereAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTarget)
 {
 	// 全ての軸方向からお互いにめり込んでいるとき衝突
 	if (PosSelf.x + fRadiusSelf > PosTarget.x - SizeTarget.x &&
@@ -226,7 +226,7 @@ bool CUtility::SphereAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSel
 //============================================================================
 // 円柱と点の衝突判定
 //============================================================================
-bool CUtility::CylinderAndPoint(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget)
+bool utility::CylinderAndPoint(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget)
 {
 	// 対象位置へのベクトルを算出
 	const D3DXVECTOR3& Vec = PosTarget - PosSelf;
@@ -248,7 +248,7 @@ bool CUtility::CylinderAndPoint(const D3DXVECTOR3& PosSelf, const float& fRadius
 //============================================================================
 // 円柱と球の衝突判定
 //============================================================================
-bool CUtility::CylinderAndSphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget)
+bool utility::CylinderAndSphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget)
 {
 	// 対象位置へのベクトルを算出
 	const D3DXVECTOR3& Vec = PosTarget - PosSelf;
@@ -270,7 +270,7 @@ bool CUtility::CylinderAndSphere(const D3DXVECTOR3& PosSelf, const float& fRadiu
 //============================================================================
 // 円柱とAABBの衝突判定
 //============================================================================
-bool CUtility::CylinderAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTarget)
+bool utility::CylinderAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTarget)
 {
 	// 全ての軸方向からお互いにめり込んでいるとき衝突
 	if (PosSelf.x + fRadiusSelf > PosTarget.x - SizeTarget.x &&
@@ -289,7 +289,7 @@ bool CUtility::CylinderAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusS
 //============================================================================
 // 円柱とAABBの衝突面を取得
 //============================================================================
-int CUtility::GetCylinderAndAABB(const D3DXVECTOR3& SelfOldPos, const D3DXVECTOR3& SelfNowPos, const float& fSelfRadius, const float& fSelfHeight, const D3DXVECTOR3& OtherPos, const D3DXVECTOR3& OtherSize)
+int utility::GetCylinderAndAABB(const D3DXVECTOR3& SelfOldPos, const D3DXVECTOR3& SelfNowPos, const float& fSelfRadius, const float& fSelfHeight, const D3DXVECTOR3& OtherPos, const D3DXVECTOR3& OtherSize)
 {
 	// 衝突が無ければ
 	if (!CylinderAndAABB(SelfNowPos, fSelfRadius, fSelfHeight, OtherPos, OtherSize))
@@ -336,7 +336,7 @@ int CUtility::GetCylinderAndAABB(const D3DXVECTOR3& SelfOldPos, const D3DXVECTOR
 //============================================================================
 // JSONファイルの展開
 //============================================================================
-nlohmann::json CUtility::OpenJsonFile(std::string FilePath)
+nlohmann::json utility::OpenJsonFile(std::string FilePath)
 {
 	// JSONファイルを読み取り展開
 	std::ifstream ifs(FilePath);

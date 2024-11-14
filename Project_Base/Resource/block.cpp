@@ -54,7 +54,7 @@ CBlock::~CBlock()
 	for (int i = 0; i < 2; i++)
 	{
 		// ƒ‰ƒ“ƒ_ƒ€‚È‰Á‘¬“x‚ğİ’è ( ‚â‚âYª‚É•Î‚Á‚½)
-		D3DXVECTOR3 RandomVelocity{ CUtility::GetRandomValue<float>() * 0.01f, fabsf(CUtility::GetRandomValue<float>()) * 0.03f, -0.5f };
+		D3DXVECTOR3 RandomVelocity{ utility::GetRandomValue<float>() * 0.01f, fabsf(utility::GetRandomValue<float>()) * 0.03f, -0.5f };
 
 		// ‚ª‚ê‚«‚ğ¶¬
 		CRubble::Create(0,						// ’Êí

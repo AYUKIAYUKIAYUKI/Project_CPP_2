@@ -74,7 +74,7 @@ CPlayer* CPlayer_State::RetrievePlayer()
 	// ÉvÉåÉCÉÑÅ[Çåüçı
 	if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
 	{
-		pPlayer = CUtility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+		pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
 	}
 	else
 	{

@@ -95,8 +95,8 @@ void CObject_HUD::Draw()
 void CObject_HUD::SetVibration()
 {
 	Vec3 NewPos = GetPos();
-	NewPos.x += CUtility::GetRandomValue<float>() * 0.05f;
-	NewPos.y += CUtility::GetRandomValue<float>() * 0.05f;
+	NewPos.x += utility::GetRandomValue<float>() * 0.05f;
+	NewPos.y += utility::GetRandomValue<float>() * 0.05f;
 	SetPos(NewPos);
 }
 
@@ -292,7 +292,7 @@ void CObject_HUD::CorrectToTarget()
 
 	// –Ú•WŒü‚«‚Ö•â³
 	Vec3 NowRot = GetRot();
-	CUtility::AdjustDirection(m_RotTarget.y, NowRot.y);	// Œü‚«‚Ì”ÍˆÍ‚Ì•â³
+	utility::AdjustDirection(m_RotTarget.y, NowRot.y);	// Œü‚«‚Ì”ÍˆÍ‚Ì•â³
 	NowRot += (m_RotTarget - NowRot) * m_fCorrectionCoef;
 	SetRot(NowRot);
 
