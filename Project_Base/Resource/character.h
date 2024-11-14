@@ -34,6 +34,10 @@ public:
 	const float& GetDirection() const;		// •ûŠp‚ğæ“¾
 	void SetDirection(float fDirection);	// •ûŠp‚ğİ’è
 
+		// <getter/setter>
+	const float& GetOldDirection() const;		// ‰ß‹‚Ì•ûŠp‚ğæ“¾
+	void SetOldDirection(float fDirection);	// ‰ß‹‚Ì•ûŠp‚ğİ’è
+
 	// <getter/setter>
 	const float& GetMoveSpeed() const;		// ˆÚ“®‘¬“x‚ğæ“¾
 	void SetMoveSpeed(float fMoveSpeed);	// ˆÚ“®‘¬“x‚ğİ’è
@@ -67,6 +71,7 @@ private:
 	// <data>
 	float		m_fCorrectionCoef;	// •â³ŒW”
 	float		m_fDirection;		// •ûŠp
+	float		m_fOldDirection;	// ‰ß‹‚Ì•ûŠp
 	float		m_fMoveSpeed;		// ˆÚ“®‘¬“x
 	D3DXVECTOR3	m_RotTarget;		// –Ú•WŒü‚«
 	D3DXVECTOR3	m_PosTarget;		// –Ú•WÀ•W

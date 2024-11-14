@@ -30,6 +30,7 @@ CCharacter::CCharacter() :
 	CObject_X{ LAYER::BG },
 	m_fCorrectionCoef{ 0.0f },
 	m_fDirection{ 0.0f },
+	m_fOldDirection{ 0.0f },
 	m_fMoveSpeed{ 0.0f },
 	m_RotTarget{ VEC3_INIT },
 	m_PosTarget{ VEC3_INIT },
@@ -92,6 +93,9 @@ void CCharacter::Update()
 
 	// Xオブジェクトの更新処理
 	CObject_X::Update();
+
+	// 方角を保存
+	m_fOldDirection = m_fDirection;
 }
 
 //============================================================================
@@ -117,6 +121,22 @@ const float& CCharacter::GetDirection() const
 void CCharacter::SetDirection(float fDirection)
 {
 	m_fDirection = fDirection;
+}
+
+//============================================================================
+// 過去の方角を取得
+//============================================================================
+const float& CCharacter::GetOldDirection() const
+{
+	return m_fOldDirection;
+}
+
+//============================================================================
+// 過去の方角を設定
+//============================================================================
+void CCharacter::SetOldDirection(float fOldDirection)
+{
+	m_fOldDirection = fOldDirection;
 }
 
 //============================================================================

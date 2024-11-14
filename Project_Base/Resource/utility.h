@@ -54,6 +54,9 @@ public:
 	// 円柱とAABBの衝突判定
 	static bool CylinderAndAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTarget);
 
+	// 円柱とAABBの衝突面を取得
+	static int GetCylinderAndAABB(const D3DXVECTOR3& SelfOldPos, const D3DXVECTOR3& SelfNowPos, const float& fSelfRadius, const float& fSelfHeight, const D3DXVECTOR3& OtherPos, const D3DXVECTOR3& OtherSize);
+
 	// Jsonファイルの展開
 	static nlohmann::json OpenJsonFile(std::string FilePath);
 
