@@ -20,20 +20,26 @@
 //****************************************************
 namespace collision
 {
+	//****************************************************
+	// usingƒfƒBƒŒƒNƒeƒBƒu
+	//****************************************************
+	using namespace abbr;
+
 	// ‹…“¯Žm
-	bool HitSphereToSphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget);
+	bool HitSphereToSphere(const CBounding_Sphere* const Self, const CBounding_Sphere* const Other);
 
 	// ‹…‚ÆAABB
-	bool HitSphereToAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTaret);
+	bool HitSphereToAABB(const CBounding_Sphere* const Self, const CBounding_Box* const Other);
 
 	// ‰~’Œ“¯Žm
 	bool HitCylinderToCylinder(const CBounding_Cylinder* const Self, const CBounding_Cylinder* const Other);
 
 	// ‰~’Œ‚Æ“_
-	bool HitCylinderToPoint(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget);
+	bool HitCylinderToPoint(const CBounding_Cylinder* const Self, const Vec3& Other);
 
 	// ‰~’Œ‚Æ‹…
-	bool HitCylinderToSphere(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const float& fRadiusTarget);
+	bool HitCylinderToSphere(const CBounding_Cylinder* const Self, const CBounding_Sphere* const Other);
+	bool HitCylinderToSphere(const D3DXVECTOR3& SelfPos, const float& fSelfRadius, const float& fSelfHeight, const D3DXVECTOR3& OtherPos, const float& fOtherRadius);
 
 	// ‰~’Œ‚ÆAABB
 	bool HitCylinderToAABB(const D3DXVECTOR3& PosSelf, const float& fRadiusSelf, const float& fHeight, const D3DXVECTOR3& PosTarget, const D3DXVECTOR3& SizeTarget);
