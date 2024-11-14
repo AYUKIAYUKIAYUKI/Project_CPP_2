@@ -1,13 +1,13 @@
 //============================================================================
 // 
-// フィールドマネージャー [field_manager.cpp]79
+// フィールドマネージャー [field_manager.cpp]
 // Author : 福田歩希
 // 
 //============================================================================
 
 //****************************************************
 // インクルードファイル
-//****************************************************797977
+//****************************************************
 #include "field_manager.h"
 #include "fan.h"
 
@@ -258,13 +258,12 @@ void CField_Manager::TestCircle()
 		// 生成用の座標を決定
 		Vec3 NewPos = VEC3_INIT;
 		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
-		//NewPos.y = -15.0f;
-		NewPos.y = 30.0f;
+		NewPos.y = 30.0f - utility::GetRandomValue<float>() * 0.1f;
 		NewPos.z = -sinf(fDirection) * FIELD_RADIUS;
 		
 		// 生成用の向きを決定
 		Vec3 NewRot = VEC3_INIT;
-		NewRot.y = fDirection + D3DX_PI * 0.5f;
+		NewRot.y = utility::GetRandomValue<float>();
 
 		// ブロックを生成
 		CBlock::Create(NewPos, NewRot);
