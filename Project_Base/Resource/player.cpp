@@ -5,7 +5,7 @@
 // 
 //============================================================================
 
-//****************************************************
+//****************************************************79797979
 // インクルードファイル
 //****************************************************
 #include "player.h"
@@ -365,7 +365,7 @@ void CPlayer::HitCheck()
 				SetAccelY(0.0f);
 
 				// 新しい目標座標を作成
-				Vec3 NewPosTarget = { CylinderPosTarget.x, BoxPos.y + BoxSize.y, CylinderPosTarget.z };
+				Vec3 NewPosTarget = { CylinderPosTarget.x, BoxPos.y + BoxSize.y + CylinderHeight, CylinderPosTarget.z };
 			 
 				// 目標座標を反映
 				SetPosTarget(NewPosTarget);
@@ -373,8 +373,18 @@ void CPlayer::HitCheck()
 				break;
 			}
 			case 2:
-				break;
+			{
+				// Y軸方向の加速度を重力方向へ固定
+				SetAccelY(-5.0f);
 
+				// 新しい目標座標を作成
+				Vec3 NewPosTarget = { CylinderPosTarget.x, BoxPos.y - BoxSize.y - CylinderHeight, CylinderPosTarget.z };
+
+				// 目標座標を反映
+				SetPosTarget(NewPosTarget);
+
+				break;
+			}
 			case 3:
 				break;
 

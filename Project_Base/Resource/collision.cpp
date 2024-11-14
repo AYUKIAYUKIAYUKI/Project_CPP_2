@@ -179,7 +179,7 @@ bool collision::HitCylinderToAABB(const Vec3& SelfPos, const float& fSelfRadius,
 	if (SelfPos.x + fSelfRadius > OtherPos.x - OtherSize.x &&
 		SelfPos.x - fSelfRadius < OtherPos.x + OtherSize.x &&
 		SelfPos.y + fSelfHeight > OtherPos.y - OtherSize.y &&
-		SelfPos.y < OtherPos.y + OtherSize.y &&
+		SelfPos.y - fSelfHeight < OtherPos.y + OtherSize.y &&
 		SelfPos.z + fSelfRadius > OtherPos.z - OtherSize.z &&
 		SelfPos.z - fSelfRadius < OtherPos.z + OtherSize.z)
 	{
