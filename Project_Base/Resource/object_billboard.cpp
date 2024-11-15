@@ -13,22 +13,33 @@
 // デバイス取得用
 #include "renderer.h"
 
+//****************************************************
+// usingディレクティブ
+//****************************************************
+using namespace abbr;
+
+//============================================================================
+// 
+// publicメンバ
+// 
+//============================================================================
+
 //============================================================================
 // コンストラクタ
 //============================================================================
-CObject_billboard::CObject_billboard(LAYER Priority) :
+CObject_Billboard::CObject_Billboard(LAYER Priority) :
 	CObject{ Priority },
 	m_pVtxBuff{ nullptr },
 	m_pTex{ nullptr },
-	m_Pos{ 0.0f, 0.0f, 0.0f },			// 座標
-	m_Rot{ 0.0f, 0.0f, 0.0f },			// 向き
-	m_Size{ 0.0f, 0.0f, 0.0f },			// サイズ
-	m_fLength{ 0.0f },					// 展開用対角線
-	m_fAngle{ 0.0f },					// 対角線用角度
-	m_fTexWidth{ 1.0f },				// 横テクスチャ分割幅
-	m_fTexHeight{ 1.0f },				// 縦テクスチャ分縦幅
-	m_nNowPatternU{ 0 },				// 現在の横テクスチャ種類
-	m_nNowPatternV{ 0 }					// 現在の縦テクスチャ種類
+	m_Size{ VEC3_INIT },
+	m_Rot{ VEC3_INIT },
+	m_Pos{ VEC3_INIT },
+	m_fLength{ 0.0f },
+	m_fAngle{ 0.0f },
+	m_fTexWidth{ 1.0f },
+	m_fTexHeight{ 1.0f },
+	m_nNowPatternU{ 0 },
+	m_nNowPatternV{ 0 }
 {
 	D3DXMatrixIdentity(&m_MtxWorld);	// ワールド行列
 }
@@ -36,7 +47,7 @@ CObject_billboard::CObject_billboard(LAYER Priority) :
 //============================================================================
 // デストラクタ
 //============================================================================
-CObject_billboard::~CObject_billboard()
+CObject_Billboard::~CObject_Billboard()
 {
 
 }
@@ -44,56 +55,13 @@ CObject_billboard::~CObject_billboard()
 //============================================================================
 // 初期設定
 //============================================================================
-HRESULT CObject_billboard::Init()
+HRESULT CObject_Billboard::Init()
 {
-	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
-
 	// 頂点バッファの生成
-	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * 4,
-		D3DUSAGE_WRITEONLY,
-		FVF_VERTEX_3D,
-		D3DPOOL_MANAGED,
-		&m_pVtxBuff,
-		nullptr);
-
-	if (m_pVtxBuff == nullptr)
-	{ // 生成失敗
+	if (FAILED(CreateVtxBuff()))
+	{
 		return E_FAIL;
 	}
-
-	// 頂点情報へのポインタ
-	VERTEX_3D* pVtx{ nullptr };
-
-	// 頂点バッファをロック
-	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-
-	// 位置の設定
-	pVtx[0].pos = { 0.0f, 0.0f, 0.0f };
-	pVtx[1].pos = { 0.0f, 0.0f, 0.0f };
-	pVtx[2].pos = { 0.0f, 0.0f, 0.0f };
-	pVtx[3].pos = { 0.0f, 0.0f, 0.0f };
-
-	// 法線ベクトルの設定
-	pVtx[0].nor = { 0.0f, 1.0f, 0.0f };
-	pVtx[1].nor = { 0.0f, 1.0f, 0.0f };
-	pVtx[2].nor = { 0.0f, 1.0f, 0.0f };
-	pVtx[3].nor = { 0.0f, 1.0f, 0.0f };
-
-	// 色の設定
-	pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-
-	// テクスチャの設定
-	pVtx[0].tex = { 0.0f, 0.0f };
-	pVtx[1].tex = { 1.0f, 0.0f };
-	pVtx[2].tex = { 0.0f, 1.0f };
-	pVtx[3].tex = { 1.0f, 1.0f };
-
-	// 頂点バッファをアンロックする
-	m_pVtxBuff->Unlock();
 
 	return S_OK;
 }
@@ -101,7 +69,7 @@ HRESULT CObject_billboard::Init()
 //============================================================================
 // 終了処理
 //============================================================================
-void CObject_billboard::Uninit()
+void CObject_Billboard::Uninit()
 {
 	// 頂点バッファの破棄
 	if (m_pVtxBuff != nullptr)
@@ -114,7 +82,7 @@ void CObject_billboard::Uninit()
 //============================================================================
 // 更新処理
 //============================================================================
-void CObject_billboard::Update()
+void CObject_Billboard::Update()
 {
 	if (m_pVtxBuff == nullptr)
 	{ // 頂点バッファが消失
@@ -126,12 +94,12 @@ void CObject_billboard::Update()
 	m_fLength = sqrtf(m_Size.x * m_Size.x + m_Size.y * m_Size.y);
 
 	// 頂点情報へのポインタ
-	VERTEX_3D* pVtx{ nullptr };
+	VERTEX_3D* pVtx = nullptr;
 
 	// 頂点バッファをロック
 	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 
-	// 位置の設定
+	// 頂点座標の設定
 	pVtx[0].pos = {
 		sinf(m_Rot.z - (D3DX_PI - m_fAngle)) * m_fLength,
 		-cosf(m_Rot.z - (D3DX_PI - m_fAngle)) * m_fLength,
@@ -156,7 +124,7 @@ void CObject_billboard::Update()
 		0.0f
 	};
 
-	// テクスチャの設定
+	// テクスチャ座標の設定
 	pVtx[0].tex = { m_fTexWidth * m_nNowPatternU, m_fTexHeight * m_nNowPatternV };
 	pVtx[1].tex = { m_fTexWidth * (m_nNowPatternU + 1), m_fTexHeight * m_nNowPatternV };
 	pVtx[2].tex = { m_fTexWidth * (m_nNowPatternU), m_fTexHeight * (m_nNowPatternV + 1) };
@@ -172,16 +140,10 @@ void CObject_billboard::Update()
 //============================================================================
 // 描画処理
 //============================================================================
-void CObject_billboard::Draw()
+void CObject_Billboard::Draw()
 {
 	// デバイスを取得
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
-
-	//// 深度テストの比較方法の変更
-	//pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
-
-	//// 深度バッファに描画しない
-	//pDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
 	// アルファテストを有効にする
 	pDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
@@ -206,16 +168,10 @@ void CObject_billboard::Draw()
 	// ポリゴンの描画
 	pDev->DrawPrimitive(D3DPT_TRIANGLESTRIP,	// プリミティブの種類
 		0,										// 頂点情報の先頭アドレス
-		2);										// プリミティブ数
+		NUM_PRIM);								// プリミティブ数
 
 	// ライト反映を有効にする
 	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
-
-	//// 深度テストの比較方法の変更
-	//pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-
-	//// 深度バッファに書き込む
-	//pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
 	// アルファテストを無効にする
 	pDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -224,7 +180,7 @@ void CObject_billboard::Draw()
 //============================================================================
 // テクスチャ割当
 //============================================================================
-void CObject_billboard::BindTex(LPDIRECT3DTEXTURE9 pTex)
+void CObject_Billboard::BindTex(LPDIRECT3DTEXTURE9 pTex)
 {
 	m_pTex = pTex;
 }
@@ -232,47 +188,15 @@ void CObject_billboard::BindTex(LPDIRECT3DTEXTURE9 pTex)
 //============================================================================
 // もっとテクスチャ割当
 //============================================================================
-void CObject_billboard::BindTex(CTexture_Manager::TYPE Type)
+void CObject_Billboard::BindTex(CTexture_Manager::TYPE Type)
 {
 	m_pTex = CTexture_Manager::GetInstance()->GetTexture(Type);
 }
 
 //============================================================================
-// 位置取得
-//============================================================================
-D3DXVECTOR3 CObject_billboard::GetPos()
-{
-	return m_Pos;
-}
-
-//============================================================================
-// 位置設定
-//============================================================================
-void CObject_billboard::SetPos(D3DXVECTOR3 Pos)
-{
-	m_Pos = Pos;
-}
-
-//============================================================================
-// 向き取得
-//============================================================================
-D3DXVECTOR3 CObject_billboard::GetRot()
-{
-	return m_Rot;
-}
-
-//============================================================================
-// 向き設定
-//============================================================================
-void CObject_billboard::SetRot(D3DXVECTOR3 Rot)
-{
-	m_Rot = Rot;
-}
-
-//============================================================================
 // サイズ取得
 //============================================================================
-D3DXVECTOR3 CObject_billboard::GetSize()
+const D3DXVECTOR3& CObject_Billboard::GetSize() const
 {
 	return m_Size;
 }
@@ -280,15 +204,79 @@ D3DXVECTOR3 CObject_billboard::GetSize()
 //============================================================================
 // サイズ設定
 //============================================================================
-void CObject_billboard::SetSize(D3DXVECTOR3 Size)
+void CObject_Billboard::SetSize(D3DXVECTOR3 Size)
 {
 	m_Size = Size;
 }
 
 //============================================================================
+// 向き取得
+//============================================================================
+const D3DXVECTOR3& CObject_Billboard::GetRot()const
+{
+	return m_Rot;
+}
+
+//============================================================================
+// 向き設定
+//============================================================================
+void CObject_Billboard::SetRot(D3DXVECTOR3 Rot)
+{
+	m_Rot = Rot;
+}
+
+//============================================================================
+// 座標取得
+//============================================================================
+const D3DXVECTOR3& CObject_Billboard::GetPos() const
+{
+	return m_Pos;
+}
+
+//============================================================================
+// 座標設定
+//============================================================================
+void CObject_Billboard::SetPos(D3DXVECTOR3 Pos)
+{
+	m_Pos = Pos;
+}
+
+//============================================================================
+// 色を取得
+//============================================================================
+const D3DXCOLOR& CObject_Billboard::GetCol() const
+{
+	return m_Col;
+}
+
+//============================================================================
+// 色を設定
+//============================================================================
+void CObject_Billboard::SetCol(D3DXCOLOR Col)
+{
+	m_Col = Col;
+}
+
+//============================================================================
+// アルファ値を取得
+//============================================================================
+const float& CObject_Billboard::GetAlpha() const
+{
+	return m_Col.a;
+}
+
+//============================================================================
+// アルファ値を設定
+//============================================================================
+void CObject_Billboard::SetAlpha(float fAlpha)
+{
+	m_Col.a = fAlpha;
+}
+
+//============================================================================
 // 展開用対角線取得
 //============================================================================
-float CObject_billboard::GetLength()
+const float& CObject_Billboard::GetLength() const
 {
 	return m_fLength;
 }
@@ -296,7 +284,7 @@ float CObject_billboard::GetLength()
 //============================================================================
 // 横テクスチャ分割幅設定
 //============================================================================
-void CObject_billboard::SetTexWidth(float fWidth)
+void CObject_Billboard::SetTexWidth(float fWidth)
 {
 	m_fTexWidth = fWidth;
 }
@@ -304,7 +292,7 @@ void CObject_billboard::SetTexWidth(float fWidth)
 //============================================================================
 // 縦テクスチャ分割幅設定
 //============================================================================
-void CObject_billboard::SetTexHeight(float fHeight)
+void CObject_Billboard::SetTexHeight(float fHeight)
 {
 	m_fTexHeight = fHeight;
 }
@@ -312,7 +300,7 @@ void CObject_billboard::SetTexHeight(float fHeight)
 //============================================================================
 // 現在のテクスチャ横分割幅取得
 //============================================================================
-int CObject_billboard::GetNowPatternU()
+const int& CObject_Billboard::GetNowPatternU() const
 {
 	return m_nNowPatternU;
 }
@@ -320,7 +308,7 @@ int CObject_billboard::GetNowPatternU()
 //============================================================================
 // 現在のテクスチャ横分割幅設定
 //============================================================================
-void CObject_billboard::SetNowPatternU(int nNowPatternU)
+void CObject_Billboard::SetNowPatternU(int nNowPatternU)
 {
 	m_nNowPatternU = nNowPatternU;
 }
@@ -328,7 +316,7 @@ void CObject_billboard::SetNowPatternU(int nNowPatternU)
 //============================================================================
 // 現在のテクスチャ縦分割幅取得
 //============================================================================
-int CObject_billboard::GetNowPatternV()
+const int& CObject_Billboard::GetNowPatternV() const
 {
 	return m_nNowPatternV;
 }
@@ -336,7 +324,7 @@ int CObject_billboard::GetNowPatternV()
 //============================================================================
 // 現在のテクスチャ縦分割幅設定
 //============================================================================
-void CObject_billboard::SetNowPatternV(int nNowPatternV)
+void CObject_Billboard::SetNowPatternV(int nNowPatternV)
 {
 	m_nNowPatternV = nNowPatternV;
 }
@@ -344,9 +332,9 @@ void CObject_billboard::SetNowPatternV(int nNowPatternV)
 //============================================================================
 // 生成
 //============================================================================
-CObject_billboard* CObject_billboard::Create()
+CObject_Billboard* CObject_Billboard::Create()
 {
-	CObject_billboard* pObject3D = DBG_NEW CObject_billboard{};
+	CObject_Billboard* pObject3D = DBG_NEW CObject_Billboard{};
 
 	// 生成出来ていたら初期設定
 	if (pObject3D != nullptr)
@@ -358,9 +346,66 @@ CObject_billboard* CObject_billboard::Create()
 }
 
 //============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
+
+//============================================================================
+// 頂点バッファの生成
+//=========================================================================
+HRESULT CObject_Billboard::CreateVtxBuff()
+{
+	// デバイスを取得
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
+
+	// 頂点バッファの生成
+	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * NUM_VTX,
+		D3DUSAGE_WRITEONLY,
+		FVF_VERTEX_3D,
+		D3DPOOL_MANAGED,
+		&m_pVtxBuff,
+		nullptr);
+
+	if (m_pVtxBuff == nullptr)
+	{ // 生成失敗
+		return E_FAIL;
+	}
+
+	// 頂点情報へのポインタ
+	VERTEX_3D* pVtx = nullptr;
+
+	// 頂点バッファをロック
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	for (WORD wNumVtx = 0; wNumVtx < NUM_VTX; ++wNumVtx)
+	{
+		// 頂点座標の設定
+		pVtx[wNumVtx].pos = { VEC3_INIT };
+
+		// 法線ベクトルの設定
+		pVtx[wNumVtx].nor = { VEC3_INIT };
+
+		// 頂点色の設定
+		pVtx[wNumVtx].col = XCOL_INIT;
+	}
+
+	// テクスチャ座標の設定
+	pVtx[0].tex = { 0.0f, 0.0f };
+	pVtx[1].tex = { 1.0f, 0.0f };
+	pVtx[2].tex = { 0.0f, 1.0f };
+	pVtx[3].tex = { 1.0f, 1.0f };
+
+	// 頂点バッファをアンロックする
+	m_pVtxBuff->Unlock();
+
+	return S_OK;
+}
+
+//============================================================================
 // ワールド行列設定
 //============================================================================
-void CObject_billboard::SetMtxWorld()
+void CObject_Billboard::SetMtxWorld()
 {
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 

@@ -57,7 +57,7 @@
     <ClCompile Include="resource\object_3D.cpp">
       <Filter>&lt;Object&gt;</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\object_billboard.cpp">
+    <ClCompile Include="Resource\object_Billboard.cpp">
       <Filter>&lt;Object&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\object_HUD.cpp">
@@ -196,7 +196,7 @@
     <ClInclude Include="resource\object_3D.h">
       <Filter>&lt;Object&gt;</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\object_billboard.h">
+    <ClInclude Include="Resource\object_Billboard.h">
       <Filter>&lt;Object&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\object_HUD.h">
