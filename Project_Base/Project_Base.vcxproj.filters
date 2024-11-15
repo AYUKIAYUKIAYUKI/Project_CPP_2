@@ -138,6 +138,12 @@
     <ClCompile Include="Resource\collision.cpp">
       <Filter>&lt;utility&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\sparks.cpp">
+      <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\object_Effect.cpp">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -276,6 +282,12 @@
     </ClInclude>
     <ClInclude Include="Resource\collision.h">
       <Filter>&lt;utility&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\sparks.h">
+      <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\object_Effect.h">
+      <Filter>&lt;Object&gt;</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

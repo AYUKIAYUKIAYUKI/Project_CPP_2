@@ -48,6 +48,7 @@
     <ClCompile Include="resource\object_2D.cpp" />
     <ClCompile Include="resource\object_3D.cpp" />
     <ClCompile Include="Resource\object_Billboard.cpp" />
+    <ClCompile Include="Resource\object_Effect.cpp" />
     <ClCompile Include="Resource\object_HUD.cpp" />
     <ClCompile Include="resource\object_X.cpp" />
     <ClCompile Include="resource\pch.cpp">
@@ -70,6 +71,7 @@
     <ClCompile Include="Resource\rubble.cpp" />
     <ClCompile Include="Resource\scene.cpp" />
     <ClCompile Include="resource\sound.cpp" />
+    <ClCompile Include="Resource\sparks.cpp" />
     <ClCompile Include="Resource\spline_test.cpp" />
     <ClCompile Include="Resource\state.cpp" />
     <ClCompile Include="resource\texture_manager.cpp" />
@@ -106,6 +108,7 @@
     <ClInclude Include="resource\object_2D.h" />
     <ClInclude Include="resource\object_3D.h" />
     <ClInclude Include="Resource\object_Billboard.h" />
+    <ClInclude Include="Resource\object_Effect.h" />
     <ClInclude Include="Resource\object_HUD.h" />
     <ClInclude Include="resource\object_X.h" />
     <ClInclude Include="resource\pch.h" />
@@ -125,6 +128,7 @@
     <ClInclude Include="Resource\rubble.h" />
     <ClInclude Include="Resource\scene.h" />
     <ClInclude Include="resource\sound.h" />
+    <ClInclude Include="Resource\sparks.h" />
     <ClInclude Include="Resource\spline_test.h" />
     <ClInclude Include="Resource\state.h" />
     <ClInclude Include="resource\texture_manager.h" />
