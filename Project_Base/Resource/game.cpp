@@ -45,7 +45,7 @@ CGame::~CGame()
 HRESULT CGame::Init()
 {
 	// 基底クラスの初期設定
-	HRESULT hr{ CScene::Init() };
+	HRESULT hr = CScene::Init();
 
 	// プレイヤーを生成
 	CPlayer::Create();
@@ -55,6 +55,7 @@ HRESULT CGame::Init()
 
 	// 環境装飾を生成
 	CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue.json"));
+	CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\around.json"));
 
 	// フィールドマネージャーの初期設定
 	CField_Manager::GetInstance()->Init();
@@ -89,6 +90,11 @@ void CGame::Update()
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
 	{
 		CFade::SetFade(CScene::MODE::RESULT);
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_F5))
+	{
+		// パラメータ確認用
+		CFade::SetFade(CScene::MODE::TITLE);
 	}
 }
 

@@ -34,6 +34,8 @@ public:
 		RENDER_SPHERE_HIT,		// render sphere hit
 		RENDER_CYLINDER,		// render cylinder
 		RENDER_CYLINDER_HIT,	// render cylinder hit
+		STATUE,					// “º‘œ
+		AROUND,					// Žü•Ó—Ìˆæ
 		MAX,
 	};
 
