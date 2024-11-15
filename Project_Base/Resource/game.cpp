@@ -47,17 +47,14 @@ HRESULT CGame::Init()
 	// 基底クラスの初期設定
 	HRESULT hr{ CScene::Init() };
 
-	/* プレイヤーを仮生成 */
+	// プレイヤーを生成
 	CPlayer::Create();
 
 	/* エネミーを仮生成 */
 	//CEnemy::Create();
 
-	/* ステージ代わりの円筒 */
-	CObject_X* pTest = CObject_X::Create(CObject::LAYER::BACK);
-	pTest->BindModel(CModel_X_Manager::TYPE::CYLINDER);
-	pTest->SetPos({ 0.0f, 0.0f, 0.0f });
-	pTest->SetScale({ 8.5f, 8.5f, 8.5f });
+	// 環境装飾を生成
+	CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue.json"));
 
 	// フィールドマネージャーの初期設定
 	CField_Manager::GetInstance()->Init();

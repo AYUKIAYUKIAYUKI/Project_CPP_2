@@ -349,6 +349,41 @@ CObject_X* CObject_X::Create(LAYER Priority, CModel_X_Manager::TYPE Type)
 }
 
 //============================================================================
+// 生成
+//============================================================================
+CObject_X* CObject_X::Create(JSON Json)
+{
+	// パラメータをコピーしていく
+	const auto& Priority = Json["Priority"];
+	const auto& ModelType = Json["ModelType"];
+	const auto& Rot = Json["Rot"];
+	const auto& Pos = Json["Pos"];
+	const auto& Scale = Json["Scale"];
+	const auto& Alpha = Json["Alpha"];
+
+	// インスタンスを生成
+	CObject_X* pObjectX = DBG_NEW CObject_X(static_cast<CObject::LAYER>(Priority));
+
+	// 生成失敗
+	if (pObjectX == nullptr)
+	{
+		assert(false && "Xオブジェクトの生成に失敗しました");
+	}
+
+	// Xオブジェクトの初期設定
+	pObjectX->Init();
+
+	// 各種パラメータを設定
+	pObjectX->BindModel(static_cast<CModel_X_Manager::TYPE>(ModelType));
+	pObjectX->SetRot(Vec3(Rot[0], Rot[1], Rot[2]));
+	pObjectX->SetPos(Vec3(Pos[0], Pos[1], Pos[2]));
+	pObjectX->SetScale(Vec3(Scale[0], Scale[1], Scale[2]));
+	pObjectX->SetAlpha(Alpha);
+
+	return pObjectX;
+}
+
+//============================================================================
 // 
 // privateメンバ
 // 

@@ -68,6 +68,7 @@ public:
 	static CObject_X* Create();												// ê∂ê¨
 	static CObject_X* Create(LAYER Priority);								// ê∂ê¨
 	static CObject_X* Create(LAYER Priority, CModel_X_Manager::TYPE Type);	// ê∂ê¨
+	static CObject_X* Create(JSON Json);									// ê∂ê¨
 
 private:
 

@@ -207,7 +207,11 @@ nlohmann::json utility::OpenJsonFile(std::string FilePath)
 	}
 	else
 	{
+#if 0
 		CRenderer::SetTimeString("JSONƒtƒ@ƒCƒ‹y" + FilePath + "z‚Ì“WŠJ‚É¸”s‚µ‚Ü‚µ‚½", 90);
+#else
+		assert(false && "JSONƒtƒ@ƒCƒ‹‚Ì“WŠJ‚É¸”s");
+#endif
 	}
 
 	return nullptr;
