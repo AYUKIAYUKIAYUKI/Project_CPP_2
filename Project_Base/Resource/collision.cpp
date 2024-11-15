@@ -194,6 +194,12 @@ bool collision::HitCylinderToAABB(const Vec3& SelfPos, const float& fSelfRadius,
 //============================================================================
 int collision::GetCylinderToAABB(const Vec3& SelfOldPos, const Vec3& SelfNowPos, const float& fSelfRadius, const float& fSelfHeight, const Vec3& OtherPos, const Vec3& OtherSize)
 {
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+	CRenderer::SetDebugString("プレイヤー過去回転 : " + to_string(SelfOldPos.x) + " :  " + to_string(SelfOldPos.y) + " : " + to_string(SelfOldPos.z));
+	CRenderer::SetDebugString("プレイヤー現在回転 : " + to_string(SelfNowPos.x) + " :  " + to_string(SelfNowPos.y) + " : " + to_string(SelfNowPos.z));
+	CRenderer::SetDebugString("プレイヤー・右・左 : " + to_string(SelfNowPos.x + fSelfRadius) + " :  " + to_string(SelfOldPos.x - fSelfRadius));
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+
 	// 衝突自体が無ければ
 	if (!HitCylinderToAABB(SelfNowPos, fSelfRadius, fSelfHeight, OtherPos, OtherSize))
 	{

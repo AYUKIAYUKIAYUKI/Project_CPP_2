@@ -78,12 +78,6 @@ void CCharacter::Uninit()
 //============================================================================
 void CCharacter::Update()
 {
-	// 自動で目標向きを移動方向に向ける
-	AutoSetRotTarget();
-
-	// 自動で目標座標を変動した方角に合わせる
-	AutoSetPosTarget();
-
 	// 目標値への補正
 	CorrectToTarget();
 

@@ -250,7 +250,7 @@ void CField_Manager::Uninit()
 //============================================================================
 void CField_Manager::TestCircle()
 {
-	float fDirection = D3DX_PI * 0.25f;				// 方角
+	float fDirection = D3DX_PI;						// 方角
 	float fAdder = (D3DX_PI * 2.0f) / MAX_BLOCK;	// 増加量
 
 	for (WORD i = 0; i < MAX_BLOCK; ++i)
@@ -258,12 +258,13 @@ void CField_Manager::TestCircle()
 		// 生成用の座標を決定
 		Vec3 NewPos = VEC3_INIT;
 		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
-		NewPos.y = 30.0f - utility::GetRandomValue<float>() * 0.1f;
+		NewPos.y = 40.0f - utility::GetRandomValue<float>() * 0.15f;
 		NewPos.z = -sinf(fDirection) * FIELD_RADIUS;
 		
 		// 生成用の向きを決定
 		Vec3 NewRot = VEC3_INIT;
-		NewRot.y = utility::GetRandomValue<float>();
+		//NewRot.y = utility::GetRandomValue<float>();
+		NewRot.y = fDirection;
 
 		// ブロックを生成
 		CBlock::Create(NewPos, NewRot);

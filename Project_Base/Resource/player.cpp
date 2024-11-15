@@ -110,11 +110,14 @@ void CPlayer::Uninit()
 //============================================================================
 void CPlayer::Update()
 {
-	// 当たり判定の中心点を設定
-	m_pBndCylinder->SetCenterPos(GetPos());
-
 	// ステートマネージャーの更新
 	m_pStateManager->Update();
+
+	// 自動で目標向きを移動方向に向ける
+	AutoSetRotTarget();
+
+	// 自動で目標座標を変動した方角に合わせる
+	AutoSetPosTarget();
 
 	// 高さの補正
 	AdjustHeight();
@@ -289,10 +292,10 @@ void CPlayer::AdjustHeight()
 	SetPosTarget(NewPosTarget);
 
 	// 高さの目標に下限を設定
-	if (GetPosTarget().y < 0.0f)
+	if (GetPosTarget().y < m_pBndCylinder->GetHeight())
 	{
 		// 目標座標を下限に固定
-		NewPosTarget.y = 0.0f;
+		NewPosTarget.y = m_pBndCylinder->GetHeight();
 		SetPosTarget(NewPosTarget);
 
 		// Y軸方向の加速度を初期化
@@ -307,6 +310,9 @@ void CPlayer::HitCheck()
 {
 	// 衝突の有無を検出
 	bool bDetect = false;
+
+	// 当たり判定の中心点を設定
+	m_pBndCylinder->SetCenterPos(GetPos());
 
 	// ミドルオブジェクトを取得
 	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
@@ -334,12 +340,25 @@ void CPlayer::HitCheck()
 		const float& fBoxDirection = pBlock->GetRot().y;
 
 		// ボックスの中心点からシリンダーの座標への相対座標を計算
+#if 0
 		const Vec3& RelativePos = CylinderPosTarget - BoxPos;
 		const Vec3& RelativeOldPos = CylinderOldPos - BoxPos;
+#else
+		Vec3 RelativePos = BoxPos - CylinderPosTarget;
+		RelativePos.y = -RelativePos.y;
+		Vec3 RelativeOldPos = BoxPos - CylinderOldPos;
+		RelativeOldPos.y = -RelativeOldPos.y;
+#endif
 
 		// 相対座標に、ボックスの回転角度分を打ち消す回転行列を適用
-		const Vec3& ResultPos = utility::RotatePointAroundY(-fBoxDirection, RelativePos);
-		const Vec3& ResultOldPos = utility::RotatePointAroundY(-fBoxDirection, RelativeOldPos);
+		const Vec3& ResultPos = utility::RotatePointAroundY(fBoxDirection, RelativePos);
+		const Vec3& ResultOldPos = utility::RotatePointAroundY(fBoxDirection, RelativeOldPos);
+
+		CRenderer::SetDebugString("プあああああああ : " + to_string(BoxPos.x) + " :  " + to_string(BoxPos.y) + " : " + to_string(BoxPos.z));
+		CRenderer::SetDebugString("プレイヤーrelati : " + to_string(RelativePos.x) + " :  " + to_string(RelativePos.y) + " : " + to_string(RelativePos.z));
+		CRenderer::SetDebugString("プレイヤーoldrel : " + to_string(RelativeOldPos.x) + " :  " + to_string(RelativeOldPos.y) + " : " + to_string(RelativeOldPos.z));
+		CRenderer::SetDebugString("プレイヤーbububu : " + to_string(ResultPos.x) + " :  " + to_string(ResultPos.y) + " : " + to_string(ResultPos.z));
+		CRenderer::SetDebugString("プレイヤーbibibi : " + to_string(ResultOldPos.x) + " :  " + to_string(ResultOldPos.y) + " : " + to_string(ResultOldPos.z));
 
 		// ボックスの回転量を打ち消したと仮定し、シリンダーの相対座標を用いて衝突判定
 		// (ボックスの座標に関わらず、仮定したAABBとシリンダーの相対距離で判定するだけなので、渡すボックス座標は原点にする)
@@ -365,7 +384,7 @@ void CPlayer::HitCheck()
 				SetAccelY(0.0f);
 
 				// 新しい目標座標を作成
-				Vec3 NewPosTarget = { CylinderPosTarget.x, BoxPos.y + BoxSize.y + CylinderHeight, CylinderPosTarget.z };
+				const Vec3& NewPosTarget = { CylinderPosTarget.x, BoxPos.y + BoxSize.y + CylinderHeight, CylinderPosTarget.z };
 			 
 				// 目標座標を反映
 				SetPosTarget(NewPosTarget);
@@ -375,10 +394,10 @@ void CPlayer::HitCheck()
 			case 2:
 			{
 				// Y軸方向の加速度を重力方向へ固定
-				SetAccelY(-5.0f);
+				SetAccelY(0.0f);
 
 				// 新しい目標座標を作成
-				Vec3 NewPosTarget = { CylinderPosTarget.x, BoxPos.y - BoxSize.y - CylinderHeight, CylinderPosTarget.z };
+				const Vec3& NewPosTarget = { CylinderPosTarget.x, BoxPos.y - BoxSize.y - CylinderHeight, CylinderPosTarget.z };
 
 				// 目標座標を反映
 				SetPosTarget(NewPosTarget);
@@ -386,11 +405,19 @@ void CPlayer::HitCheck()
 				break;
 			}
 			case 3:
-				break;
+			{
+				// 目標座標を反映
+				SetPosTarget(CylinderOldPos);
 
+				break;
+			}
 			case 4:
-				break;
+			{
+				// 目標座標を反映
+				SetPosTarget(CylinderOldPos);
 
+				break;
+			}
 			default:
 				break;
 			}
