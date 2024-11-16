@@ -25,6 +25,7 @@
 #include "collision.h"
 #include "object_HUD.h"
 #include "player.h"
+#include "sparks.h"
 
 //****************************************************
 // プリプロセッサディレクティブ
@@ -133,6 +134,9 @@ void CField_Manager::Release()
 //============================================================================
 void CField_Manager::Update()
 {
+	// 火の粉を生成
+	CSparks::AutoGenerate();
+
 	// 扇形の方角をプレイヤーの方角に
 	m_pFan->SetDirection(m_pPlayer->GetDirection());
 

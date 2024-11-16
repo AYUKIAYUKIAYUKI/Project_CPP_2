@@ -34,6 +34,7 @@ CObject_Billboard::CObject_Billboard(LAYER Priority) :
 	m_Size{ VEC3_INIT },
 	m_Rot{ VEC3_INIT },
 	m_Pos{ VEC3_INIT },
+	m_Col{ XCOL_INIT },
 	m_fLength{ 0.0f },
 	m_fAngle{ 0.0f },
 	m_fTexWidth{ 1.0f },
@@ -123,6 +124,12 @@ void CObject_Billboard::Update()
 		-cosf(m_Rot.z + m_fAngle) * m_fLength,
 		0.0f
 	};
+
+	// 頂点色の設定
+	for (WORD wCntVtx = 0; wCntVtx < NUM_VTX; ++wCntVtx)
+	{
+		pVtx[wCntVtx].col = m_Col;
+	}
 
 	// テクスチャ座標の設定
 	pVtx[0].tex = { m_fTexWidth * m_nNowPatternU, m_fTexHeight * m_nNowPatternV };

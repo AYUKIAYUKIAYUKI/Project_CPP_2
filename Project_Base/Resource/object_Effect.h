@@ -52,7 +52,8 @@ public:
 	const D3DXCOLOR& GetColTarget() const;	// 目標色を取得
 	void SetColTarget(D3DXCOLOR ColTarget);	// 目標色を設定
 
-	// <setter>
+	// <getter/setter>
+	const int& GetMaxDuration();	// 最大期間を取得
 	void SetMaxDuration(int nMax);	// 最大期間を設定
 
 	// <getter>
