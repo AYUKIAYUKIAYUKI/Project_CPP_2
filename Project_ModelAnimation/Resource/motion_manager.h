@@ -51,7 +51,10 @@ public:
 		MotionKey*	apKey;		// キー情報
 	};
 
-	struct Test
+	//****************************************************
+	// アクターの構造体を定義
+	//****************************************************
+	struct Actor
 	{
 		std::vector<CObject_X*>	vpModelParts;	// モデルパーツ
 		WORD					wMaxMotion;		// 総モーション数
@@ -85,7 +88,7 @@ private:
 	void	Uninit();	// 終了処理
 
 	// <data>
-	Test m_Test;	// テスト
+	Actor m_Actor;	// アクター
 
 	// <static data>
 	static CMotion_Manager* m_pMotionManager;	// Xモデルマネージャーの本体

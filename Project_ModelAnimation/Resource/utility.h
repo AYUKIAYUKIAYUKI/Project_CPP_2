@@ -40,6 +40,9 @@ namespace utility
 	// Jsonファイルの展開
 	nlohmann::json OpenJsonFile(std::string FilePath);
 
+	// JsonデータをD3DXVECTOR3に変換
+	D3DXVECTOR3 JsonConvertToVec3(nlohmann::json Json);
+
 	// 乱数生成
 	template <typename T> static T GetRandomValue();
 

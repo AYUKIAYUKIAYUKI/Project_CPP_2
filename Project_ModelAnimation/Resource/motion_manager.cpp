@@ -34,11 +34,11 @@ CMotion_Manager* CMotion_Manager::m_pMotionManager = nullptr;	// ƒ‚[ƒVƒ‡ƒ“ƒ}ƒl
 void CMotion_Manager::Update()
 {
 	CRenderer::SetDebugString("");
-	CRenderer::SetDebugString("‘ƒ‚[ƒVƒ‡ƒ“”F" + to_string(m_Test.wMaxMotion));
+	CRenderer::SetDebugString("‘ƒ‚[ƒVƒ‡ƒ“”F" + to_string(m_Actor.wMaxMotion));
 	CRenderer::SetDebugString("");
-	for (WORD wCntMotion = 0; wCntMotion < m_Test.wMaxMotion; ++wCntMotion)
+	for (WORD wCntMotion = 0; wCntMotion < m_Actor.wMaxMotion; ++wCntMotion)
 	{
-		const Motion* const pMotion = &m_Test.apMotion[wCntMotion];
+		const Motion* const pMotion = &m_Actor.apMotion[wCntMotion];
 		CRenderer::SetDebugString("Œ»İ‚ÌƒtƒŒ[ƒ€”@F" + to_string(pMotion->wNowFrame));
 		CRenderer::SetDebugString("Œ»İ‚ÌƒL[”@@@F" + to_string(pMotion->wNowKey));
 		CRenderer::SetDebugString("ƒ‹[ƒvƒtƒ‰ƒO@@@F" + to_string(pMotion->bLoop));
@@ -132,9 +132,10 @@ CMotion_Manager* CMotion_Manager::GetInstance()
 //============================================================================
 // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 //============================================================================
-CMotion_Manager::CMotion_Manager()
+CMotion_Manager::CMotion_Manager() :
+	m_Actor{ {}, 0, nullptr }
 {
-
+	
 }
 
 //============================================================================
@@ -156,39 +157,59 @@ HRESULT CMotion_Manager::Init()
 	// ‘ƒp[ƒc”‚ğæ“¾
 	const WORD& MaxParts = static_cast<WORD>(Json["MaxParts"]);
 
-	// ƒp[ƒcƒIƒuƒWƒFƒNƒg‚ğ¶¬
+	// ƒp[ƒc”•ª‚Ìƒp[ƒcƒIƒuƒWƒFƒNƒg‚ğ¶¬
 	for (WORD wCntParts = 0; wCntParts < MaxParts; ++wCntParts)
 	{
-		m_Test.vpModelParts.push_back(CObject_X::Create(static_cast<CX_Manager::TYPE>(Json["ModelType"][wCntParts])));
+		m_Actor.vpModelParts.push_back(CObject_X::Create(static_cast<CX_Manager::TYPE>(Json["ModelType"][wCntParts])));
 	}
 
 	// ‘ƒ‚[ƒVƒ‡ƒ“”‚ğæ“¾
-	m_Test.wMaxMotion = static_cast<WORD>(Json["MaxMotion"]);
+	m_Actor.wMaxMotion = static_cast<WORD>(Json["MaxMotion"]);
 
-	// ƒ‚[ƒVƒ‡ƒ“î•ñ‚ğ¶¬
-	m_Test.apMotion = DBG_NEW Motion[m_Test.wMaxMotion];
+	// ƒ‚[ƒVƒ‡ƒ“”•ª‚Ìƒ‚[ƒVƒ‡ƒ“î•ñ‚ğ¶¬
+	m_Actor.apMotion = DBG_NEW Motion[m_Actor.wMaxMotion];
 
 	// ƒ‚[ƒVƒ‡ƒ“î•ñ‚Ìİ’è
-	for (WORD wCntMotion = 0; wCntMotion < m_Test.wMaxMotion; ++wCntMotion)
+	for (WORD wCntMotion = 0; wCntMotion < m_Actor.wMaxMotion; ++wCntMotion)
 	{
+		// ƒ‚[ƒVƒ‡ƒ“î•ñ‚Ìƒ|ƒCƒ“ƒ^‚ğì¬
+		Motion* const pMotion = &m_Actor.apMotion[wCntMotion];
+
 		// Ä¶’†‚ÌƒL[‚ÆƒtƒŒ[ƒ€‚ğ‰Šú‰»
-		m_Test.apMotion[wCntMotion].wNowKey = 0;
-		m_Test.apMotion[wCntMotion].wNowFrame = 0;
+		pMotion->wNowKey = 0;
+		pMotion->wNowFrame = 0;
 
 		// ƒ‹[ƒvƒtƒ‰ƒO‚ğæ“¾
-		m_Test.apMotion[wCntMotion].bLoop = static_cast<bool>(Json["Loop"][wCntMotion]);
+		pMotion->bLoop = static_cast<bool>(Json["Loop"][wCntMotion]);
 
 		// ƒ‚[ƒVƒ‡ƒ“‚Ì‘ƒL[”‚ğæ“¾
-		m_Test.apMotion[wCntMotion].wMaxKey = static_cast<WORD>(Json["MaxKey"][wCntMotion]);
+		pMotion->wMaxKey = static_cast<WORD>(Json["MaxKey"][wCntMotion]);
 
-		// ƒL[î•ñ‚ğ¶¬
-		m_Test.apMotion[wCntMotion].apKey = DBG_NEW MotionKey[m_Test.apMotion[wCntMotion].wMaxKey];
+		// ƒL[”•ª‚ÌƒL[î•ñ‚ğ¶¬
+		pMotion->apKey = DBG_NEW MotionKey[m_Actor.apMotion[wCntMotion].wMaxKey];
 
 		// ƒL[î•ñ‚Ìİ’è
-		for (WORD wCntMotionKey = 0; wCntMotionKey < m_Test.apMotion[wCntMotion].wMaxKey; ++wCntMotionKey)
+		for (WORD wCntMotionKey = 0; wCntMotionKey < pMotion->wMaxKey; ++wCntMotionKey)
 		{
+			// ƒL[î•ñ‚Ìƒ|ƒCƒ“ƒ^‚ğì¬
+			MotionKey* const pKey = &pMotion->apKey[wCntMotionKey];
+
 			// ƒL[‚Ì‘ƒtƒŒ[ƒ€”‚ğæ“¾
-			m_Test.apMotion[wCntMotion].apKey[wCntMotionKey].wMaxFrame = static_cast<WORD>(Json["MaxFrame"][wCntMotionKey]);
+			pKey->wMaxFrame = static_cast<WORD>(Json["MaxFrame"][wCntMotionKey]);
+
+			// ƒp[ƒc”•ª‚Ì–Ú•W’lî•ñ‚ğ¶¬
+			pKey->apDest = DBG_NEW MotionDest[m_Actor.vpModelParts.size()];
+
+			for (WORD wCntMotionDest = 0; wCntMotionDest < m_Actor.vpModelParts.size(); ++wCntMotionDest)
+			{
+				// –Ú•W’lî•ñ‚Ìƒ|ƒCƒ“ƒ^‚ğì¬
+				MotionDest* const pDest = &pKey->apDest[wCntMotionDest];
+
+				// Šeíƒpƒ‰ƒ[ƒ^‚ğİ’è
+				pDest->ScaleTarget = utility::JsonConvertToVec3(Json["ScaleTarget"][wCntMotionDest]);	// –Ú•WkÚ
+				pDest->RotTarget = utility::JsonConvertToVec3(Json["RotTarget"][wCntMotionDest]);		// –Ú•WŒü‚«
+				pDest->PosTarget = utility::JsonConvertToVec3(Json["PosTarget"][wCntMotionDest]);		// –Ú•WÀ•W
+			}
 		}
 	}
 
@@ -200,20 +221,44 @@ HRESULT CMotion_Manager::Init()
 //============================================================================
 void CMotion_Manager::Uninit()
 {
-	// ƒL[î•ñ‚Ìƒ|ƒCƒ“ƒ^”z—ñ‚ğ”jŠü
-	for (WORD wCntMotion = 0; wCntMotion < m_Test.wMaxMotion; ++wCntMotion)
+	// ƒL[î•ñ“à‚Ì–Ú•W’lî•ñ‚ğ”jŠü
+	for (WORD wCntMotion = 0; wCntMotion < m_Actor.wMaxMotion; ++wCntMotion)
 	{
-		if (m_Test.apMotion[wCntMotion].apKey != nullptr)
+		// ƒ‚[ƒVƒ‡ƒ“î•ñ‚Ìƒ|ƒCƒ“ƒ^‚ğì¬
+		Motion* const pMotion = &m_Actor.apMotion[wCntMotion];
+
+		for (WORD wCntMotionKey = 0; wCntMotionKey < pMotion->wMaxKey; ++wCntMotionKey)
 		{
-			delete[] m_Test.apMotion[wCntMotion].apKey;
-			m_Test.apMotion[wCntMotion].apKey = nullptr;
+			// ƒL[î•ñ‚Ìƒ|ƒCƒ“ƒ^‚ğì¬
+			MotionKey* const pKey = &pMotion->apKey[wCntMotionKey];
+
+			// –Ú•W’lî•ñ‚Ìƒ|ƒCƒ“ƒ^”z—ñ‚ğ”jŠü
+			if (pKey->apDest != nullptr)
+			{
+				delete[] pKey->apDest;
+				pKey->apDest = nullptr;
+			}
+		}
+	}
+
+	// ƒ‚[ƒVƒ‡ƒ“î•ñ“à‚ÌƒL[î•ñ‚ğ”jŠü
+	for (WORD wCntMotion = 0; wCntMotion < m_Actor.wMaxMotion; ++wCntMotion)
+	{
+		// ƒ‚[ƒVƒ‡ƒ“î•ñ‚Ìƒ|ƒCƒ“ƒ^‚ğì¬
+		Motion* const pMotion = &m_Actor.apMotion[wCntMotion];
+
+		// ƒL[î•ñ‚Ìƒ|ƒCƒ“ƒ^”z—ñ‚ğ”jŠü
+		if (pMotion->apKey != nullptr)
+		{
+			delete[] pMotion->apKey;
+			pMotion->apKey = nullptr;
 		}
 	}
 
 	// ƒ‚[ƒVƒ‡ƒ“î•ñ‚Ìƒ|ƒCƒ“ƒ^”z—ñ‚ğ”jŠü
-	if (m_Test.apMotion != nullptr)
+	if (m_Actor.apMotion != nullptr)
 	{
-		delete[] m_Test.apMotion;
-		m_Test.apMotion = nullptr;
+		delete[] m_Actor.apMotion;
+		m_Actor.apMotion = nullptr;
 	}
 }
