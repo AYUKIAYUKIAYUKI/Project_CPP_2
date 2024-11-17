@@ -22,8 +22,19 @@ public:
 	{
 		STATUE = 0,	// 銅像
 		AROUND,		// 周域
-		TEST0,		// 
-		TEST1,		// 
+		TEST0,		// test0
+		TEST1,		// test1
+		WAIST,		// 腰
+		BODY,		// 胴
+		HEAD,		// 頭
+		LEGL,		// 左脚
+		FOOTL,		// 左足
+		LEGR,		// 右脚
+		FOOTR,		// 右足
+		ARML,		// 左腕
+		HANDL,		// 左手
+		ARMR,		// 右腕
+		HANDR,		// 右手
 		MAX,
 	};
 

@@ -3,6 +3,17 @@
 		"Data\\MODEL\\statue.x",
 		"Data\\MODEL\\around.x",
 		"Data\\MODEL\\test\\test0.x",
-		"Data\\MODEL\\test\\test1.x"
+		"Data\\MODEL\\test\\test1.x",
+		"Data\\MODEL\\PLAYER\\waist.x",
+		"Data\\MODEL\\PLAYER\\body.x",
+		"Data\\MODEL\\PLAYER\\head.x",
+		"Data\\MODEL\\PLAYER\\legL.x",
+		"Data\\MODEL\\PLAYER\\footL.x",
+		"Data\\MODEL\\PLAYER\\legR.x",
+		"Data\\MODEL\\PLAYER\\footR.x",
+		"Data\\MODEL\\PLAYER\\armL.x",
+		"Data\\MODEL\\PLAYER\\handL.x",
+		"Data\\MODEL\\PLAYER\\armR.x",
+		"Data\\MODEL\\PLAYER\\handR.x"
 	]
 }
