@@ -84,8 +84,12 @@ private:
 	~CMotion_Manager();	// デストラクタ
 
 	// <function>
-	HRESULT	Init();		// 初期設定
-	void	Uninit();	// 終了処理
+	HRESULT	Init();				// 初期設定
+	void	Uninit();			// 終了処理
+	void	Reset();			// リセット
+	void	Animation();		// 動作
+	void	CountFrame();		// フレームをカウント
+	void	CorrectTarget();	// 目標値への補正
 
 	// <data>
 	Actor m_Actor;	// アクター

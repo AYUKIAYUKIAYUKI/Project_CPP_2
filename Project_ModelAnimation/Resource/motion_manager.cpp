@@ -10,6 +10,7 @@
 //****************************************************
 #include "motion_manager.h"
 #include "object_X.h"
+#include "manager.h"
 #include "renderer.h"
 
 //****************************************************
@@ -33,6 +34,9 @@ CMotion_Manager* CMotion_Manager::m_pMotionManager = nullptr;	// ƒ‚[ƒVƒ‡ƒ“ƒ}ƒl
 //============================================================================
 void CMotion_Manager::Update()
 {
+	// “®ì
+	Animation();
+
 	CRenderer::SetDebugString("");
 	CRenderer::SetDebugString("‘ƒ‚[ƒVƒ‡ƒ“”F" + to_string(m_Actor.wMaxMotion));
 	CRenderer::SetDebugString("");
@@ -49,9 +53,20 @@ void CMotion_Manager::Update()
 		{
 			const MotionKey* const pKey = &pMotion->apKey[wCntMotionKey];
 			CRenderer::SetDebugString("ƒL[[" + to_string(wCntMotionKey) + "]‚Ì‘ƒtƒŒ[ƒ€”F" + to_string(pKey->wMaxFrame));
+
+			for (WORD wCntModelParts = 0; wCntModelParts < m_Actor.vpModelParts.size(); ++wCntModelParts)
+			{
+				const MotionDest* const pDest = &pKey->apDest[wCntModelParts];
+				CRenderer::SetDebugString("ScaleTargetF" + to_string(pDest->ScaleTarget.x) + "F" + to_string(pDest->ScaleTarget.y) + "F" + to_string(pDest->ScaleTarget.z));
+				CRenderer::SetDebugString("RotTargetF" + to_string(pDest->RotTarget.x) + "F" + to_string(pDest->RotTarget.y) + "F" + to_string(pDest->RotTarget.z));
+				CRenderer::SetDebugString("PosTargetF" + to_string(pDest->PosTarget.x) + "F" + to_string(pDest->PosTarget.y) + "F" + to_string(pDest->PosTarget.z));
+			}
 		}
 	}
 	CRenderer::SetDebugString("");
+
+	// ƒŠƒZƒbƒg
+	Reset();
 }
 
 //============================================================================
@@ -186,7 +201,7 @@ HRESULT CMotion_Manager::Init()
 		pMotion->wMaxKey = static_cast<WORD>(Json["MaxKey"][wCntMotion]);
 
 		// ƒL[”•ª‚ÌƒL[î•ñ‚ğ¶¬
-		pMotion->apKey = DBG_NEW MotionKey[m_Actor.apMotion[wCntMotion].wMaxKey];
+		pMotion->apKey = DBG_NEW MotionKey[pMotion->wMaxKey];
 
 		// ƒL[î•ñ‚Ìİ’è
 		for (WORD wCntMotionKey = 0; wCntMotionKey < pMotion->wMaxKey; ++wCntMotionKey)
@@ -200,15 +215,15 @@ HRESULT CMotion_Manager::Init()
 			// ƒp[ƒc”•ª‚Ì–Ú•W’lî•ñ‚ğ¶¬
 			pKey->apDest = DBG_NEW MotionDest[m_Actor.vpModelParts.size()];
 
-			for (WORD wCntMotionDest = 0; wCntMotionDest < m_Actor.vpModelParts.size(); ++wCntMotionDest)
+			for (WORD wCntModelParts = 0; wCntModelParts < m_Actor.vpModelParts.size(); ++wCntModelParts)
 			{
 				// –Ú•W’lî•ñ‚Ìƒ|ƒCƒ“ƒ^‚ğì¬
-				MotionDest* const pDest = &pKey->apDest[wCntMotionDest];
+				MotionDest* const pDest = &pKey->apDest[wCntModelParts];
 
 				// Šeíƒpƒ‰ƒ[ƒ^‚ğİ’è
-				pDest->ScaleTarget = utility::JsonConvertToVec3(Json["ScaleTarget"][wCntMotionDest]);	// –Ú•WkÚ
-				pDest->RotTarget = utility::JsonConvertToVec3(Json["RotTarget"][wCntMotionDest]);		// –Ú•WŒü‚«
-				pDest->PosTarget = utility::JsonConvertToVec3(Json["PosTarget"][wCntMotionDest]);		// –Ú•WÀ•W
+				pDest->ScaleTarget = utility::JsonConvertToVec3(Json["ScaleTarget"][wCntMotionKey][wCntModelParts]);	// –Ú•WkÚ
+				pDest->RotTarget = utility::JsonConvertToVec3(Json["RotTarget"][wCntMotionKey][wCntModelParts]);		// –Ú•WŒü‚«
+				pDest->PosTarget = utility::JsonConvertToVec3(Json["PosTarget"][wCntMotionKey][wCntModelParts]);		// –Ú•WÀ•W
 			}
 		}
 	}
@@ -260,5 +275,88 @@ void CMotion_Manager::Uninit()
 	{
 		delete[] m_Actor.apMotion;
 		m_Actor.apMotion = nullptr;
+	}
+
+	// ƒp[ƒc—pƒIƒuƒWƒFƒNƒg‚ÌÁ‹
+	for (auto it : m_Actor.vpModelParts)
+	{
+		// ”jŠü—\–ñ
+		it->SetRelease();
+	}
+}
+
+//============================================================================
+// ƒŠƒZƒbƒg
+//============================================================================
+void CMotion_Manager::Reset()
+{
+	if (CManager::GetKeyboard()->GetTrigger(DIK_F5))
+	{
+		// ˆê’U‰ğ•ú
+		Release();
+
+		// ‘¦Ä¶¬
+		Create();
+	}
+}
+
+//============================================================================
+// “®ì
+//============================================================================
+void CMotion_Manager::Animation()
+{
+	// ƒtƒŒ[ƒ€ƒJƒEƒ“ƒg
+	CountFrame();
+
+	// –Ú•W’l‚Ö‚Ì•â³
+	CorrectTarget();
+}
+
+//============================================================================
+// ƒtƒŒ[ƒ€ƒJƒEƒ“ƒg
+//============================================================================
+void CMotion_Manager::CountFrame()
+{
+	// Œ»İ‚ÌƒtƒŒ[ƒ€”‚ğƒCƒ“ƒNƒŠƒƒ“ƒg
+	m_Actor.apMotion->wNowFrame++;
+
+	// ƒtƒŒ[ƒ€”‚ªAŒ»İÄ¶’†‚ÌƒL[‚Ì‘ƒtƒŒ[ƒ€”‚É’B‚µ‚½‚ç
+	if (m_Actor.apMotion->wNowFrame >= m_Actor.apMotion->apKey[m_Actor.apMotion->wNowKey].wMaxFrame)
+	{
+		// Œ»İ‚ÌƒtƒŒ[ƒ€”‚ğƒŠƒZƒbƒg
+		m_Actor.apMotion->wNowFrame = 0;
+
+		// Œ»İ‚ÌƒL[”‚ğƒCƒ“ƒNƒŠƒƒ“ƒg
+		m_Actor.apMotion->wNowKey++;
+
+		// ƒL[”‚ªAŒ»İÄ¶’†‚Ìƒ‚[ƒVƒ‡ƒ“‚Ì‘ƒL[”‚É’B‚µ‚½‚ç
+		if (m_Actor.apMotion->wNowKey >= m_Actor.apMotion->wMaxKey)
+		{
+			// Œ»İ‚ÌƒL[”‚ğƒŠƒZƒbƒg
+			m_Actor.apMotion->wNowKey = 0;
+		}
+	}
+}
+
+//============================================================================
+// –Ú•W’l‚Ö‚Ì•â³
+//============================================================================
+void CMotion_Manager::CorrectTarget()
+{
+	// ƒtƒŒ[ƒ€‚Ìis“x‡‚ğì¬ (‘ƒtƒŒ[ƒ€” - Œ»İ‚ÌƒtƒŒ[ƒ€)
+	const WORD wFrameCoef = m_Actor.apMotion->apKey[m_Actor.apMotion->wNowKey].wMaxFrame - m_Actor.apMotion->wNowFrame;
+
+	// ‘S‚Ä‚Ìƒp[ƒc‚ª‚»‚ê‚¼‚ê‚Ì–Ú•W’l‚Ö•â³‚µ‚½ƒpƒ‰ƒ[ƒ^‚ğİ’è‚·‚é
+	for (WORD wCntModelParts = 0; wCntModelParts < m_Actor.vpModelParts.size(); ++wCntModelParts)
+	{
+		// –Ú•WŒü‚«
+		Vec3 NewRot = m_Actor.vpModelParts[wCntModelParts]->GetRot();
+		NewRot += (m_Actor.apMotion->apKey[m_Actor.apMotion->wNowKey].apDest[wCntModelParts].RotTarget - NewRot) / wFrameCoef;
+		m_Actor.vpModelParts[wCntModelParts]->SetRot(NewRot);
+
+		// –Ú•WÀ•W
+		Vec3 NewPos = m_Actor.vpModelParts[wCntModelParts]->GetPos();
+		NewPos += (m_Actor.apMotion->apKey[m_Actor.apMotion->wNowKey].apDest[wCntModelParts].PosTarget - NewPos) / wFrameCoef;
+		m_Actor.vpModelParts[wCntModelParts]->SetPos(NewPos);
 	}
 }
