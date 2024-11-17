@@ -22,6 +22,8 @@ public:
 	{
 		STATUE = 0,	// 銅像
 		AROUND,		// 周域
+		TEST0,		// 
+		TEST1,		// 
 		MAX,
 	};
 
@@ -48,8 +50,8 @@ public:
 	MODEL* GetModel(TYPE Type);	// モデルを取得
 
 	// <static function>
-	static HRESULT Create();	// 生成
-	static void	Release();		// 解放
+	static HRESULT	Create();	// 生成
+	static void		Release();		// 解放
 
 	// <static getter>
 	static CX_Manager* GetInstance();	// Xモデルマネージャーを取得

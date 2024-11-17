@@ -1,0 +1,19 @@
+{
+	"MaxParts": 2,
+	"ModelType": [
+		2,
+		3
+	],
+	"MaxMotion": 1,
+	"MaxKey": [
+		3
+	],
+	"Loop": [
+		false
+	],
+	"MaxFrame": [
+		30,
+		60,
+		90
+	]
+}

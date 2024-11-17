@@ -35,6 +35,9 @@
     <ClCompile Include="Resource\utility.cpp">
       <Filter>&lt;utility&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\motion_manager.cpp">
+      <Filter>&lt;System&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource\camera.h" />
@@ -70,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="Resource\utility.h">
       <Filter>&lt;utility&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\motion_manager.h">
+      <Filter>&lt;System&gt;</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

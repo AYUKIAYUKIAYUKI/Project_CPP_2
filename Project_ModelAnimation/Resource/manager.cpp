@@ -226,10 +226,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 	// パッドの初期化
 	m_pPad->Init(hInstance, hWnd);
 
-	/* テスト */
-	CObject_X::Create(CObject::LAYER::MIDDLE, CX_Manager::TYPE::STATUE);
-	CObject_X::Create(CObject::LAYER::MIDDLE, CX_Manager::TYPE::AROUND);
-
 	return S_OK;
 }
 

@@ -19,6 +19,7 @@
 // シングルトン管理
 #include "texture_manager.h"
 #include "X_manager.h"
+#include "motion_manager.h"
 
 //****************************************************
 // プリプロセッサディレクティブ
@@ -44,11 +45,15 @@ void CRenderer::Update()
 	// 文字列クリア
 	m_DebugStr = {};
 
+	// モーションマネージャーの更新
+	CMotion_Manager::GetInstance()->Update();
+
 	// 全オブジェクト更新処理
 	CObject::UpdateAll();
 
 	// 全オブジェクト後更新処理
 	CObject::LateUpdateAll();
+
 }
 
 //============================================================================
@@ -362,6 +367,12 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 		return E_FAIL;
 	}
 
+	// モーションマネージャーを生成
+	if (FAILED(CMotion_Manager::Create()))
+	{
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -372,6 +383,9 @@ void CRenderer::Uninit()
 {
 	// 全オブジェクト解放処理
 	CObject::ReleaseAll();
+
+	// モーションマネージャーの破棄
+	CMotion_Manager::Release();
 
 	// Xモデルマネージャーの破棄
 	CX_Manager::Release();
