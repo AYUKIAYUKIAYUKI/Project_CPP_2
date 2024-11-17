@@ -18,9 +18,9 @@ public:
 	//****************************************************
 	// モデル識別
 	//****************************************************
-	enum class TYPE
+	enum class TYPE : WORD
 	{
-		TEST = 0,	// NONE
+		TEST = 0,	// TEST
 		MAX,
 	};
 
@@ -40,7 +40,7 @@ public:
 	CX_Manager(const CX_Manager&) = delete;				// コピーコンストラクタ
 	CX_Manager& operator=(const CX_Manager&) = delete;	// コピー代入演算子
 	CX_Manager(CX_Manager&&) = delete;					// ムーブコンストラクタ
-	CX_Manager& operator=(CX_Manager&&) = delete;			// ムーブ代入演算子
+	CX_Manager& operator=(CX_Manager&&) = delete;		// ムーブ代入演算子
 
 	// <getter>
 	MODEL* GetModel(TYPE Type);	// モデルを取得

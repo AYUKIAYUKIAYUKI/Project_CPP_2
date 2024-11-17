@@ -52,7 +52,10 @@ HRESULT CX_Manager::Create()
 	}
 
 	// Xモデルマネージャーの初期設定
-	m_pXModelManager->Init();
+	if (FAILED(m_pXModelManager->Init()))
+	{
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -80,17 +83,17 @@ void CX_Manager::Release()
 //============================================================================
 CX_Manager::MODEL* CX_Manager::GetModel(TYPE Type)
 {
-	if (m_apModelTemp[static_cast<int>(Type)].pMesh == nullptr)
-	{ // モデル取得不能
-
-#ifdef _DEBUG	// 警告表示
-
-		CRenderer::SetTimeString("【警告】モデル取得エラー", 600);
-
+	// モデル取得不能
+	if (m_apModelTemp[static_cast<WORD>(Type)].pMesh == nullptr)
+	{
+#ifdef _DEBUG
+		CRenderer::SetTimeString("【警告】モデル取得時にエラー発生", 300);
 #endif	// _DEBUG
+
+		return nullptr;
 	}
 
-	return &m_apModelTemp[static_cast<int>(Type)];
+	return &m_apModelTemp[static_cast<WORD>(Type)];
 }
 
 //============================================================================
@@ -122,14 +125,14 @@ CX_Manager* CX_Manager::GetInstance()
 //============================================================================
 CX_Manager::CX_Manager()
 {
-	for (int i = 0; i < static_cast<int>(TYPE::MAX); i++)
+	for (WORD wCntModel = 0; wCntModel < static_cast<WORD>(TYPE::MAX); wCntModel++)
 	{
 		// モデル情報の初期化
-		m_apModelTemp[i].Size = { 0.0f, 0.0f, 0.0f };	// サイズ
-		m_apModelTemp[i].pMesh = nullptr;				// メッシュのポインタ
-		m_apModelTemp[i].pBuffMat = nullptr;			// マテリアルバッファのポインタ
-		m_apModelTemp[i].dwNumMat = 0;					// マテリアル数
-		m_apModelTemp[i].apTex = nullptr;				// テクスチャのポインタ
+		m_apModelTemp[wCntModel].Size = { VEC3_INIT };	// サイズ
+		m_apModelTemp[wCntModel].pMesh = nullptr;		// メッシュのポインタ
+		m_apModelTemp[wCntModel].pBuffMat = nullptr;	// マテリアルバッファのポインタ
+		m_apModelTemp[wCntModel].dwNumMat = 0;			// マテリアル数
+		m_apModelTemp[wCntModel].apTex = nullptr;		// テクスチャのポインタ
 	}
 }
 
@@ -146,97 +149,75 @@ CX_Manager::~CX_Manager()
 //============================================================================
 HRESULT CX_Manager::Init()
 {
-	// モデルリストを展開
-	std::ifstream ModelList("Data\\TXT\\model_path.txt");
-
-	// 展開に失敗
-	if (!ModelList)
-	{
-		return E_FAIL;
-	}
+	// モデルリストを取得
+	JSON Json = utility::OpenJsonFile("Data\\JSON\\model_list.json");
 
 	// デバイスを取得
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
-	for (int nCntModel = 0; nCntModel < static_cast<int>(TYPE::MAX); nCntModel++)
+	for (WORD wCntModel = 0; wCntModel < static_cast<WORD>(TYPE::MAX); wCntModel++)
 	{
-		// モデル名格納先
-		std::string ModelName;
-
-		// モデル名を取得する
-		std::getline(ModelList, ModelName);
-
-		// パスを作成する
-		ModelName.insert(0, "Data\\MODEL\\");
+		// モデルファイルのパスを作成する
+		const std::string& ModelFilePath = Json["ModelList"][wCntModel];
 
 		// モデルファイルの取得
-		HRESULT hr = D3DXLoadMeshFromX(ModelName.c_str(),
+		HRESULT hr = D3DXLoadMeshFromX(ModelFilePath.c_str(),
 			D3DXMESH_SYSTEMMEM,
 			pDev,
 			nullptr,
-			&m_apModelTemp[nCntModel].pBuffMat,
+			&m_apModelTemp[wCntModel].pBuffMat,
 			nullptr,
-			&m_apModelTemp[nCntModel].dwNumMat,
-			&m_apModelTemp[nCntModel].pMesh);
+			&m_apModelTemp[wCntModel].dwNumMat,
+			&m_apModelTemp[wCntModel].pMesh);
 
 		if (FAILED(hr))
 		{ // 取得失敗
 
-#ifdef _DEBUG	// 警告表示
-
-			ModelName = ModelName.substr(ModelName.find_last_of("\\") + 1, ModelName.back());
-			CRenderer::SetTimeString("【警告】モデル[" + ModelName + "]は読み込みに失敗しました", 300);
-
+#ifdef _DEBUG
+			CRenderer::SetTimeString("【警告】モデル[" + ModelFilePath + "]は読み込みに失敗しました", 300);
 #endif	// _DEBUG
 
 			continue;
 		}
 
 		// モデルのサイズを取得する
-		m_apModelTemp[nCntModel].Size = LoadSize(ModelName);
+		m_apModelTemp[wCntModel].Size = LoadSize(ModelFilePath);
 
 		// マテリアルデータへのポインタを取得
-		D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_apModelTemp[nCntModel].pBuffMat->GetBufferPointer();
+		D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_apModelTemp[wCntModel].pBuffMat->GetBufferPointer();
 
 		// マテリアルの数分のテクスチャポインタを確保
-		m_apModelTemp[nCntModel].apTex = DBG_NEW LPDIRECT3DTEXTURE9[static_cast<int>(m_apModelTemp[nCntModel].dwNumMat)];
+		m_apModelTemp[wCntModel].apTex = DBG_NEW LPDIRECT3DTEXTURE9[static_cast<int>(m_apModelTemp[wCntModel].dwNumMat)];
 
 		// マテリアル分テクスチャの有無を確認
-		for (int nCntMat = 0; nCntMat < static_cast<int>(m_apModelTemp[nCntModel].dwNumMat); nCntMat++)
+		for (WORD wCntMat = 0; wCntMat < static_cast<WORD>(m_apModelTemp[wCntModel].dwNumMat); wCntMat++)
 		{
-			if (pMat[nCntMat].pTextureFilename != nullptr)
+			// テクスチャ名を取得失敗
+			if (pMat[wCntMat].pTextureFilename == nullptr)
 			{
-				// テクスチャを読み取れたら生成
-				hr = D3DXCreateTextureFromFileA(pDev,
-					pMat[nCntMat].pTextureFilename,
-					&m_apModelTemp[nCntModel].apTex[nCntMat]);
+				// テクスチャのポインタを初期化しておく
+				m_apModelTemp[wCntModel].apTex[wCntMat] = nullptr;
+			
+				continue;
+			}
 
-				if (FAILED(hr))
-				{ // 生成失敗
+			// テクスチャ名を読み取れたら生成
+			hr = D3DXCreateTextureFromFileA(pDev,
+				pMat[wCntMat].pTextureFilename,
+				&m_apModelTemp[wCntModel].apTex[wCntMat]);
 
-					// テクスチャ名をコピー
-					std::string TextureName{ pMat[nCntMat].pTextureFilename };
+			if (FAILED(hr))
+			{ // 生成失敗
 
-#ifdef _DEBUG	// 警告表示
-
-					ModelName = ModelName.substr(ModelName.find_last_of("\\") + 1, ModelName.back());
-					CRenderer::SetTimeString("【警告】モデル[" + ModelName + "]におけるテクスチャパスの[" + TextureName + "]は生成に失敗しました", 600);
-
+#ifdef _DEBUG
+				CRenderer::SetTimeString("【警告】モデル[" + ModelFilePath + "]におけるテクスチャの[" + pMat[wCntMat].pTextureFilename + "]は生成に失敗しました", 600);
 #endif	// _DEBUG
 
-					m_apModelTemp[nCntModel].apTex[nCntMat] = nullptr;
-				}
-			}
-			else
-			{
-				// 読み取れなければ初期化
-				m_apModelTemp[nCntModel].apTex[nCntMat] = nullptr;
+				// テクスチャのポインタを初期化しておく
+				m_apModelTemp[wCntModel].apTex[wCntMat] = nullptr;
 			}
 		}
 	}
-
-	// ファイルを閉じる
-	ModelList.close();
 
 	return S_OK;
 }
@@ -246,98 +227,97 @@ HRESULT CX_Manager::Init()
 //============================================================================
 D3DXVECTOR3 CX_Manager::LoadSize(std::string filename)
 {
-	// 比較処理用に数値を入れておく
-	D3DXVECTOR3 sizeMin = { FLT_MAX, FLT_MAX, FLT_MAX };
-	D3DXVECTOR3 sizeMax = { FLT_MIN, FLT_MIN, FLT_MIN };
+	// 該当モデルファイルを展開
+	std::ifstream ModelFile(filename);
 
-	// モデルファイルそのものを展開
-	std::ifstream file(filename);
-
-	if (!file)
-	{ // 展開に失敗
-
-#ifdef _DEBUG	// 警告表示
-
+	// 展開に失敗
+	if (!ModelFile.good())
+	{
+#ifdef _DEBUG
 		CRenderer::SetTimeString("【警告】モデル[" + filename + "]はサイズ読み込みに失敗しました", 600);
-
 #endif	// _DEBUG
 
-		return D3DXVECTOR3{ 0.0f, 0.0f, 0.0f, };
+		return VEC3_INIT;
 	}
 
-	// 文字列格納用
-	std::string str{};
+	// 汎用文字列格納用
+	std::string Str;
 
-	// 頂点情報の箇所まで行を読み込む
-	while (std::getline(file, str))
+	// テキストから頂点情報の行を検索
+	while (std::getline(ModelFile, Str))
 	{
-		if (str == "Mesh {")
+		// 頂点情報を発見したので検索終了
+		if (Str == "Mesh {")
 		{
 			// 不要な行を一度読み込む
-			std::getline(file, str);
+			std::getline(ModelFile, Str);
 
 			break;
 		}
 	}
 
-	// 配列の要素数
-	const int nNumArray = 3;
+	// 比較処理用に数値を入れておく
+	Vec3 ResultMin = { FLT_MAX, FLT_MAX, FLT_MAX };
+	Vec3 ResultMax = { FLT_MIN, FLT_MIN, FLT_MIN };
+
+	// 取得予定の軸方向数
+	const WORD wAxis = 3;
 
 	// 数値を比較していく
-	while (std::getline(file, str))
+	while (std::getline(ModelFile, Str))
 	{
 		// 終了条件
-		if (str == " ")
+		if (Str == " ")
 		{
 			break;
 		}
 
-		// 数値用
-		float fNum[nNumArray]{};
+		// 数値格納用
+		float fNum[wAxis] = { 0.0f, 0.0f, 0.0f };
 
 		// 読みとった数値を一旦格納する
-		for (int i = 0; i < nNumArray; ++i)
+		for (WORD wCntAxis = 0; wCntAxis < wAxis; ++wCntAxis)
 		{
-			fNum[i] = std::stof(str);
-			str = str.substr(str.find(";") + 1, str.back());
+			fNum[wCntAxis] = std::stof(Str);
+			Str = Str.substr(Str.find(";") + 1, Str.back());
 		}
 
 		// 各軸の最大・最小地点を更新
-		if (sizeMin.x > fNum[0])
+		if (ResultMin.x > fNum[0])
 		{
-			sizeMin.x = fNum[0];
+			ResultMin.x = fNum[0];
 		}
 
-		if (sizeMin.y > fNum[1])
+		if (ResultMin.y > fNum[1])
 		{
-			sizeMin.y = fNum[1];
+			ResultMin.y = fNum[1];
 		}
 
-		if (sizeMin.z > fNum[2])
+		if (ResultMin.z > fNum[2])
 		{
-			sizeMin.z = fNum[2];
+			ResultMin.z = fNum[2];
 		}
 
-		if (sizeMax.x < fNum[0])
+		if (ResultMax.x < fNum[0])
 		{
-			sizeMax.x = fNum[0];
+			ResultMax.x = fNum[0];
 		}
 
-		if (sizeMax.y < fNum[1])
+		if (ResultMax.y < fNum[1])
 		{
-			sizeMax.y = fNum[1];
+			ResultMax.y = fNum[1];
 		}
 
-		if (sizeMax.z < fNum[2])
+		if (ResultMax.z < fNum[2])
 		{
-			sizeMax.z = fNum[2];
+			ResultMax.z = fNum[2];
 		}
 	}
 
 	// ファイルを閉じる
-	file.close();
+	ModelFile.close();
 
-	return sizeMax;
+	return ResultMax;
 }
 
 //============================================================================
@@ -345,37 +325,40 @@ D3DXVECTOR3 CX_Manager::LoadSize(std::string filename)
 //============================================================================
 void CX_Manager::Uninit()
 {
-	for (int i = 0; i < static_cast<int>(TYPE::MAX); i++)
+	for (WORD wCntModel = 0; wCntModel < static_cast<WORD>(TYPE::MAX); wCntModel++)
 	{
 		// テクスチャポインタの破棄
-		if (m_apModelTemp[i].apTex != nullptr)
+		if (m_apModelTemp[wCntModel].apTex != nullptr)
 		{
 			// テクスチャの破棄
-			for (int nCntMat = 0; nCntMat < static_cast<int>(m_apModelTemp[i].dwNumMat); nCntMat++)
+			for (WORD wCntMat = 0; wCntMat < static_cast<WORD>(m_apModelTemp[wCntModel].dwNumMat); wCntMat++)
 			{
-				if (m_apModelTemp[i].apTex[nCntMat] != nullptr)
+				if (m_apModelTemp[wCntModel].apTex[wCntMat] != nullptr)
 				{
-					m_apModelTemp[i].apTex[nCntMat]->Release();
-					m_apModelTemp[i].apTex[nCntMat] = nullptr;
+					m_apModelTemp[wCntModel].apTex[wCntMat]->Release();
+					m_apModelTemp[wCntModel].apTex[wCntMat] = nullptr;
 				}
 			}
 
-			delete[] m_apModelTemp[i].apTex;
-			m_apModelTemp[i].apTex = nullptr;
+			// テクスチャを解放
+			delete[] m_apModelTemp[wCntModel].apTex;
+			
+			// テクスチャのポインタを初期化
+			m_apModelTemp[wCntModel].apTex = nullptr;
 		}
 
 		// メッシュの破棄
-		if (m_apModelTemp[i].pMesh != nullptr)
+		if (m_apModelTemp[wCntModel].pMesh != nullptr)
 		{
-			m_apModelTemp[i].pMesh->Release();
-			m_apModelTemp[i].pMesh = nullptr;
+			m_apModelTemp[wCntModel].pMesh->Release();
+			m_apModelTemp[wCntModel].pMesh = nullptr;
 		}
 
 		// マテリアルの破棄
-		if (m_apModelTemp[i].pBuffMat != nullptr)
+		if (m_apModelTemp[wCntModel].pBuffMat != nullptr)
 		{
-			m_apModelTemp[i].pBuffMat->Release();
-			m_apModelTemp[i].pBuffMat = nullptr;
+			m_apModelTemp[wCntModel].pBuffMat->Release();
+			m_apModelTemp[wCntModel].pBuffMat = nullptr;
 		}
 	}
 }
