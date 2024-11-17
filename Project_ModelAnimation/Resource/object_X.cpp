@@ -9,9 +9,9 @@
 // インクルードファイル
 //****************************************************
 #include "object_X.h"
-
-// デバイス取得用
 #include "renderer.h"
+
+#include "manager.h"
 
 //****************************************************
 // プリプロセッサディレクティブ
@@ -40,7 +40,8 @@ CObject_X::CObject_X(LAYER Priority) :
 	m_Pos{ VEC3_INIT },
 	m_Rot{ VEC3_INIT },
 	m_Scale{ 1.0f, 1.0f, 1.0f },
-	m_fAlpha{ ALPHA_INIT }
+	m_Col{ XCOL_INIT },
+	m_bUseCol{ false }
 {
 	// ワールド行列を初期化
 	D3DXMatrixIdentity(&m_MtxWorld);
@@ -75,6 +76,8 @@ void CObject_X::Uninit()
 //============================================================================
 void CObject_X::Update()
 {
+	CManager::GetKeyboard()->GetPress(DIK_1) ? m_bUseCol = 1 : m_bUseCol = 0;
+
 	// 向きを調整する
 	AdjustRotAngle();
 
@@ -130,19 +133,19 @@ void CObject_X::Draw()
 	// マテリアルデータへのポインタを取得
 	pMat = (D3DXMATERIAL*)m_pModel->pBuffMat->GetBufferPointer();
 
-	for (int nCntMat = 0; nCntMat < static_cast<int>(m_pModel->dwNumMat); nCntMat++)
+	for (WORD wCntMat = 0; wCntMat < static_cast<WORD>(m_pModel->dwNumMat); wCntMat++)
 	{
-		// アルファ値の設定
-		pMat[nCntMat].MatD3D.Diffuse.a = m_fAlpha;
+		// マテリアル色の設定
+		m_bUseCol ? pMat[wCntMat].MatD3D.Diffuse = m_Col : pMat[wCntMat].MatD3D.Diffuse = m_pModel->apColMat[wCntMat];
 
 		// マテリアルの設定
-		pDev->SetMaterial(&pMat[nCntMat].MatD3D);
+		pDev->SetMaterial(&pMat[wCntMat].MatD3D);
 
 		// テクスチャの設定
-		pDev->SetTexture(0, m_pModel->apTex[nCntMat]);
+		pDev->SetTexture(0, m_pModel->apTex[wCntMat]);
 
 		// オブジェクトパーツの描画
-		m_pModel->pMesh->DrawSubset(nCntMat);
+		m_pModel->pMesh->DrawSubset(wCntMat);
 	}
 
 	// 保存していたマテリアルを戻す
@@ -236,19 +239,35 @@ void CObject_X::SetScale(D3DXVECTOR3 Scale)
 }
 
 //============================================================================
-// アルファ値を取得
+// 色を取得
 //============================================================================
-const float& CObject_X::GetAlpha() const
+const D3DXCOLOR& CObject_X::GetCol() const
 {
-	return m_fAlpha;
+	return m_Col;
 }
 
 //============================================================================
-// アルファ値を設定
+// 色を設定
 //============================================================================
-void CObject_X::SetAlpha(float fAlpha)
+void CObject_X::SetCol(D3DXCOLOR Col)
 {
-	m_fAlpha = fAlpha;
+	m_Col = Col;
+}
+
+//============================================================================
+// 色反映を取得
+//============================================================================
+const bool& CObject_X::GetUseCol() const
+{
+	return m_bUseCol;
+}
+
+//============================================================================
+// 色反映を設定
+//============================================================================
+void CObject_X::SetUseCol(bool bUse)
+{
+	m_bUseCol = bUse;
 }
 
 //============================================================================
@@ -278,7 +297,7 @@ float CObject_X::GetHeight() const
 //============================================================================
 // 生成
 //============================================================================
-CObject_X* CObject_X::Create()
+CObject_X* CObject_X::Create(CX_Manager::TYPE Type)
 {
 	// インスタンスを生成
 	CObject_X* pObjectX = DBG_NEW CObject_X();
@@ -289,25 +308,8 @@ CObject_X* CObject_X::Create()
 		assert(false && "Xオブジェクトの生成に失敗しました");
 	}
 
-	// Xオブジェクトの初期設定
-	pObjectX->Init();
-
-	return pObjectX;
-}
-
-//============================================================================
-// 生成
-//============================================================================
-CObject_X* CObject_X::Create(LAYER Priority)
-{
-	// インスタンスを生成
-	CObject_X* pObjectX = DBG_NEW CObject_X(Priority);
-
-	// 生成失敗
-	if (pObjectX == nullptr)
-	{
-		assert(false && "Xオブジェクトの生成に失敗しました");
-	}
+	// モデルを設定
+	pObjectX->BindModel(Type);
 
 	// Xオブジェクトの初期設定
 	pObjectX->Init();
@@ -329,11 +331,11 @@ CObject_X* CObject_X::Create(LAYER Priority, CX_Manager::TYPE Type)
 		assert(false && "Xオブジェクトの生成に失敗しました");
 	}
 
-	// Xオブジェクトの初期設定
-	pObjectX->Init();
-
 	// モデルを設定
 	pObjectX->BindModel(Type);
+
+	// Xオブジェクトの初期設定
+	pObjectX->Init();
 
 	return pObjectX;
 }
@@ -349,7 +351,6 @@ CObject_X* CObject_X::Create(JSON Json)
 	const auto& Rot = Json["Rot"];
 	const auto& Pos = Json["Pos"];
 	const auto& Scale = Json["Scale"];
-	const auto& Alpha = Json["Alpha"];
 
 	// インスタンスを生成
 	CObject_X* pObjectX = DBG_NEW CObject_X(static_cast<CObject::LAYER>(Priority));
@@ -360,15 +361,16 @@ CObject_X* CObject_X::Create(JSON Json)
 		assert(false && "Xオブジェクトの生成に失敗しました");
 	}
 
+	// モデルを設定
+	pObjectX->BindModel(static_cast<CX_Manager::TYPE>(ModelType));
+
 	// Xオブジェクトの初期設定
 	pObjectX->Init();
 
 	// 各種パラメータを設定
-	pObjectX->BindModel(static_cast<CX_Manager::TYPE>(ModelType));
 	pObjectX->SetRot(Vec3(Rot[0], Rot[1], Rot[2]));
 	pObjectX->SetPos(Vec3(Pos[0], Pos[1], Pos[2]));
 	pObjectX->SetScale(Vec3(Scale[0], Scale[1], Scale[2]));
-	pObjectX->SetAlpha(Alpha);
 
 	return pObjectX;
 }

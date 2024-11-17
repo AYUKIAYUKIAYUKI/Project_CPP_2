@@ -56,8 +56,12 @@ public:
 	void SetScale(D3DXVECTOR3 Scale);		// 縮尺設定
 
 	// <getter/setter>
-	const float& GetAlpha() const;	// アルファ値取得
-	void SetAlpha(float fAlpha);	// アルファ値設定
+	const D3DXCOLOR& GetCol() const;	// 色を取得
+	void SetCol(D3DXCOLOR Col);			// 色を設定
+
+	// <getter/setter>
+	const bool& GetUseCol() const;	// 色反映を取得
+	void SetUseCol(bool Col);		// 色反映を設定
 
 	// <virtual getter>
 	virtual D3DXVECTOR3 GetSize() const;	// サイズを取得
@@ -65,8 +69,7 @@ public:
 	virtual float GetHeight() const;		// 高さを取得
 
 	// <static function>
-	static CObject_X* Create();											// 生成
-	static CObject_X* Create(LAYER Priority);							// 生成
+	static CObject_X* Create(CX_Manager::TYPE Type);					// 生成
 	static CObject_X* Create(LAYER Priority, CX_Manager::TYPE Type);	// 生成
 	static CObject_X* Create(JSON Json);								// 生成
 
@@ -84,7 +87,8 @@ private:
 	D3DXVECTOR3			m_Rot;		// 向き
 	D3DXVECTOR3			m_Pos;		// 座標
 	D3DXVECTOR3			m_Scale;	// 縮尺
-	float				m_fAlpha;	// アルファ値
+	D3DXCOLOR			m_Col;		// 色
+	bool				m_bUseCol;	// 色反映
 	D3DXMATRIX			m_MtxWorld;	// ワールド行列
 };
 

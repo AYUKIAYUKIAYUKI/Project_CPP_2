@@ -20,7 +20,8 @@ public:
 	//****************************************************
 	enum class TYPE : WORD
 	{
-		TEST = 0,	// TEST
+		STATUE = 0,	// “º‘œ
+		AROUND,		// Žüˆæ
 		MAX,
 	};
 

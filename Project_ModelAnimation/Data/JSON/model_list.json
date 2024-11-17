@@ -1,5 +1,6 @@
 {
   "ModelList": [
-    "Data\\MODEL\\statue.x"
+    "Data\\MODEL\\statue.x",
+    "Data\\MODEL\\around.x"
   ]
 }

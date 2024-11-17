@@ -227,7 +227,8 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 	m_pPad->Init(hInstance, hWnd);
 
 	/* ƒeƒXƒg */
-	CObject_X::Create(CObject::LAYER::MIDDLE, CX_Manager::TYPE::TEST);
+	CObject_X::Create(CObject::LAYER::MIDDLE, CX_Manager::TYPE::STATUE);
+	CObject_X::Create(CObject::LAYER::MIDDLE, CX_Manager::TYPE::AROUND);
 
 	return S_OK;
 }

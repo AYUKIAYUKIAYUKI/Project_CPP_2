@@ -62,7 +62,7 @@ HRESULT CCamera::Init()
 	m_fDistance = 100.0f;
 
 	// 俯瞰度合いを設定
-	m_fAdjust = 25.0f;
+	m_fAdjust = 0.0f;
 
 	return S_OK;
 }
@@ -217,21 +217,11 @@ void CCamera::BranchMode()
 	if (CManager::GetKeyboard()->GetPress(DIK_F2))
 	{
 		m_Rot.x = -D3DX_PI * 0.55f;
-		m_fAdjust = 0.0f;
-	}
-	else if (CManager::GetKeyboard()->GetRelease(DIK_F2))
-	{
-		m_fAdjust = 25.0f;
 	}
 
 	if (CManager::GetKeyboard()->GetPress(DIK_F3))
 	{
 		m_Rot.x = 0.0f;
-		m_fAdjust = 0.0f;
-	}
-	else if (CManager::GetKeyboard()->GetRelease(DIK_F3))
-	{
-		m_fAdjust = 25.0f;
 	}
 
 	// カメラ操作
