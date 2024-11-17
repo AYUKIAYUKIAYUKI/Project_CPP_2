@@ -39,9 +39,9 @@ public:
 	void	Draw() override;	// 描画処理
 
 	// <getter/setter>
-	CModel_X_Manager::MODEL* GetModel();				// モデル取得
-	void BindModel(CModel_X_Manager::MODEL* pModel);	// モデル割当
-	void BindModel(CModel_X_Manager::TYPE Type);		// もっとモデル割当
+	CX_Manager::MODEL* GetModel();				// モデル取得
+	void BindModel(CX_Manager::MODEL* pModel);	// モデル割当
+	void BindModel(CX_Manager::TYPE Type);		// もっとモデル割当
 
 	// <getter/setter>
 	const D3DXVECTOR3& GetRot() const;	// 向き取得
@@ -65,10 +65,10 @@ public:
 	virtual float GetHeight() const;		// 高さを取得
 
 	// <static function>
-	static CObject_X* Create();												// 生成
-	static CObject_X* Create(LAYER Priority);								// 生成
-	static CObject_X* Create(LAYER Priority, CModel_X_Manager::TYPE Type);	// 生成
-	static CObject_X* Create(JSON Json);									// 生成
+	static CObject_X* Create();											// 生成
+	static CObject_X* Create(LAYER Priority);							// 生成
+	static CObject_X* Create(LAYER Priority, CX_Manager::TYPE Type);	// 生成
+	static CObject_X* Create(JSON Json);								// 生成
 
 private:
 
@@ -80,12 +80,12 @@ private:
 	void SetMtxWorld();		// ワールド行列設定
 
 	// <data>
-	CModel_X_Manager::MODEL*	m_pModel;	// モデル情報
-	D3DXVECTOR3					m_Rot;		// 向き
-	D3DXVECTOR3					m_Pos;		// 座標
-	D3DXVECTOR3					m_Scale;	// 縮尺
-	float						m_fAlpha;	// アルファ値
-	D3DXMATRIX					m_MtxWorld;	// ワールド行列
+	CX_Manager::MODEL*	m_pModel;	// モデル情報
+	D3DXVECTOR3			m_Rot;		// 向き
+	D3DXVECTOR3			m_Pos;		// 座標
+	D3DXVECTOR3			m_Scale;	// 縮尺
+	float				m_fAlpha;	// アルファ値
+	D3DXMATRIX			m_MtxWorld;	// ワールド行列
 };
 
 #endif // _OBJECT_X_H_

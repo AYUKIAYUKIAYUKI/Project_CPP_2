@@ -165,7 +165,7 @@ void CObject_X::Draw()
 //============================================================================
 // モデル取得
 //============================================================================
-CModel_X_Manager::MODEL* CObject_X::GetModel()
+CX_Manager::MODEL* CObject_X::GetModel()
 {
 	return m_pModel;
 }
@@ -173,7 +173,7 @@ CModel_X_Manager::MODEL* CObject_X::GetModel()
 //============================================================================
 // モデル割当
 //============================================================================
-void CObject_X::BindModel(CModel_X_Manager::MODEL* pModel)
+void CObject_X::BindModel(CX_Manager::MODEL* pModel)
 {
 	m_pModel = pModel;
 }
@@ -181,10 +181,10 @@ void CObject_X::BindModel(CModel_X_Manager::MODEL* pModel)
 //============================================================================
 // もっとモデル割当
 //============================================================================
-void CObject_X::BindModel(CModel_X_Manager::TYPE Type)
+void CObject_X::BindModel(CX_Manager::TYPE Type)
 {
 	// モデルを取得して設定
-	m_pModel = CModel_X_Manager::GetInstance()->GetModel(Type);
+	m_pModel = CX_Manager::GetInstance()->GetModel(Type);
 }
 
 //============================================================================
@@ -318,7 +318,7 @@ CObject_X* CObject_X::Create(LAYER Priority)
 //============================================================================
 // 生成
 //============================================================================
-CObject_X* CObject_X::Create(LAYER Priority, CModel_X_Manager::TYPE Type)
+CObject_X* CObject_X::Create(LAYER Priority, CX_Manager::TYPE Type)
 {
 	// インスタンスを生成
 	CObject_X* pObjectX = DBG_NEW CObject_X(Priority);
@@ -364,7 +364,7 @@ CObject_X* CObject_X::Create(JSON Json)
 	pObjectX->Init();
 
 	// 各種パラメータを設定
-	pObjectX->BindModel(static_cast<CModel_X_Manager::TYPE>(ModelType));
+	pObjectX->BindModel(static_cast<CX_Manager::TYPE>(ModelType));
 	pObjectX->SetRot(Vec3(Rot[0], Rot[1], Rot[2]));
 	pObjectX->SetPos(Vec3(Pos[0], Pos[1], Pos[2]));
 	pObjectX->SetScale(Vec3(Scale[0], Scale[1], Scale[2]));

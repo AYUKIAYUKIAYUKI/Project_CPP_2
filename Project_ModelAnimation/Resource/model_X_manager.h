@@ -11,7 +11,7 @@
 //****************************************************
 // Xモデルマネージャークラス
 //****************************************************
-class CModel_X_Manager final
+class CX_Manager final
 {
 public:
 
@@ -51,25 +51,38 @@ public:
 		LPDIRECT3DTEXTURE9* apTex;	// テクスチャ情報
 	};
 
-	HRESULT Load();	// モデル読込
-	void Release();	// 解放
+	// <special function>
+	CX_Manager(const CX_Manager&) = delete;				// コピーコンストラクタ
+	CX_Manager& operator=(const CX_Manager&) = delete;	// コピー代入演算子
+	CX_Manager(CX_Manager&&) = delete;					// ムーブコンストラクタ
+	CX_Manager& operator=(CX_Manager&&) = delete;			// ムーブ代入演算子
 
+	// <getter>
 	MODEL* GetModel(TYPE Type);	// モデルを取得
 
-	static CModel_X_Manager* GetInstance();	// Xモデルマネージャーを取得
+	// <static function>
+	static HRESULT Create();	// 生成
+	static void	Release();		// 解放
+
+	// <static getter>
+	static CX_Manager* GetInstance();	// Xモデルマネージャーを取得
 
 private:
 
-	CModel_X_Manager();		// デフォルトコンストラクタ
-	~CModel_X_Manager();	// デストラクタ
+	// <special function>
+	CX_Manager();	// コンストラクタ
+	~CX_Manager();	// デストラクタ
 
-	void Create();									// 生成
-	D3DXVECTOR3 ImportSize(std::string Filename);	// サイズ読み込み
-	void Unload();									// モデル破棄
+	// <function>
+	HRESULT		Init();							// 初期設定
+	D3DXVECTOR3 LoadSize(std::string FileName);	// サイズ読み込み
+	void		Uninit();						// 終了処理
 
+	// <data>
 	MODEL m_apModelTemp[static_cast<int>(TYPE::MAX)];	// Xモデル情報
 
-	static CModel_X_Manager* m_pInstnce;	// Xモデルマネージャー
+	// <static data>
+	static CX_Manager* m_pXModelManager;	// Xモデルマネージャーの本体
 };
 
 #endif // _MODEL_X_MANAGER_H_

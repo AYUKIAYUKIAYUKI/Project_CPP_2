@@ -9,26 +9,150 @@
 // インクルードファイル
 //****************************************************
 #include "model_X_manager.h"
-
-// デバイス取得用
 #include "renderer.h"
+
+//****************************************************
+// usingディレクティブ
+//****************************************************
+using namespace abbr;
 
 //****************************************************
 // 静的メンバの初期化
 //****************************************************
-CModel_X_Manager* CModel_X_Manager::m_pInstnce;	// Xモデルマネージャー
+CX_Manager* CX_Manager::m_pXModelManager = nullptr;	// Xモデルマネージャーの本体
 
 //============================================================================
-// モデル読み込み
+// 
+// publicメンバ
+// 
 //============================================================================
-HRESULT CModel_X_Manager::Load()
+
+//============================================================================
+// 生成
+//============================================================================
+HRESULT CX_Manager::Create()
+{
+	// 既に生成されていたら
+	if (m_pXModelManager != nullptr)
+	{ 
+#ifdef _DEBUG
+		CRenderer::SetTimeString("Xモデルマネージャーは既に生成されています", 120);
+#endif	// _DEBUG
+
+		return S_OK;
+	}
+
+	// インスタンスを生成
+	m_pXModelManager = DBG_NEW CX_Manager();
+
+	// 生成失敗
+	if (m_pXModelManager == nullptr)
+	{
+		return E_FAIL;
+	}
+
+	// Xモデルマネージャーの初期設定
+	m_pXModelManager->Init();
+
+	return S_OK;
+}
+
+//============================================================================
+// 解放
+//============================================================================
+void CX_Manager::Release()
+{
+	if (m_pXModelManager != nullptr)
+	{
+		// Xモデルマネージャーの終了処理
+		m_pXModelManager->Uninit();
+
+		// メモリの解放
+		delete m_pXModelManager;
+
+		// ポインタの初期化
+		m_pXModelManager = nullptr;
+	}
+}
+
+//============================================================================
+// モデルを取得
+//============================================================================
+CX_Manager::MODEL* CX_Manager::GetModel(TYPE Type)
+{
+	if (m_apModelTemp[static_cast<int>(Type)].pMesh == nullptr)
+	{ // モデル取得不能
+
+#ifdef _DEBUG	// 警告表示
+
+		CRenderer::SetTimeString("【警告】モデル取得エラー", 600);
+
+#endif	// _DEBUG
+	}
+
+	return &m_apModelTemp[static_cast<int>(Type)];
+}
+
+//============================================================================
+// Xモデルマネージャーを取得
+//============================================================================
+CX_Manager* CX_Manager::GetInstance()
+{
+	// 本体が存在しなければ
+	if (m_pXModelManager == nullptr)
+	{
+		// 生成
+		if (FAILED(Create()))
+		{
+			assert(false && "Xモデルマネージャーの取得に失敗");
+		}
+	}
+
+	return m_pXModelManager;
+}
+
+//============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
+
+//============================================================================
+// コンストラクタ
+//============================================================================
+CX_Manager::CX_Manager()
+{
+	for (int i = 0; i < static_cast<int>(TYPE::MAX); i++)
+	{
+		// モデル情報の初期化
+		m_apModelTemp[i].Size = { 0.0f, 0.0f, 0.0f };	// サイズ
+		m_apModelTemp[i].pMesh = nullptr;				// メッシュのポインタ
+		m_apModelTemp[i].pBuffMat = nullptr;			// マテリアルバッファのポインタ
+		m_apModelTemp[i].dwNumMat = 0;					// マテリアル数
+		m_apModelTemp[i].apTex = nullptr;				// テクスチャのポインタ
+	}
+}
+
+//============================================================================
+// デストラクタ
+//============================================================================
+CX_Manager::~CX_Manager()
+{
+
+}
+
+//============================================================================
+// 初期設定
+//============================================================================
+HRESULT CX_Manager::Init()
 {
 	// モデルリストを展開
-	std::ifstream ModelList{ "Data\\TXT\\model_path.txt" };
+	std::ifstream ModelList("Data\\TXT\\model_path.txt");
 
+	// 展開に失敗
 	if (!ModelList)
-	{ // 展開に失敗
-		assert(false);
+	{
+		return E_FAIL;
 	}
 
 	// デバイスを取得
@@ -69,13 +193,13 @@ HRESULT CModel_X_Manager::Load()
 		}
 
 		// モデルのサイズを取得する
-		m_apModelTemp[nCntModel].Size = ImportSize(ModelName);
+		m_apModelTemp[nCntModel].Size = LoadSize(ModelName);
 
 		// マテリアルデータへのポインタを取得
 		D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_apModelTemp[nCntModel].pBuffMat->GetBufferPointer();
 
 		// マテリアルの数分のテクスチャポインタを確保
-		m_apModelTemp[nCntModel].apTex = DBG_NEW LPDIRECT3DTEXTURE9 [static_cast<int>(m_apModelTemp[nCntModel].dwNumMat)];
+		m_apModelTemp[nCntModel].apTex = DBG_NEW LPDIRECT3DTEXTURE9[static_cast<int>(m_apModelTemp[nCntModel].dwNumMat)];
 
 		// マテリアル分テクスチャの有無を確認
 		for (int nCntMat = 0; nCntMat < static_cast<int>(m_apModelTemp[nCntModel].dwNumMat); nCntMat++)
@@ -118,104 +242,16 @@ HRESULT CModel_X_Manager::Load()
 }
 
 //============================================================================
-// 解放
-//============================================================================
-void CModel_X_Manager::Release()
-{
-	if (m_pInstnce != nullptr)
-	{
-		// Xモデルの破棄
-		m_pInstnce->Unload();
-
-		// メモリの解放
-		delete m_pInstnce;
-
-		// ポインタの初期化
-		m_pInstnce = nullptr;
-	}
-}
-
-//============================================================================
-// モデルを取得
-//============================================================================
-CModel_X_Manager::MODEL* CModel_X_Manager::GetModel(TYPE Type)
-{
-	if (m_apModelTemp[static_cast<int>(Type)].pMesh == nullptr)
-	{ // モデル取得不能
-
-#ifdef _DEBUG	// 警告表示
-
-		CRenderer::SetTimeString("【警告】モデル取得エラー", 600);
-
-#endif	// _DEBUG
-	}
-
-	return &m_apModelTemp[static_cast<int>(Type)];
-}
-
-//============================================================================
-// Xモデルマネージャーを取得
-//============================================================================
-CModel_X_Manager* CModel_X_Manager::GetInstance()
-{
-	if (m_pInstnce == nullptr)
-	{
-		// 生成
-		m_pInstnce->Create();
-	}
-
-	return m_pInstnce;
-}
-
-//============================================================================
-// デフォルトコンストラクタ
-//============================================================================
-CModel_X_Manager::CModel_X_Manager()
-{
-	for (int i = 0; i < static_cast<int>(TYPE::MAX); i++)
-	{
-		// モデル情報の初期化
-		m_apModelTemp[i].Size = { 0.0f, 0.0f, 0.0f };	// サイズ
-		m_apModelTemp[i].pMesh = nullptr;				// メッシュのポインタ
-		m_apModelTemp[i].pBuffMat = nullptr;			// マテリアルバッファのポインタ
-		m_apModelTemp[i].dwNumMat = 0;					// マテリアル数
-		m_apModelTemp[i].apTex = nullptr;				// テクスチャのポインタ
-	}
-}
-
-//============================================================================
-// デストラクタ
-//============================================================================
-CModel_X_Manager::~CModel_X_Manager()
-{
-
-}
-
-//============================================================================
-// 生成
-//============================================================================
-void CModel_X_Manager::Create()
-{
-	if (m_pInstnce != nullptr)
-	{ // 二重生成禁止
-		assert(false);
-	}
-
-	// インスタンスを生成
-	m_pInstnce = DBG_NEW CModel_X_Manager{};
-}
-
-//============================================================================
 // サイズ読み込み
 //============================================================================
-D3DXVECTOR3 CModel_X_Manager::ImportSize(std::string filename)
+D3DXVECTOR3 CX_Manager::LoadSize(std::string filename)
 {
 	// 比較処理用に数値を入れておく
-	D3DXVECTOR3 sizeMin{ FLT_MAX, FLT_MAX, FLT_MAX };
-	D3DXVECTOR3 sizeMax{ FLT_MIN, FLT_MIN, FLT_MIN };
+	D3DXVECTOR3 sizeMin = { FLT_MAX, FLT_MAX, FLT_MAX };
+	D3DXVECTOR3 sizeMax = { FLT_MIN, FLT_MIN, FLT_MIN };
 
 	// モデルファイルそのものを展開
-	std::ifstream file{ filename };
+	std::ifstream file(filename);
 
 	if (!file)
 	{ // 展開に失敗
@@ -305,9 +341,9 @@ D3DXVECTOR3 CModel_X_Manager::ImportSize(std::string filename)
 }
 
 //============================================================================
-// モデル破棄
+// 終了処理
 //============================================================================
-void CModel_X_Manager::Unload()
+void CX_Manager::Uninit()
 {
 	for (int i = 0; i < static_cast<int>(TYPE::MAX); i++)
 	{

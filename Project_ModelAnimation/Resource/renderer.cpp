@@ -356,8 +356,8 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 		return E_FAIL;
 	}
 
-	// Xモデルマネージャー初期設定
-	if (FAILED(CModel_X_Manager::GetInstance()->Load()))
+	// Xモデルマネージャーを生成
+	if (FAILED(CX_Manager::Create()))
 	{
 		return E_FAIL;
 	}
@@ -373,8 +373,8 @@ void CRenderer::Uninit()
 	// 全オブジェクト解放処理
 	CObject::ReleaseAll();
 
-	// Xモデルマネージャー破棄
-	CModel_X_Manager::GetInstance()->Release();
+	// Xモデルマネージャーの破棄
+	CX_Manager::Release();
 
 	// テクスチャマネージャー破棄
 	CTexture_Manager::GetInstance()->Release();
