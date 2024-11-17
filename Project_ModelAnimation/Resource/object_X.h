@@ -14,7 +14,7 @@
 #include "object.h"
 
 // Xƒ‚ƒfƒ‹î•ñ—p
-#include "model_X_manager.h"
+#include "X_manager.h"
 
 //****************************************************
 // ‘O•ûéŒ¾

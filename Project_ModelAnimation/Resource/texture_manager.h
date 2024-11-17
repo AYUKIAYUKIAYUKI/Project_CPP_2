@@ -20,12 +20,7 @@ public:
 	//****************************************************
 	enum class TYPE
 	{
-		TEST0 = 0,			// テスト
-		TEST1,				// テスト
-		MAP,				// 仮マップ
-		CIRCLE,				// サークル
-		PLAYERGAUGE,		// プレイヤーのゲージ
-		PLAYERGAUGEWINDOW,	// プレイヤーのゲージウィンドウ
+		NONE = 0,
 		MAX,
 	};
 

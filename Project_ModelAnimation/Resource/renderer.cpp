@@ -18,7 +18,7 @@
 
 // シングルトン管理
 #include "texture_manager.h"
-#include "model_X_manager.h"
+#include "X_manager.h"
 
 //****************************************************
 // プリプロセッサディレクティブ

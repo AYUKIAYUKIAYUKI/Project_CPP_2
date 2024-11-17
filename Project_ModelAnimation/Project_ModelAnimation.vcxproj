@@ -26,7 +26,7 @@
     <ClCompile Include="resource\light.cpp" />
     <ClCompile Include="resource\main.cpp" />
     <ClCompile Include="resource\manager.cpp" />
-    <ClCompile Include="Resource\model_X_manager.cpp" />
+    <ClCompile Include="Resource\X_manager.cpp" />
     <ClCompile Include="resource\object.cpp" />
     <ClCompile Include="resource\object_X.cpp" />
     <ClCompile Include="resource\pch.cpp">
@@ -45,7 +45,7 @@
     <ClInclude Include="resource\light.h" />
     <ClInclude Include="resource\main.h" />
     <ClInclude Include="resource\manager.h" />
-    <ClInclude Include="Resource\model_X_manager.h" />
+    <ClInclude Include="Resource\X_manager.h" />
     <ClInclude Include="resource\object.h" />
     <ClInclude Include="resource\object_X.h" />
     <ClInclude Include="resource\pch.h" />

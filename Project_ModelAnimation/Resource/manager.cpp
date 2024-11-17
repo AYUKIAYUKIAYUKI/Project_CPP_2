@@ -9,9 +9,9 @@
 // インクルードファイル
 //****************************************************
 #include "manager.h"
-
-// シングルトン管理用
 #include "renderer.h"
+
+#include "object_X.h"
 
 //****************************************************
 // usingディレクティブ
@@ -225,6 +225,9 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 
 	// パッドの初期化
 	m_pPad->Init(hInstance, hWnd);
+
+	/* テスト */
+	CObject_X::Create(CObject::LAYER::MIDDLE, CX_Manager::TYPE::TEST);
 
 	return S_OK;
 }

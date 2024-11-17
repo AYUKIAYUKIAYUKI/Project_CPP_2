@@ -59,10 +59,10 @@ CCamera::~CCamera()
 HRESULT CCamera::Init()
 {
 	// 間距離を設定
-	m_fDistance = 250.0f;
+	m_fDistance = 100.0f;
 
 	// 俯瞰度合いを設定
-	m_fAdjust = 75.0f;
+	m_fAdjust = 25.0f;
 
 	return S_OK;
 }
@@ -221,7 +221,7 @@ void CCamera::BranchMode()
 	}
 	else if (CManager::GetKeyboard()->GetRelease(DIK_F2))
 	{
-		m_fAdjust = 75.0f;
+		m_fAdjust = 25.0f;
 	}
 
 	if (CManager::GetKeyboard()->GetPress(DIK_F3))
@@ -231,7 +231,7 @@ void CCamera::BranchMode()
 	}
 	else if (CManager::GetKeyboard()->GetRelease(DIK_F3))
 	{
-		m_fAdjust = 75.0f;
+		m_fAdjust = 25.0f;
 	}
 
 	// カメラ操作
@@ -285,7 +285,7 @@ void CCamera::Control()
 	else if (CManager::GetKeyboard()->GetPress(DIK_BACKSLASH))
 	{
 		// 距離間リセット
-		m_fDistance = 200.0f;
+		m_fDistance = 100.0f;
 	}
 }
 

@@ -1,0 +1,381 @@
+//============================================================================
+// 
+// Xモデルマネージャー [model_X_manager.cpp]
+// Author : 福田歩希
+// 
+//============================================================================
+
+//****************************************************
+// インクルードファイル
+//****************************************************
+#include "X_manager.h"
+#include "renderer.h"
+
+//****************************************************
+// usingディレクティブ
+//****************************************************
+using namespace abbr;
+
+//****************************************************
+// 静的メンバの初期化
+//****************************************************
+CX_Manager* CX_Manager::m_pXModelManager = nullptr;	// Xモデルマネージャーの本体
+
+//============================================================================
+// 
+// publicメンバ
+// 
+//============================================================================
+
+//============================================================================
+// 生成
+//============================================================================
+HRESULT CX_Manager::Create()
+{
+	// 既に生成されていたら
+	if (m_pXModelManager != nullptr)
+	{ 
+#ifdef _DEBUG
+		CRenderer::SetTimeString("Xモデルマネージャーは既に生成されています", 120);
+#endif	// _DEBUG
+
+		return S_OK;
+	}
+
+	// インスタンスを生成
+	m_pXModelManager = DBG_NEW CX_Manager();
+
+	// 生成失敗
+	if (m_pXModelManager == nullptr)
+	{
+		return E_FAIL;
+	}
+
+	// Xモデルマネージャーの初期設定
+	m_pXModelManager->Init();
+
+	return S_OK;
+}
+
+//============================================================================
+// 解放
+//============================================================================
+void CX_Manager::Release()
+{
+	if (m_pXModelManager != nullptr)
+	{
+		// Xモデルマネージャーの終了処理
+		m_pXModelManager->Uninit();
+
+		// メモリの解放
+		delete m_pXModelManager;
+
+		// ポインタの初期化
+		m_pXModelManager = nullptr;
+	}
+}
+
+//============================================================================
+// モデルを取得
+//============================================================================
+CX_Manager::MODEL* CX_Manager::GetModel(TYPE Type)
+{
+	if (m_apModelTemp[static_cast<int>(Type)].pMesh == nullptr)
+	{ // モデル取得不能
+
+#ifdef _DEBUG	// 警告表示
+
+		CRenderer::SetTimeString("【警告】モデル取得エラー", 600);
+
+#endif	// _DEBUG
+	}
+
+	return &m_apModelTemp[static_cast<int>(Type)];
+}
+
+//============================================================================
+// Xモデルマネージャーを取得
+//============================================================================
+CX_Manager* CX_Manager::GetInstance()
+{
+	// 本体が存在しなければ
+	if (m_pXModelManager == nullptr)
+	{
+		// 生成
+		if (FAILED(Create()))
+		{
+			assert(false && "Xモデルマネージャーの取得に失敗");
+		}
+	}
+
+	return m_pXModelManager;
+}
+
+//============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
+
+//============================================================================
+// コンストラクタ
+//============================================================================
+CX_Manager::CX_Manager()
+{
+	for (int i = 0; i < static_cast<int>(TYPE::MAX); i++)
+	{
+		// モデル情報の初期化
+		m_apModelTemp[i].Size = { 0.0f, 0.0f, 0.0f };	// サイズ
+		m_apModelTemp[i].pMesh = nullptr;				// メッシュのポインタ
+		m_apModelTemp[i].pBuffMat = nullptr;			// マテリアルバッファのポインタ
+		m_apModelTemp[i].dwNumMat = 0;					// マテリアル数
+		m_apModelTemp[i].apTex = nullptr;				// テクスチャのポインタ
+	}
+}
+
+//============================================================================
+// デストラクタ
+//============================================================================
+CX_Manager::~CX_Manager()
+{
+
+}
+
+//============================================================================
+// 初期設定
+//============================================================================
+HRESULT CX_Manager::Init()
+{
+	// モデルリストを展開
+	std::ifstream ModelList("Data\\TXT\\model_path.txt");
+
+	// 展開に失敗
+	if (!ModelList)
+	{
+		return E_FAIL;
+	}
+
+	// デバイスを取得
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
+
+	for (int nCntModel = 0; nCntModel < static_cast<int>(TYPE::MAX); nCntModel++)
+	{
+		// モデル名格納先
+		std::string ModelName;
+
+		// モデル名を取得する
+		std::getline(ModelList, ModelName);
+
+		// パスを作成する
+		ModelName.insert(0, "Data\\MODEL\\");
+
+		// モデルファイルの取得
+		HRESULT hr = D3DXLoadMeshFromX(ModelName.c_str(),
+			D3DXMESH_SYSTEMMEM,
+			pDev,
+			nullptr,
+			&m_apModelTemp[nCntModel].pBuffMat,
+			nullptr,
+			&m_apModelTemp[nCntModel].dwNumMat,
+			&m_apModelTemp[nCntModel].pMesh);
+
+		if (FAILED(hr))
+		{ // 取得失敗
+
+#ifdef _DEBUG	// 警告表示
+
+			ModelName = ModelName.substr(ModelName.find_last_of("\\") + 1, ModelName.back());
+			CRenderer::SetTimeString("【警告】モデル[" + ModelName + "]は読み込みに失敗しました", 300);
+
+#endif	// _DEBUG
+
+			continue;
+		}
+
+		// モデルのサイズを取得する
+		m_apModelTemp[nCntModel].Size = LoadSize(ModelName);
+
+		// マテリアルデータへのポインタを取得
+		D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_apModelTemp[nCntModel].pBuffMat->GetBufferPointer();
+
+		// マテリアルの数分のテクスチャポインタを確保
+		m_apModelTemp[nCntModel].apTex = DBG_NEW LPDIRECT3DTEXTURE9[static_cast<int>(m_apModelTemp[nCntModel].dwNumMat)];
+
+		// マテリアル分テクスチャの有無を確認
+		for (int nCntMat = 0; nCntMat < static_cast<int>(m_apModelTemp[nCntModel].dwNumMat); nCntMat++)
+		{
+			if (pMat[nCntMat].pTextureFilename != nullptr)
+			{
+				// テクスチャを読み取れたら生成
+				hr = D3DXCreateTextureFromFileA(pDev,
+					pMat[nCntMat].pTextureFilename,
+					&m_apModelTemp[nCntModel].apTex[nCntMat]);
+
+				if (FAILED(hr))
+				{ // 生成失敗
+
+					// テクスチャ名をコピー
+					std::string TextureName{ pMat[nCntMat].pTextureFilename };
+
+#ifdef _DEBUG	// 警告表示
+
+					ModelName = ModelName.substr(ModelName.find_last_of("\\") + 1, ModelName.back());
+					CRenderer::SetTimeString("【警告】モデル[" + ModelName + "]におけるテクスチャパスの[" + TextureName + "]は生成に失敗しました", 600);
+
+#endif	// _DEBUG
+
+					m_apModelTemp[nCntModel].apTex[nCntMat] = nullptr;
+				}
+			}
+			else
+			{
+				// 読み取れなければ初期化
+				m_apModelTemp[nCntModel].apTex[nCntMat] = nullptr;
+			}
+		}
+	}
+
+	// ファイルを閉じる
+	ModelList.close();
+
+	return S_OK;
+}
+
+//============================================================================
+// サイズ読み込み
+//============================================================================
+D3DXVECTOR3 CX_Manager::LoadSize(std::string filename)
+{
+	// 比較処理用に数値を入れておく
+	D3DXVECTOR3 sizeMin = { FLT_MAX, FLT_MAX, FLT_MAX };
+	D3DXVECTOR3 sizeMax = { FLT_MIN, FLT_MIN, FLT_MIN };
+
+	// モデルファイルそのものを展開
+	std::ifstream file(filename);
+
+	if (!file)
+	{ // 展開に失敗
+
+#ifdef _DEBUG	// 警告表示
+
+		CRenderer::SetTimeString("【警告】モデル[" + filename + "]はサイズ読み込みに失敗しました", 600);
+
+#endif	// _DEBUG
+
+		return D3DXVECTOR3{ 0.0f, 0.0f, 0.0f, };
+	}
+
+	// 文字列格納用
+	std::string str{};
+
+	// 頂点情報の箇所まで行を読み込む
+	while (std::getline(file, str))
+	{
+		if (str == "Mesh {")
+		{
+			// 不要な行を一度読み込む
+			std::getline(file, str);
+
+			break;
+		}
+	}
+
+	// 配列の要素数
+	const int nNumArray = 3;
+
+	// 数値を比較していく
+	while (std::getline(file, str))
+	{
+		// 終了条件
+		if (str == " ")
+		{
+			break;
+		}
+
+		// 数値用
+		float fNum[nNumArray]{};
+
+		// 読みとった数値を一旦格納する
+		for (int i = 0; i < nNumArray; ++i)
+		{
+			fNum[i] = std::stof(str);
+			str = str.substr(str.find(";") + 1, str.back());
+		}
+
+		// 各軸の最大・最小地点を更新
+		if (sizeMin.x > fNum[0])
+		{
+			sizeMin.x = fNum[0];
+		}
+
+		if (sizeMin.y > fNum[1])
+		{
+			sizeMin.y = fNum[1];
+		}
+
+		if (sizeMin.z > fNum[2])
+		{
+			sizeMin.z = fNum[2];
+		}
+
+		if (sizeMax.x < fNum[0])
+		{
+			sizeMax.x = fNum[0];
+		}
+
+		if (sizeMax.y < fNum[1])
+		{
+			sizeMax.y = fNum[1];
+		}
+
+		if (sizeMax.z < fNum[2])
+		{
+			sizeMax.z = fNum[2];
+		}
+	}
+
+	// ファイルを閉じる
+	file.close();
+
+	return sizeMax;
+}
+
+//============================================================================
+// 終了処理
+//============================================================================
+void CX_Manager::Uninit()
+{
+	for (int i = 0; i < static_cast<int>(TYPE::MAX); i++)
+	{
+		// テクスチャポインタの破棄
+		if (m_apModelTemp[i].apTex != nullptr)
+		{
+			// テクスチャの破棄
+			for (int nCntMat = 0; nCntMat < static_cast<int>(m_apModelTemp[i].dwNumMat); nCntMat++)
+			{
+				if (m_apModelTemp[i].apTex[nCntMat] != nullptr)
+				{
+					m_apModelTemp[i].apTex[nCntMat]->Release();
+					m_apModelTemp[i].apTex[nCntMat] = nullptr;
+				}
+			}
+
+			delete[] m_apModelTemp[i].apTex;
+			m_apModelTemp[i].apTex = nullptr;
+		}
+
+		// メッシュの破棄
+		if (m_apModelTemp[i].pMesh != nullptr)
+		{
+			m_apModelTemp[i].pMesh->Release();
+			m_apModelTemp[i].pMesh = nullptr;
+		}
+
+		// マテリアルの破棄
+		if (m_apModelTemp[i].pBuffMat != nullptr)
+		{
+			m_apModelTemp[i].pBuffMat->Release();
+			m_apModelTemp[i].pBuffMat = nullptr;
+		}
+	}
+}

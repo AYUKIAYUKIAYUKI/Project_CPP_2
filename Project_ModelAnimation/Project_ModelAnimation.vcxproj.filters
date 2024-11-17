@@ -26,7 +26,7 @@
     <ClCompile Include="resource\renderer.cpp">
       <Filter>&lt;System&gt;</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\model_X_manager.cpp">
+    <ClCompile Include="Resource\X_manager.cpp">
       <Filter>&lt;System&gt;</Filter>
     </ClCompile>
     <ClCompile Include="resource\manager.cpp">
@@ -62,7 +62,7 @@
     <ClInclude Include="resource\renderer.h">
       <Filter>&lt;System&gt;</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\model_X_manager.h">
+    <ClInclude Include="Resource\X_manager.h">
       <Filter>&lt;System&gt;</Filter>
     </ClInclude>
     <ClInclude Include="resource\manager.h">
