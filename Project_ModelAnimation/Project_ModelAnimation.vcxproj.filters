@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="resource\camera.cpp" />
+    <ClCompile Include="resource\light.cpp" />
+    <ClCompile Include="resource\main.cpp" />
+    <ClCompile Include="resource\pch.cpp" />
+    <ClCompile Include="resource\object.cpp">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="resource\object_X.cpp">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="resource\input.cpp">
+      <Filter>&lt;System&gt;\&lt;Input&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\input_keyboard.cpp">
+      <Filter>&lt;System&gt;\&lt;Input&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\input_pad.cpp">
+      <Filter>&lt;System&gt;\&lt;Input&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="resource\texture_manager.cpp">
+      <Filter>&lt;System&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="resource\renderer.cpp">
+      <Filter>&lt;System&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\model_X_manager.cpp">
+      <Filter>&lt;System&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="resource\manager.cpp">
+      <Filter>&lt;System&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\utility.cpp">
+      <Filter>&lt;utility&gt;</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource\camera.h" />
+    <ClInclude Include="resource\light.h" />
+    <ClInclude Include="resource\main.h" />
+    <ClInclude Include="resource\pch.h" />
+    <ClInclude Include="resource\object.h">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\object_X.h">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\input.h">
+      <Filter>&lt;System&gt;\&lt;Input&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\input_keyboard.h">
+      <Filter>&lt;System&gt;\&lt;Input&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\input_pad.h">
+      <Filter>&lt;System&gt;\&lt;Input&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\texture_manager.h">
+      <Filter>&lt;System&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\renderer.h">
+      <Filter>&lt;System&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\model_X_manager.h">
+      <Filter>&lt;System&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\manager.h">
+      <Filter>&lt;System&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\utility.h">
+      <Filter>&lt;utility&gt;</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="&lt;Object&gt;">
+      <UniqueIdentifier>{97e60c37-3cab-4a6f-9f00-80e1d7f38c4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;System&gt;">
+      <UniqueIdentifier>{e8e0c940-d826-4680-a5f3-8bc400344620}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;System&gt;\&lt;Input&gt;">
+      <UniqueIdentifier>{671f83ae-673a-4a83-83fd-d45193394866}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;utility&gt;">
+      <UniqueIdentifier>{07c8b80b-d72f-4cd8-8cb3-d5880e69bd8f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
