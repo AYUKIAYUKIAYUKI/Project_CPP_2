@@ -29,11 +29,12 @@ public:
 	//****************************************************
 	struct MODEL
 	{
-		D3DXVECTOR3 Size;			// サイズ
-		LPD3DXMESH pMesh;			// メッシュ情報
-		LPD3DXBUFFER pBuffMat;		// マテリアル情報
-		DWORD dwNumMat;				// マテリアルの数
-		LPDIRECT3DTEXTURE9* apTex;	// テクスチャ情報
+		LPD3DXMESH			pMesh;		// メッシュ情報
+		D3DXVECTOR3			Size;		// サイズ
+		LPD3DXBUFFER		pBuffMat;	// マテリアル情報
+		DWORD				dwNumMat;	// マテリアル数
+		D3DXCOLOR*			apColMat;	// マテリアル色	
+		LPDIRECT3DTEXTURE9*	apTex;		// テクスチャ
 	};
 
 	// <special function>

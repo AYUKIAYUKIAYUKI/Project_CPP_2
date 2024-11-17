@@ -128,10 +128,11 @@ CX_Manager::CX_Manager()
 	for (WORD wCntModel = 0; wCntModel < static_cast<WORD>(TYPE::MAX); wCntModel++)
 	{
 		// モデル情報の初期化
-		m_apModelTemp[wCntModel].Size = { VEC3_INIT };	// サイズ
 		m_apModelTemp[wCntModel].pMesh = nullptr;		// メッシュのポインタ
-		m_apModelTemp[wCntModel].pBuffMat = nullptr;	// マテリアルバッファのポインタ
+		m_apModelTemp[wCntModel].Size = { VEC3_INIT };	// サイズ
+		m_apModelTemp[wCntModel].pBuffMat = nullptr;	// マテリアルのポインタ
 		m_apModelTemp[wCntModel].dwNumMat = 0;			// マテリアル数
+		m_apModelTemp[wCntModel].apColMat = nullptr;	// マテリアルの色のポインタ
 		m_apModelTemp[wCntModel].apTex = nullptr;		// テクスチャのポインタ
 	}
 }
@@ -186,12 +187,18 @@ HRESULT CX_Manager::Init()
 		// マテリアルデータへのポインタを取得
 		D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_apModelTemp[wCntModel].pBuffMat->GetBufferPointer();
 
-		// マテリアルの数分のテクスチャポインタを確保
-		m_apModelTemp[wCntModel].apTex = DBG_NEW LPDIRECT3DTEXTURE9[static_cast<int>(m_apModelTemp[wCntModel].dwNumMat)];
+		// マテリアル数分、マテリアル色情報のポインタ配列を確保
+		m_apModelTemp[wCntModel].apColMat = DBG_NEW D3DXCOLOR[static_cast<WORD>(m_apModelTemp[wCntModel].dwNumMat)];
 
-		// マテリアル分テクスチャの有無を確認
+		// マテリアル数分、テクスチャ情報のポインタ配列を確保
+		m_apModelTemp[wCntModel].apTex = DBG_NEW LPDIRECT3DTEXTURE9[static_cast<WORD>(m_apModelTemp[wCntModel].dwNumMat)];
+
+		// マテリアルごとにテクスチャの有無を確認
 		for (WORD wCntMat = 0; wCntMat < static_cast<WORD>(m_apModelTemp[wCntModel].dwNumMat); wCntMat++)
 		{
+			// マテリアルの色をモデル情報内に保存しておく
+			m_apModelTemp[wCntModel].apColMat[wCntMat] = pMat[wCntMat].MatD3D.Diffuse;
+
 			// テクスチャ名を取得失敗
 			if (pMat[wCntMat].pTextureFilename == nullptr)
 			{
@@ -327,38 +334,42 @@ void CX_Manager::Uninit()
 {
 	for (WORD wCntModel = 0; wCntModel < static_cast<WORD>(TYPE::MAX); wCntModel++)
 	{
-		// テクスチャポインタの破棄
+		// マテリアル用のテクスチャを破棄
+		for (WORD wCntMat = 0; wCntMat < static_cast<WORD>(m_apModelTemp[wCntModel].dwNumMat); wCntMat++)
+		{
+			if (m_apModelTemp[wCntModel].apTex[wCntMat] != nullptr)
+			{
+				m_apModelTemp[wCntModel].apTex[wCntMat]->Release();
+				m_apModelTemp[wCntModel].apTex[wCntMat] = nullptr;
+			}
+		}
+
+		// テクスチャポインタ配列の破棄
 		if (m_apModelTemp[wCntModel].apTex != nullptr)
 		{
-			// テクスチャの破棄
-			for (WORD wCntMat = 0; wCntMat < static_cast<WORD>(m_apModelTemp[wCntModel].dwNumMat); wCntMat++)
-			{
-				if (m_apModelTemp[wCntModel].apTex[wCntMat] != nullptr)
-				{
-					m_apModelTemp[wCntModel].apTex[wCntMat]->Release();
-					m_apModelTemp[wCntModel].apTex[wCntMat] = nullptr;
-				}
-			}
-
-			// テクスチャを解放
 			delete[] m_apModelTemp[wCntModel].apTex;
-			
-			// テクスチャのポインタを初期化
 			m_apModelTemp[wCntModel].apTex = nullptr;
 		}
 
-		// メッシュの破棄
-		if (m_apModelTemp[wCntModel].pMesh != nullptr)
+		// マテリアル色ポインタ配列の破棄
+		if (m_apModelTemp[wCntModel].apColMat != nullptr)
 		{
-			m_apModelTemp[wCntModel].pMesh->Release();
-			m_apModelTemp[wCntModel].pMesh = nullptr;
+			delete[] m_apModelTemp[wCntModel].apColMat;
+			m_apModelTemp[wCntModel].apColMat = nullptr;
 		}
 
-		// マテリアルの破棄
+		// マテリアルバッファの破棄
 		if (m_apModelTemp[wCntModel].pBuffMat != nullptr)
 		{
 			m_apModelTemp[wCntModel].pBuffMat->Release();
 			m_apModelTemp[wCntModel].pBuffMat = nullptr;
+		}
+
+		// メッシュバッファの破棄
+		if (m_apModelTemp[wCntModel].pMesh != nullptr)
+		{
+			m_apModelTemp[wCntModel].pMesh->Release();
+			m_apModelTemp[wCntModel].pMesh = nullptr;
 		}
 	}
 }
