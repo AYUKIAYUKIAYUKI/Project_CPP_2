@@ -1,6 +1,6 @@
 //============================================================================
 // 
-// Xオブジェクト [object_X.cpp]
+// パーツオブジェクト [object_Parts.cpp]
 // Author : 福田歩希
 // 
 //============================================================================
@@ -8,17 +8,8 @@
 //****************************************************
 // インクルードファイル
 //****************************************************
-#include "object_X.h"
+#include "object_parts.h"
 #include "renderer.h"
-
-#include "manager.h"
-
-//****************************************************
-// プリプロセッサディレクティブ
-//****************************************************
-
-/// <summary> Zバッファでの描画切り替え </summary>
-#define CHANGE_DRAW_ZBUFFER 0
 
 //****************************************************
 // usingディレクティブ
@@ -34,8 +25,9 @@ using namespace abbr;
 //============================================================================
 // コンストラクタ
 //============================================================================
-CObject_X::CObject_X(LAYER Priority) :
+CObject_Parts::CObject_Parts(LAYER Priority) :
 	CObject{ Priority },
+	m_pParent{ nullptr },
 	m_pModel{ nullptr },
 	m_Pos{ VEC3_INIT },
 	m_Rot{ VEC3_INIT },
@@ -50,7 +42,7 @@ CObject_X::CObject_X(LAYER Priority) :
 //============================================================================
 // デストラクタ
 //============================================================================
-CObject_X::~CObject_X()
+CObject_Parts::~CObject_Parts()
 {
 
 }
@@ -58,7 +50,7 @@ CObject_X::~CObject_X()
 //============================================================================
 // 初期設定
 //============================================================================
-HRESULT CObject_X::Init()
+HRESULT CObject_Parts::Init()
 {
 	return S_OK;
 }
@@ -66,7 +58,7 @@ HRESULT CObject_X::Init()
 //============================================================================
 // 終了処理
 //============================================================================
-void CObject_X::Uninit()
+void CObject_Parts::Uninit()
 {
 
 }
@@ -74,10 +66,8 @@ void CObject_X::Uninit()
 //============================================================================
 // 更新処理
 //============================================================================
-void CObject_X::Update()
+void CObject_Parts::Update()
 {
-	CManager::GetKeyboard()->GetPress(DIK_1) ? m_bUseCol = 1 : m_bUseCol = 0;
-
 	// 向きを調整する
 	AdjustRotAngle();
 
@@ -88,7 +78,7 @@ void CObject_X::Update()
 //============================================================================
 // 描画処理
 //============================================================================
-void CObject_X::Draw()
+void CObject_Parts::Draw()
 {
 	// モデルが設定されていない
 	if (m_pModel == nullptr)
@@ -110,11 +100,11 @@ void CObject_X::Draw()
 
 #if CHANGE_DRAW_ZBUFFER
 
-		// 深度テストの比較方法の変更
-		pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
+	// 深度テストの比較方法の変更
+	pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
 
-		// 深度バッファに描画しない
-		pDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	// 深度バッファに描画しない
+	pDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
 #endif	// CHANGE_DRAW_ZBUFFER
 
@@ -156,19 +146,35 @@ void CObject_X::Draw()
 
 #if CHANGE_DRAW_ZBUFFER
 
-		// 深度テストの比較方法の変更
-		pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+	// 深度テストの比較方法の変更
+	pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 
-		// 深度バッファに書き込む
-		pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+	// 深度バッファに書き込む
+	pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
 #endif	// CHANGE_DRAW_ZBUFFER
 }
 
 //============================================================================
+// 親パーツのポインタ取得
+//============================================================================
+const CObject_Parts* const CObject_Parts::GetParent()const
+{
+	return m_pParent;
+}
+
+//============================================================================
+// 親パーツのポインタ設定
+//============================================================================
+void CObject_Parts::SetParent(CObject_Parts* pParent)
+{
+	m_pParent = pParent;
+}
+
+//============================================================================
 // モデル取得
 //============================================================================
-CX_Manager::MODEL* CObject_X::GetModel()
+CX_Manager::MODEL* CObject_Parts::GetModel()
 {
 	return m_pModel;
 }
@@ -176,7 +182,7 @@ CX_Manager::MODEL* CObject_X::GetModel()
 //============================================================================
 // モデル割当
 //============================================================================
-void CObject_X::BindModel(CX_Manager::MODEL* pModel)
+void CObject_Parts::BindModel(CX_Manager::MODEL* pModel)
 {
 	m_pModel = pModel;
 }
@@ -184,48 +190,32 @@ void CObject_X::BindModel(CX_Manager::MODEL* pModel)
 //============================================================================
 // もっとモデル割当
 //============================================================================
-void CObject_X::BindModel(CX_Manager::TYPE Type)
+void CObject_Parts::BindModel(CX_Manager::TYPE Type)
 {
 	// モデルを取得して設定
 	m_pModel = CX_Manager::GetInstance()->GetModel(Type);
 }
 
 //============================================================================
-// 向き取得
+// 縮尺オフセットを取得
 //============================================================================
-const D3DXVECTOR3& CObject_X::GetRot()const
+const D3DXVECTOR3& CObject_Parts::GetScaleOffset() const
 {
-	return m_Rot;
+	return m_ScaleOffset;
 }
 
 //============================================================================
-// 向き設定
+// 縮尺オフセットを設定
 //============================================================================
-void CObject_X::SetRot(D3DXVECTOR3 Rot)
+void CObject_Parts::SetScaleOffset(D3DXVECTOR3 Scale)
 {
-	m_Rot = Rot;
-}
-
-//============================================================================
-// 座標取得
-//============================================================================
-const D3DXVECTOR3& CObject_X::GetPos() const
-{
-	return m_Pos;
-}
-
-//============================================================================
-// 座標設定
-//============================================================================
-void CObject_X::SetPos(D3DXVECTOR3 Pos)
-{
-	m_Pos = Pos;
+	m_ScaleOffset = Scale;
 }
 
 //============================================================================
 // 縮尺を取得
 //============================================================================
-const D3DXVECTOR3& CObject_X::GetScale() const
+const D3DXVECTOR3& CObject_Parts::GetScale() const
 {
 	return m_Scale;
 }
@@ -233,15 +223,79 @@ const D3DXVECTOR3& CObject_X::GetScale() const
 //============================================================================
 // 縮尺を設定
 //============================================================================
-void CObject_X::SetScale(D3DXVECTOR3 Scale)
+void CObject_Parts::SetScale(D3DXVECTOR3 Scale)
 {
 	m_Scale = Scale;
 }
 
 //============================================================================
+// 向きオフセット取得
+//============================================================================
+const D3DXVECTOR3& CObject_Parts::GetRotOffset() const
+{
+	return m_RotOffset;
+}
+
+//============================================================================
+// 向きオフセット設定
+//============================================================================
+void CObject_Parts::SetRotOffset(D3DXVECTOR3 Rot)
+{
+	m_RotOffset = Rot;
+}
+
+//============================================================================
+// 向き取得
+//============================================================================
+const D3DXVECTOR3& CObject_Parts::GetRot()const
+{
+	return m_Rot;
+}
+
+//============================================================================
+// 向き設定
+//============================================================================
+void CObject_Parts::SetRot(D3DXVECTOR3 Rot)
+{
+	m_Rot = Rot;
+}
+
+//============================================================================
+// 座標オフセット取得
+//============================================================================
+const D3DXVECTOR3& CObject_Parts::GetPosOffset() const
+{
+	return m_PosOffset;
+}
+
+//============================================================================
+// 座標オフセット設定
+//============================================================================
+void CObject_Parts::SetPosOffset(D3DXVECTOR3 Pos)
+{
+	m_PosOffset = Pos;
+}
+
+//============================================================================
+// 座標取得
+//============================================================================
+const D3DXVECTOR3& CObject_Parts::GetPos() const
+{
+	return m_Pos;
+}
+
+//============================================================================
+// 座標設定
+//============================================================================
+void CObject_Parts::SetPos(D3DXVECTOR3 Pos)
+{
+	m_Pos = Pos;
+}
+
+//============================================================================
 // 色を取得
 //============================================================================
-const D3DXCOLOR& CObject_X::GetCol() const
+const D3DXCOLOR& CObject_Parts::GetCol() const
 {
 	return m_Col;
 }
@@ -249,7 +303,7 @@ const D3DXCOLOR& CObject_X::GetCol() const
 //============================================================================
 // 色を設定
 //============================================================================
-void CObject_X::SetCol(D3DXCOLOR Col)
+void CObject_Parts::SetCol(D3DXCOLOR Col)
 {
 	m_Col = Col;
 }
@@ -257,7 +311,7 @@ void CObject_X::SetCol(D3DXCOLOR Col)
 //============================================================================
 // 色反映を取得
 //============================================================================
-const bool& CObject_X::GetUseCol() const
+const bool& CObject_Parts::GetUseCol() const
 {
 	return m_bUseCol;
 }
@@ -265,15 +319,23 @@ const bool& CObject_X::GetUseCol() const
 //============================================================================
 // 色反映を設定
 //============================================================================
-void CObject_X::SetUseCol(bool bUse)
+void CObject_Parts::SetUseCol(bool bUse)
 {
 	m_bUseCol = bUse;
 }
 
 //============================================================================
+// ワールド行列を取得
+//============================================================================
+const D3DXMATRIX& CObject_Parts::GetMtxWorld() const
+{
+	return m_MtxWorld;
+}
+
+//============================================================================
 // サイズを取得
 //============================================================================
-D3DXVECTOR3 CObject_X::GetSize() const
+D3DXVECTOR3 CObject_Parts::GetSize() const
 {
 	return VEC3_INIT;
 }
@@ -281,7 +343,7 @@ D3DXVECTOR3 CObject_X::GetSize() const
 //============================================================================
 // 半径を取得
 //============================================================================
-float CObject_X::GetRadius() const
+float CObject_Parts::GetRadius() const
 {
 	return 0.0f;
 }
@@ -289,7 +351,7 @@ float CObject_X::GetRadius() const
 //============================================================================
 // 高さを取得
 //============================================================================
-float CObject_X::GetHeight() const
+float CObject_Parts::GetHeight() const
 {
 	return 0.0f;
 }
@@ -297,82 +359,27 @@ float CObject_X::GetHeight() const
 //============================================================================
 // 生成
 //============================================================================
-CObject_X* CObject_X::Create(CX_Manager::TYPE Type)
+CObject_Parts* CObject_Parts::Create(CX_Manager::TYPE Type, CObject_Parts* pParent)
 {
 	// インスタンスを生成
-	CObject_X* pObjectX = DBG_NEW CObject_X();
+	CObject_Parts* pNewInstance = DBG_NEW CObject_Parts();
 
 	// 生成失敗
-	if (pObjectX == nullptr)
+	if (pNewInstance == nullptr)
 	{
-		assert(false && "Xオブジェクトの生成に失敗しました");
+		assert(false && "パーツオブジェクトの生成に失敗しました");
 	}
 
-	// モデルを設定
-	pObjectX->BindModel(Type);
-
-	// Xオブジェクトの初期設定
-	pObjectX->Init();
-
-	return pObjectX;
-}
-
-//============================================================================
-// 生成
-//============================================================================
-CObject_X* CObject_X::Create(LAYER Priority, CX_Manager::TYPE Type)
-{
-	// インスタンスを生成
-	CObject_X* pObjectX = DBG_NEW CObject_X(Priority);
-
-	// 生成失敗
-	if (pObjectX == nullptr)
-	{
-		assert(false && "Xオブジェクトの生成に失敗しました");
-	}
+	// 親パーツのポインタを設定
+	pNewInstance->SetParent(pParent);
 
 	// モデルを設定
-	pObjectX->BindModel(Type);
+	pNewInstance->BindModel(Type);
 
-	// Xオブジェクトの初期設定
-	pObjectX->Init();
+	// パーツオブジェクトの初期設定
+	pNewInstance->Init();
 
-	return pObjectX;
-}
-
-//============================================================================
-// 生成
-//============================================================================
-CObject_X* CObject_X::Create(JSON Json)
-{
-	// パラメータをコピーしていく
-	const auto& Priority = Json["Priority"];
-	const auto& ModelType = Json["ModelType"];
-	const auto& Rot = Json["Rot"];
-	const auto& Pos = Json["Pos"];
-	const auto& Scale = Json["Scale"];
-
-	// インスタンスを生成
-	CObject_X* pObjectX = DBG_NEW CObject_X(static_cast<CObject::LAYER>(Priority));
-
-	// 生成失敗
-	if (pObjectX == nullptr)
-	{
-		assert(false && "Xオブジェクトの生成に失敗しました");
-	}
-
-	// モデルを設定
-	pObjectX->BindModel(static_cast<CX_Manager::TYPE>(ModelType));
-
-	// Xオブジェクトの初期設定
-	pObjectX->Init();
-
-	// 各種パラメータを設定
-	pObjectX->SetRot(Vec3(Rot[0], Rot[1], Rot[2]));
-	pObjectX->SetPos(Vec3(Pos[0], Pos[1], Pos[2]));
-	pObjectX->SetScale(Vec3(Scale[0], Scale[1], Scale[2]));
-
-	return pObjectX;
+	return pNewInstance;
 }
 
 //============================================================================
@@ -384,7 +391,7 @@ CObject_X* CObject_X::Create(JSON Json)
 //============================================================================
 // 向きを調整する
 //============================================================================
-void CObject_X::AdjustRotAngle()
+void CObject_Parts::AdjustRotAngle()
 {
 	while (fabsf(m_Rot.y) > D3DX_PI)
 	{
@@ -395,7 +402,7 @@ void CObject_X::AdjustRotAngle()
 //============================================================================
 // ワールド行列設定
 //============================================================================
-void CObject_X::SetMtxWorld()
+void CObject_Parts::SetMtxWorld()
 {
 	// 計算用行列
 	D3DXMATRIX mtxScale, mtxRot, mtxTrans;
@@ -405,9 +412,9 @@ void CObject_X::SetMtxWorld()
 
 	// 拡縮行列作成
 	D3DXMatrixScaling(&mtxScale,
-		m_Scale.x,
-		m_Scale.y,
-		m_Scale.z);
+		m_ScaleOffset.x + m_Scale.x,
+		m_ScaleOffset.y + m_Scale.y,
+		m_ScaleOffset.z + m_Scale.z);
 
 	// 拡縮行列との掛け算
 	D3DXMatrixMultiply(&m_MtxWorld,
@@ -416,9 +423,9 @@ void CObject_X::SetMtxWorld()
 
 	// 回転行列作成
 	D3DXMatrixRotationYawPitchRoll(&mtxRot,
-		m_Rot.y,
-		m_Rot.x,
-		m_Rot.z);
+		m_RotOffset.x + m_Rot.x,
+		m_RotOffset.y + m_Rot.y,
+		m_RotOffset.z + m_Rot.z);
 
 	// 回転行列との掛け算
 	D3DXMatrixMultiply(&m_MtxWorld,
@@ -427,12 +434,26 @@ void CObject_X::SetMtxWorld()
 
 	// 平行移動行列作成
 	D3DXMatrixTranslation(&mtxTrans,
-		m_Pos.x,
-		m_Pos.y,
-		m_Pos.z);
+		m_PosOffset.x + m_Pos.x,
+		m_PosOffset.y + m_Pos.y,
+		m_PosOffset.z + m_Pos.z);
 
 	// 平行移動行列との掛け算
 	D3DXMatrixMultiply(&m_MtxWorld,
 		&m_MtxWorld,
 		&mtxTrans);
+
+	// 親パーツが無ければここで終了
+	if (m_pParent == nullptr)
+	{
+		return;
+	}
+
+	// 親パーツのワールド行列を取得
+	D3DXMATRIX mtxParent = m_pParent->GetMtxWorld();
+
+	// 親パーツのワールド行列とかけ合わせる
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxParent);
 }

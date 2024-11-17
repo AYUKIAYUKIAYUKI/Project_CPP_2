@@ -27,6 +27,7 @@
     <ClCompile Include="resource\main.cpp" />
     <ClCompile Include="resource\manager.cpp" />
     <ClCompile Include="Resource\motion_manager.cpp" />
+    <ClCompile Include="Resource\object_Parts.cpp" />
     <ClCompile Include="Resource\X_manager.cpp" />
     <ClCompile Include="resource\object.cpp" />
     <ClCompile Include="resource\object_X.cpp" />
@@ -47,6 +48,7 @@
     <ClInclude Include="resource\main.h" />
     <ClInclude Include="resource\manager.h" />
     <ClInclude Include="Resource\motion_manager.h" />
+    <ClInclude Include="Resource\object_Parts.h" />
     <ClInclude Include="Resource\X_manager.h" />
     <ClInclude Include="resource\object.h" />
     <ClInclude Include="resource\object_X.h" />
