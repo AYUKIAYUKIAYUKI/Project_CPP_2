@@ -11,7 +11,7 @@
 //****************************************************
 // 前方宣言
 //****************************************************
-class CObject_X;
+class CObject_Parts;
 
 //****************************************************
 // モーションマネージャークラス
@@ -54,12 +54,12 @@ public:
 	//****************************************************
 	struct Actor
 	{
-		WORD					wNowMotion;		// 再生中のモーション
-		WORD					wNowKey;		// 再生中のキー
-		WORD					wNowFrame;		// 再生中のフレーム
-		std::vector<CObject_X*>	vpModelParts;	// モデルパーツ
-		WORD					wMaxMotion;		// 総モーション数
-		ActorMotion*			apMotion;		// モーション情報
+		WORD						wNowMotion;		// 再生中のモーション
+		WORD						wNowKey;		// 再生中のキー
+		WORD						wNowFrame;		// 再生中のフレーム
+		std::vector<CObject_Parts*>	vpModelParts;	// モデルパーツ
+		WORD						wMaxMotion;		// 総モーション数
+		ActorMotion*				apMotion;		// モーション情報
 	};
 
 	// <special function>

@@ -29,9 +29,12 @@ CObject_Parts::CObject_Parts(LAYER Priority) :
 	CObject{ Priority },
 	m_pParent{ nullptr },
 	m_pModel{ nullptr },
-	m_Pos{ VEC3_INIT },
-	m_Rot{ VEC3_INIT },
+	m_ScaleOffset{ VEC3_INIT },
 	m_Scale{ 1.0f, 1.0f, 1.0f },
+	m_RotOffset{ VEC3_INIT },
+	m_Rot{ VEC3_INIT },
+	m_PosOffset{ VEC3_INIT },
+	m_Pos{ VEC3_INIT },
 	m_Col{ XCOL_INIT },
 	m_bUseCol{ false }
 {

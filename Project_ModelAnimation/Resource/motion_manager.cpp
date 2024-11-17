@@ -9,7 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "motion_manager.h"
-#include "object_X.h"
+#include "object_Parts.h"
 #include "manager.h"
 #include "renderer.h"
 
@@ -175,7 +175,12 @@ HRESULT CMotion_Manager::Init()
 	// パーツ数分のパーツオブジェクトを生成
 	for (WORD wCntParts = 0; wCntParts < MaxParts; ++wCntParts)
 	{
-		m_Actor.vpModelParts.push_back(CObject_X::Create(static_cast<CX_Manager::TYPE>(Json["ModelType"][wCntParts])));
+		// 親パーツのインデックス
+		const SHORT& wParentIdx = static_cast<SHORT>(Json["ParentIdx"][wCntParts]);
+
+		wParentIdx < 0 ?
+			m_Actor.vpModelParts.push_back(CObject_Parts::Create(static_cast<CX_Manager::TYPE>(Json["ModelType"][wCntParts]), nullptr)) :
+			m_Actor.vpModelParts.push_back(CObject_Parts::Create(static_cast<CX_Manager::TYPE>(Json["ModelType"][wCntParts]), m_Actor.vpModelParts.at(wParentIdx)));
 	}
 
 	// 総モーション数を取得
