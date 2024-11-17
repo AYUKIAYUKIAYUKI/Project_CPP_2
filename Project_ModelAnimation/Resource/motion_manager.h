@@ -23,7 +23,7 @@ public:
 	//****************************************************
 	// 動作目標値の構造体を定義
 	//****************************************************
-	struct MotionDest
+	struct KeyDest
 	{
 		D3DXVECTOR3 ScaleTarget;	// 目標縮尺
 		D3DXVECTOR3 RotTarget;		// 目標向き
@@ -36,16 +36,14 @@ public:
 	struct MotionKey
 	{
 		WORD		wMaxFrame;	// キーの総フレーム数
-		MotionDest*	apDest;		// パーツごとの動作目標値
+		KeyDest*	apDest;		// パーツごとの動作目標値
 	};
 
 	//****************************************************
 	// モーション情報の構造体を定義
 	//****************************************************
-	struct Motion
+	struct ActorMotion
 	{
-		WORD		wNowKey;	// 再生中のキー
-		WORD		wNowFrame;	// 再生中のフレーム
 		bool		bLoop;		// ループフラグ
 		WORD		wMaxKey;	// モーションの総キー数
 		MotionKey*	apKey;		// キー情報
@@ -56,9 +54,12 @@ public:
 	//****************************************************
 	struct Actor
 	{
+		WORD					wNowMotion;		// 再生中のモーション
+		WORD					wNowKey;		// 再生中のキー
+		WORD					wNowFrame;		// 再生中のフレーム
 		std::vector<CObject_X*>	vpModelParts;	// モデルパーツ
 		WORD					wMaxMotion;		// 総モーション数
-		Motion*					apMotion;		// モーション情報
+		ActorMotion*			apMotion;		// モーション情報
 	};
 
 	// <special function>

@@ -42,9 +42,9 @@ void CMotion_Manager::Update()
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 	for (WORD wCntMotion = 0; wCntMotion < m_Actor.wMaxMotion; ++wCntMotion)
 	{
-		const Motion* const pMotion = &m_Actor.apMotion[wCntMotion];
-		CRenderer::SetDebugString("現在のフレーム数　：" + to_string(pMotion->wNowFrame));
-		CRenderer::SetDebugString("現在のキー数　　　：" + to_string(pMotion->wNowKey));
+		const ActorMotion* const pMotion = &m_Actor.apMotion[wCntMotion];
+		CRenderer::SetDebugString("現在のフレーム数　：" + to_string(m_Actor.wNowFrame));
+		CRenderer::SetDebugString("現在のキー数　　　：" + to_string(m_Actor.wNowKey));
 		CRenderer::SetDebugString("ループフラグ　　　：" + to_string(pMotion->bLoop));
 		CRenderer::SetDebugString("総キー数　　　　　：" + to_string(pMotion->wMaxKey));
 		CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
@@ -56,7 +56,7 @@ void CMotion_Manager::Update()
 
 			for (WORD wCntModelParts = 0; wCntModelParts < m_Actor.vpModelParts.size(); ++wCntModelParts)
 			{
-				const MotionDest* const pDest = &pKey->apDest[wCntModelParts];
+				const KeyDest* const pDest = &pKey->apDest[wCntModelParts];
 				CRenderer::SetDebugString("ScaleTarget：" + to_string(pDest->ScaleTarget.x) + "：" + to_string(pDest->ScaleTarget.y) + "：" + to_string(pDest->ScaleTarget.z));
 				CRenderer::SetDebugString("RotTarget：" + to_string(pDest->RotTarget.x) + "：" + to_string(pDest->RotTarget.y) + "：" + to_string(pDest->RotTarget.z));
 				CRenderer::SetDebugString("PosTarget：" + to_string(pDest->PosTarget.x) + "：" + to_string(pDest->PosTarget.y) + "：" + to_string(pDest->PosTarget.z));
@@ -148,7 +148,7 @@ CMotion_Manager* CMotion_Manager::GetInstance()
 // コンストラクタ
 //============================================================================
 CMotion_Manager::CMotion_Manager() :
-	m_Actor{ {}, 0, nullptr }
+	m_Actor{ 0, 0, 0, {}, 0, nullptr }
 {
 	
 }
@@ -182,17 +182,13 @@ HRESULT CMotion_Manager::Init()
 	m_Actor.wMaxMotion = static_cast<WORD>(Json["MaxMotion"]);
 
 	// モーション数分のモーション情報を生成
-	m_Actor.apMotion = DBG_NEW Motion[m_Actor.wMaxMotion];
+	m_Actor.apMotion = DBG_NEW ActorMotion[m_Actor.wMaxMotion];
 
 	// モーション情報の設定
 	for (WORD wCntMotion = 0; wCntMotion < m_Actor.wMaxMotion; ++wCntMotion)
 	{
 		// モーション情報のポインタを作成
-		Motion* const pMotion = &m_Actor.apMotion[wCntMotion];
-
-		// 再生中のキーとフレームを初期化
-		pMotion->wNowKey = 0;
-		pMotion->wNowFrame = 0;
+		ActorMotion* const pMotion = &m_Actor.apMotion[wCntMotion];
 
 		// ループフラグを取得
 		pMotion->bLoop = static_cast<bool>(Json["Loop"][wCntMotion]);
@@ -213,12 +209,12 @@ HRESULT CMotion_Manager::Init()
 			pKey->wMaxFrame = static_cast<WORD>(Json["MaxFrame"][wCntMotionKey]);
 
 			// パーツ数分の目標値情報を生成
-			pKey->apDest = DBG_NEW MotionDest[m_Actor.vpModelParts.size()];
+			pKey->apDest = DBG_NEW KeyDest[m_Actor.vpModelParts.size()];
 
 			for (WORD wCntModelParts = 0; wCntModelParts < m_Actor.vpModelParts.size(); ++wCntModelParts)
 			{
 				// 目標値情報のポインタを作成
-				MotionDest* const pDest = &pKey->apDest[wCntModelParts];
+				KeyDest* const pDest = &pKey->apDest[wCntModelParts];
 
 				// 各種パラメータを設定
 				pDest->ScaleTarget = utility::JsonConvertToVec3(Json["ScaleTarget"][wCntMotionKey][wCntModelParts]);	// 目標縮尺
@@ -240,7 +236,7 @@ void CMotion_Manager::Uninit()
 	for (WORD wCntMotion = 0; wCntMotion < m_Actor.wMaxMotion; ++wCntMotion)
 	{
 		// モーション情報のポインタを作成
-		Motion* const pMotion = &m_Actor.apMotion[wCntMotion];
+		ActorMotion* const pMotion = &m_Actor.apMotion[wCntMotion];
 
 		for (WORD wCntMotionKey = 0; wCntMotionKey < pMotion->wMaxKey; ++wCntMotionKey)
 		{
@@ -260,7 +256,7 @@ void CMotion_Manager::Uninit()
 	for (WORD wCntMotion = 0; wCntMotion < m_Actor.wMaxMotion; ++wCntMotion)
 	{
 		// モーション情報のポインタを作成
-		Motion* const pMotion = &m_Actor.apMotion[wCntMotion];
+		ActorMotion* const pMotion = &m_Actor.apMotion[wCntMotion];
 
 		// キー情報のポインタ配列を破棄
 		if (pMotion->apKey != nullptr)
@@ -318,22 +314,22 @@ void CMotion_Manager::Animation()
 void CMotion_Manager::CountFrame()
 {
 	// 現在のフレーム数をインクリメント
-	m_Actor.apMotion->wNowFrame++;
+	m_Actor.wNowFrame++;
 
 	// フレーム数が、現在再生中のキーの総フレーム数に達したら
-	if (m_Actor.apMotion->wNowFrame >= m_Actor.apMotion->apKey[m_Actor.apMotion->wNowKey].wMaxFrame)
+	if (m_Actor.wNowFrame >= m_Actor.apMotion[m_Actor.wNowMotion].apKey[m_Actor.wNowKey].wMaxFrame)
 	{
 		// 現在のフレーム数をリセット
-		m_Actor.apMotion->wNowFrame = 0;
+		m_Actor.wNowFrame = 0;
 
 		// 現在のキー数をインクリメント
-		m_Actor.apMotion->wNowKey++;
+		m_Actor.wNowKey++;
 
 		// キー数が、現在再生中のモーションの総キー数に達したら
-		if (m_Actor.apMotion->wNowKey >= m_Actor.apMotion->wMaxKey)
+		if (m_Actor.wNowKey >= m_Actor.apMotion[m_Actor.wNowMotion].wMaxKey)
 		{
 			// 現在のキー数をリセット
-			m_Actor.apMotion->wNowKey = 0;
+			m_Actor.wNowKey = 0;
 		}
 	}
 }
@@ -344,19 +340,19 @@ void CMotion_Manager::CountFrame()
 void CMotion_Manager::CorrectTarget()
 {
 	// フレームの進行度合を作成 (総フレーム数 - 現在のフレーム)
-	const WORD wFrameCoef = m_Actor.apMotion->apKey[m_Actor.apMotion->wNowKey].wMaxFrame - m_Actor.apMotion->wNowFrame;
+	const WORD wFrameCoef = m_Actor.apMotion[m_Actor.wNowMotion].apKey[m_Actor.wNowKey].wMaxFrame - m_Actor.wNowFrame;
 
 	// 全てのパーツがそれぞれの目標値へ補正したパラメータを設定する
 	for (WORD wCntModelParts = 0; wCntModelParts < m_Actor.vpModelParts.size(); ++wCntModelParts)
 	{
 		// 目標向き
 		Vec3 NewRot = m_Actor.vpModelParts[wCntModelParts]->GetRot();
-		NewRot += (m_Actor.apMotion->apKey[m_Actor.apMotion->wNowKey].apDest[wCntModelParts].RotTarget - NewRot) / wFrameCoef;
+		NewRot += (m_Actor.apMotion->apKey[m_Actor.wNowKey].apDest[wCntModelParts].RotTarget - NewRot) / wFrameCoef;
 		m_Actor.vpModelParts[wCntModelParts]->SetRot(NewRot);
 
 		// 目標座標
 		Vec3 NewPos = m_Actor.vpModelParts[wCntModelParts]->GetPos();
-		NewPos += (m_Actor.apMotion->apKey[m_Actor.apMotion->wNowKey].apDest[wCntModelParts].PosTarget - NewPos) / wFrameCoef;
+		NewPos += (m_Actor.apMotion->apKey[m_Actor.wNowKey].apDest[wCntModelParts].PosTarget - NewPos) / wFrameCoef;
 		m_Actor.vpModelParts[wCntModelParts]->SetPos(NewPos);
 	}
 }
