@@ -266,11 +266,11 @@ void CCamera::Control()
 	// ズームイン / アウト
 	if (CManager::GetKeyboard()->GetPress(DIK_AT) && m_fDistance > 10.0f)
 	{
-		m_fDistance -= 10.0f;
+		m_fDistance -= 2.0f;
 	}
 	else if (CManager::GetKeyboard()->GetPress(DIK_COLON))
 	{
-		m_fDistance += 10.0f;
+		m_fDistance += 2.0f;
 	}
 	else if (CManager::GetKeyboard()->GetPress(DIK_BACKSLASH))
 	{

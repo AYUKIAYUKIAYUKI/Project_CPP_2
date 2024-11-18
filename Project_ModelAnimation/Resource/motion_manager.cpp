@@ -174,15 +174,32 @@ HRESULT CMotion_Manager::Init()
 	// 総パーツ数を取得
 	const WORD& MaxParts = static_cast<WORD>(Json["MaxParts"]);
 
-	// パーツ数分のパーツオブジェクトを生成
+	// パーツ数分のパーツオブジェクトを先行して生成
+	for (WORD wCntParts = 0; wCntParts < MaxParts; ++wCntParts)
+	{
+		m_Actor.vpModelParts.push_back(CObject_Parts::Create(static_cast<CX_Manager::TYPE>(Json["ModelType"][wCntParts]), nullptr));
+	}
+
+	// 生成されたパーツに対し、各種設定を行う
 	for (WORD wCntParts = 0; wCntParts < MaxParts; ++wCntParts)
 	{
 		// 親パーツのインデックス
-		const SHORT& wParentIdx = static_cast<SHORT>(Json["ParentIdx"][wCntParts]);
+		const SHORT& shParentIdx = static_cast<SHORT>(Json["ParentIdx"][wCntParts]);
 
-		wParentIdx < 0 ?
-			m_Actor.vpModelParts.push_back(CObject_Parts::Create(static_cast<CX_Manager::TYPE>(Json["ModelType"][wCntParts]), nullptr)) :
-			m_Actor.vpModelParts.push_back(CObject_Parts::Create(static_cast<CX_Manager::TYPE>(Json["ModelType"][wCntParts]), m_Actor.vpModelParts.at(wParentIdx)));
+		// パーツのポインタをコピー
+		CObject_Parts* pParts = m_Actor.vpModelParts[wCntParts];
+
+		if (shParentIdx == -1)
+		{
+			pParts->SetParent(nullptr);
+		}
+		else
+		{
+			pParts->SetParent(m_Actor.vpModelParts.at(shParentIdx));
+		}
+
+		// オフセット値を設定
+		pParts->SetPosOffset(utility::JsonConvertToVec3(Json["PosOffset"][wCntParts]));
 	}
 
 	// 総モーション数を取得
