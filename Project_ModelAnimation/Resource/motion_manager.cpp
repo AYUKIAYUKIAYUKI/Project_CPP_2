@@ -37,7 +37,7 @@ void CMotion_Manager::Update()
 	// 動作
 	Animation();
 
-#if 0
+#if 1
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 	CRenderer::SetDebugString("総モーション数：" + to_string(m_Actor.wMaxMotion));
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
@@ -55,6 +55,7 @@ void CMotion_Manager::Update()
 			const MotionKey* const pKey = &pMotion->apKey[wCntMotionKey];
 			CRenderer::SetDebugString("キー[" + to_string(wCntMotionKey) + "]の総フレーム数：" + to_string(pKey->wMaxFrame));
 
+#if 0
 			for (WORD wCntModelParts = 0; wCntModelParts < m_Actor.vpModelParts.size(); ++wCntModelParts)
 			{
 				const KeyDest* const pDest = &pKey->apDest[wCntModelParts];
@@ -62,6 +63,7 @@ void CMotion_Manager::Update()
 				CRenderer::SetDebugString("RotTarget：" + to_string(pDest->RotTarget.x) + "：" + to_string(pDest->RotTarget.y) + "：" + to_string(pDest->RotTarget.z));
 				CRenderer::SetDebugString("PosTarget：" + to_string(pDest->PosTarget.x) + "：" + to_string(pDest->PosTarget.y) + "：" + to_string(pDest->PosTarget.z));
 			}
+#endif
 		}
 	}
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
