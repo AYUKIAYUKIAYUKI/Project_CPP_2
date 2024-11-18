@@ -90,6 +90,7 @@ private:
 	void	Edit();				// 編集
 	void	EditParts();		// パーツ情報の編集
 	void	EditDest();			// 目標値情報の編集
+	void	EditMotion();		// モーション情報の編集
 	void	EditKey();			// キー情報の編集
 	void	EditFrame();		// フレーム情報の編集
 	void	Export();			// エクスポート
@@ -97,6 +98,12 @@ private:
 	void	CountFrame();		// フレームをカウント
 	void	CorrectTarget();	// 目標値への補正
 	void	Reset();			// リセット
+
+	// <getter>
+	ActorMotion* const GetNowMotion() const;	// 現在のモーションのポインタを取得
+	ActorMotion* const GetSelectMotion() const;	// 選択中のモーションのポインタを取得
+	MotionKey* const GetNowKey() const;			// 現在のキーのポインタを取得
+	MotionKey* const GetSelectKey() const;		// 選択中のキーのポインタを取得
 
 	// <data>
 	JSON	m_Json;				// ジェイソンデータ

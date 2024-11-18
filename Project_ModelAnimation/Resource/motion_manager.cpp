@@ -337,15 +337,8 @@ void CMotion_Manager::Edit()
 	// パーツ情報の編集
 	EditParts();
 
-	// 選択モーション切り替え
-	if (CManager::GetKeyboard()->GetTrigger(DIK_3))
-	{
-		m_wSelectMotion > 0 ? m_wSelectMotion-- : m_wSelectMotion = m_Actor.wMaxMotion - 1;
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_4))
-	{
-		m_wSelectMotion < m_Actor.wMaxMotion - 1 ? m_wSelectMotion++ : m_wSelectMotion = 0;
-	}
+	// モーション情報の編集
+	EditMotion();
 
 	// キー情報の編集
 	EditKey();
@@ -389,7 +382,7 @@ void CMotion_Manager::EditParts()
 		}
 	}
 
-	// 目標値情報の編集MA
+	// 目標値情報の編集
 	EditDest();
 }
 
@@ -402,6 +395,22 @@ void CMotion_Manager::EditDest()
 }
 
 //============================================================================
+// モーション情報の編集
+//============================================================================
+void CMotion_Manager::EditMotion()
+{
+	// 選択モーション切り替え
+	if (CManager::GetKeyboard()->GetTrigger(DIK_3))
+	{
+		m_wSelectMotion > 0 ? m_wSelectMotion-- : m_wSelectMotion = m_Actor.wMaxMotion - 1;
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_4))
+	{
+		m_wSelectMotion < m_Actor.wMaxMotion - 1 ? m_wSelectMotion++ : m_wSelectMotion = 0;
+	}
+}
+
+//============================================================================
 // キー情報の編集
 //============================================================================
 void CMotion_Manager::EditKey()
@@ -409,11 +418,11 @@ void CMotion_Manager::EditKey()
 	// 選択キー切り替え
 	if (CManager::GetKeyboard()->GetTrigger(DIK_5))
 	{
-		m_wSelectKey > 0 ? m_wSelectKey-- : m_wSelectKey = m_Actor.apMotion[m_Actor.wNowMotion].wMaxKey - 1;
+		m_wSelectKey > 0 ? m_wSelectKey-- : m_wSelectKey = GetSelectMotion()->wMaxKey - 1;
 	}
 	else if (CManager::GetKeyboard()->GetTrigger(DIK_6))
 	{
-		m_wSelectKey < m_Actor.apMotion[m_Actor.wNowMotion].wMaxKey - 1 ? m_wSelectKey++ : m_wSelectKey = 0;
+		m_wSelectKey < GetSelectMotion()->wMaxKey - 1 ? m_wSelectKey++ : m_wSelectKey = 0;
 	}
 }
 
@@ -423,17 +432,17 @@ void CMotion_Manager::EditKey()
 void CMotion_Manager::EditFrame()
 {
 	// 総フレーム増減
-	if (CManager::GetKeyboard()->GetTrigger(DIK_7) && m_Actor.apMotion[m_Actor.wNowMotion].apKey[m_wSelectKey].wMaxFrame > 1)
+	if (CManager::GetKeyboard()->GetTrigger(DIK_7) && GetNowKey()->wMaxFrame > 1)
 	{
-		m_Actor.apMotion[m_Actor.wNowMotion].apKey[m_wSelectKey].wMaxFrame--;
+		GetSelectKey()->wMaxFrame--;
 	}
 	else if (CManager::GetKeyboard()->GetTrigger(DIK_8))
 	{
-		m_Actor.apMotion[m_Actor.wNowMotion].apKey[m_wSelectKey].wMaxFrame++;
+		GetSelectKey()->wMaxFrame++;
 	}
 	else if (CManager::GetKeyboard()->GetRelease(DIK_7) || CManager::GetKeyboard()->GetRelease(DIK_8))
 	{
-		m_Json["MaxFrame"][m_wSelectKey] = m_Actor.apMotion[m_Actor.wNowMotion].apKey[m_wSelectKey].wMaxFrame;
+		m_Json["MaxFrame"][m_wSelectKey] = GetSelectKey()->wMaxFrame;
 	}
 }
 
@@ -535,4 +544,36 @@ void CMotion_Manager::Reset()
 		// 即再生成
 		Create();
 	}
+}
+
+//============================================================================
+// 現在のモーションのポインタを取得
+//============================================================================
+CMotion_Manager::ActorMotion* const CMotion_Manager::GetNowMotion() const
+{
+	return &m_Actor.apMotion[m_Actor.wNowMotion];
+}
+
+//============================================================================
+// 選択中のモーションのポインタを取得
+//============================================================================
+CMotion_Manager::ActorMotion* const CMotion_Manager::GetSelectMotion() const
+{
+	return &m_Actor.apMotion[m_wSelectMotion];
+}
+
+//============================================================================
+// 現在のキーのポインタを取得
+//============================================================================
+CMotion_Manager::MotionKey* const CMotion_Manager::GetNowKey() const
+{
+	return &GetNowMotion()->apKey[m_Actor.wNowKey];
+}
+
+//============================================================================
+// 選択中のキーのポインタを取得
+//============================================================================
+CMotion_Manager::MotionKey* const CMotion_Manager::GetSelectKey() const
+{
+	return &GetSelectMotion()->apKey[m_wSelectKey];
 }
