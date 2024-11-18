@@ -87,13 +87,24 @@ private:
 	// <function>
 	HRESULT	Init();				// 初期設定
 	void	Uninit();			// 終了処理
-	void	Reset();			// リセット
+	void	Edit();				// 編集
+	void	EditParts();		// パーツ情報の編集
+	void	EditDest();			// 目標値情報の編集
+	void	EditKey();			// キー情報の編集
+	void	EditFrame();		// フレーム情報の編集
+	void	Export();			// エクスポート
 	void	Animation();		// 動作
 	void	CountFrame();		// フレームをカウント
 	void	CorrectTarget();	// 目標値への補正
+	void	Reset();			// リセット
 
 	// <data>
-	Actor m_Actor;	// アクター
+	JSON	m_Json;				// ジェイソンデータ
+	Actor	m_Actor;			// アクター
+	WORD	m_wSelectParts;		// 選択パーツ
+	WORD	m_wSelectMotion;	// 選択モーション
+	WORD	m_wSelectKey;		// 選択キー
+	bool	m_bPlay;			// 再生
 
 	// <static data>
 	static CMotion_Manager* m_pMotionManager;	// Xモデルマネージャーの本体

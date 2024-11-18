@@ -34,8 +34,14 @@ CMotion_Manager* CMotion_Manager::m_pMotionManager = nullptr;	// ƒ‚[ƒVƒ‡ƒ“ƒ}ƒl
 //============================================================================
 void CMotion_Manager::Update()
 {
-	// “®ì
-	Animation();
+	// •ÒW
+	Edit();
+
+	if (m_bPlay)
+	{
+		// “®ì
+		Animation();
+	}
 
 #if 1
 	CRenderer::SetDebugString("");
@@ -44,12 +50,13 @@ void CMotion_Manager::Update()
 	for (WORD wCntMotion = 0; wCntMotion < m_Actor.wMaxMotion; ++wCntMotion)
 	{
 		const ActorMotion* const pMotion = &m_Actor.apMotion[wCntMotion];
+		CRenderer::SetDebugString("");
+		CRenderer::SetDebugString("<Ä¶‘Ò‹@ƒ‚[ƒVƒ‡ƒ“î•ñ>");
 		CRenderer::SetDebugString("Œ»İ‚ÌƒtƒŒ[ƒ€”@F" + to_string(m_Actor.wNowFrame));
 		CRenderer::SetDebugString("Œ»İ‚ÌƒL[”@@@F" + to_string(m_Actor.wNowKey));
 		CRenderer::SetDebugString("ƒ‹[ƒvƒtƒ‰ƒO@@@F" + to_string(pMotion->bLoop));
 		CRenderer::SetDebugString("‘ƒL[”@@@@@F" + to_string(pMotion->wMaxKey));
-		CRenderer::SetDebugString("");
-
+		CRenderer::SetDebugString("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[");
 		for (WORD wCntMotionKey = 0; wCntMotionKey < pMotion->wMaxKey; ++wCntMotionKey)
 		{
 			const MotionKey* const pKey = &pMotion->apKey[wCntMotionKey];
@@ -66,6 +73,10 @@ void CMotion_Manager::Update()
 #endif
 		}
 	}
+	CRenderer::SetDebugString("");
+	CRenderer::SetDebugString("Œ»İ‚Ì‘I‘ğƒp[ƒc@@F" + to_string(m_wSelectParts));
+	CRenderer::SetDebugString("Œ»İ‚Ì‘I‘ğƒ‚[ƒVƒ‡ƒ“F" + to_string(m_wSelectMotion));
+	CRenderer::SetDebugString("Œ»İ‚Ì‘I‘ğƒL[@@@F" + to_string(m_wSelectKey));
 	CRenderer::SetDebugString("");
 #endif
 
@@ -152,7 +163,11 @@ CMotion_Manager* CMotion_Manager::GetInstance()
 // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 //============================================================================
 CMotion_Manager::CMotion_Manager() :
-	m_Actor{ 0, 0, 0, {}, 0, nullptr }
+	m_Actor{ 0, 0, 0, {}, 0, nullptr },
+	m_wSelectParts{ 0 },
+	m_wSelectMotion{ 0 },
+	m_wSelectKey{ 0 },
+	m_bPlay{ false }
 {
 	
 }
@@ -171,22 +186,23 @@ CMotion_Manager::~CMotion_Manager()
 HRESULT CMotion_Manager::Init()
 {
 	// JSONƒtƒ@ƒCƒ‹‚©‚çƒ‚[ƒVƒ‡ƒ“î•ñ‚ğæ“¾
-	JSON Json = utility::OpenJsonFile("Data\\JSON\\player_motion.json");
+	//m_Json = utility::OpenJsonFile("Data\\JSON\\player_motion.json");
+	m_Json = utility::OpenJsonFile("Data\\JSON\\motion_export.json");
 
 	// ‘ƒp[ƒc”‚ğæ“¾
-	const WORD& MaxParts = static_cast<WORD>(Json["MaxParts"]);
+	const WORD& MaxParts = static_cast<WORD>(m_Json["MaxParts"]);
 
 	// ƒp[ƒc”•ª‚Ìƒp[ƒcƒIƒuƒWƒFƒNƒg‚ğæs‚µ‚Ä¶¬
 	for (WORD wCntParts = 0; wCntParts < MaxParts; ++wCntParts)
 	{
-		m_Actor.vpModelParts.push_back(CObject_Parts::Create(static_cast<CX_Manager::TYPE>(Json["ModelType"][wCntParts]), nullptr));
+		m_Actor.vpModelParts.push_back(CObject_Parts::Create(static_cast<CX_Manager::TYPE>(m_Json["ModelType"][wCntParts]), nullptr));
 	}
 
 	// ¶¬‚³‚ê‚½ƒp[ƒc‚É‘Î‚µAŠeíİ’è‚ğs‚¤
 	for (WORD wCntParts = 0; wCntParts < MaxParts; ++wCntParts)
 	{
 		// eƒp[ƒc‚ÌƒCƒ“ƒfƒbƒNƒX
-		const SHORT& shParentIdx = static_cast<SHORT>(Json["ParentIdx"][wCntParts]);
+		const SHORT& shParentIdx = static_cast<SHORT>(m_Json["ParentIdx"][wCntParts]);
 
 		// ƒp[ƒc‚Ìƒ|ƒCƒ“ƒ^‚ğƒRƒs[
 		CObject_Parts* pParts = m_Actor.vpModelParts[wCntParts];
@@ -201,11 +217,11 @@ HRESULT CMotion_Manager::Init()
 		}
 
 		// ƒIƒtƒZƒbƒg’l‚ğİ’è
-		pParts->SetPosOffset(utility::JsonConvertToVec3(Json["PosOffset"][wCntParts]));
+		pParts->SetPosOffset(utility::JsonConvertToVec3(m_Json["PosOffset"][wCntParts]));
 	}
 
 	// ‘ƒ‚[ƒVƒ‡ƒ“”‚ğæ“¾
-	m_Actor.wMaxMotion = static_cast<WORD>(Json["MaxMotion"]);
+	m_Actor.wMaxMotion = static_cast<WORD>(m_Json["MaxMotion"]);
 
 	// ƒ‚[ƒVƒ‡ƒ“”•ª‚Ìƒ‚[ƒVƒ‡ƒ“î•ñ‚ğ¶¬
 	m_Actor.apMotion = DBG_NEW ActorMotion[m_Actor.wMaxMotion];
@@ -217,10 +233,10 @@ HRESULT CMotion_Manager::Init()
 		ActorMotion* const pMotion = &m_Actor.apMotion[wCntMotion];
 
 		// ƒ‹[ƒvƒtƒ‰ƒO‚ğæ“¾
-		pMotion->bLoop = static_cast<bool>(Json["Loop"][wCntMotion]);
+		pMotion->bLoop = static_cast<bool>(m_Json["Loop"][wCntMotion]);
 
 		// ƒ‚[ƒVƒ‡ƒ“‚Ì‘ƒL[”‚ğæ“¾
-		pMotion->wMaxKey = static_cast<WORD>(Json["MaxKey"][wCntMotion]);
+		pMotion->wMaxKey = static_cast<WORD>(m_Json["MaxKey"][wCntMotion]);
 
 		// ƒL[”•ª‚ÌƒL[î•ñ‚ğ¶¬
 		pMotion->apKey = DBG_NEW MotionKey[pMotion->wMaxKey];
@@ -232,7 +248,7 @@ HRESULT CMotion_Manager::Init()
 			MotionKey* const pKey = &pMotion->apKey[wCntMotionKey];
 
 			// ƒL[‚Ì‘ƒtƒŒ[ƒ€”‚ğæ“¾
-			pKey->wMaxFrame = static_cast<WORD>(Json["MaxFrame"][wCntMotionKey]);
+			pKey->wMaxFrame = static_cast<WORD>(m_Json["MaxFrame"][wCntMotionKey]);
 
 			// ƒp[ƒc”•ª‚Ì–Ú•W’lî•ñ‚ğ¶¬
 			pKey->apDest = DBG_NEW KeyDest[m_Actor.vpModelParts.size()];
@@ -243,9 +259,9 @@ HRESULT CMotion_Manager::Init()
 				KeyDest* const pDest = &pKey->apDest[wCntModelParts];
 
 				// Šeíƒpƒ‰ƒ[ƒ^‚ğİ’è
-				pDest->ScaleTarget = utility::JsonConvertToVec3(Json["ScaleTarget"][wCntMotionKey][wCntModelParts]);	// –Ú•WkÚ
-				pDest->RotTarget = utility::JsonConvertToVec3(Json["RotTarget"][wCntMotionKey][wCntModelParts]);		// –Ú•WŒü‚«
-				pDest->PosTarget = utility::JsonConvertToVec3(Json["PosTarget"][wCntMotionKey][wCntModelParts]);		// –Ú•WÀ•W
+				pDest->ScaleTarget = utility::JsonConvertToVec3(m_Json["ScaleTarget"][wCntMotionKey][wCntModelParts]);	// –Ú•WkÚ
+				pDest->RotTarget = utility::JsonConvertToVec3(m_Json["RotTarget"][wCntMotionKey][wCntModelParts]);		// –Ú•WŒü‚«
+				pDest->PosTarget = utility::JsonConvertToVec3(m_Json["PosTarget"][wCntMotionKey][wCntModelParts]);		// –Ú•WÀ•W
 			}
 		}
 	}
@@ -308,17 +324,140 @@ void CMotion_Manager::Uninit()
 }
 
 //============================================================================
-// ƒŠƒZƒbƒg
+// •ÒW
 //============================================================================
-void CMotion_Manager::Reset()
+void CMotion_Manager::Edit()
 {
+	// Ä¶Ø‚è‘Ö‚¦
 	if (CManager::GetKeyboard()->GetTrigger(DIK_F5))
 	{
-		// ˆê’U‰ğ•ú
-		Release();
+		m_bPlay = !m_bPlay;
+	}
 
-		// ‘¦Ä¶¬
-		Create();
+	// ƒp[ƒcî•ñ‚Ì•ÒW
+	EditParts();
+
+	// ‘I‘ğƒ‚[ƒVƒ‡ƒ“Ø‚è‘Ö‚¦
+	if (CManager::GetKeyboard()->GetTrigger(DIK_3))
+	{
+		m_wSelectMotion > 0 ? m_wSelectMotion-- : m_wSelectMotion = m_Actor.wMaxMotion - 1;
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_4))
+	{
+		m_wSelectMotion < m_Actor.wMaxMotion - 1 ? m_wSelectMotion++ : m_wSelectMotion = 0;
+	}
+
+	// ƒL[î•ñ‚Ì•ÒW
+	EditKey();
+
+	// ƒtƒŒ[ƒ€î•ñ‚Ì•ÒW
+	EditFrame();
+
+	// ƒGƒNƒXƒ|[ƒg
+	if (CManager::GetKeyboard()->GetTrigger(DIK_F1))
+	{
+		Export();
+	}
+}
+
+//============================================================================
+// ƒp[ƒcî•ñ‚Ì•ÒW
+//============================================================================
+void CMotion_Manager::EditParts()
+{
+	// ‘I‘ğƒp[ƒcØ‚è‘Ö‚¦
+	if (CManager::GetKeyboard()->GetTrigger(DIK_1))
+	{
+		m_wSelectParts > 0 ? m_wSelectParts-- : m_wSelectParts = m_Actor.vpModelParts.size() - 1;
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_2))
+	{
+		m_wSelectParts < m_Actor.vpModelParts.size() - 1 ? m_wSelectParts++ : m_wSelectParts = 0;
+	}
+
+	// ‘I‘ğƒp[ƒc‚ğ“§‰ß
+	for (WORD wCntParts = 0; wCntParts < m_Actor.vpModelParts.size(); ++wCntParts)
+	{
+		if (m_wSelectParts == wCntParts)
+		{
+			m_Actor.vpModelParts[wCntParts]->SetCol({ 1.0f, 0.5f, 0.25f, 0.25f });
+			m_Actor.vpModelParts[wCntParts]->SetUseCol(true);
+		}
+		else
+		{
+			m_Actor.vpModelParts[wCntParts]->SetUseCol(false);
+		}
+	}
+
+	// –Ú•W’lî•ñ‚Ì•ÒWMA
+	EditDest();
+}
+
+//============================================================================
+// –Ú•W’lî•ñ‚Ì•ÒW
+//============================================================================
+void CMotion_Manager::EditDest()
+{
+
+}
+
+//============================================================================
+// ƒL[î•ñ‚Ì•ÒW
+//============================================================================
+void CMotion_Manager::EditKey()
+{
+	// ‘I‘ğƒL[Ø‚è‘Ö‚¦
+	if (CManager::GetKeyboard()->GetTrigger(DIK_5))
+	{
+		m_wSelectKey > 0 ? m_wSelectKey-- : m_wSelectKey = m_Actor.apMotion[m_Actor.wNowMotion].wMaxKey - 1;
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_6))
+	{
+		m_wSelectKey < m_Actor.apMotion[m_Actor.wNowMotion].wMaxKey - 1 ? m_wSelectKey++ : m_wSelectKey = 0;
+	}
+}
+
+//============================================================================
+// ƒtƒŒ[ƒ€î•ñ‚Ì•ÒW
+//============================================================================
+void CMotion_Manager::EditFrame()
+{
+	// ‘ƒtƒŒ[ƒ€‘Œ¸
+	if (CManager::GetKeyboard()->GetTrigger(DIK_7) && m_Actor.apMotion[m_Actor.wNowMotion].apKey[m_wSelectKey].wMaxFrame > 1)
+	{
+		m_Actor.apMotion[m_Actor.wNowMotion].apKey[m_wSelectKey].wMaxFrame--;
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_8))
+	{
+		m_Actor.apMotion[m_Actor.wNowMotion].apKey[m_wSelectKey].wMaxFrame++;
+	}
+	else if (CManager::GetKeyboard()->GetRelease(DIK_7) || CManager::GetKeyboard()->GetRelease(DIK_8))
+	{
+		m_Json["MaxFrame"][m_wSelectKey] = m_Actor.apMotion[m_Actor.wNowMotion].apKey[m_wSelectKey].wMaxFrame;
+	}
+}
+
+//============================================================================
+// ƒGƒNƒXƒ|[ƒg
+//============================================================================
+void CMotion_Manager::Export()
+{
+	// ƒtƒ@ƒCƒ‹–¼‚ğì¬
+	std::string FileName = "Data\\JSON\\motion_export.json";
+
+	// ƒtƒ@ƒCƒ‹‚ğ‘‚«o‚µ“WŠJ
+	std::ofstream Ofs(FileName, std::ios::out);
+
+	if (Ofs.good())
+	{
+		// ƒWƒFƒCƒ\ƒ“ƒf[ƒ^‚ğƒVƒŠƒAƒ‰ƒCƒY
+		Ofs << m_Json.dump(1, '	');	// ‘æˆêˆø” -> ƒCƒ“ƒfƒ“ƒg”, ‘æ“ñˆø” -> ƒCƒ“ƒfƒ“ƒgŒ`®
+
+		CRenderer::SetTimeString("ƒ‚[ƒVƒ‡ƒ“ƒf[ƒ^[" + FileName + "]‚ğ‘‚«o‚µ‚Ü‚µ‚½", 120);
+	}
+	else
+	{
+		assert(false && "ƒtƒ@ƒCƒ‹‚Ì‘‚«‚İ‚É¸”s");
 	}
 }
 
@@ -380,5 +519,20 @@ void CMotion_Manager::CorrectTarget()
 		Vec3 NewPos = m_Actor.vpModelParts[wCntModelParts]->GetPos();
 		NewPos += (m_Actor.apMotion->apKey[m_Actor.wNowKey].apDest[wCntModelParts].PosTarget - NewPos) / wFrameCoef;
 		m_Actor.vpModelParts[wCntModelParts]->SetPos(NewPos);
+	}
+}
+
+//============================================================================
+// ƒŠƒZƒbƒg
+//============================================================================
+void CMotion_Manager::Reset()
+{
+	if (CManager::GetKeyboard()->GetTrigger(DIK_F7))
+	{
+		// ˆê’U‰ğ•ú
+		Release();
+
+		// ‘¦Ä¶¬
+		Create();
 	}
 }
