@@ -100,15 +100,17 @@ private:
 	void	Reset();			// リセット
 
 	// <getter>
-	ActorMotion* const GetNowMotion() const;	// 現在のモーションのポインタを取得
-	ActorMotion* const GetSelectMotion() const;	// 選択中のモーションのポインタを取得
-	MotionKey* const GetNowKey() const;			// 現在のキーのポインタを取得
-	MotionKey* const GetSelectKey() const;		// 選択中のキーのポインタを取得
+	CObject_Parts* const GetSelectParts() const;	// 選択中のパーツのポインタを取得
+	ActorMotion* const GetNowMotion() const;		// 現在のモーションのポインタを取得
+	ActorMotion* const GetSelectMotion() const;		// 選択中のモーションのポインタを取得
+	MotionKey* const GetNowKey() const;				// 現在のキーのポインタを取得
+	MotionKey* const GetSelectKey() const;			// 選択中のキーのポインタを取得
 
 	// <data>
 	JSON	m_Json;				// ジェイソンデータ
 	Actor	m_Actor;			// アクター
 	WORD	m_wSelectParts;		// 選択パーツ
+	WORD	m_wPosEditCoef;		// 座標編集の強度
 	WORD	m_wSelectMotion;	// 選択モーション
 	WORD	m_wSelectKey;		// 選択キー
 	bool	m_bPlay;			// 再生

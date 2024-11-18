@@ -188,6 +188,17 @@ void utility::AdjustDirection(float& fAngle1, float& fAngle2)
 }
 
 //============================================================================
+// 小数点を切り捨て
+//============================================================================
+std::string utility::ToPrecision(float fVal)
+{
+	std::ostringstream Oss;
+	Oss << std::fixed << std::setprecision(1) << fVal;
+
+	return Oss.str();
+}
+
+//============================================================================
 // JSONファイルの展開
 //============================================================================
 nlohmann::json utility::OpenJsonFile(std::string FilePath)

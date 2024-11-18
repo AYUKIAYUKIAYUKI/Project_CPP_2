@@ -37,6 +37,9 @@ namespace utility
 	// 向きの範囲の補正(ラジアン)
 	void AdjustDirection(float& fAngle1, float& fAngle2);
 
+	// 小数点を切り捨て
+	std::string ToPrecision(float fVal);
+
 	// Jsonファイルの展開
 	nlohmann::json OpenJsonFile(std::string FilePath);
 
