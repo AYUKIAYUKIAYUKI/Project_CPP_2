@@ -92,6 +92,7 @@ private:
 	void	EditDest();			// 目標値情報の編集
 	void	EditMotion();		// モーション情報の編集
 	void	EditKey();			// キー情報の編集
+	void	ResizeKey();		// キー情報を再確保
 	void	EditFrame();		// フレーム情報の編集
 	void	Export();			// エクスポート
 	void	Animation();		// 動作
@@ -110,7 +111,7 @@ private:
 	JSON	m_Json;				// ジェイソンデータ
 	Actor	m_Actor;			// アクター
 	WORD	m_wSelectParts;		// 選択パーツ
-	WORD	m_wPosEditCoef;		// 座標編集の強度
+	float	m_fPosEditCoef;		// 座標編集の強度
 	WORD	m_wSelectMotion;	// 選択モーション
 	WORD	m_wSelectKey;		// 選択キー
 	bool	m_bPlay;			// 再生

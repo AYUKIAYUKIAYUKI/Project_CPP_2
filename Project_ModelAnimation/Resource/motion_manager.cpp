@@ -65,14 +65,15 @@ void CMotion_Manager::Update()
 	}
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 	CRenderer::SetDebugString("現在の選択パーツ　　：" + to_string(m_wSelectParts));
+	CRenderer::SetDebugString("座標編集の強度　　　：" + to_string(m_fPosEditCoef));
 	CRenderer::SetDebugString("現在の選択モーション：" + to_string(m_wSelectMotion));
 	CRenderer::SetDebugString("現在の選択キー　　　：" + to_string(m_wSelectKey));
 	for (WORD wCntModelParts = 0; wCntModelParts < m_Actor.vpModelParts.size(); ++wCntModelParts)
 	{
 		const KeyDest* const pDest = &GetSelectKey()->apDest[wCntModelParts];
-		CRenderer::SetDebugString("Scale：x " + utility::ToPrecision(pDest->ScaleTarget.x) + "：y " + utility::ToPrecision(pDest->ScaleTarget.y) + "：z " + utility::ToPrecision(pDest->ScaleTarget.z) + "："
-			"Rot：x " + utility::ToPrecision(pDest->RotTarget.x) + "：y " + utility::ToPrecision(pDest->RotTarget.y) + "：z " + utility::ToPrecision(pDest->RotTarget.z) + "："
-			"Pos：x " + utility::ToPrecision(pDest->PosTarget.x) + "：y " + utility::ToPrecision(pDest->PosTarget.y) + "：z " + utility::ToPrecision(pDest->PosTarget.z));
+		CRenderer::SetDebugString("Scale：" + utility::ToPrecision(pDest->ScaleTarget.x) + "：" + utility::ToPrecision(pDest->ScaleTarget.y) + "：" + utility::ToPrecision(pDest->ScaleTarget.z) + "："
+			"Rot：" + utility::ToPrecision(pDest->RotTarget.x) + "：" + utility::ToPrecision(pDest->RotTarget.y) + "：" + utility::ToPrecision(pDest->RotTarget.z) + "："
+			"Pos：" + utility::ToPrecision(pDest->PosTarget.x) + "：" + utility::ToPrecision(pDest->PosTarget.y) + "：" + utility::ToPrecision(pDest->PosTarget.z));
 	}
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 #endif
@@ -162,7 +163,7 @@ CMotion_Manager* CMotion_Manager::GetInstance()
 CMotion_Manager::CMotion_Manager() :
 	m_Actor{ 0, 0, 0, {}, 0, nullptr },
 	m_wSelectParts{ 0 },
-	m_wPosEditCoef{ 0 },
+	m_fPosEditCoef{ 0.0f },
 	m_wSelectMotion{ 0 },
 	m_wSelectKey{ 0 },
 	m_bPlay{ false }
@@ -419,41 +420,42 @@ void CMotion_Manager::EditDest()
 
 	if (CManager::GetKeyboard()->GetTrigger(DIK_R))
 	{
-		m_wPosEditCoef--;
+		m_fPosEditCoef += -0.1f;
 	}
 	else if (CManager::GetKeyboard()->GetTrigger(DIK_Y))
 	{
-		m_wPosEditCoef++;
+		m_fPosEditCoef += 0.1f;
 	}
 
 	if (CManager::GetKeyboard()->GetTrigger(DIK_F))
 	{
-		pDest->PosTarget.x += -m_wPosEditCoef;
+		pDest->PosTarget.x += -m_fPosEditCoef;
 	}
 	else if (CManager::GetKeyboard()->GetTrigger(DIK_H))
 	{
-		pDest->PosTarget.x += m_wPosEditCoef;
+		pDest->PosTarget.x += m_fPosEditCoef;
 	}
 	else if (CManager::GetKeyboard()->GetTrigger(DIK_T))
 	{
-		pDest->PosTarget.y += m_wPosEditCoef;
+		pDest->PosTarget.y += m_fPosEditCoef;
 	}
 	else if (CManager::GetKeyboard()->GetTrigger(DIK_G))
 	{
-		pDest->PosTarget.y += -m_wPosEditCoef;
+		pDest->PosTarget.y += -m_fPosEditCoef;
 	}
 	else if (CManager::GetKeyboard()->GetTrigger(DIK_V))
 	{
-		pDest->PosTarget.z += -m_wPosEditCoef;
+		pDest->PosTarget.z += -m_fPosEditCoef;
 	}
 	else if (CManager::GetKeyboard()->GetTrigger(DIK_N))
 	{
-		pDest->PosTarget.z += m_wPosEditCoef;
+		pDest->PosTarget.z += m_fPosEditCoef;
 	}
 
 	// 目標値を反映
-	m_Json["RotTarget"][m_wSelectKey][m_wSelectParts] = *pDest->RotTarget;
-	m_Json["RotTarget"][m_wSelectKey][m_wSelectParts] = *pDest->PosTarget;
+	m_Json["ScaleTarget"][m_wSelectKey][m_wSelectParts] = { pDest->ScaleTarget.x, pDest->ScaleTarget.y, pDest->ScaleTarget.z };
+	m_Json["RotTarget"][m_wSelectKey][m_wSelectParts] = { pDest->RotTarget.x, pDest->RotTarget.y, pDest->RotTarget.z };
+	m_Json["PosTarget"][m_wSelectKey][m_wSelectParts] = { pDest->PosTarget.x, pDest->PosTarget.y, pDest->PosTarget.z };
 }
 
 //============================================================================
@@ -485,6 +487,93 @@ void CMotion_Manager::EditKey()
 	else if (CManager::GetKeyboard()->GetTrigger(DIK_6))
 	{
 		m_wSelectKey < GetSelectMotion()->wMaxKey - 1 ? m_wSelectKey++ : m_wSelectKey = 0;
+	}
+
+	/*
+	// 総キー数の切り替え
+	if (CManager::GetKeyboard()->GetTrigger(DIK_F2))
+	{
+		GetSelectMotion()->wMaxKey--;
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_F3))
+	{
+		GetSelectMotion()->wMaxKey++;
+	}
+	else if (CManager::GetKeyboard()->GetRelease(DIK_F2) || CManager::GetKeyboard()->GetRelease(DIK_F3))
+	{
+		// キー情報の再確保
+		ResizeKey();
+	}
+	*/
+}
+
+//============================================================================
+// キー情報の再確保
+//============================================================================
+void CMotion_Manager::ResizeKey()
+{
+	/* 横着しないできちんとコピーすること！ */
+
+	// 総キー数を再設定
+	m_Json["MaxKey"][m_wSelectMotion] = m_Actor.apMotion[m_wSelectMotion].wMaxKey;
+
+	// キー情報内の目標値情報を破棄
+	for (WORD wCntMotion = 0; wCntMotion < m_Actor.wMaxMotion; ++wCntMotion)
+	{
+		// モーション情報のポインタを作成
+		ActorMotion* const pMotion = &m_Actor.apMotion[wCntMotion];
+
+		for (WORD wCntMotionKey = 0; wCntMotionKey < pMotion->wMaxKey; ++wCntMotionKey)
+		{
+			// キー情報のポインタを作成
+			MotionKey* const pKey = &pMotion->apKey[wCntMotionKey];
+
+			// 目標値情報のポインタ配列を破棄
+			if (pKey->apDest != nullptr)
+			{
+				delete[] pKey->apDest;
+				pKey->apDest = nullptr;
+			}
+		}
+
+		// キー情報のポインタ配列を破棄
+		if (pMotion->apKey != nullptr)
+		{
+			delete[] pMotion->apKey;
+			pMotion->apKey = nullptr;
+		}
+	}
+
+	ActorMotion* pMotion = GetSelectMotion();
+
+	// モーションの総キー数を取得
+	pMotion->wMaxKey = static_cast<WORD>(m_Json["MaxKey"][m_wSelectMotion]);
+
+	// キー数分のキー情報を生成
+	pMotion->apKey = DBG_NEW MotionKey[pMotion->wMaxKey];
+
+	// キー情報の設定
+	for (WORD wCntMotionKey = 0; wCntMotionKey < pMotion->wMaxKey; ++wCntMotionKey)
+	{
+		// キー情報のポインタを作成
+		MotionKey* const pKey = &pMotion->apKey[wCntMotionKey];
+
+		// キーの総フレーム数を取得
+		pKey->wMaxFrame = static_cast<WORD>(m_Json["MaxFrame"][wCntMotionKey]);
+
+		// パーツ数分の目標値情報を生成
+		pKey->apDest = DBG_NEW KeyDest[m_Actor.vpModelParts.size()];
+
+		for (WORD wCntModelParts = 0; wCntModelParts < m_Actor.vpModelParts.size(); ++wCntModelParts)
+		{
+			// 目標値情報のポインタを作成
+			KeyDest* const pDest = &pKey->apDest[wCntModelParts];
+
+			// 各種パラメータを設定
+			pDest->ScaleTarget = utility::JsonConvertToVec3(m_Json["ScaleTarget"][wCntMotionKey][wCntModelParts]);	// 目標縮尺
+			pDest->RotTarget = utility::JsonConvertToVec3(m_Json["RotTarget"][wCntMotionKey][wCntModelParts]);		// 目標向き
+			pDest->PosTarget = utility::JsonConvertToVec3(m_Json["PosTarget"][wCntMotionKey][wCntModelParts]);		// 目標座標
+		}
 	}
 }
 
