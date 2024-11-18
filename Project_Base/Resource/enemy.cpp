@@ -89,13 +89,19 @@ void CEnemy::Update()
 	fNewDirection += -DEFAULT_MOVE_SPEED * 3.0f;
 	SetDirection(fNewDirection);
 
+	//
+	AutoSetRotTarget();
+
+	//
+	AutoSetPosTarget();
+
 	// プレイヤーへの攻撃
 	AttackOnPlayer();
 
 	// キャラクタークラスの更新処理
 	CCharacter::Update();
 
-#if 0
+#if 1
 #ifdef _DEBUG
 
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");

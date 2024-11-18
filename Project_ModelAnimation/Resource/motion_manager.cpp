@@ -37,6 +37,7 @@ void CMotion_Manager::Update()
 	// 動作
 	Animation();
 
+#if 0
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 	CRenderer::SetDebugString("総モーション数：" + to_string(m_Actor.wMaxMotion));
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
@@ -64,6 +65,7 @@ void CMotion_Manager::Update()
 		}
 	}
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+#endif
 
 	// リセット
 	Reset();
@@ -167,7 +169,7 @@ CMotion_Manager::~CMotion_Manager()
 HRESULT CMotion_Manager::Init()
 {
 	// JSONファイルからモーション情報を取得
-	JSON Json = utility::OpenJsonFile("Data\\JSON\\motion_test.json");
+	JSON Json = utility::OpenJsonFile("Data\\JSON\\player_motion.json");
 
 	// 総パーツ数を取得
 	const WORD& MaxParts = static_cast<WORD>(Json["MaxParts"]);

@@ -31675,7 +31675,7 @@ Mesh {
    1.000000;1.000000;1.000000;;
    0.800000;0.800000;0.800000;;
    TextureFilename {
-    "Data\\TEXTURE\\body.png";
+    "Data\\TEXTURE\\body.jpg";
    }
   }
   Material {
@@ -31684,7 +31684,7 @@ Mesh {
    1.000000;1.000000;1.000000;;
    0.800000;0.800000;0.800000;;
    TextureFilename {
-    "Data\\TEXTURE\\cloth.png";
+    "Data\\TEXTURE\\cloth.jpg";
    }
   }
   Material {
@@ -31693,7 +31693,7 @@ Mesh {
    1.000000;1.000000;1.000000;;
    0.800000;0.800000;0.800000;;
    TextureFilename {
-    "Data\\TEXTURE\\face.png";
+    "Data\\TEXTURE\\face.jpg";
    }
   }
   Material {
@@ -31702,7 +31702,7 @@ Mesh {
    1.000000;1.000000;1.000000;;
    0.800000;0.800000;0.800000;;
    TextureFilename {
-    "Data\\TEXTURE\\hair.png";
+    "Data\\TEXTURE\\hair.jpg";
    }
   }
   Material {
