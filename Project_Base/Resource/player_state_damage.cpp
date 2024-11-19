@@ -62,6 +62,7 @@ void CPlayer_State_Damage::Update()
 	if (m_nDamageDuration >= MAX_DASH_DURATION)
 	{
 		// 通常カラーに設定
+		/* MA側のXオブジェクトに変更後、マテリアルカラーを操作に変更 */
 		m_pCharacter->SetAlpha(1.0f);
 
 		// 通常状態へ

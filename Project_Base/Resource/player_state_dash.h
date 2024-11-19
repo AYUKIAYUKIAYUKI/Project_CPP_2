@@ -21,9 +21,8 @@ class CPlayer_State_Dash : public CPlayer_State
 public:
 
 	// <special function>
-	CPlayer_State_Dash();					// コンストラクタ
-	CPlayer_State_Dash(bool bDirection);	// 方向指定コンストラクタ
-	~CPlayer_State_Dash() override;			// デストラクタ
+	CPlayer_State_Dash();			// コンストラクタ
+	~CPlayer_State_Dash() override;	// デストラクタ
 
 	// <function>
 	void Update() override;		// 更新処理
@@ -36,8 +35,7 @@ private:
 	static constexpr int MAX_DASH_DURATION = 45;
 
 	// <function>
-	void SetRotTargetToMoveDirection();	// 目標向きを移動方向に設定
-	void SetPosTarget_Unnamed();		// 目標座標をダッシュ方向に増加
+	void SetPosTarget_Unnamed();	// 目標座標をダッシュ方向に増加
 
 	// <data>
 	bool	m_bDirection;		// 方向

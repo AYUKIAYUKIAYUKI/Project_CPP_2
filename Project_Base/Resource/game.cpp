@@ -51,7 +51,7 @@ HRESULT CGame::Init()
 	CPlayer::Create();
 
 	/* エネミーを仮生成 */
-	CEnemy::Create();
+	//CEnemy::Create();
 
 	// 環境装飾を生成
 	CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue.json"));

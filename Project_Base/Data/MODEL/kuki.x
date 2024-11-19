@@ -177,7 +177,7 @@ Mesh {
    1.000000;1.000000;1.000000;;
    1.000000;1.000000;1.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Pictures\\Screenshots\\スクリーンショット 2024-10-18 142345.png";
+    "C:\\Users\\student\\Pictures\\Screenshots\\ 2024-10-18 142345.png";
    }
   }
  }

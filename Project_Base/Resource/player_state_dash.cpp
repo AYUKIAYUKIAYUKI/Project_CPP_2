@@ -15,6 +15,9 @@
 // フィールドサイズ取得用
 #include "field_manager.h"
 
+// インプット取得用
+#include "manager.h"
+
 //****************************************************
 // usingディレクティブ
 //****************************************************
@@ -34,18 +37,15 @@ CPlayer_State_Dash::CPlayer_State_Dash() :
 	m_bDirection{ false },
 	m_nDashDuration{ 0 }
 {
-
-}
-
-//============================================================================
-// 方向指定コンストラクタ
-//============================================================================
-CPlayer_State_Dash::CPlayer_State_Dash(bool bDirection) :
-	CPlayer_State{},
-	m_bDirection{ bDirection },
-	m_nDashDuration{ 0 }
-{
-
+	// 左方向を入力していたら
+	if (CManager::GetKeyboard()->GetPress(DIK_A) || CManager::GetKeyboard()->GetRelease(DIK_A))
+	{
+		m_bDirection = 0;
+	}
+	else
+	{
+		m_bDirection = 1;
+	}
 }
 
 //============================================================================
@@ -61,9 +61,6 @@ CPlayer_State_Dash::~CPlayer_State_Dash()
 //============================================================================
 void CPlayer_State_Dash::Update()
 {
-	// 目標向きを移動方向に設定
-	SetRotTargetToMoveDirection();
-
 	// 目標座標をダッシュ方向に増加
 	SetPosTarget_Unnamed();
 
@@ -107,25 +104,14 @@ void CPlayer_State_Dash::To_Damage()
 //============================================================================
 
 //============================================================================
-// 目標向きを移動方向に設定
-//============================================================================
-void CPlayer_State_Dash::SetRotTargetToMoveDirection()
-{
-	Vec3 NewRotTarget = m_pCharacter->GetRotTarget();								// 目標向きを取得
-	const Vec3& MoveVec = m_pCharacter->GetPosTarget() - m_pCharacter->GetPos();	// 移動方向のベクトルを作成
-	NewRotTarget.y = atan2f(-MoveVec.x, -MoveVec.z);								// 目標向きを移動方向に
-	m_pCharacter->SetRotTarget(NewRotTarget);										// 目標向きを反映
-}
-
-//============================================================================
 // 目標座標をダッシュ方向に増加
 //============================================================================
 void CPlayer_State_Dash::SetPosTarget_Unnamed()
 {
-	// 方角を設定
+	// 現在の方角を取得
 	float fDirection = m_pCharacter->GetDirection();
 
-	// 設定されている方角に合わせて移動
+	// 設定されている移動方向に方角を増加
 	if (m_bDirection)
 	{
 		fDirection += m_pCharacter->GetMoveSpeed() * 5.0f;

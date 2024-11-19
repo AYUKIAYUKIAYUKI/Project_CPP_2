@@ -121,7 +121,7 @@ void CPlayer_State_Default::To_Dash()
 {
 	if (GetNextState() == nullptr)
 	{
-		SetNextState(DBG_NEW CPlayer_State_Default());
+		SetNextState(DBG_NEW CPlayer_State_Dash());
 	}
 }
 
