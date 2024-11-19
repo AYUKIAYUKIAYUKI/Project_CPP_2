@@ -41,6 +41,7 @@
     <ClCompile Include="Resource\object_Parts.cpp">
       <Filter>&lt;Object&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\motion_set.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource\camera.h" />
@@ -83,6 +84,7 @@
     <ClInclude Include="Resource\object_Parts.h">
       <Filter>&lt;Object&gt;</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\motion_set.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Object&gt;">
