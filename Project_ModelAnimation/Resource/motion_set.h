@@ -56,10 +56,14 @@ public:
 	~CMotion_Set();	// デストラクタ
 
 	// <function>
+	void Release();			// 破棄
 	void Update();			// 更新処理
 	void Animation();		// 動作
 	void CountFrame();		// フレームをカウント
 	void CorrectTarget();	// 目標値への補正
+
+	// <static function>
+	static CMotion_Set* Create(JSON Json);
 
 private:
 

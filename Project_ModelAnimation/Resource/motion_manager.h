@@ -66,13 +66,13 @@ private:
 	CMotion_Set::Key* const GetSelectKey() const;		// 選択中のキーのポインタを取得
 
 	// <data>
-	JSON		m_Json;				// ジェイソンデータ
-	CMotion_Set	m_MotionSet;		// モーションセット
-	WORD		m_wSelectParts;		// 選択パーツ
-	float		m_fPosEditCoef;		// 座標編集の強度
-	WORD		m_wSelectMotion;	// 選択モーション
-	WORD		m_wSelectKey;		// 選択キー
-	bool		m_bPlay;			// 再生
+	JSON			m_Json;				// ジェイソンデータ
+	CMotion_Set*	m_MotionSet;		// モーションセット
+	WORD			m_wSelectParts;		// 選択パーツ
+	float			m_fPosEditCoef;		// 座標編集の強度
+	WORD			m_wSelectMotion;	// 選択モーション
+	WORD			m_wSelectKey;		// 選択キー
+	bool			m_bPlay;			// 再生
 
 	// <static data>
 	static CMotion_Manager* m_pMotionManager;	// モーションマネージャーの本体
