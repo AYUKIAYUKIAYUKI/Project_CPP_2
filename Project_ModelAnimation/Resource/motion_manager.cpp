@@ -387,9 +387,15 @@ void CMotion_Manager::EditKey()
 	// 総キー数の切り替え
 	if (CManager::GetKeyboard()->GetTrigger(DIK_F2) && GetSelectMotion()->wMaxKey > 1)
 	{
-		// 総キー数をデクリメント
+		// 総キー数をデクリメントし、ジェイソンデータに保存
 		GetSelectMotion()->wMaxKey--;
 		m_Json["MaxKey"] = GetSelectMotion()->wMaxKey;
+
+		// 消去するキー番号のフレーム・目標値情報をジェイソンデータから消去
+		m_Json["MaxFrame"].erase(GetSelectMotion()->wMaxKey);
+		m_Json["ScaleTarget"].erase(GetSelectMotion()->wMaxKey);
+		m_Json["RotTarget"].erase(GetSelectMotion()->wMaxKey);
+		m_Json["PosTarget"].erase(GetSelectMotion()->wMaxKey);
 
 		// キー情報のポインタを作成
 		CMotion_Set::Key* const pKey = &GetSelectMotion()->vpKey[GetSelectMotion()->wMaxKey];
@@ -415,11 +421,11 @@ void CMotion_Manager::EditKey()
 		// キー情報オブジェクトを新規作成
 		CMotion_Set::Key Key;
 
-		// キーの総フレーム数を設定
+		// 新たなキーの総フレーム数を設定し、ジェイソンデータに保存
 		Key.wMaxFrame = 1;
 		m_Json["MaxFrame"][GetSelectMotion()->wMaxKey] = Key.wMaxFrame;
 
-		// パーツ数分の目標値情報を生成
+		// パーツ数分の目標値情報を追加生成
 		Key.apDest = DBG_NEW CMotion_Set::KeyDest[m_MotionSet->m_wMaxParts];
 
 		for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_wMaxParts; ++wCntModelParts)
@@ -427,7 +433,7 @@ void CMotion_Manager::EditKey()
 			// 目標値情報のポインタを作成
 			CMotion_Set::KeyDest* const pDest = &Key.apDest[wCntModelParts];
 
-			// 各種パラメータを設定
+			// 新たなキーのパーツの目標値を設定し、ジェイソンデータに保存
 			pDest->ScaleTarget = { 1.0f, 1.0f, 1.0f };	// 目標縮尺
 			m_Json["ScaleTarget"][GetSelectMotion()->wMaxKey][wCntModelParts] = { pDest->ScaleTarget.x, pDest->ScaleTarget.y, pDest->ScaleTarget.z };
 			pDest->RotTarget = { VEC3_INIT };	// 目標向き
@@ -438,7 +444,7 @@ void CMotion_Manager::EditKey()
 
 		GetSelectMotion()->vpKey.push_back(Key);
 
-		// 総キー数をインクリメント
+		// 総キー数をインクリメント、ジェイソンデータに保存
 		GetSelectMotion()->wMaxKey++;
 		m_Json["MaxKey"] = GetSelectMotion()->wMaxKey;
 	}
