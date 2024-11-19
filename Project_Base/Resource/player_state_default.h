@@ -21,7 +21,7 @@ class CPlayer_State_Default : public CPlayer_State
 public:
 
 	// <special function>
-	CPlayer_State_Default();			// デフォルトコンストラクタ
+	CPlayer_State_Default();			// コンストラクタ
 	~CPlayer_State_Default() override;	// デストラクタ
 
 	// <function>

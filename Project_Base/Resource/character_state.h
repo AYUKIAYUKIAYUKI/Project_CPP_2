@@ -31,15 +31,19 @@ public:
 	// <function>
 	template <typename T> T* CheckChangeState();	// ステートの変更を確認
 
-	// <setter/getter>
-	CCharacter_State* GetNextState();				// 変更予定のステートを取得
-	template <typename T> void SetNextState(T* pT);	// 変更予定のステートを設定
-
 protected:
 
+	// <setter/getter>
+	const CCharacter_State* const GetNextState() const;	// 変更予定のステートを取得
+	template <typename T> void SetNextState(T* pT);		// 変更予定のステートを設定
+
 	// <data>
-	CCharacter*			m_pCharacter;	// キャラクターのポインタ
-	CCharacter_State*	m_pNextState;	// 変更予定のステート
+	CCharacter*	m_pCharacter;	// キャラクターのポインタ
+
+private:
+
+	// <data>
+	CCharacter_State* m_pNextState;	// 変更予定のステート
 };
 
 //============================================================================

@@ -9,8 +9,6 @@
 // インクルードファイル
 //****************************************************
 #include "player_state_jump.h"
-
-// 変更先ステート
 #include "player_state_default.h"
 
 // フィールド取得用
@@ -31,7 +29,7 @@ using namespace abbr;
 //============================================================================
 
 //============================================================================
-// デフォルトコンストラクタ
+// コンストラクタ
 //============================================================================
 CPlayer_State_Jump::CPlayer_State_Jump() :
 	CPlayer_State{},
@@ -66,6 +64,17 @@ void CPlayer_State_Jump::Update()
 
 	// 重力の補正
 	AdjustGravity();
+}
+
+//============================================================================
+// 通常状態へ
+//============================================================================
+void CPlayer_State_Jump::To_Default()
+{
+	if (GetNextState() == nullptr)
+	{
+		SetNextState(DBG_NEW CPlayer_State_Default());
+	}
 }
 
 //============================================================================
@@ -129,16 +138,5 @@ void CPlayer_State_Jump::AdjustGravity()
 	{
 		// 延長期間が終了すると通常の重力加速を行う
 		m_pCharacter->SetAccelY(m_pCharacter->GetAccelY() + CField_Manager::FIELD_GRAVITY);
-	}
-}
-
-//============================================================================
-// ステート - 通常状態へ
-//============================================================================
-void CPlayer_State_Jump::To_Default()
-{
-	if (GetNextState() == nullptr)
-	{
-		SetNextState(DBG_NEW CPlayer_State_Default());
 	}
 }

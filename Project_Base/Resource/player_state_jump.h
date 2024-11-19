@@ -24,11 +24,12 @@ public:
 	static constexpr float AMOUNT_JUMPACCEL = 8.0f;
 
 	// <special function>
-	CPlayer_State_Jump();			// デフォルトコンストラクタ
+	CPlayer_State_Jump();			// コンストラクタ
 	~CPlayer_State_Jump() override;	// デストラクタ
 
 	// <function>
-	void Update() override;	// 更新処理
+	void Update() override;		// 更新処理
+	void To_Default() override;	// 通常状態へ
 
 private:
 
@@ -38,7 +39,6 @@ private:
 	// <function>
 	void Control();			// 操作
 	void AdjustGravity();	// 重力の補正
-	void To_Default();		// ステート - 通常状態へ
 
 	// <data>
 	int		m_nJumpRemainDuration;	// 入力延長期間

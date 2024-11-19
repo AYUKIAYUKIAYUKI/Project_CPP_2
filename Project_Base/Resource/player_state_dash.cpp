@@ -9,9 +9,8 @@
 // インクルードファイル
 //****************************************************
 #include "player_state_dash.h"
-
-// 変更先ステート
 #include "player_state_default.h"
+#include "player_state_damage.h"
 
 // フィールドサイズ取得用
 #include "field_manager.h"
@@ -28,7 +27,7 @@ using namespace abbr;
 //============================================================================
 
 //============================================================================
-// デフォルトコンストラクタ
+// コンストラクタ
 //============================================================================
 CPlayer_State_Dash::CPlayer_State_Dash() :
 	CPlayer_State{},
@@ -80,6 +79,28 @@ void CPlayer_State_Dash::Update()
 }
 
 //============================================================================
+// 通常状態へ
+//============================================================================
+void CPlayer_State_Dash::To_Default()
+{
+	if (GetNextState() == nullptr)
+	{
+		SetNextState(DBG_NEW CPlayer_State_Default());
+	}
+}
+
+//============================================================================
+// ダメージ状態へ
+//============================================================================
+void CPlayer_State_Dash::To_Damage()
+{
+	if (GetNextState() == nullptr)
+	{
+		SetNextState(DBG_NEW CPlayer_State_Damage());
+	}
+}
+
+//============================================================================
 // 
 // privateメンバ
 // 
@@ -120,15 +141,4 @@ void CPlayer_State_Dash::SetPosTarget_Unnamed()
 	NewPosTarget.x = cosf(fDirection) * CField_Manager::FIELD_RADIUS;	// X方向の座標を設定
 	NewPosTarget.z = sinf(fDirection) * CField_Manager::FIELD_RADIUS;	// Z方向の座標を設定
 	m_pCharacter->SetPosTarget(NewPosTarget);							// 目標座標を反映
-}
-
-//============================================================================
-// ステート - 通常状態へ
-//============================================================================
-void CPlayer_State_Dash::To_Default()
-{
-	if (GetNextState() == nullptr)
-	{
-		SetNextState(DBG_NEW CPlayer_State_Default());
-	}
 }

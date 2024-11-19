@@ -20,19 +20,21 @@ class CPlayer_State_Damage : public CPlayer_State
 {
 public:
 
-	CPlayer_State_Damage();				// デフォルトコンストラクタ
+	// <special function>
+	CPlayer_State_Damage();				// コンストラクタ
 	~CPlayer_State_Damage() override;	// デストラクタ
-
-	void Update() override;	// 更新処理
+	
+	// <funciton>
+	void Update() override;		// 更新処理
+	void To_Default() override;	// 状態へ
 
 private:
 
 	/// <summary> ダメージ継続期間 </summary>
 	static constexpr int MAX_DASH_DURATION = 60;
 
+	// <data>
 	int m_nDamageDuration;	// ダメージ継続期間
-
-	void To_Default();	// 通常状態へ
 };
 
 #endif	// _PLAYER_STATE_DAMAGE_
