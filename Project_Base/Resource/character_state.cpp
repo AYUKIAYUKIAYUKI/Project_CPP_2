@@ -40,13 +40,11 @@ CCharacter_State::~CCharacter_State()
 	if (m_pCharacter != nullptr)
 	{
 #if 0	// 取得したキャラクターオブジェクトの破棄はオブジェクトクラスに委ねます、ポインタの初期化のみ
-		
 		// 終了処理
 		m_pCharacter->Uninit();
 
 		// メモリを解放
 		delete m_pCharacter;
-
 #endif
 
 		// ポインタを初期化
@@ -55,11 +53,9 @@ CCharacter_State::~CCharacter_State()
 
 	if (m_pNextState != nullptr)
 	{
-#if 0	// 変更予定のステートオブジェクトは破棄はキャラクターステートマネージャークラスに委ねます、ポインタの初期化のみ
-
+#if 0	// 終了時以外にメンバが持つ変更先のステートを解放する場合、状態変更後にダングリングします、変更前にメンバの初期化を行ってください
 		// メモリを解放
 		delete m_pNextState;
-
 #endif
 
 		// ポインタを初期化

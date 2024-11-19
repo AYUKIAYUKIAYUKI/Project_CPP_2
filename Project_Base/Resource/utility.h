@@ -44,6 +44,7 @@ namespace utility
 	template <typename T> static T GetRandomValue();
 
 	// ダウンキャスト
+	template <typename T1, typename T2> static T1* DownCast(T2* pBase);
 	template <typename T1, typename T2> static T1* DownCast(T1* pDest, T2* pBase);
 };
 
@@ -72,12 +73,29 @@ template <typename T> T utility::GetRandomValue()
 //============================================================================
 // ダウンキャスト
 //============================================================================
+template <typename T1, typename T2> T1* utility::DownCast(T2* pBase)
+{
+	// 引数のオブジェクトを指定されたクラスにダウンキャスト
+	T1* pObj = dynamic_cast<T1*>(pBase);
+
+	// ダウンキャスト失敗
+	if (!pObj)
+	{
+		assert(false);
+	}
+
+	return pObj;
+}
+
+//============================================================================
+// ダウンキャスト
+//============================================================================
 template <typename T1, typename T2> T1* utility::DownCast(T1* pDest, T2* pBase)
 {
 	pDest;	/* 警告回避 */
 
 	// 引数のオブジェクトを指定されたクラスにダウンキャスト
-	T1* pObj{ dynamic_cast<T1*>(pBase) };
+	T1* pObj = dynamic_cast<T1*>(pBase);
 
 	// ダウンキャスト失敗
 	if (!pObj)

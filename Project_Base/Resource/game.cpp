@@ -91,7 +91,7 @@ void CGame::Update()
 	{
 		CFade::SetFade(CScene::MODE::RESULT);
 	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_F5))
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_F7))
 	{
 		// パラメータ確認用
 		CFade::SetFade(CScene::MODE::TITLE);

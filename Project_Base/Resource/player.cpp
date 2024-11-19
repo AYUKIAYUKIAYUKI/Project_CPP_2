@@ -135,14 +135,15 @@ void CPlayer::Update()
 #ifdef _DEBUG
 
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-	CRenderer::SetDebugString("プレイヤー方角　　 : " + to_string(GetDirection() * (180 / D3DX_PI)));
-	CRenderer::SetDebugString("プレイヤー速度　　 : " + to_string(GetMoveSpeed()));
-	CRenderer::SetDebugString("プレイヤー向き　　 : " + to_string(GetRot().x * (180 / D3DX_PI)) + " :  " + to_string(GetRot().y * (180 / D3DX_PI)) + " : " + to_string(GetRot().z * (180 / D3DX_PI)));
-	CRenderer::SetDebugString("プレイヤー目標向き : " + to_string(GetRotTarget().x * (180 / D3DX_PI)) + " :  " + to_string(GetRotTarget().y * (180 / D3DX_PI)) + " : " + to_string(GetRotTarget().z * (180 / D3DX_PI)));
-	CRenderer::SetDebugString("プレイヤー現在座標 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
-	CRenderer::SetDebugString("プレイヤー目標座標 : " + to_string(GetPosTarget().x) + " :  " + to_string(GetPosTarget().y) + " : " + to_string(GetPosTarget().z));
-	CRenderer::SetDebugString("プレイヤー加速度　 : " + to_string(GetAccelY()));
-	CRenderer::SetDebugString("プレイヤー体力　　 : " + to_string(GetLife()));
+	CRenderer::SetDebugString("プレイヤーステート：" + static_cast<std::string>(typeid(*m_pState).name()));
+	CRenderer::SetDebugString("プレイヤー方角　　：" + to_string(GetDirection() * (180 / D3DX_PI)));
+	CRenderer::SetDebugString("プレイヤー速度　　：" + to_string(GetMoveSpeed()));
+	CRenderer::SetDebugString("プレイヤー向き　　：" + to_string(GetRot().x * (180 / D3DX_PI)) + " :  " + to_string(GetRot().y * (180 / D3DX_PI)) + " : " + to_string(GetRot().z * (180 / D3DX_PI)));
+	CRenderer::SetDebugString("プレイヤー目標向き：" + to_string(GetRotTarget().x * (180 / D3DX_PI)) + " :  " + to_string(GetRotTarget().y * (180 / D3DX_PI)) + " : " + to_string(GetRotTarget().z * (180 / D3DX_PI)));
+	CRenderer::SetDebugString("プレイヤー現在座標：" + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
+	CRenderer::SetDebugString("プレイヤー目標座標：" + to_string(GetPosTarget().x) + " :  " + to_string(GetPosTarget().y) + " : " + to_string(GetPosTarget().z));
+	CRenderer::SetDebugString("プレイヤー加速度　：" + to_string(GetAccelY()));
+	CRenderer::SetDebugString("プレイヤー体力　　：" + to_string(GetLife()));
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 
 #endif // _DEBUG

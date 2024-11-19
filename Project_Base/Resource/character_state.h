@@ -54,7 +54,10 @@ template <typename T> T* CCharacter_State::CheckChangeState()
 	}
 
 	// 変更先のポインタをコピー
-	T* pNextState = dynamic_cast<T*>(m_pNextState);
+	T* pNextState = utility::DownCast<T, CCharacter_State>(m_pNextState);
+
+	// メンバの持つ変更先の情報を初期化
+	m_pNextState = nullptr;
 
 	// 自身を破棄
 	delete this;
