@@ -70,8 +70,10 @@ void CPlayer_State_Dash::Update()
 	// 継続期間をカウントアップ
 	m_nDashDuration++;
 
+	JSON test = utility::OpenJsonFile("Data\\JSON\\debug_param.json");
+
 	// 継続期間が最大に到達で
-	if (m_nDashDuration >= MAX_DASH_DURATION)
+	if (m_nDashDuration >= static_cast<WORD>(test["Duration"]))
 	{
 		// 通常状態へ
 		To_Default();

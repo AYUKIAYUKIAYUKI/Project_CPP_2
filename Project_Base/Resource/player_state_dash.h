@@ -32,7 +32,7 @@ public:
 private:
 
 	/// <summary> ダッシュ継続期間 </summary>
-	static constexpr int MAX_DASH_DURATION = 45;
+	static constexpr int MAX_DASH_DURATION = 10;
 
 	// <function>
 	void SetPosTarget_Unnamed();	// 目標座標をダッシュ方向に増加

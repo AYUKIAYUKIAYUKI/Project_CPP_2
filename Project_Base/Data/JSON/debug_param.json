@@ -1,3 +1,4 @@
 {
-  "Jump": 8.0
+  "Dash": 5.0,
+  "Duration": 10
 }
