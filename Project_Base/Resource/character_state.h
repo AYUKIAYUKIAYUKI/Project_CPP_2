@@ -21,19 +21,46 @@ class CCharacter_State : public CState
 {
 public:
 
+	// <special function>
 	CCharacter_State();						// デフォルトコンストラクタ
 	virtual ~CCharacter_State() override;	// デストラクタ
 
+	// <virtual function>
 	virtual void Update() override = 0;	// 更新処理
 
+	// <function>
+	template <typename T> T* CheckChangeState();	// ステートの変更を確認
+
+	// <setter/getter>
 	CCharacter_State* GetNextState();				// 変更予定のステートを取得
 	template <typename T> void SetNextState(T* pT);	// 変更予定のステートを設定
 
 protected:
 
+	// <data>
 	CCharacter*			m_pCharacter;	// キャラクターのポインタ
 	CCharacter_State*	m_pNextState;	// 変更予定のステート
 };
+
+//============================================================================
+// ステートの変更確認
+//============================================================================
+template <typename T> T* CCharacter_State::CheckChangeState()
+{
+	// 変更予定のステートは無い
+	if (!m_pNextState)
+	{
+		return dynamic_cast<T*>(this);
+	}
+
+	// 変更先のポインタをコピー
+	T* pNextState = dynamic_cast<T*>(m_pNextState);
+
+	// 自身を破棄
+	delete this;
+
+	return pNextState;
+}
 
 //============================================================================
 // 変更予定のステートを設定

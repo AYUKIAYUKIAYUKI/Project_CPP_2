@@ -12,12 +12,12 @@
 // インクルードファイル
 //****************************************************
 #include "character.h"
-#include "character_state_manager.h"
 
 //****************************************************
 // 前方宣言
 //****************************************************
 class CBounding_Cylinder;
+class CPlayer_State;
 
 //****************************************************
 // プレイヤークラス
@@ -44,13 +44,13 @@ public:
 	void	Uninit() override;		// 終了設定
 	void	Update() override;		// 更新処理
 	void	Draw() override;		// 描画処理
-	void	To_Damage(int nDamage);	// ステート - ダメージ状態へ
+	void	SetDamage(int nDamage);	// ダメージを受ける
 
 	// <getter>
 	float GetRadius() const override;						// 半径を取得
 	float GetHeight() const override;						// 高さを取得
 	const CBounding_Cylinder* const GetBndCylinder() const;	// バウンディングシリンダーを取得
-	CCharacter_State* GetNowState();						// 現在のステートを取得
+	const CPlayer_State* const GetNowState() const;			// 現在のステートを取得
 
 	// <static function>
 	static CPlayer* Create();	// 生成
@@ -62,8 +62,8 @@ private:
 	void AdjustHeight();	// 高さを補正
 
 	// <data>
-	CBounding_Cylinder*			m_pBndCylinder;		// バウンディングシリンダー
-	CCharacter_State_Manager*	m_pStateManager;	// ステートマネージャー
+	CBounding_Cylinder*	m_pBndCylinder;		// バウンディングシリンダー
+	CPlayer_State*		m_pState;			// ステート
 };
 
 #endif // _PLAYER_H_

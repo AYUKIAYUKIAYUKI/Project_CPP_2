@@ -10,6 +10,7 @@
 //****************************************************
 #include "player.h"
 #include "bounding_cylinder.h"
+#include "player_state.h"
 #include "player_state_default.h"
 
 #include "block.h"
@@ -36,7 +37,7 @@ using namespace abbr;
 CPlayer::CPlayer() :
 	CCharacter{},
 	m_pBndCylinder{ DBG_NEW CBounding_Cylinder(this) },
-	m_pStateManager{ nullptr }
+	m_pState{ nullptr }
 {
 
 }
@@ -62,10 +63,10 @@ CPlayer::~CPlayer()
 //============================================================================
 HRESULT CPlayer::Init()
 {
-	// ステートマネージャーの生成
-	if (!m_pStateManager)
+	// 初期ステートの生成
+	if (!m_pState)
 	{
-		m_pStateManager = CCharacter_State_Manager::Create(DBG_NEW CPlayer_State_Default());	// 初期ステートを設定しておく
+		m_pState = DBG_NEW CPlayer_State_Default();
 	}
 
 	// 初期方角を設定
@@ -91,14 +92,14 @@ HRESULT CPlayer::Init()
 //============================================================================
 void CPlayer::Uninit()
 {
-	// ステートマネージャーの破棄
-	if (m_pStateManager)
+	// ステートー破棄
+	if (m_pState)
 	{
-		// 解放
-		m_pStateManager->Release();
+		// ステートの破棄
+		delete m_pState;
 		
 		// ポインタを初期化
-		m_pStateManager = nullptr;
+		m_pState = nullptr;
 	}
 
 	// キャラクタークラスの終了処理
@@ -110,8 +111,11 @@ void CPlayer::Uninit()
 //============================================================================
 void CPlayer::Update()
 {
-	// ステートマネージャーの更新
-	m_pStateManager->Update();
+	// ステートの変更確認
+	m_pState = m_pState->CheckChangeState<CPlayer_State>();
+
+	// ステートの更新
+	m_pState->Update();
 
 	// 自動で目標向きを移動方向に向ける
 	AutoSetRotTarget();
@@ -201,17 +205,17 @@ void CPlayer::Draw()
 }
 
 //============================================================================
-// ステート - ダメージ状態へ
+// ダメージを受ける
 //============================================================================
-void CPlayer::To_Damage(int nDamage)
+void CPlayer::SetDamage(int nDamage)
 {
 	// ダメージ量分、体力を変動
 	 int nNewLife = GetLife();
 	 nNewLife += nDamage;
 	 SetLife(nNewLife);
 
-	// マネージャーにダメージ状態へ変更するよう命令する
-	m_pStateManager->To_Damage();
+	// ダメージ状態へ変更するよう命令する
+	m_pState->To_Damage();
 }
 
 //============================================================================
@@ -241,10 +245,10 @@ const CBounding_Cylinder* const CPlayer::GetBndCylinder() const
 //============================================================================
 // 現在のステートを取得
 //============================================================================
-CCharacter_State* CPlayer::GetNowState()
+const CPlayer_State* const CPlayer::GetNowState() const
 {
-	// ステートマネージャーの持つステートオブジェクトのポインタを返す
-	return m_pStateManager->GetNowState();
+	// ステートのポインタを返す
+	return m_pState;
 }
 
 //============================================================================

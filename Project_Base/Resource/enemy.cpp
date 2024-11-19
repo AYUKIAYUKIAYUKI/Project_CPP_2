@@ -89,10 +89,10 @@ void CEnemy::Update()
 	fNewDirection += -DEFAULT_MOVE_SPEED * 3.0f;
 	SetDirection(fNewDirection);
 
-	//
+	// 目標向きを移動方向に
 	AutoSetRotTarget();
 
-	//
+	// 方角から自動で座標を設定
 	AutoSetPosTarget();
 
 	// プレイヤーへの攻撃
@@ -203,8 +203,8 @@ void CEnemy::AttackOnPlayer()
 			/* 判定表示を赤色に */
 			m_pBndCylinder->ChangeModel(CModel_X_Manager::TYPE::RENDER_CYLINDER_HIT);
 
-			// ダメージ状態へ
-			pPlayer->To_Damage(-1);
+			// ダメージを与える
+			pPlayer->SetDamage(-1);
 		}
 		else
 		{

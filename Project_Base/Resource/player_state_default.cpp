@@ -9,10 +9,9 @@
 // インクルードファイル
 //****************************************************
 #include "player_state_default.h"
-
-// 変更先ステート
 #include "player_state_dash.h"
 #include "player_state_jump.h"
+#include "player_state_damage.h"
 
 // フィールド取得用
 #include "field_manager.h"
@@ -89,7 +88,7 @@ void CPlayer_State_Default::Control()
 		if (pKeyboard->GetTrigger(DIK_RSHIFT))
 		{
 			// ダッシュ状態へ
-			To_Dash(false);
+			To_Dash();
 		}
 	}
 	else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT) || pPad->GetJoyStickL().X > 0)
@@ -101,7 +100,7 @@ void CPlayer_State_Default::Control()
 		if (pKeyboard->GetTrigger(DIK_RSHIFT))
 		{
 			// ダッシュ状態へ
-			To_Dash(true);
+			To_Dash();
 		}
 	}
 
@@ -116,18 +115,18 @@ void CPlayer_State_Default::Control()
 }
 
 //============================================================================
-// ステート - ダッシュ状態へ
+// ダッシュ状態へ
 //============================================================================
-void CPlayer_State_Default::To_Dash(bool bDirection)
+void CPlayer_State_Default::To_Dash()
 {
 	if (GetNextState() == nullptr)
 	{
-		SetNextState(DBG_NEW CPlayer_State_Dash(bDirection));
+		SetNextState(DBG_NEW CPlayer_State_Default());
 	}
 }
 
 //============================================================================
-// ステート - ダッシュ状態へ
+// ジャンプ状態へ
 //============================================================================
 void CPlayer_State_Default::To_Jump()
 {
@@ -137,5 +136,16 @@ void CPlayer_State_Default::To_Jump()
 		m_pCharacter->SetAccelY(CPlayer_State_Jump::AMOUNT_JUMPACCEL);
 
 		SetNextState(DBG_NEW CPlayer_State_Jump());
+	}
+}
+
+//============================================================================
+// ダメージ状態へ
+//============================================================================
+void CPlayer_State_Default::To_Damage()
+{
+	if (GetNextState() == nullptr)
+	{
+		SetNextState(DBG_NEW CPlayer_State_Damage());
 	}
 }

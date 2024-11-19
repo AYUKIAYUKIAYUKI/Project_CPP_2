@@ -25,14 +25,15 @@ public:
 	~CPlayer_State_Default() override;	// デストラクタ
 
 	// <function>
-	void Update() override;	// 更新処理
+	void Update() override;		// 更新処理
+	void To_Dash() override;	// ダッシュ状態へ
+	void To_Jump() override;	// ジャンプ状態へ
+	void To_Damage() override;	// ダメージ状態へ
 
 private:
 
 	// <function>
-	void Control();					// 操作
-	void To_Dash(bool bDirection);	// ステート - ダッシュ状態へ
-	void To_Jump();					// ステート - ジャンプ状態へ
+	void Control();	// 操作
 };
 
 #endif	// _PLAYER_STATE_DEFAULT_

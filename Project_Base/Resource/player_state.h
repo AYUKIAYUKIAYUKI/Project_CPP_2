@@ -21,14 +21,25 @@ class CPlayer_State : public CCharacter_State
 {
 public:
 
+	// <special function>
 	CPlayer_State();					// デフォルトコンストラクタ
 	CPlayer_State(CPlayer* pPlayer);	// プレイヤー取得コンストラクタ
 	virtual ~CPlayer_State() override;	// デストラクタ
 
+	// <function>
 	virtual void Update() override = 0;	// 更新処理
+	virtual void To_Default();			// 通常状態へ変更
+	virtual void To_Dash();				// ダッシュ状態へ変更
+	virtual void To_Jump();				// ジャンプ状態へ変更
+	virtual void To_Attck();			// 攻撃状態へ変更
+	virtual void To_Damage();			// ダメージ状態へ変更
 
 private:
 
+	// <function>
+	void PrintError();	// エラー表示
+
+	// <Getter>
 	CPlayer* RetrievePlayer();	// プレイヤーポインタを取得
 };
 
