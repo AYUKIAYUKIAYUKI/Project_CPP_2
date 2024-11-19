@@ -65,13 +65,13 @@ void CLight::Update()
 {
 #ifdef _DEBUG
 	// 操作番号変更
-	ChangeID();
+	//ChangeID();
 
 	// 操作
-	Control();
+	//Control();
 
 	// リセット
-	Reset();
+	//Reset();
 
 	// ライトをセット
 	SetLight();

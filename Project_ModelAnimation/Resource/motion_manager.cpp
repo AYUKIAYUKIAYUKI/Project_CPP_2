@@ -43,43 +43,11 @@ void CMotion_Manager::Update()
 		m_MotionSet->Animation();
 	}
 
-#if 1
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-	CRenderer::SetDebugString("総モーション数：" + to_string(m_MotionSet->m_wMaxMotion));
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-	for (WORD wCntMotion = 0; wCntMotion < m_MotionSet->m_wMaxMotion; ++wCntMotion)
-	{
-		const CMotion_Set::Motion* const pMotion = &m_MotionSet->m_apMotion[wCntMotion];
-		CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-		CRenderer::SetDebugString("<再生待機モーション情報>");
-		CRenderer::SetDebugString("現在のフレーム数　：" + to_string(m_MotionSet->m_wNowFrame));
-		CRenderer::SetDebugString("現在のキー数　　　：" + to_string(m_MotionSet->m_wNowKey));
-		CRenderer::SetDebugString("ループフラグ　　　：" + to_string(pMotion->bLoop));
-		CRenderer::SetDebugString("総キー数　　　　　：" + to_string(pMotion->wMaxKey));
-		CRenderer::SetDebugString("ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー");
-		for (WORD wCntMotionKey = 0; wCntMotionKey < pMotion->wMaxKey; ++wCntMotionKey)
-		{
-			const CMotion_Set::Key* const pKey = &pMotion->apKey[wCntMotionKey];
-			CRenderer::SetDebugString("キー[" + to_string(wCntMotionKey) + "]の総フレーム数：" + to_string(pKey->wMaxFrame));
-		}
-	}
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-	CRenderer::SetDebugString("現在の選択パーツ　　：" + to_string(m_wSelectParts));
-	CRenderer::SetDebugString("座標編集の強度　　　：" + to_string(m_fPosEditCoef));
-	CRenderer::SetDebugString("現在の選択モーション：" + to_string(m_wSelectMotion));
-	CRenderer::SetDebugString("現在の選択キー　　　：" + to_string(m_wSelectKey));
-	for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_vpModelParts.size(); ++wCntModelParts)
-	{
-		const CMotion_Set::KeyDest* const pDest = &GetSelectKey()->apDest[wCntModelParts];
-		CRenderer::SetDebugString("Scale：" + utility::ToPrecision(pDest->ScaleTarget.x) + "：" + utility::ToPrecision(pDest->ScaleTarget.y) + "：" + utility::ToPrecision(pDest->ScaleTarget.z) + "："
-			"Rot：" + utility::ToPrecision(pDest->RotTarget.x) + "：" + utility::ToPrecision(pDest->RotTarget.y) + "：" + utility::ToPrecision(pDest->RotTarget.z) + "："
-			"Pos：" + utility::ToPrecision(pDest->PosTarget.x) + "：" + utility::ToPrecision(pDest->PosTarget.y) + "：" + utility::ToPrecision(pDest->PosTarget.z));
-	}
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-#endif
-
 	// リセット
 	Reset();
+
+	// デバッグ表示
+	PrintDebug();
 }
 
 //============================================================================
@@ -161,6 +129,7 @@ CMotion_Manager* CMotion_Manager::GetInstance()
 // コンストラクタ
 //============================================================================
 CMotion_Manager::CMotion_Manager() :
+	m_Json{},
 	m_MotionSet{ nullptr },
 	m_wSelectParts{ 0 },
 	m_fPosEditCoef{ 0.0f },
@@ -184,8 +153,11 @@ CMotion_Manager::~CMotion_Manager()
 //============================================================================
 HRESULT CMotion_Manager::Init()
 {
+	// ジェイソンデータを取得
+	m_Json = utility::OpenJsonFile("Data\\JSON\\motion_export.json");
+
 	// モーションセットを生成
-	m_MotionSet = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\motion_export.json"));
+	m_MotionSet = CMotion_Set::Create(m_Json);
 
 	return S_OK;
 }
@@ -203,6 +175,46 @@ void CMotion_Manager::Uninit()
 		// ポインタを初期化
 		m_MotionSet = nullptr;
 	}
+}
+
+//============================================================================
+// デバッグ表示
+//============================================================================
+void CMotion_Manager::PrintDebug()
+{
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+	CRenderer::SetDebugString("総パーツ数：" + to_string(m_MotionSet->m_wMaxParts));
+	CRenderer::SetDebugString("総モーション数：" + to_string(m_MotionSet->m_wMaxMotion));
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+	for (WORD wCntMotion = 0; wCntMotion < m_MotionSet->m_wMaxMotion; ++wCntMotion)
+	{
+		const CMotion_Set::Motion* const pMotion = &m_MotionSet->m_apMotion[wCntMotion];
+		CRenderer::SetDebugString("<再生待機モーション情報>");
+		CRenderer::SetDebugString("現在のフレーム数　：" + to_string(m_MotionSet->m_wNowFrame));
+		CRenderer::SetDebugString("現在のキー数　　　：" + to_string(m_MotionSet->m_wNowKey));
+		CRenderer::SetDebugString("ループフラグ　　　：" + to_string(pMotion->bLoop));
+		CRenderer::SetDebugString("総キー数　　　　　：" + to_string(pMotion->wMaxKey));
+		CRenderer::SetDebugString("ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー");
+		for (WORD wCntMotionKey = 0; wCntMotionKey < pMotion->wMaxKey; ++wCntMotionKey)
+		{
+			const CMotion_Set::Key* const pKey = &pMotion->vpKey[wCntMotionKey];
+			CRenderer::SetDebugString("キー[" + to_string(wCntMotionKey) + "]の総フレーム数：" + to_string(pKey->wMaxFrame));
+		}
+	}
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+	CRenderer::SetDebugString("<編集情報>");
+	CRenderer::SetDebugString("現在の選択パーツ　　：" + to_string(m_wSelectParts));
+	CRenderer::SetDebugString("座標編集の強度　　　：" + to_string(m_fPosEditCoef));
+	CRenderer::SetDebugString("現在の選択モーション：" + to_string(m_wSelectMotion));
+	CRenderer::SetDebugString("現在の選択キー　　　：" + to_string(m_wSelectKey));
+	for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_vpModelParts.size(); ++wCntModelParts)
+	{
+		const CMotion_Set::KeyDest* const pDest = &GetSelectKey()->apDest[wCntModelParts];
+		CRenderer::SetDebugString("Scale：" + utility::ToPrecision(pDest->ScaleTarget.x) + "：" + utility::ToPrecision(pDest->ScaleTarget.y) + "：" + utility::ToPrecision(pDest->ScaleTarget.z) + "："
+			"Rot：" + utility::ToPrecision(pDest->RotTarget.x) + "：" + utility::ToPrecision(pDest->RotTarget.y) + "：" + utility::ToPrecision(pDest->RotTarget.z) + "："
+			"Pos：" + utility::ToPrecision(pDest->PosTarget.x) + "：" + utility::ToPrecision(pDest->PosTarget.y) + "：" + utility::ToPrecision(pDest->PosTarget.z));
+	}
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 }
 
 //============================================================================
@@ -372,22 +384,64 @@ void CMotion_Manager::EditKey()
 		m_wSelectKey < GetSelectMotion()->wMaxKey - 1 ? m_wSelectKey++ : m_wSelectKey = 0;
 	}
 
-	/*
 	// 総キー数の切り替え
-	if (CManager::GetKeyboard()->GetTrigger(DIK_F2))
+	if (CManager::GetKeyboard()->GetTrigger(DIK_F2) && GetSelectMotion()->wMaxKey > 1)
 	{
+		// 総キー数をデクリメント
 		GetSelectMotion()->wMaxKey--;
+		m_Json["MaxKey"] = GetSelectMotion()->wMaxKey;
+
+		// キー情報のポインタを作成
+		CMotion_Set::Key* const pKey = &GetSelectMotion()->vpKey[GetSelectMotion()->wMaxKey];
+
+		// 目標値情報のポインタ配列を破棄
+		if (pKey->apDest != nullptr)
+		{
+			delete[] pKey->apDest;
+			pKey->apDest = nullptr;
+		}
+
+		// 末尾のキー情報を削除
+		GetSelectMotion()->vpKey.pop_back();
+
+		// 選択キー番号を調整
+		if (m_wSelectKey >= GetSelectMotion()->wMaxKey)
+		{
+			m_wSelectKey = GetSelectMotion()->wMaxKey - 1;
+		}
 	}
 	else if (CManager::GetKeyboard()->GetTrigger(DIK_F3))
 	{
+		// キー情報オブジェクトを新規作成
+		CMotion_Set::Key Key;
+
+		// キーの総フレーム数を設定
+		Key.wMaxFrame = 1;
+		m_Json["MaxFrame"][GetSelectMotion()->wMaxKey] = Key.wMaxFrame;
+
+		// パーツ数分の目標値情報を生成
+		Key.apDest = DBG_NEW CMotion_Set::KeyDest[m_MotionSet->m_wMaxParts];
+
+		for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_wMaxParts; ++wCntModelParts)
+		{
+			// 目標値情報のポインタを作成
+			CMotion_Set::KeyDest* const pDest = &Key.apDest[wCntModelParts];
+
+			// 各種パラメータを設定
+			pDest->ScaleTarget = { 1.0f, 1.0f, 1.0f };	// 目標縮尺
+			m_Json["ScaleTarget"][GetSelectMotion()->wMaxKey][wCntModelParts] = { pDest->ScaleTarget.x, pDest->ScaleTarget.y, pDest->ScaleTarget.z };
+			pDest->RotTarget = { VEC3_INIT };	// 目標向き
+			m_Json["RotTarget"][GetSelectMotion()->wMaxKey][wCntModelParts] = { pDest->RotTarget.x, pDest->RotTarget.y, pDest->RotTarget.z };
+			pDest->PosTarget = { VEC3_INIT };	// 目標座標
+			m_Json["PosTarget"][GetSelectMotion()->wMaxKey][wCntModelParts] = { pDest->PosTarget.x, pDest->PosTarget.y, pDest->PosTarget.z };
+		}
+
+		GetSelectMotion()->vpKey.push_back(Key);
+
+		// 総キー数をインクリメント
 		GetSelectMotion()->wMaxKey++;
+		m_Json["MaxKey"] = GetSelectMotion()->wMaxKey;
 	}
-	else if (CManager::GetKeyboard()->GetRelease(DIK_F2) || CManager::GetKeyboard()->GetRelease(DIK_F3))
-	{
-		// キー情報の再確保
-		ResizeKey();
-	}
-	*/
 }
 
 //============================================================================
@@ -395,7 +449,7 @@ void CMotion_Manager::EditKey()
 //============================================================================
 void CMotion_Manager::ResizeKey()
 {
-	/* 横着しないできちんとコピーすること！ */
+	
 }
 
 //============================================================================
@@ -449,11 +503,16 @@ void CMotion_Manager::Reset()
 {
 	if (CManager::GetKeyboard()->GetTrigger(DIK_F7))
 	{
+		// 選択番号情報を初期化
+		m_wSelectParts = 0;
+		m_wSelectMotion = 0;
+		m_wSelectKey = 0;
+
 		// 一旦解放
-		Release();
+		m_MotionSet->Release();
 
 		// 即再生成
-		Create();
+		m_MotionSet = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\motion_export.json"));
 	}
 }
 
@@ -478,5 +537,5 @@ CMotion_Set::Motion* const CMotion_Manager::GetSelectMotion() const
 //============================================================================
 CMotion_Set::Key* const CMotion_Manager::GetSelectKey() const
 {
-	return &GetSelectMotion()->apKey[m_wSelectKey];
+	return &GetSelectMotion()->vpKey[m_wSelectKey];
 }

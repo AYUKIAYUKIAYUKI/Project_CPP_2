@@ -30,6 +30,7 @@ CMotion_Set::CMotion_Set() :
 	m_wNowKey{ 0 },
 	m_wNowFrame{ 0 },
 	m_vpModelParts{},
+	m_wMaxParts{ 0 },
 	m_wMaxMotion{ 0 },
 	m_apMotion{ nullptr }
 {
@@ -58,7 +59,7 @@ void CMotion_Set::Release()
 		for (WORD wCntMotionKey = 0; wCntMotionKey < pMotion->wMaxKey; ++wCntMotionKey)
 		{
 			// キー情報のポインタを作成
-			CMotion_Set::Key* const pKey = &pMotion->apKey[wCntMotionKey];
+			CMotion_Set::Key* const pKey = &pMotion->vpKey[wCntMotionKey];
 
 			// 目標値情報のポインタ配列を破棄
 			if (pKey->apDest != nullptr)
@@ -69,18 +70,10 @@ void CMotion_Set::Release()
 		}
 	}
 
-	// モーション情報内のキー情報を破棄
 	for (WORD wCntMotion = 0; wCntMotion < m_wMaxMotion; ++wCntMotion)
 	{
-		// モーション情報のポインタを作成
-		CMotion_Set::Motion* const pMotion = &m_apMotion[wCntMotion];
-
-		// キー情報のポインタ配列を破棄
-		if (pMotion->apKey != nullptr)
-		{
-			delete[] pMotion->apKey;
-			pMotion->apKey = nullptr;
-		}
+		// モーションごとにキー情報ベクターのクリア
+		m_apMotion[wCntMotion].vpKey.clear();
 	}
 
 	// モーション情報のポインタ配列を破棄
@@ -157,7 +150,7 @@ void CMotion_Set::CountFrame()
 void CMotion_Set::CorrectTarget()
 {
 	// フレームの進行度合を作成 (総フレーム数 - 現在のフレーム)
-	const WORD wFrameCoef = m_apMotion[m_wNowMotion].apKey[m_wNowKey].wMaxFrame - m_wNowFrame;
+	const WORD wFrameCoef = m_apMotion[m_wNowMotion].vpKey[m_wNowKey].wMaxFrame - m_wNowFrame;
 
 	// パーツ数を取得
 	const WORD wSize = static_cast<WORD>(m_vpModelParts.size());
@@ -167,17 +160,17 @@ void CMotion_Set::CorrectTarget()
 	{
 		// 目標縮尺
 		Vec3 NewScale = m_vpModelParts[wCntModelParts]->GetScale();
-		NewScale += (m_apMotion->apKey[m_wNowKey].apDest[wCntModelParts].ScaleTarget - NewScale) / wFrameCoef;
+		NewScale += (m_apMotion->vpKey[m_wNowKey].apDest[wCntModelParts].ScaleTarget - NewScale) / wFrameCoef;
 		m_vpModelParts[wCntModelParts]->SetScale(NewScale);
 
 		// 目標向き
 		Vec3 NewRot = m_vpModelParts[wCntModelParts]->GetRot();
-		NewRot += (m_apMotion->apKey[m_wNowKey].apDest[wCntModelParts].RotTarget - NewRot) / wFrameCoef;
+		NewRot += (m_apMotion->vpKey[m_wNowKey].apDest[wCntModelParts].RotTarget - NewRot) / wFrameCoef;
 		m_vpModelParts[wCntModelParts]->SetRot(NewRot);
 
 		// 目標座標
 		Vec3 NewPos = m_vpModelParts[wCntModelParts]->GetPos();
-		NewPos += (m_apMotion->apKey[m_wNowKey].apDest[wCntModelParts].PosTarget - NewPos) / wFrameCoef;
+		NewPos += (m_apMotion->vpKey[m_wNowKey].apDest[wCntModelParts].PosTarget - NewPos) / wFrameCoef;
 		m_vpModelParts[wCntModelParts]->SetPos(NewPos);
 	}
 }
@@ -197,18 +190,18 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 	}
 
 	// 総パーツ数を取得
-	const WORD& MaxParts = static_cast<WORD>(Json["MaxParts"]);
+	pNew->m_wMaxParts = static_cast<WORD>(Json["MaxParts"]);
 
 	// パーツ数分のパーツオブジェクトを先行して生成
-	for (WORD wCntParts = 0; wCntParts < MaxParts; ++wCntParts)
+	for (WORD wCntParts = 0; wCntParts < pNew->m_wMaxParts; ++wCntParts)
 	{
 		pNew->m_vpModelParts.push_back(CObject_Parts::Create(static_cast<CX_Manager::TYPE>(Json["ModelType"][wCntParts]), nullptr));
 	}
 
 	// 生成されたパーツに対し、各種設定を行う
-	for (WORD wCntParts = 0; wCntParts < MaxParts; ++wCntParts)
+	for (WORD wCntParts = 0; wCntParts < pNew->m_wMaxParts; ++wCntParts)
 	{
-		// 親パーツのインデックス
+		// 親パーツのインデックス番号を取得
 		const SHORT& shParentIdx = static_cast<SHORT>(Json["ParentIdx"][wCntParts]);
 
 		// パーツのポインタをコピー
@@ -216,14 +209,18 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 
 		if (shParentIdx == -1)
 		{
+			// インデックスが-1のものは親を持たない
 			pParts->SetParent(nullptr);
 		}
 		else
 		{
-			pParts->SetParent(pNew->m_vpModelParts.at(shParentIdx));
+			// 親パーツのポインタを渡す
+			pParts->SetParent(pNew->m_vpModelParts[shParentIdx]);
 		}
 
 		// オフセット値を設定
+		//pParts->SetScaleOffset(utility::JsonConvertToVec3(Json["ScaleOffset"][wCntParts]));
+		//pParts->SetRotOffset(utility::JsonConvertToVec3(Json["RotOffset"][wCntParts]));
 		pParts->SetPosOffset(utility::JsonConvertToVec3(Json["PosOffset"][wCntParts]));
 	}
 
@@ -231,45 +228,46 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 	pNew->m_wMaxMotion = static_cast<WORD>(Json["MaxMotion"]);
 
 	// モーション数分のモーション情報を生成
-	pNew->m_apMotion = DBG_NEW CMotion_Set::Motion[pNew->m_wMaxMotion];
+	pNew->m_apMotion = DBG_NEW Motion[pNew->m_wMaxMotion];
 
 	// モーション情報の設定
 	for (WORD wCntMotion = 0; wCntMotion < pNew->m_wMaxMotion; ++wCntMotion)
 	{
 		// モーション情報のポインタを作成
-		CMotion_Set::Motion* const pMotion = &pNew->m_apMotion[wCntMotion];
+		Motion* const pMotion = &pNew->m_apMotion[wCntMotion];
 
 		// ループフラグを取得
 		pMotion->bLoop = static_cast<bool>(Json["Loop"][wCntMotion]);
 
 		// モーションの総キー数を取得
-		pMotion->wMaxKey = static_cast<WORD>(Json["MaxKey"][wCntMotion]);
-
-		// キー数分のキー情報を生成
-		pMotion->apKey = DBG_NEW CMotion_Set::Key[pMotion->wMaxKey];
+		/* モーションを複数作成出来るようになるまで、二次元配列で指定しないように */
+		//pMotion->wMaxKey = static_cast<WORD>(Json["MaxKey"][wCntMotion]);
+		pMotion->wMaxKey = static_cast<WORD>(Json["MaxKey"]);
 
 		// キー情報の設定
 		for (WORD wCntMotionKey = 0; wCntMotionKey < pMotion->wMaxKey; ++wCntMotionKey)
 		{
-			// キー情報のポインタを作成
-			CMotion_Set::Key* const pKey = &pMotion->apKey[wCntMotionKey];
+			// キー情報オブジェクトを作成
+			Key Key;
 
 			// キーの総フレーム数を取得
-			pKey->wMaxFrame = static_cast<WORD>(Json["MaxFrame"][wCntMotionKey]);
+			Key.wMaxFrame = static_cast<WORD>(Json["MaxFrame"][wCntMotionKey]);
 
 			// パーツ数分の目標値情報を生成
-			pKey->apDest = DBG_NEW CMotion_Set::KeyDest[pNew->m_vpModelParts.size()];
+			Key.apDest = DBG_NEW CMotion_Set::KeyDest[pNew->m_wMaxParts];
 
-			for (WORD wCntModelParts = 0; wCntModelParts < pNew->m_vpModelParts.size(); ++wCntModelParts)
+			for (WORD wCntModelParts = 0; wCntModelParts < pNew->m_wMaxParts; ++wCntModelParts)
 			{
 				// 目標値情報のポインタを作成
-				CMotion_Set::KeyDest* const pDest = &pKey->apDest[wCntModelParts];
+				KeyDest* const pDest = &Key.apDest[wCntModelParts];
 
 				// 各種パラメータを設定
 				pDest->ScaleTarget = utility::JsonConvertToVec3(Json["ScaleTarget"][wCntMotionKey][wCntModelParts]);	// 目標縮尺
 				pDest->RotTarget = utility::JsonConvertToVec3(Json["RotTarget"][wCntMotionKey][wCntModelParts]);		// 目標向き
 				pDest->PosTarget = utility::JsonConvertToVec3(Json["PosTarget"][wCntMotionKey][wCntModelParts]);		// 目標座標
 			}
+
+			pMotion->vpKey.push_back(Key);
 		}
 	}
 
@@ -295,5 +293,5 @@ CMotion_Set::Motion* const CMotion_Set::GetNowMotion() const
 //============================================================================
 CMotion_Set::Key* const CMotion_Set::GetNowKey() const
 {
-	return &GetNowMotion()->apKey[m_wNowKey];
+	return &GetNowMotion()->vpKey[m_wNowKey];
 }

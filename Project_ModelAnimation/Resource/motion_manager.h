@@ -48,17 +48,18 @@ private:
 	~CMotion_Manager();	// デストラクタ
 
 	// <function>
-	HRESULT	Init();				// 初期設定
-	void	Uninit();			// 終了処理
-	void	Edit();				// 編集
-	void	EditParts();		// パーツ情報の編集
-	void	EditDest();			// 目標値情報の編集
-	void	EditMotion();		// モーション情報の編集
-	void	EditKey();			// キー情報の編集
-	void	ResizeKey();		// キー情報を再確保
-	void	EditFrame();		// フレーム情報の編集
-	void	Export();			// エクスポート
-	void	Reset();			// リセット
+	HRESULT	Init();			// 初期設定
+	void	Uninit();		// 終了処理
+	void	PrintDebug();	// デバッグ表示
+	void	Edit();			// 編集
+	void	EditParts();	// パーツ情報の編集
+	void	EditDest();		// 目標値情報の編集
+	void	EditMotion();	// モーション情報の編集
+	void	EditKey();		// キー情報の編集
+	void	ResizeKey();	// キー情報を再確保
+	void	EditFrame();	// フレーム情報の編集
+	void	Export();		// エクスポート
+	void	Reset();		// リセット
 
 	// <getter>
 	CObject_Parts* const GetSelectParts() const;		// 選択中のパーツのポインタを取得

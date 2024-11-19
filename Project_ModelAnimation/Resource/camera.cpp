@@ -214,15 +214,15 @@ void CCamera::SetDistance(float fDistance)
 //============================================================================
 void CCamera::BranchMode()
 {
-	if (CManager::GetKeyboard()->GetPress(DIK_F2))
-	{
-		m_Rot.x = -D3DX_PI * 0.55f;
-	}
+	//if (CManager::GetKeyboard()->GetPress(DIK_F2))
+	//{
+	//	m_Rot.x = -D3DX_PI * 0.55f;
+	//}
 
-	if (CManager::GetKeyboard()->GetPress(DIK_F3))
-	{
-		m_Rot.x = 0.0f;
-	}
+	//if (CManager::GetKeyboard()->GetPress(DIK_F3))
+	//{
+	//	m_Rot.x = 0.0f;
+	//}
 
 	// カメラ操作
 	Control();

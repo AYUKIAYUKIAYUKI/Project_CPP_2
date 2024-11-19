@@ -46,9 +46,9 @@ public:
 	//****************************************************
 	struct Motion
 	{
-		bool bLoop;		// ループフラグ
-		WORD wMaxKey;	// モーションの総キー数
-		Key* apKey;		// キー情報
+		bool bLoop;				// ループフラグ
+		WORD wMaxKey;			// モーションの総キー数
+		std::vector<Key> vpKey;	// キー情報
 	};
 
 	// <special function>
@@ -76,6 +76,7 @@ private:
 	WORD						m_wNowKey;		// 再生中のキー
 	WORD						m_wNowFrame;	// 再生中のフレーム
 	std::vector<CObject_Parts*>	m_vpModelParts;	// モデルパーツ
+	WORD						m_wMaxParts;	// モデルの総パーツ数
 	WORD						m_wMaxMotion;	// 総モーション数
 	Motion*						m_apMotion;		// モーション情報
 };
