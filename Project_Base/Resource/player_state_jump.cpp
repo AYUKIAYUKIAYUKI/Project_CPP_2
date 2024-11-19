@@ -149,8 +149,10 @@ void CPlayer_State_Jump::AdjustGravity()
 	// 重力加速
 	if (!m_bEndRemain)
 	{
+		JSON Json = utility::OpenJsonFile("Data\\debug.json");
+
 		// ジャンプ延長中はわずかに重力に逆らう
-		m_pCharacter->SetVelY(m_pCharacter->GetVelY() + -CField_Manager::FIELD_GRAVITY * 0.25f);
+		m_pCharacter->SetVelY(m_pCharacter->GetVelY() + -CField_Manager::FIELD_GRAVITY * static_cast<float>(Json["Anti"]));
 	}
 	else
 	{
