@@ -12,6 +12,7 @@
 #include "bounding_cylinder.h"
 #include "player_state.h"
 #include "player_state_default.h"
+#include "player_state_dash.h"
 
 #include "block.h"
 #include "collision.h"
@@ -142,7 +143,7 @@ void CPlayer::Update()
 	CRenderer::SetDebugString("プレイヤー目標向き：" + to_string(GetRotTarget().x * (180 / D3DX_PI)) + " :  " + to_string(GetRotTarget().y * (180 / D3DX_PI)) + " : " + to_string(GetRotTarget().z * (180 / D3DX_PI)));
 	CRenderer::SetDebugString("プレイヤー現在座標：" + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
 	CRenderer::SetDebugString("プレイヤー目標座標：" + to_string(GetPosTarget().x) + " :  " + to_string(GetPosTarget().y) + " : " + to_string(GetPosTarget().z));
-	CRenderer::SetDebugString("プレイヤー加速度　：" + to_string(GetAccelY()));
+	CRenderer::SetDebugString("プレイヤー加速度　：" + to_string(GetVelY()));
 	CRenderer::SetDebugString("プレイヤー体力　　：" + to_string(GetLife()));
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 
@@ -293,7 +294,7 @@ void CPlayer::AdjustHeight()
 {
 	// 目標座標をY軸の加速度分変動する
 	Vec3 NewPosTarget = GetPosTarget();
-	NewPosTarget.y += GetAccelY();
+	NewPosTarget.y += GetVelY();
 	SetPosTarget(NewPosTarget);
 
 	// 高さの目標に下限を設定
@@ -304,7 +305,7 @@ void CPlayer::AdjustHeight()
 		SetPosTarget(NewPosTarget);
 
 		// Y軸方向の加速度を初期化
-		SetAccelY(0.0f);
+		SetVelY(0.0f);
 	}
 }
 
@@ -386,7 +387,7 @@ void CPlayer::HitCheck()
 			case 1:
 			{
 				// Y軸方向の加速度を初期化
-				SetAccelY(0.0f);
+				SetVelY(0.0f);
 
 				// 新しい目標座標を作成
 				const Vec3& NewPosTarget = { CylinderPosTarget.x, BoxPos.y + BoxSize.y + CylinderHeight, CylinderPosTarget.z };
@@ -399,7 +400,7 @@ void CPlayer::HitCheck()
 			case 2:
 			{
 				// Y軸方向の加速度を重力方向へ固定
-				SetAccelY(0.0f);
+				SetVelY(0.0f);
 
 				// 新しい目標座標を作成
 				const Vec3& NewPosTarget = { CylinderPosTarget.x, BoxPos.y - BoxSize.y - CylinderHeight, CylinderPosTarget.z };

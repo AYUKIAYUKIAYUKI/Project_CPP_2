@@ -56,7 +56,7 @@ void CPlayer_State_Default::Update()
 	Control();
 
 	// 重力加速
-	m_pCharacter->SetAccelY(m_pCharacter->GetAccelY() + CField_Manager::FIELD_GRAVITY);
+	m_pCharacter->SetVelY(m_pCharacter->GetVelY() + CField_Manager::FIELD_GRAVITY);
 }
 
 //============================================================================
@@ -85,26 +85,21 @@ void CPlayer_State_Default::Control()
 		// 方角を変動
 		fDirection += -fMoveSpeed;
 
-		if (pKeyboard->GetTrigger(DIK_RSHIFT))
-		{
-			// ダッシュ状態へ
-			To_Dash();
-		}
 	}
 	else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT) || pPad->GetJoyStickL().X > 0)
 	{ // カメラから見て右へ
 		
 		 // 方角を変動
 		fDirection += fMoveSpeed;
-
-		if (pKeyboard->GetTrigger(DIK_RSHIFT))
-		{
-			// ダッシュ状態へ
-			To_Dash();
-		}
 	}
 
-	if (pKeyboard->GetTrigger(DIK_SPACE))
+
+	if (pKeyboard->GetTrigger(DIK_RSHIFT))
+	{
+		// ダッシュ状態へ
+		To_Dash();
+	}
+	else if (pKeyboard->GetTrigger(DIK_SPACE))
 	{
 		// ジャンプ状態へ
 		To_Jump();
@@ -133,7 +128,7 @@ void CPlayer_State_Default::To_Jump()
 	if (GetNextState() == nullptr)
 	{
 		// Y軸の加速度を大幅に増加
-		m_pCharacter->SetAccelY(CPlayer_State_Jump::AMOUNT_JUMPACCEL);
+		m_pCharacter->SetVelY(CPlayer_State_Jump::AMOUNT_JUMPACCEL);
 
 		SetNextState(DBG_NEW CPlayer_State_Jump());
 	}

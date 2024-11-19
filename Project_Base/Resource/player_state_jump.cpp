@@ -10,6 +10,7 @@
 //****************************************************
 #include "player_state_jump.h"
 #include "player_state_default.h"
+#include "player_state_dash.h"
 
 // フィールド取得用
 #include "field_manager.h"
@@ -53,17 +54,17 @@ CPlayer_State_Jump::~CPlayer_State_Jump()
 void CPlayer_State_Jump::Update()
 {
 	// 間違いなくプレイヤーが着地している場合
-	if (m_pCharacter->GetAccelY() == 0.0f && fabsf(m_pCharacter->GetPos().y - m_pCharacter->GetPosTarget().y) <= 1.0f)
+	if (m_pCharacter->GetVelY() == 0.0f && fabsf(m_pCharacter->GetPos().y - m_pCharacter->GetPosTarget().y) <= 1.0f)
 	{
 		// 通常状態へ
 		To_Default();
 	}
 
-	// 操作
-	Control();
-
 	// 重力の補正
 	AdjustGravity();
+
+	// 操作
+	Control();
 }
 
 //============================================================================
@@ -74,6 +75,17 @@ void CPlayer_State_Jump::To_Default()
 	if (GetNextState() == nullptr)
 	{
 		SetNextState(DBG_NEW CPlayer_State_Default());
+	}
+}
+
+//============================================================================
+// ダッシュ状態へ
+//============================================================================
+void CPlayer_State_Jump::To_Dash()
+{
+	if (GetNextState() == nullptr)
+	{
+		SetNextState(DBG_NEW CPlayer_State_Dash());
 	}
 }
 
@@ -110,6 +122,12 @@ void CPlayer_State_Jump::Control()
 		fDirection += fMoveSpeed * 0.5f;
 	}
 
+	if (pKeyboard->GetTrigger(DIK_RSHIFT))
+	{
+		// ダッシュ状態へ
+		To_Dash();
+	}
+
 	// 方角を反映
 	m_pCharacter->SetDirection(fDirection);
 }
@@ -132,11 +150,11 @@ void CPlayer_State_Jump::AdjustGravity()
 	if (!m_bEndRemain)
 	{
 		// ジャンプ延長中はわずかに重力に逆らう
-		m_pCharacter->SetAccelY(m_pCharacter->GetAccelY() + -CField_Manager::FIELD_GRAVITY * 0.25f);
+		m_pCharacter->SetVelY(m_pCharacter->GetVelY() + -CField_Manager::FIELD_GRAVITY * 0.25f);
 	}
 	else
 	{
 		// 延長期間が終了すると通常の重力加速を行う
-		m_pCharacter->SetAccelY(m_pCharacter->GetAccelY() + CField_Manager::FIELD_GRAVITY);
+		m_pCharacter->SetVelY(m_pCharacter->GetVelY() + CField_Manager::FIELD_GRAVITY);
 	}
 }

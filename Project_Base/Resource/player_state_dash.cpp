@@ -46,6 +46,9 @@ CPlayer_State_Dash::CPlayer_State_Dash() :
 	{
 		m_bDirection = 1;
 	}
+
+	// Y軸方向の加速度を無くす
+	m_pCharacter->SetVelY(0.0f);
 }
 
 //============================================================================
@@ -123,7 +126,7 @@ void CPlayer_State_Dash::SetPosTarget_Unnamed()
 
 	m_pCharacter->SetDirection(fDirection);
 
-	Vec3 NewPosTarget = VEC3_INIT;										// 新規目標座標を作成
+	Vec3 NewPosTarget = m_pCharacter->GetPosTarget();					// 新規目標座標を作成
 	NewPosTarget.x = cosf(fDirection) * CField_Manager::FIELD_RADIUS;	// X方向の座標を設定
 	NewPosTarget.z = sinf(fDirection) * CField_Manager::FIELD_RADIUS;	// Z方向の座標を設定
 	m_pCharacter->SetPosTarget(NewPosTarget);							// 目標座標を反映

@@ -33,7 +33,7 @@ CCharacter::CCharacter() :
 	m_fMoveSpeed{ 0.0f },
 	m_RotTarget{ VEC3_INIT },
 	m_PosTarget{ VEC3_INIT },
-	m_fAccelY{ 0.0f },
+	m_fVelY{ 0.0f },
 	m_nLife{ 0 }
 {
 
@@ -164,17 +164,17 @@ void CCharacter::SetPosTarget(D3DXVECTOR3 PosTarget)
 //============================================================================
 // Yé≤ÇÃâ¡ë¨ìxÇéÊìæ
 //============================================================================
-const float& CCharacter::GetAccelY() const
+const float& CCharacter::GetVelY() const
 {
-	return m_fAccelY;
+	return m_fVelY;
 }
 
 //============================================================================
 // Yé≤ÇÃâ¡ë¨ìxÇê›íË
 //============================================================================
-void CCharacter::SetAccelY(float fAccelY)
+void CCharacter::SetVelY(float fVelY)
 {
-	m_fAccelY = fAccelY;
+	m_fVelY = fVelY;
 }
 
 //============================================================================

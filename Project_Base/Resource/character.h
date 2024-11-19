@@ -47,8 +47,8 @@ public:
 	void SetPosTarget(D3DXVECTOR3 PosTarget);	// 目標座標を設定
 
 	// <getter/setter>
-	const float& GetAccelY() const;	// Y軸の加速度を取得
-	void SetAccelY(float fAccelY);	// Y軸の加速度を設定
+	const float& GetVelY() const;	// Y軸の加速度を取得
+	void SetVelY(float fAccelY);	// Y軸の加速度を設定
 
 	// <getter/setter>
 	const int& GetLife() const;	// 体力を取得
@@ -72,7 +72,7 @@ private:
 	float		m_fMoveSpeed;		// 移動速度
 	D3DXVECTOR3	m_RotTarget;		// 目標向き
 	D3DXVECTOR3	m_PosTarget;		// 目標座標
-	float		m_fAccelY;			// Y軸の加速度
+	float		m_fVelY;			// Y軸の加速度
 	int			m_nLife;			// 体力
 };
 
