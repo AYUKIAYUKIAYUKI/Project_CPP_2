@@ -47,19 +47,6 @@ void CRenderer::Update()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	static bool bShow = true;
-	ImGui::ShowDemoWindow(&bShow);
-
-	//// ウィンドウを表示
-	//static ImVec2 Vec2 = { 400, 400 };
-	////Vec2.x++;
-	////Vec2.y++;
-	//ImGui::SetNextWindowSize(Vec2, ImGuiCond_None);
-	//ImGui::SetNextWindowPos(ImVec2(Vec2.x, Vec2.y), ImGuiCond_None);
-	//static bool bShow = true;
-	//ImGui::Begin("てすと", &bShow, ImGuiWindowFlags_AlwaysAutoResize);
-	//ImGui::End();
-
 	// 文字列クリア
 	m_DebugStr = {};
 
@@ -370,8 +357,9 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 
 	// ImGuiの入出力設定
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // キーボードを有効化
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // ゲームパッドを有効化
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+	io.Fonts->AddFontFromFileTTF("Data\\FONT\\meiryo.ttc", 24.0f, nullptr);
 
 	// ImGuiの表示スタイルを設定
 	ImGui::StyleColorsDark();

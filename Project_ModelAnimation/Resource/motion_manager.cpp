@@ -34,6 +34,12 @@ CMotion_Manager* CMotion_Manager::m_pMotionManager = nullptr;	// ƒ‚[ƒVƒ‡ƒ“ƒ}ƒl
 //============================================================================
 void CMotion_Manager::Update()
 {
+	// ƒEƒBƒ“ƒhƒE‚ğ•\¦
+	ImVec2 Rect = { 500, 300 };
+	ImGui::SetNextWindowSize(Rect);
+	ImGui::SetNextWindowPos({ SCREEN_WIDTH - Rect.x, 0, });
+	ImGui::Begin("Motion_Manager");
+
 	// •ÒW
 	Edit();
 
@@ -45,6 +51,9 @@ void CMotion_Manager::Update()
 
 	// ƒŠƒZƒbƒg
 	Reset();
+
+	// ƒEƒBƒ“ƒhƒE•\¦I—¹
+	ImGui::End();
 
 	// ƒfƒoƒbƒO•\¦
 	PrintDebug();
@@ -223,10 +232,7 @@ void CMotion_Manager::PrintDebug()
 void CMotion_Manager::Edit()
 {
 	// Ä¶Ø‚è‘Ö‚¦
-	if (CManager::GetKeyboard()->GetTrigger(DIK_F5))
-	{
-		m_bPlay = !m_bPlay;
-	}
+	ImGui::Checkbox("PlayMotion", &m_bPlay);
 
 	// ƒp[ƒcî•ñ‚Ì•ÒW
 	EditParts();
