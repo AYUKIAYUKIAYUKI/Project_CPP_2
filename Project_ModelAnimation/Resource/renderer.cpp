@@ -284,25 +284,22 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 
 	// デバイスのプレゼンテーションパラメータの設定
 	ZeroMemory(&d3dpp, sizeof(d3dpp));			// パラメータのゼロクリア
-	//d3dpp.BackBufferWidth = SCREEN_WIDTH;		// ゲームサイズ(幅)
-	d3dpp.BackBufferWidth = 1535;				// ゲームサイズ(幅)
-	//d3dpp.BackBufferHeight = SCREEN_HEIGHT;	// ゲームサイズ(高さ)
-	d3dpp.BackBufferHeight = 863;				// ゲームサイズ(高さ)
+#if 0
+	d3dpp.BackBufferWidth = SCREEN_WIDTH;		// ゲームサイズ(幅)
+	d3dpp.BackBufferHeight = SCREEN_HEIGHT;		// ゲームサイズ(高さ)
+#else
+	d3dpp.BackBufferWidth = GetSystemMetrics(SM_CXSCREEN);	// ゲームサイズ(幅)
+	d3dpp.BackBufferHeight = GetSystemMetrics(SM_CYSCREEN);	// ゲームサイズ(高さ)
+#endif
 	d3dpp.BackBufferFormat = d3ddm.Format;		// バックバッファの形式
 	d3dpp.BackBufferCount = 1;					// バックバッファの数
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;	// ダブルバッファの切り替え(映像信号に同期)
 	d3dpp.EnableAutoDepthStencil = TRUE;		// デプスバッファとステンシルバッファを作成
-
 #if ENABLE_STENCIL_BUFFER
-
 	d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;	// デプスバッファとして24bit、ステンシルバッファとして8bitを使用する
-
 #else
-
 	d3dpp.AutoDepthStencilFormat = D3DFMT_D16;	// デプスバッファとして16bitを使う
-
 #endif
-
 	d3dpp.Windowed = bWindiw;									// ウインドウモード
 	d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;	// リフレッシュレート
 	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;	// インターバル

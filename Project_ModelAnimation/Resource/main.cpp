@@ -231,12 +231,14 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			break;
 
+#if 0
 		case VK_F11:
 
 			// ウィンドウサイズの変更
 			ChangeWindowSize(hWnd);
 
 			break;
+#endif
 		}
 
 		break;
