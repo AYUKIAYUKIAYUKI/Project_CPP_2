@@ -37,7 +37,7 @@ public:
 	//****************************************************
 	struct Key
 	{
-		WORD		wMaxFrame;	// キーの総フレーム数
+		int			nMaxFrame;	// キーの総フレーム数
 		KeyDest*	apDest;		// パーツごとの動作目標値
 	};
 

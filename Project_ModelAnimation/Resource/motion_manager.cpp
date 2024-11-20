@@ -206,7 +206,7 @@ void CMotion_Manager::PrintDebug()
 		for (WORD wCntMotionKey = 0; wCntMotionKey < pMotion->wMaxKey; ++wCntMotionKey)
 		{
 			const CMotion_Set::Key* const pKey = &pMotion->vpKey[wCntMotionKey];
-			CRenderer::SetDebugString("キー[" + to_string(wCntMotionKey) + "]の総フレーム数：" + to_string(pKey->wMaxFrame));
+			CRenderer::SetDebugString("キー[" + to_string(wCntMotionKey) + "]の総フレーム数：" + to_string(pKey->nMaxFrame));
 		}
 	}
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
@@ -462,8 +462,8 @@ void CMotion_Manager::EditKey()
 		CMotion_Set::Key Key;
 
 		// 新たなキーの総フレーム数を設定し、ジェイソンデータに保存
-		Key.wMaxFrame = 1;
-		m_Json["MaxFrame"][GetSelectMotion()->wMaxKey] = Key.wMaxFrame;
+		Key.nMaxFrame = 1;
+		m_Json["MaxFrame"][GetSelectMotion()->wMaxKey] = Key.nMaxFrame;
 
 		// パーツ数分の目標値情報を追加生成
 		Key.apDest = DBG_NEW CMotion_Set::KeyDest[m_MotionSet->m_wMaxParts];
@@ -503,18 +503,23 @@ void CMotion_Manager::ResizeKey()
 //============================================================================
 void CMotion_Manager::EditFrame()
 {
+	const int nOldMaxFrame = GetSelectKey()->nMaxFrame;
+
 	// 総フレーム増減
-	if (CManager::GetKeyboard()->GetTrigger(DIK_7) && m_MotionSet->GetNowKey()->wMaxFrame > 1)
+	ImGui::Separator();
+	ImGui::BulletText("Frame");
+	ImGui::InputInt("MaxFrame", &GetSelectKey()->nMaxFrame, 1, 1);
+
+	// フレーム数の下限を設定
+	if (GetSelectKey()->nMaxFrame < 1)
 	{
-		GetSelectKey()->wMaxFrame--;
+		GetSelectKey()->nMaxFrame = 1;
 	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_8))
+
+	// 増減があればジェイソンデータを変更
+	if (nOldMaxFrame != GetSelectKey()->nMaxFrame)
 	{
-		GetSelectKey()->wMaxFrame++;
-	}
-	else if (CManager::GetKeyboard()->GetRelease(DIK_7) || CManager::GetKeyboard()->GetRelease(DIK_8))
-	{
-		m_Json["MaxFrame"][m_wSelectKey] = GetSelectKey()->wMaxFrame;
+		m_Json["MaxFrame"][m_wSelectKey] = GetSelectKey()->nMaxFrame;
 	}
 }
 

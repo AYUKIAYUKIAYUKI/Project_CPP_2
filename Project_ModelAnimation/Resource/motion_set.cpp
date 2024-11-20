@@ -127,7 +127,7 @@ void CMotion_Set::CountFrame()
 	m_wNowFrame++;
 
 	// フレーム数が、現在再生中のキーの総フレーム数に達したら
-	if (m_wNowFrame >= GetNowKey()->wMaxFrame)
+	if (m_wNowFrame >= GetNowKey()->nMaxFrame)
 	{
 		// 現在のフレーム数をリセット
 		m_wNowFrame = 0;
@@ -150,7 +150,7 @@ void CMotion_Set::CountFrame()
 void CMotion_Set::CorrectTarget()
 {
 	// フレームの進行度合を作成 (総フレーム数 - 現在のフレーム)
-	const WORD wFrameCoef = m_apMotion[m_wNowMotion].vpKey[m_wNowKey].wMaxFrame - m_wNowFrame;
+	const WORD wFrameCoef = m_apMotion[m_wNowMotion].vpKey[m_wNowKey].nMaxFrame - m_wNowFrame;
 
 	// パーツ数を取得
 	const WORD wSize = static_cast<WORD>(m_vpModelParts.size());
@@ -251,7 +251,7 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 			Key Key;
 
 			// キーの総フレーム数を取得
-			Key.wMaxFrame = static_cast<WORD>(Json["MaxFrame"][wCntMotionKey]);
+			Key.nMaxFrame = static_cast<WORD>(Json["MaxFrame"][wCntMotionKey]);
 
 			// パーツ数分の目標値情報を生成
 			Key.apDest = DBG_NEW CMotion_Set::KeyDest[pNew->m_wMaxParts];
