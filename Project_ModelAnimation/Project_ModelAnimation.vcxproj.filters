@@ -42,6 +42,21 @@
       <Filter>&lt;Object&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\motion_set.cpp" />
+    <ClCompile Include="ImGui\imgui.cpp">
+      <Filter>&lt;ImGui&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_dx9.cpp">
+      <Filter>&lt;ImGui&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
+      <Filter>&lt;ImGui&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_draw.cpp">
+      <Filter>&lt;ImGui&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_demo.cpp" />
+    <ClCompile Include="ImGui\imgui_tables.cpp" />
+    <ClCompile Include="ImGui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource\camera.h" />
@@ -85,6 +100,28 @@
       <Filter>&lt;Object&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\motion_set.h" />
+    <ClInclude Include="ImGui\imgui.h">
+      <Filter>&lt;ImGui&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imconfig.h">
+      <Filter>&lt;ImGui&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_dx9.h">
+      <Filter>&lt;ImGui&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_win32.h">
+      <Filter>&lt;ImGui&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_internal.h">
+      <Filter>&lt;ImGui&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_rectpack.h">
+      <Filter>&lt;ImGui&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_truetype.h">
+      <Filter>&lt;ImGui&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_textedit.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Object&gt;">
@@ -98,6 +135,9 @@
     </Filter>
     <Filter Include="&lt;utility&gt;">
       <UniqueIdentifier>{07c8b80b-d72f-4cd8-8cb3-d5880e69bd8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;ImGui&gt;">
+      <UniqueIdentifier>{993f2c85-ebc1-4920-b552-b84e892308b8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

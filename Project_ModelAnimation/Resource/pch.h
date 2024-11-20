@@ -22,6 +22,14 @@
 #include <xinput.h>					// コントローラー動作用
 #include <xaudio2.h>				// サウンド動作用
 
+// ImGui
+#ifndef IMGUI_DEFINE_MATH_OPERATORS
+#define IMGUI_DEFINE_MATH_OPERATORS
+#endif // IMGUI_DEFINE_MATH_OPERATORS
+#include <imgui.h>
+#include <imgui_impl_dx9.h>
+#include <imgui_impl_win32.h>
+
 // JSON
 #include <nlohmann/json.hpp>
 
