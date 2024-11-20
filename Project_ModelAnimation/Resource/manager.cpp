@@ -34,23 +34,6 @@ CManager* CManager::m_pManager = nullptr;	// マネージャーの本体
 //============================================================================
 void CManager::Update()
 {
-	ImGui_ImplDX9_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
-	static bool bShow = true;
-	ImGui::ShowDemoWindow(&bShow);
-
-	//// ウィンドウを表示
-	//static ImVec2 Vec2 = { 400, 400 };
-	////Vec2.x++;
-	////Vec2.y++;
-	//ImGui::SetNextWindowSize(Vec2, ImGuiCond_None);
-	//ImGui::SetNextWindowPos(ImVec2(Vec2.x, Vec2.y), ImGuiCond_None);
-	//static bool bShow = true;
-	//ImGui::Begin("てすと", &bShow, ImGuiWindowFlags_AlwaysAutoResize);
-	//ImGui::End();
-
 	// レンダラーの更新
 	CRenderer::GetRenderer()->Update();
 
@@ -65,8 +48,6 @@ void CManager::Update()
 
 	// パッドの更新
 	m_pPad->Update();
-
-	ImGui::EndFrame();
 }
 
 //============================================================================
@@ -201,22 +182,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 		return E_FAIL;
 	}
 
-	// ImGuiのコンテキストを作成
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-
-	// ImGuiの入出力設定
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // キーボードを有効化
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // ゲームパッドを有効化
-
-	// ImGuiの表示スタイルを設定
-	ImGui::StyleColorsDark();
-
-	// バックエンドの初期設定
-	ImGui_ImplWin32_Init(hWnd);
-	ImGui_ImplDX9_Init(CRenderer::GetDeviece());
-
 	// カメラの生成
 	m_pCamera = DBG_NEW CCamera();
 
@@ -298,11 +263,6 @@ void CManager::Uninit()
 		delete m_pCamera;		// メモリを解放
 		m_pCamera = nullptr;	// ポインタを初期化
 	}
-
-	// バックエンドとImGUiの終了処理
-	ImGui_ImplDX9_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
 
 	// レンダラーの破棄
 	CRenderer::Release();

@@ -42,6 +42,24 @@ CRenderer* CRenderer::m_pRenderer = nullptr;	// レンダラーの本体
 //============================================================================
 void CRenderer::Update()
 {
+	// Guiの更新を開始
+	ImGui_ImplDX9_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	static bool bShow = true;
+	ImGui::ShowDemoWindow(&bShow);
+
+	//// ウィンドウを表示
+	//static ImVec2 Vec2 = { 400, 400 };
+	////Vec2.x++;
+	////Vec2.y++;
+	//ImGui::SetNextWindowSize(Vec2, ImGuiCond_None);
+	//ImGui::SetNextWindowPos(ImVec2(Vec2.x, Vec2.y), ImGuiCond_None);
+	//static bool bShow = true;
+	//ImGui::Begin("てすと", &bShow, ImGuiWindowFlags_AlwaysAutoResize);
+	//ImGui::End();
+
 	// 文字列クリア
 	m_DebugStr = {};
 
@@ -54,6 +72,8 @@ void CRenderer::Update()
 	// 全オブジェクト後更新処理
 	CObject::LateUpdateAll();
 
+	// Guiの更新を終了
+	ImGui::EndFrame();
 }
 
 //============================================================================
@@ -344,6 +364,22 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
+	// ImGuiのコンテキストを作成
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+
+	// ImGuiの入出力設定
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // キーボードを有効化
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // ゲームパッドを有効化
+
+	// ImGuiの表示スタイルを設定
+	ImGui::StyleColorsDark();
+
+	// バックエンドの初期設定
+	ImGui_ImplWin32_Init(hWnd);
+	ImGui_ImplDX9_Init(CRenderer::GetDeviece());
+
 	// フォントを生成
 	D3DXCreateFont(m_pD3DDevice,
 		22,
@@ -402,6 +438,11 @@ void CRenderer::Uninit()
 		m_pFont->Release();
 		m_pFont = nullptr;
 	}
+
+	// ImGUiの終了処理
+	ImGui_ImplDX9_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 
 	// Direct3Dデバイスの破棄
 	if (m_pD3DDevice != nullptr)
