@@ -35,9 +35,9 @@ CMotion_Manager* CMotion_Manager::m_pMotionManager = nullptr;	// ƒ‚[ƒVƒ‡ƒ“ƒ}ƒl
 void CMotion_Manager::Update()
 {
 	// ƒEƒBƒ“ƒhƒE‚ğ•\¦
-	ImVec2 Rect = { 500, 300 };
+	ImVec2 Rect = { 600, 800 };
 	ImGui::SetNextWindowSize(Rect);
-	ImGui::SetNextWindowPos({ SCREEN_WIDTH - Rect.x, 0, });
+	ImGui::SetNextWindowPos({ SCREEN_WIDTH - (Rect.x + 100), 100, });
 	ImGui::Begin("Motion_Manager");
 
 	// •ÒW
@@ -141,7 +141,6 @@ CMotion_Manager::CMotion_Manager() :
 	m_Json{},
 	m_MotionSet{ nullptr },
 	m_wSelectParts{ 0 },
-	m_fPosEditCoef{ 0.0f },
 	m_wSelectMotion{ 0 },
 	m_wSelectKey{ 0 },
 	m_bPlay{ false }
@@ -213,7 +212,6 @@ void CMotion_Manager::PrintDebug()
 	CRenderer::SetDebugString("");
 	CRenderer::SetDebugString("<•ÒWî•ñ>");
 	CRenderer::SetDebugString("Œ»İ‚Ì‘I‘ğƒp[ƒc@@F" + to_string(m_wSelectParts));
-	CRenderer::SetDebugString("À•W•ÒW‚Ì‹­“x@@@F" + to_string(m_fPosEditCoef));
 	CRenderer::SetDebugString("Œ»İ‚Ì‘I‘ğƒ‚[ƒVƒ‡ƒ“F" + to_string(m_wSelectMotion));
 	CRenderer::SetDebugString("Œ»İ‚Ì‘I‘ğƒL[@@@F" + to_string(m_wSelectKey));
 	for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_vpModelParts.size(); ++wCntModelParts)
@@ -232,7 +230,7 @@ void CMotion_Manager::PrintDebug()
 void CMotion_Manager::Edit()
 {
 	// Ä¶Ø‚è‘Ö‚¦
-	ImGui::Checkbox("PlayMotion", &m_bPlay);
+	ImGui::Checkbox("Playing Motion", &m_bPlay);
 
 	// ƒp[ƒcî•ñ‚Ì•ÒW
 	EditParts();
@@ -247,10 +245,9 @@ void CMotion_Manager::Edit()
 	EditFrame();
 
 	// ƒGƒNƒXƒ|[ƒg
-	if (CManager::GetKeyboard()->GetTrigger(DIK_F1))
-	{
+	ImGui::Separator();
+	if (ImGui::Button("Export Edit Data"))
 		Export();
-	}
 }
 
 //============================================================================
@@ -294,64 +291,53 @@ void CMotion_Manager::EditDest()
 	// ‘I‘ğ’†‚Ìƒp[ƒc‚Ì–Ú•W’lî•ñ‚Ìƒ|ƒCƒ“ƒ^‚ğì¬
 	CMotion_Set::KeyDest* const pDest = &GetSelectKey()->apDest[m_wSelectParts];
 
-	if (CManager::GetKeyboard()->GetTrigger(DIK_U))
-	{
-		pDest->RotTarget.x += D3DX_PI * 0.05f;
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_O))
-	{
-		pDest->RotTarget.x += D3DX_PI * -0.05f;
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_I))
-	{
-		pDest->RotTarget.y += D3DX_PI * 0.05f;
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_K))
-	{
-		pDest->RotTarget.y += D3DX_PI * -0.05f;
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_J))
-	{
-		pDest->RotTarget.z += D3DX_PI * 0.05f;
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_L))
-	{
-		pDest->RotTarget.z += D3DX_PI * -0.05f;
-	}
+	// –Ú•WkÚ‚ğ•Ï“®
+	ImGui::Separator();
+	ImGui::BulletText("ScaleDest");
+	if (ImGui::Button("Reset:ScaleX"))
+		pDest->ScaleTarget.x = 1.0f;
+	ImGui::SameLine();
+	ImGui::InputFloat("Scale:X", &pDest->ScaleTarget.x, 1.0f, 1.0f);
+	if (ImGui::Button("Reset:ScaleY"))
+		pDest->ScaleTarget.y = 1.0f;
+	ImGui::SameLine();
+	ImGui::InputFloat("Scale:Y", &pDest->ScaleTarget.y, 1.0f, 1.0f);
+	if (ImGui::Button("Reset:ScaleZ"))
+		pDest->ScaleTarget.z = 1.0f;
+	ImGui::SameLine();
+	ImGui::InputFloat("Scale:Z", &pDest->ScaleTarget.z, 1.0f, 1.0f);
 
-	if (CManager::GetKeyboard()->GetTrigger(DIK_R))
-	{
-		m_fPosEditCoef += -0.1f;
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_Y))
-	{
-		m_fPosEditCoef += 0.1f;
-	}
+	// –Ú•WŒü‚«‚ğ•Ï“®
+	ImGui::Separator();
+	ImGui::BulletText("RotDest");
+	if (ImGui::Button("Reset:RotX"))
+		pDest->RotTarget.x = 0.0f;
+	ImGui::SameLine();
+	ImGui::SliderFloat("Rot:X", &pDest->RotTarget.x, -D3DX_PI, D3DX_PI);
+	if (ImGui::Button("Reset:RotY"))
+		pDest->RotTarget.y = 0.0f;
+	ImGui::SameLine();
+	ImGui::SliderFloat("Rot:Y", &pDest->RotTarget.y, -D3DX_PI, D3DX_PI);
+	if (ImGui::Button("Reset:RotZ"))
+		pDest->RotTarget.z = 0.0f;
+	ImGui::SameLine();
+	ImGui::SliderFloat("Rot:Z", &pDest->RotTarget.z, -D3DX_PI, D3DX_PI);
 
-	if (CManager::GetKeyboard()->GetTrigger(DIK_F))
-	{
-		pDest->PosTarget.x += -m_fPosEditCoef;
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_H))
-	{
-		pDest->PosTarget.x += m_fPosEditCoef;
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_T))
-	{
-		pDest->PosTarget.y += m_fPosEditCoef;
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_G))
-	{
-		pDest->PosTarget.y += -m_fPosEditCoef;
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_V))
-	{
-		pDest->PosTarget.z += -m_fPosEditCoef;
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_N))
-	{
-		pDest->PosTarget.z += m_fPosEditCoef;
-	}
+	// –Ú•WÀ•W
+	ImGui::Separator();
+	ImGui::BulletText("ScaleDest");
+	if (ImGui::Button("Reset:PosX"))
+		pDest->PosTarget.x = 0.0f;
+	ImGui::SameLine();
+	ImGui::InputFloat("Pos:X", &pDest->PosTarget.x, 1.0f, 1.0f);
+	if (ImGui::Button("Reset:PosY"))
+		pDest->PosTarget.y = 0.0f;
+	ImGui::SameLine();
+	ImGui::InputFloat("Pos:Y", &pDest->PosTarget.y, 1.0f, 1.0f);
+	if (ImGui::Button("Reset:PosZ"))
+		pDest->PosTarget.z = 0.0f;
+	ImGui::SameLine();
+	ImGui::InputFloat("Pos:Z", &pDest->PosTarget.z, 1.0f, 1.0f);
 
 	// –Ú•W’l‚ğ”½‰f
 	m_Json["ScaleTarget"][m_wSelectKey][m_wSelectParts] = { pDest->ScaleTarget.x, pDest->ScaleTarget.y, pDest->ScaleTarget.z };
@@ -513,7 +499,10 @@ void CMotion_Manager::Export()
 //============================================================================
 void CMotion_Manager::Reset()
 {
-	if (CManager::GetKeyboard()->GetTrigger(DIK_F7))
+	// ƒGƒNƒXƒ|[ƒgƒ{ƒ^ƒ“‚Ì‰¡
+	ImGui::SameLine();
+
+	if (ImGui::Button("Reset Edit Data"))
 	{
 		// ‘I‘ğ”Ô†î•ñ‚ğ‰Šú‰»
 		m_wSelectParts = 0;

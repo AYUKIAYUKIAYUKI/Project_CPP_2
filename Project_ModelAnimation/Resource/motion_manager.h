@@ -70,7 +70,6 @@ private:
 	JSON			m_Json;				// ジェイソンデータ
 	CMotion_Set*	m_MotionSet;		// モーションセット
 	WORD			m_wSelectParts;		// 選択パーツ
-	float			m_fPosEditCoef;		// 座標編集の強度
 	WORD			m_wSelectMotion;	// 選択モーション
 	WORD			m_wSelectKey;		// 選択キー
 	bool			m_bPlay;			// 再生
