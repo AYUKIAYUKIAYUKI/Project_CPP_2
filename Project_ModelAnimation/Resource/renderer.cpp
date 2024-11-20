@@ -284,8 +284,10 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 
 	// デバイスのプレゼンテーションパラメータの設定
 	ZeroMemory(&d3dpp, sizeof(d3dpp));			// パラメータのゼロクリア
-	d3dpp.BackBufferWidth = SCREEN_WIDTH;		// ゲームサイズ(幅)
-	d3dpp.BackBufferHeight = SCREEN_HEIGHT;		// ゲームサイズ(高さ)
+	//d3dpp.BackBufferWidth = SCREEN_WIDTH;		// ゲームサイズ(幅)
+	d3dpp.BackBufferWidth = 1535;				// ゲームサイズ(幅)
+	//d3dpp.BackBufferHeight = SCREEN_HEIGHT;	// ゲームサイズ(高さ)
+	d3dpp.BackBufferHeight = 863;				// ゲームサイズ(高さ)
 	d3dpp.BackBufferFormat = d3ddm.Format;		// バックバッファの形式
 	d3dpp.BackBufferCount = 1;					// バックバッファの数
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;	// ダブルバッファの切り替え(映像信号に同期)
