@@ -93,7 +93,6 @@ void CPlayer_State_Default::Control()
 		fDirection += fMoveSpeed;
 	}
 
-
 	if (pKeyboard->GetTrigger(DIK_RSHIFT))
 	{
 		// ƒ_ƒbƒVƒ…ó‘Ô‚Ö
