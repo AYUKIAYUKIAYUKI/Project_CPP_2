@@ -95,6 +95,10 @@ void CRenderer::Draw()
 		// 全オブジェクトの描画
 		CObject::DrawAll();
 
+		// ImGuiの描画
+		ImGui::Render();
+		ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+
 		// デバッグ表示
 		PrintDebug();
 
