@@ -244,6 +244,9 @@ void CMotion_Manager::Edit()
 	// フレーム情報の編集
 	EditFrame();
 
+	// 目標値情報の編集
+	EditDest();
+
 	// エクスポート
 	ImGui::Separator();
 	if (ImGui::Button("Export Edit Data"))
@@ -260,25 +263,27 @@ void CMotion_Manager::EditParts()
 	// 選択パーツ切り替え
 	ImGui::Separator();
 	ImGui::BulletText("Select Parts");
-	if (ImGui::Button("First"))
+	if (ImGui::Button("FirstParts"))
 	{
 		m_wSelectParts = 0;
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Prev"))
+	if (ImGui::Button("PrevParts"))
 	{
 		m_wSelectParts > 0 ? m_wSelectParts-- : m_wSelectParts = static_cast<WORD>(m_MotionSet->m_vpModelParts.size()) - 1;
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Next"))
+	if (ImGui::Button("NextParts"))
 	{
 		m_wSelectParts < m_MotionSet->m_vpModelParts.size() - 1 ? m_wSelectParts++ : m_wSelectParts = 0;
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Last"))
+	if (ImGui::Button("LastParts"))
 	{
 		m_wSelectParts = m_MotionSet->m_vpModelParts.size() - 1;
 	}
+	ImGui::SameLine();
+	ImGui::Text("Select->%d", m_wSelectParts);
 
 	// 選択パーツを透過
 	for (WORD wCntParts = 0; wCntParts < m_MotionSet->m_vpModelParts.size(); ++wCntParts)
@@ -293,9 +298,143 @@ void CMotion_Manager::EditParts()
 			m_MotionSet->m_vpModelParts[wCntParts]->SetUseCol(false);
 		}
 	}
+}
 
-	// 目標値情報の編集
-	EditDest();
+//============================================================================
+// モーション情報の編集
+//============================================================================
+void CMotion_Manager::EditMotion()
+{
+	// 選択モーション切り替え
+	if (CManager::GetKeyboard()->GetTrigger(DIK_3))
+	{
+		m_wSelectMotion > 0 ? m_wSelectMotion-- : m_wSelectMotion = m_MotionSet->m_wMaxMotion - 1;
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_4))
+	{
+		m_wSelectMotion < m_MotionSet->m_wMaxMotion - 1 ? m_wSelectMotion++ : m_wSelectMotion = 0;
+	}
+}
+
+//============================================================================
+// キー情報の編集
+//============================================================================
+void CMotion_Manager::EditKey()
+{
+	// 選択キー切り替え
+	ImGui::Separator();
+	ImGui::BulletText("Select Key");
+	if (ImGui::Button("FirstKey"))
+	{
+		m_wSelectParts = 0;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("PrevKey"))
+	{
+		m_wSelectKey > 0 ? m_wSelectKey-- : m_wSelectKey = GetSelectMotion()->wMaxKey - 1;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("NextKey"))
+	{
+		m_wSelectKey < GetSelectMotion()->wMaxKey - 1 ? m_wSelectKey++ : m_wSelectKey = 0;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("LastKey"))
+	{
+		m_wSelectKey = GetSelectMotion()->wMaxKey - 1;
+	}
+	ImGui::SameLine();
+	ImGui::Text("Select->%d", m_wSelectKey);
+
+	// 総キー数の切り替え
+	if (CManager::GetKeyboard()->GetTrigger(DIK_F2) && GetSelectMotion()->wMaxKey > 1)
+	{
+		// 総キー数をデクリメントし、ジェイソンデータに保存
+		GetSelectMotion()->wMaxKey--;
+		m_Json["MaxKey"] = GetSelectMotion()->wMaxKey;
+
+		// 消去するキー番号のフレーム・目標値情報をジェイソンデータから消去
+		m_Json["MaxFrame"].erase(GetSelectMotion()->wMaxKey);
+		m_Json["ScaleTarget"].erase(GetSelectMotion()->wMaxKey);
+		m_Json["RotTarget"].erase(GetSelectMotion()->wMaxKey);
+		m_Json["PosTarget"].erase(GetSelectMotion()->wMaxKey);
+
+		// キー情報のポインタを作成
+		CMotion_Set::Key* const pKey = &GetSelectMotion()->vpKey[GetSelectMotion()->wMaxKey];
+
+		// 目標値情報のポインタ配列を破棄
+		if (pKey->apDest != nullptr)
+		{
+			delete[] pKey->apDest;
+			pKey->apDest = nullptr;
+		}
+
+		// 末尾のキー情報を削除
+		GetSelectMotion()->vpKey.pop_back();
+
+		// 選択キー番号を調整
+		if (m_wSelectKey >= GetSelectMotion()->wMaxKey)
+		{
+			m_wSelectKey = GetSelectMotion()->wMaxKey - 1;
+		}
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_F3))
+	{
+		// キー情報オブジェクトを新規作成
+		CMotion_Set::Key Key;
+
+		// 新たなキーの総フレーム数を設定し、ジェイソンデータに保存
+		Key.nMaxFrame = 1;
+		m_Json["MaxFrame"][GetSelectMotion()->wMaxKey] = Key.nMaxFrame;
+
+		// パーツ数分の目標値情報を追加生成
+		Key.apDest = DBG_NEW CMotion_Set::KeyDest[m_MotionSet->m_wMaxParts];
+
+		for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_wMaxParts; ++wCntModelParts)
+		{
+			// 目標値情報のポインタを作成
+			CMotion_Set::KeyDest* const pDest = &Key.apDest[wCntModelParts];
+
+			// 新たなキーのパーツの目標値を設定し、ジェイソンデータに保存
+			pDest->ScaleTarget = { 1.0f, 1.0f, 1.0f };	// 目標縮尺
+			m_Json["ScaleTarget"][GetSelectMotion()->wMaxKey][wCntModelParts] = { pDest->ScaleTarget.x, pDest->ScaleTarget.y, pDest->ScaleTarget.z };
+			pDest->RotTarget = { VEC3_INIT };	// 目標向き
+			m_Json["RotTarget"][GetSelectMotion()->wMaxKey][wCntModelParts] = { pDest->RotTarget.x, pDest->RotTarget.y, pDest->RotTarget.z };
+			pDest->PosTarget = { VEC3_INIT };	// 目標座標
+			m_Json["PosTarget"][GetSelectMotion()->wMaxKey][wCntModelParts] = { pDest->PosTarget.x, pDest->PosTarget.y, pDest->PosTarget.z };
+		}
+
+		GetSelectMotion()->vpKey.push_back(Key);
+
+		// 総キー数をインクリメント、ジェイソンデータに保存
+		GetSelectMotion()->wMaxKey++;
+		m_Json["MaxKey"] = GetSelectMotion()->wMaxKey;
+	}
+}
+
+//============================================================================
+// フレーム情報の編集
+//============================================================================
+void CMotion_Manager::EditFrame()
+{
+	const int nOldMaxFrame = GetSelectKey()->nMaxFrame;
+
+	// 総フレーム増減
+	ImGui::Separator();
+	ImGui::BulletText("Frame");
+	ImGui::InputInt("MaxFrame", &GetSelectKey()->nMaxFrame, 1, 1);
+
+	// フレーム数の下限を設定
+	if (GetSelectKey()->nMaxFrame < 1)
+	{
+		GetSelectKey()->nMaxFrame = 1;
+	}
+
+	// 増減があればジェイソンデータを変更
+	if (nOldMaxFrame != GetSelectKey()->nMaxFrame)
+	{
+		m_Json["MaxFrame"][m_wSelectKey] = GetSelectKey()->nMaxFrame;
+	}
 }
 
 //============================================================================
@@ -391,136 +530,6 @@ void CMotion_Manager::EditDest()
 	m_Json["ScaleTarget"][m_wSelectKey][m_wSelectParts] = { pDest->ScaleTarget.x, pDest->ScaleTarget.y, pDest->ScaleTarget.z };
 	m_Json["RotTarget"][m_wSelectKey][m_wSelectParts] = { pDest->RotTarget.x, pDest->RotTarget.y, pDest->RotTarget.z };
 	m_Json["PosTarget"][m_wSelectKey][m_wSelectParts] = { pDest->PosTarget.x, pDest->PosTarget.y, pDest->PosTarget.z };
-}
-
-//============================================================================
-// モーション情報の編集
-//============================================================================
-void CMotion_Manager::EditMotion()
-{
-	// 選択モーション切り替え
-	if (CManager::GetKeyboard()->GetTrigger(DIK_3))
-	{
-		m_wSelectMotion > 0 ? m_wSelectMotion-- : m_wSelectMotion = m_MotionSet->m_wMaxMotion - 1;
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_4))
-	{
-		m_wSelectMotion < m_MotionSet->m_wMaxMotion - 1 ? m_wSelectMotion++ : m_wSelectMotion = 0;
-	}
-}
-
-//============================================================================
-// キー情報の編集
-//============================================================================
-void CMotion_Manager::EditKey()
-{
-	// 選択キー切り替え
-	if (CManager::GetKeyboard()->GetTrigger(DIK_5))
-	{
-		m_wSelectKey > 0 ? m_wSelectKey-- : m_wSelectKey = GetSelectMotion()->wMaxKey - 1;
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_6))
-	{
-		m_wSelectKey < GetSelectMotion()->wMaxKey - 1 ? m_wSelectKey++ : m_wSelectKey = 0;
-	}
-
-	// 総キー数の切り替え
-	if (CManager::GetKeyboard()->GetTrigger(DIK_F2) && GetSelectMotion()->wMaxKey > 1)
-	{
-		// 総キー数をデクリメントし、ジェイソンデータに保存
-		GetSelectMotion()->wMaxKey--;
-		m_Json["MaxKey"] = GetSelectMotion()->wMaxKey;
-
-		// 消去するキー番号のフレーム・目標値情報をジェイソンデータから消去
-		m_Json["MaxFrame"].erase(GetSelectMotion()->wMaxKey);
-		m_Json["ScaleTarget"].erase(GetSelectMotion()->wMaxKey);
-		m_Json["RotTarget"].erase(GetSelectMotion()->wMaxKey);
-		m_Json["PosTarget"].erase(GetSelectMotion()->wMaxKey);
-
-		// キー情報のポインタを作成
-		CMotion_Set::Key* const pKey = &GetSelectMotion()->vpKey[GetSelectMotion()->wMaxKey];
-
-		// 目標値情報のポインタ配列を破棄
-		if (pKey->apDest != nullptr)
-		{
-			delete[] pKey->apDest;
-			pKey->apDest = nullptr;
-		}
-
-		// 末尾のキー情報を削除
-		GetSelectMotion()->vpKey.pop_back();
-
-		// 選択キー番号を調整
-		if (m_wSelectKey >= GetSelectMotion()->wMaxKey)
-		{
-			m_wSelectKey = GetSelectMotion()->wMaxKey - 1;
-		}
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_F3))
-	{
-		// キー情報オブジェクトを新規作成
-		CMotion_Set::Key Key;
-
-		// 新たなキーの総フレーム数を設定し、ジェイソンデータに保存
-		Key.nMaxFrame = 1;
-		m_Json["MaxFrame"][GetSelectMotion()->wMaxKey] = Key.nMaxFrame;
-
-		// パーツ数分の目標値情報を追加生成
-		Key.apDest = DBG_NEW CMotion_Set::KeyDest[m_MotionSet->m_wMaxParts];
-
-		for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_wMaxParts; ++wCntModelParts)
-		{
-			// 目標値情報のポインタを作成
-			CMotion_Set::KeyDest* const pDest = &Key.apDest[wCntModelParts];
-
-			// 新たなキーのパーツの目標値を設定し、ジェイソンデータに保存
-			pDest->ScaleTarget = { 1.0f, 1.0f, 1.0f };	// 目標縮尺
-			m_Json["ScaleTarget"][GetSelectMotion()->wMaxKey][wCntModelParts] = { pDest->ScaleTarget.x, pDest->ScaleTarget.y, pDest->ScaleTarget.z };
-			pDest->RotTarget = { VEC3_INIT };	// 目標向き
-			m_Json["RotTarget"][GetSelectMotion()->wMaxKey][wCntModelParts] = { pDest->RotTarget.x, pDest->RotTarget.y, pDest->RotTarget.z };
-			pDest->PosTarget = { VEC3_INIT };	// 目標座標
-			m_Json["PosTarget"][GetSelectMotion()->wMaxKey][wCntModelParts] = { pDest->PosTarget.x, pDest->PosTarget.y, pDest->PosTarget.z };
-		}
-
-		GetSelectMotion()->vpKey.push_back(Key);
-
-		// 総キー数をインクリメント、ジェイソンデータに保存
-		GetSelectMotion()->wMaxKey++;
-		m_Json["MaxKey"] = GetSelectMotion()->wMaxKey;
-	}
-}
-
-//============================================================================
-// キー情報の再確保
-//============================================================================
-void CMotion_Manager::ResizeKey()
-{
-	
-}
-
-//============================================================================
-// フレーム情報の編集
-//============================================================================
-void CMotion_Manager::EditFrame()
-{
-	const int nOldMaxFrame = GetSelectKey()->nMaxFrame;
-
-	// 総フレーム増減
-	ImGui::Separator();
-	ImGui::BulletText("Frame");
-	ImGui::InputInt("MaxFrame", &GetSelectKey()->nMaxFrame, 1, 1);
-
-	// フレーム数の下限を設定
-	if (GetSelectKey()->nMaxFrame < 1)
-	{
-		GetSelectKey()->nMaxFrame = 1;
-	}
-
-	// 増減があればジェイソンデータを変更
-	if (nOldMaxFrame != GetSelectKey()->nMaxFrame)
-	{
-		m_Json["MaxFrame"][m_wSelectKey] = GetSelectKey()->nMaxFrame;
-	}
 }
 
 //============================================================================
