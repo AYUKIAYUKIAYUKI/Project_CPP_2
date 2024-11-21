@@ -402,6 +402,12 @@ void CMotion_Manager::EditKey()
 		GetSelectMotion()->wMaxKey--;
 		m_Json["MaxKey"] = GetSelectMotion()->wMaxKey;
 
+		// 現在の再生キーが総キー数を超えないよう制限
+		if (m_MotionSet->m_wNowKey >= GetSelectMotion()->wMaxKey)
+		{
+			m_MotionSet->m_wNowKey = GetSelectMotion()->wMaxKey - 1;
+		}
+
 		// 消去するキー番号のフレーム・目標値情報をジェイソンデータから消去
 		m_Json["MaxFrame"].erase(GetSelectMotion()->wMaxKey);
 		m_Json["ScaleTarget"].erase(GetSelectMotion()->wMaxKey);
@@ -480,6 +486,12 @@ void CMotion_Manager::EditFrame()
 	if (GetSelectKey()->nMaxFrame < 1)
 	{
 		GetSelectKey()->nMaxFrame = 1;
+	}
+
+	// 現在の再生フレームが総フレーム数を超えないよう制限
+	if (m_MotionSet->m_wNowFrame >= GetSelectKey()->nMaxFrame)
+	{
+		m_MotionSet->m_wNowFrame = GetSelectKey()->nMaxFrame - 1;
 	}
 
 	// 増減があればジェイソンデータを変更
