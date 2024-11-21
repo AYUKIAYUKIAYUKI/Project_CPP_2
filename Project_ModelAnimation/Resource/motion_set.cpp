@@ -152,11 +152,8 @@ void CMotion_Set::CorrectTarget()
 	// フレームの進行度合を作成 (総フレーム数 - 現在のフレーム)
 	const WORD wFrameCoef = m_apMotion[m_wNowMotion].vpKey[m_wNowKey].nMaxFrame - m_wNowFrame;
 
-	// パーツ数を取得
-	const WORD wSize = static_cast<WORD>(m_vpModelParts.size());
-
 	// 全てのパーツがそれぞれの目標値へ補正したパラメータを設定する
-	for (WORD wCntModelParts = 0; wCntModelParts < wSize; ++wCntModelParts)
+	for (WORD wCntModelParts = 0; wCntModelParts < m_wMaxParts; ++wCntModelParts)
 	{
 		// 目標縮尺
 		Vec3 NewScale = m_vpModelParts[wCntModelParts]->GetScale();

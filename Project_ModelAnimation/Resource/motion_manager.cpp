@@ -49,6 +49,12 @@ void CMotion_Manager::Update()
 		m_MotionSet->Animation();
 	}
 
+	if (m_bShowKeyEnd)
+	{
+		// キーの最終的な動きを見せる
+		ShowKeyEnd();
+	}
+
 	// リセット
 	Reset();
 
@@ -143,7 +149,8 @@ CMotion_Manager::CMotion_Manager() :
 	m_wSelectParts{ 0 },
 	m_wSelectMotion{ 0 },
 	m_wSelectKey{ 0 },
-	m_bPlay{ false }
+	m_bPlay{ false },
+	m_bShowKeyEnd{ false }
 {
 	
 }
@@ -230,7 +237,15 @@ void CMotion_Manager::PrintDebug()
 void CMotion_Manager::Edit()
 {
 	// 再生切り替え
-	ImGui::Checkbox("Playing Motion", &m_bPlay);
+	ImGui::Checkbox("Playing motion", &m_bPlay);
+	ImGui::SameLine();
+	ImGui::Checkbox("Show this key end", &m_bShowKeyEnd);
+
+	// キーの最後の動きを見せる時はアニメーションしない
+	if (m_bShowKeyEnd)
+	{
+		m_bPlay = false;
+	}
 
 	// パーツ情報の編集
 	EditParts();
@@ -283,7 +298,7 @@ void CMotion_Manager::EditParts()
 		m_wSelectParts = m_MotionSet->m_vpModelParts.size() - 1;
 	}
 	ImGui::SameLine();
-	ImGui::Text("Select->%d", m_wSelectParts);
+	ImGui::Text("Select:%d", m_wSelectParts);
 
 	// 選択パーツを透過
 	for (WORD wCntParts = 0; wCntParts < m_MotionSet->m_vpModelParts.size(); ++wCntParts)
@@ -344,7 +359,7 @@ void CMotion_Manager::EditKey()
 		m_wSelectKey = GetSelectMotion()->wMaxKey - 1;
 	}
 	ImGui::SameLine();
-	ImGui::Text("Select->%d", m_wSelectKey);
+	ImGui::Text("Select:%d", m_wSelectKey);
 
 	// 総キー数の切り替え
 	if (CManager::GetKeyboard()->GetTrigger(DIK_F2) && GetSelectMotion()->wMaxKey > 1)
@@ -530,6 +545,25 @@ void CMotion_Manager::EditDest()
 	m_Json["ScaleTarget"][m_wSelectKey][m_wSelectParts] = { pDest->ScaleTarget.x, pDest->ScaleTarget.y, pDest->ScaleTarget.z };
 	m_Json["RotTarget"][m_wSelectKey][m_wSelectParts] = { pDest->RotTarget.x, pDest->RotTarget.y, pDest->RotTarget.z };
 	m_Json["PosTarget"][m_wSelectKey][m_wSelectParts] = { pDest->PosTarget.x, pDest->PosTarget.y, pDest->PosTarget.z };
+}
+
+//============================================================================
+// キーの最終的な状態を見せる
+//============================================================================
+void CMotion_Manager::ShowKeyEnd()
+{
+	// 全てのパーツが、このキーの目標値に固定される
+	for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_wMaxParts; ++wCntModelParts)
+	{
+		// 目標縮尺
+		m_MotionSet->m_vpModelParts[wCntModelParts]->SetScale(m_MotionSet->m_apMotion->vpKey[m_wSelectKey].apDest[wCntModelParts].ScaleTarget);
+
+		// 目標向き
+		m_MotionSet->m_vpModelParts[wCntModelParts]->SetRot(m_MotionSet->m_apMotion->vpKey[m_wSelectKey].apDest[wCntModelParts].RotTarget);
+
+		// 目標座標
+		m_MotionSet->m_vpModelParts[wCntModelParts]->SetPos(m_MotionSet->m_apMotion->vpKey[m_wSelectKey].apDest[wCntModelParts].PosTarget);
+	}
 }
 
 //============================================================================

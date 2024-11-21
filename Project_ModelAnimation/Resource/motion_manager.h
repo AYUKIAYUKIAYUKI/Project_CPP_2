@@ -57,6 +57,7 @@ private:
 	void	EditKey();		// キー情報の編集
 	void	EditFrame();	// フレーム情報の編集
 	void	EditDest();		// 目標値情報の編集
+	void	ShowKeyEnd();	// キーの最終的な状態を見せる
 	void	Export();		// エクスポート
 	void	Reset();		// リセット
 
@@ -72,6 +73,7 @@ private:
 	WORD			m_wSelectMotion;	// 選択モーション
 	WORD			m_wSelectKey;		// 選択キー
 	bool			m_bPlay;			// 再生
+	bool			m_bShowKeyEnd;		// キーの最終的な状態を見せる
 
 	// <static data>
 	static CMotion_Manager* m_pMotionManager;	// モーションマネージャーの本体
