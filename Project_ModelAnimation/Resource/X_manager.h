@@ -20,10 +20,7 @@ public:
 	//****************************************************
 	enum class TYPE : WORD
 	{
-		STATUE = 0,	// ì∫ëú
-		AROUND,		// é¸àÊ
-		TEST0,		// test0
-		TEST1,		// test1
+		STATUE = 0,	// grid
 		WAIST,		// çò
 		BODY,		// ì∑
 		HEAD,		// ì™
