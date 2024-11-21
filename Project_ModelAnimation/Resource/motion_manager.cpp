@@ -379,7 +379,7 @@ void CMotion_Manager::EditKey()
 	ImGui::BulletText("Select Key");
 	if (ImGui::Button("FirstKey"))
 	{
-		m_wSelectParts = 0;
+		m_wSelectKey = 0;
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("PrevKey"))
@@ -528,21 +528,21 @@ void CMotion_Manager::EditDest()
 			pDest->ScaleTarget.x = 1.0f;
 		}
 		ImGui::SameLine();
-		ImGui::InputFloat("Scale:X", &pDest->ScaleTarget.x, 1.0f, 1.0f);
+		ImGui::DragFloat("Scale:X", &pDest->ScaleTarget.x, 0.01f, 0.0f);
 		// 縮尺：Y
 		if (ImGui::Button("Reset:ScaleY"))
 		{
 			pDest->ScaleTarget.y = 1.0f;
 		}
 		ImGui::SameLine();
-		ImGui::InputFloat("Scale:Y", &pDest->ScaleTarget.y, 1.0f, 1.0f);
+		ImGui::DragFloat("Scale:Y", &pDest->ScaleTarget.y, 0.01f, 0.0f);
 		// 縮尺：Z
 		if (ImGui::Button("Reset:ScaleZ"))
 		{
 			pDest->ScaleTarget.z = 1.0f;
 		}
 		ImGui::SameLine();
-		ImGui::InputFloat("Scale:Z", &pDest->ScaleTarget.z, 1.0f, 1.0f);
+		ImGui::DragFloat("Scale:Z", &pDest->ScaleTarget.z, 0.01f, 0.0f);
 	}
 
 	// 目標向きを変動
@@ -555,21 +555,21 @@ void CMotion_Manager::EditDest()
 			pDest->RotTarget.x = 0.0f;
 		}
 		ImGui::SameLine();
-		ImGui::SliderFloat("Rot:X", &pDest->RotTarget.x, -D3DX_PI, D3DX_PI);
+		ImGui::DragFloat("Rot:X", &pDest->RotTarget.x, D3DX_PI * 0.01f, -D3DX_PI, D3DX_PI);
 		// 向き：X
 		if (ImGui::Button("Reset:RotY"))
 		{
 			pDest->RotTarget.y = 0.0f;
 		}
 		ImGui::SameLine();
-		ImGui::SliderFloat("Rot:Y", &pDest->RotTarget.y, -D3DX_PI, D3DX_PI);
+		ImGui::DragFloat("Rot:Y", &pDest->RotTarget.y, D3DX_PI * 0.01f, -D3DX_PI, D3DX_PI);
 		// 向き：Z
 		if (ImGui::Button("Reset:RotZ"))
 		{
 			pDest->RotTarget.z = 0.0f;
 		}
 		ImGui::SameLine();
-		ImGui::SliderFloat("Rot:Z", &pDest->RotTarget.z, -D3DX_PI, D3DX_PI);
+		ImGui::DragFloat("Rot:Z", &pDest->RotTarget.z, D3DX_PI * 0.01f, -D3DX_PI, D3DX_PI);
 	}
 
 	// 目標座標
@@ -582,21 +582,21 @@ void CMotion_Manager::EditDest()
 			pDest->PosTarget.x = 0.0f;
 		}
 		ImGui::SameLine();
-		ImGui::InputFloat("Pos:X", &pDest->PosTarget.x, 1.0f, 1.0f);
+		ImGui::DragFloat("Pos:X", &pDest->PosTarget.x, 0.01f);
 		// 座標：Y
 		if (ImGui::Button("Reset:PosY"))
 		{
 			pDest->PosTarget.y = 0.0f;
 		}
 		ImGui::SameLine();
-		ImGui::InputFloat("Pos:Y", &pDest->PosTarget.y, 1.0f, 1.0f);
+		ImGui::DragFloat("Pos:Y", &pDest->PosTarget.y, 0.01f);
 		// 座標：Z
 		if (ImGui::Button("Reset:PosZ"))
 		{
 			pDest->PosTarget.z = 0.0f;
 		}
 		ImGui::SameLine();
-		ImGui::InputFloat("Pos:Z", &pDest->PosTarget.z, 1.0f, 1.0f);
+		ImGui::DragFloat("Pos:Z", &pDest->PosTarget.z, 0.01f);
 	}
 
 	// 目標値を反映
