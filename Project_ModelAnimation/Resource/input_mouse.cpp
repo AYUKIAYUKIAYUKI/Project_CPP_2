@@ -97,16 +97,16 @@ void CInputMouse::Update()
 	// 入力デバイスからデータを取得
 	if (SUCCEEDED(m_pDevice->GetDeviceState(sizeof(DIMOUSESTATE2), &StateMouse)))
 	{
-		for (WORD wCntKey = 0; wCntKey < 4; ++wCntKey)
+		for (WORD wCntKey = 0; wCntKey < 8; ++wCntKey)
 		{
 			// マウスのリリース情報を保存
-			m_StateRelease.rgbButtons[wCntKey] = ~m_State.rgbButtons[wCntKey] & StateMouse.rgbButtons[wCntKey];
+			m_StateRelease.rgbButtons[wCntKey] = m_StateRelease.rgbButtons[wCntKey] & ~StateMouse.rgbButtons[wCntKey];
 
 			// マウスのトリガー情報を保存
-			m_StateTrigger.rgbButtons[wCntKey] = m_State.rgbButtons[wCntKey] & ~StateMouse.rgbButtons[wCntKey];
+			m_StateTrigger.rgbButtons[wCntKey] = ~m_StateTrigger.rgbButtons[wCntKey] & StateMouse.rgbButtons[wCntKey];
 
 			// マウスのプレス情報を保存
-			m_State.rgbButtons[wCntKey] = StateMouse.rgbButtons[wCntKey];
+			//m_State.rgbButtons[wCntKey] = StateMouse.rgbButtons[wCntKey];
 
 			// マウスの移動情報を保存
 			m_State = StateMouse;
