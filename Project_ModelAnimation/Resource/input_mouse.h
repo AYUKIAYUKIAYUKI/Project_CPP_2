@@ -21,7 +21,7 @@ class CInputMouse : public CInput
 public:
 
 	// <special function>
-	CInputMouse();	// デフォルトコンストラクタ
+	CInputMouse();	// コンストラクタ
 	~CInputMouse();	// デストラクタ
 
 	// <function>
@@ -34,13 +34,14 @@ public:
 	bool		GetTrigger(int nKey);	// トリガー情報取得
 	bool		GetRelease(int nKey);	// リリース情報取得
 	D3DXVECTOR2	GetMouseMove();			// マウスの移動量を取得
+	float		GetWheelScroll();		// ホイールのスクロール量を取得
 
 private:
 
 	// <data>
-	DIMOUSESTATE m_aKeyState;			// プレス情報
-	DIMOUSESTATE m_aKeyStateTrigger;	// トリガー情報
-	DIMOUSESTATE m_aKeyStateRelease;	// リリース情報
+	DIMOUSESTATE2 m_State;			// プレス情報
+	DIMOUSESTATE2 m_StateTrigger;	// トリガー情報
+	DIMOUSESTATE2 m_StateRelease;	// リリース情報
 };
 
 #endif	// _INPUT_KEYBOARD_

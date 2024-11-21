@@ -47,7 +47,7 @@ public:
 private:
 
 	/// <summary> 目標値への補間強度 </summary>
-	static constexpr float COEF_ADJUST = 0.1f;
+	static constexpr float COEF_ADJUST = 0.25f;
 
 	// <function>
 	void BranchMode();			// ビューモード分岐

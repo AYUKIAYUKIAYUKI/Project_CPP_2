@@ -17,12 +17,12 @@
 //============================================================================
 
 //============================================================================
-// デフォルトコンストラクタ
+// コンストラクタ
 //============================================================================
 CInputMouse::CInputMouse() :
-	m_aKeyState{},
-	m_aKeyStateTrigger{},
-	m_aKeyStateRelease{}
+	m_State{},
+	m_StateTrigger{},
+	m_StateRelease{}
 {
 
 }
@@ -56,7 +56,7 @@ HRESULT CInputMouse::Init(HINSTANCE hInstance, HWND hWnd)
 	}
 
 	// データフォーマットの設定
-	if (FAILED(m_pDevice->SetDataFormat(&c_dfDIMouse)))
+	if (FAILED(m_pDevice->SetDataFormat(&c_dfDIMouse2)))
 	{
 		return E_FAIL;
 	}
@@ -92,25 +92,24 @@ void CInputMouse::Uninit()
 //============================================================================
 void CInputMouse::Update()
 {
-	DIMOUSESTATE StateMouse = {};	// マウス入力情報
+	DIMOUSESTATE2 StateMouse = {};	// マウス入力情報
 
 	// 入力デバイスからデータを取得
-	if (SUCCEEDED(m_pDevice->GetDeviceState(sizeof(DIMOUSESTATE), &StateMouse)))
+	if (SUCCEEDED(m_pDevice->GetDeviceState(sizeof(DIMOUSESTATE2), &StateMouse)))
 	{
 		for (WORD wCntKey = 0; wCntKey < 4; ++wCntKey)
 		{
 			// マウスのリリース情報を保存
-			m_aKeyStateRelease.rgbButtons[wCntKey] = ~m_aKeyState.rgbButtons[wCntKey] & StateMouse.rgbButtons[wCntKey];
+			m_StateRelease.rgbButtons[wCntKey] = ~m_State.rgbButtons[wCntKey] & StateMouse.rgbButtons[wCntKey];
 
 			// マウスのトリガー情報を保存
-			m_aKeyStateTrigger.rgbButtons[wCntKey] = m_aKeyState.rgbButtons[wCntKey] & ~StateMouse.rgbButtons[wCntKey];
+			m_StateTrigger.rgbButtons[wCntKey] = m_State.rgbButtons[wCntKey] & ~StateMouse.rgbButtons[wCntKey];
 
 			// マウスのプレス情報を保存
-			m_aKeyState.rgbButtons[wCntKey] = StateMouse.rgbButtons[wCntKey];
+			m_State.rgbButtons[wCntKey] = StateMouse.rgbButtons[wCntKey];
 
 			// マウスの移動情報を保存
-			m_aKeyState.lX = StateMouse.lX;
-			m_aKeyState.lY = StateMouse.lY;
+			m_State = StateMouse;
 		}
 	}
 	else
@@ -125,7 +124,7 @@ void CInputMouse::Update()
 //============================================================================
 bool CInputMouse::GetPress(int nKey)
 {
-	return ((m_aKeyState.rgbButtons[nKey] & 0x80) != 0) ? true : false;
+	return ((m_State.rgbButtons[nKey] & 0x80) != 0) ? true : false;
 }
 
 //============================================================================
@@ -133,7 +132,7 @@ bool CInputMouse::GetPress(int nKey)
 //============================================================================
 bool CInputMouse::GetTrigger(int nKey)
 {
-	return ((m_aKeyStateTrigger.rgbButtons[nKey] & 0x80) != 0) ? true : false;
+	return ((m_StateTrigger.rgbButtons[nKey] & 0x80) != 0) ? true : false;
 }
 
 //============================================================================
@@ -141,7 +140,7 @@ bool CInputMouse::GetTrigger(int nKey)
 //============================================================================
 bool CInputMouse::GetRelease(int nKey)
 {
-	return ((m_aKeyStateRelease.rgbButtons[nKey] & 0x80) != 0) ? true : false;
+	return ((m_StateRelease.rgbButtons[nKey] & 0x80) != 0) ? true : false;
 }
 
 //============================================================================
@@ -149,5 +148,13 @@ bool CInputMouse::GetRelease(int nKey)
 //============================================================================
 D3DXVECTOR2 CInputMouse::GetMouseMove()
 {
-	return { static_cast<float>(m_aKeyState.lX), static_cast<float>(m_aKeyState.lY) };
+	return { static_cast<float>(m_State.lX), static_cast<float>(m_State.lY) };
+}
+
+//============================================================================
+// ホイールのスクロール量を取得
+//============================================================================
+float CInputMouse::GetWheelScroll()
+{
+	return static_cast<float>(m_State.lZ);
 }

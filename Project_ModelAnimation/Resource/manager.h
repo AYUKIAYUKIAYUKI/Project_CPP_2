@@ -14,6 +14,7 @@
 #include "camera.h"
 #include "light.h"
 #include "input_keyboard.h"
+#include "input_mouse.h"
 #include "input_pad.h"
 
 //****************************************************
@@ -34,8 +35,8 @@ public:
 	void Draw();	// 描画処理
 
 	// <getter>
-	CCamera*			GetCamera() const;			// カメラを取得
-	CLight*				GetLight() const;			// ライトを取得
+	CCamera*	GetCamera() const;	// カメラを取得
+	CLight*		GetLight() const;	// ライトを取得
 	
 	// <static function>
 	static HRESULT Create(HINSTANCE hInstance, HWND hWnd);	// 生成
@@ -44,12 +45,13 @@ public:
 	// <static getter>
 	static CManager*		GetManager();	// マネージャーを取得
 	static CInputKeyboard*	GetKeyboard();	// キーボードを取得
+	static CInputMouse*		GetMouse();		// マウスを取得
 	static CInputPad*		GetPad();		// パッドを取得
 
 private:
 
 	// <special function>
-	CManager();		// デフォルトコンストラクタ
+	CManager();		// コンストラクタ
 	~CManager();	// デストラクタ
 
 	// <function>
@@ -57,10 +59,11 @@ private:
 	void	Uninit();								// 終了処理
 
 	// <datas>
-	CInputKeyboard*		m_pKeyboard;		// キーボード
-	CInputPad*			m_pPad;				// パッド
-	CCamera*			m_pCamera;			// カメラ
-	CLight*				m_pLight;			// ライト
+	CInputKeyboard*	m_pKeyboard;	// キーボード
+	CInputMouse*	m_pMouse;		// マウス
+	CInputPad*		m_pPad;			// パッド
+	CCamera*		m_pCamera;		// カメラ
+	CLight*			m_pLight;		// ライト
 
 	// <static data>
 	static CManager* m_pManager;	// マネージャーの本体

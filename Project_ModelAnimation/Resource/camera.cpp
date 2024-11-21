@@ -214,16 +214,6 @@ void CCamera::SetDistance(float fDistance)
 //============================================================================
 void CCamera::BranchMode()
 {
-	//if (CManager::GetKeyboard()->GetPress(DIK_F2))
-	//{
-	//	m_Rot.x = -D3DX_PI * 0.55f;
-	//}
-
-	//if (CManager::GetKeyboard()->GetPress(DIK_F3))
-	//{
-	//	m_Rot.x = 0.0f;
-	//}
-
 	// カメラ操作
 	Control();
 }
@@ -233,49 +223,31 @@ void CCamera::BranchMode()
 //============================================================================
 void CCamera::Control()
 {
-	// 移動上下
-	if (CManager::GetKeyboard()->GetPress(DIK_W))
-	{
-		m_PosTarget.y += 1.0f;
+	if (CManager::GetMouse()->GetPress(0))
+	{ 
+		// 移動上下
+		m_PosTarget.y += CManager::GetMouse()->GetMouseMove().y * 0.025f;
 	}
-	else if (CManager::GetKeyboard()->GetPress(DIK_S))
-	{
-		m_PosTarget.y -= 1.0f;
-	}
-
-	// 向き左右
-	if (CManager::GetKeyboard()->GetPress(DIK_RIGHT))
-	{
-		m_RotTarget.y += 0.02f;
-	}
-	else if (CManager::GetKeyboard()->GetPress(DIK_LEFT))
-	{
-		m_RotTarget.y -= 0.02f;
+	else if (CManager::GetMouse()->GetPress(1))
+	{ 
+		// 向き上下左右
+		m_RotTarget.x += CManager::GetMouse()->GetMouseMove().y * -0.01f;
+		m_RotTarget.y += CManager::GetMouse()->GetMouseMove().x * 0.01f;
 	}
 
-	// 向き上下
-	if (CManager::GetKeyboard()->GetPress(DIK_UP))
+	// 距離感リセット
+	if (CManager::GetMouse()->GetTrigger(2))
 	{
-		m_RotTarget.x += 0.02f;
-	}
-	else if (CManager::GetKeyboard()->GetPress(DIK_DOWN))
-	{
-		m_RotTarget.x -= 0.02f;
+		m_fDistance = 40.0f;
 	}
 
 	// ズームイン / アウト
-	if (CManager::GetKeyboard()->GetPress(DIK_AT) && m_fDistance > 10.0f)
+	m_fDistance += -CManager::GetMouse()->GetWheelScroll() * 0.05f;
+
+	// ズームインの下限を設定
+	if (m_fDistance < 10.0f)
 	{
-		m_fDistance -= 1.0f;
-	}
-	else if (CManager::GetKeyboard()->GetPress(DIK_COLON))
-	{
-		m_fDistance += 1.0f;
-	}
-	else if (CManager::GetKeyboard()->GetPress(DIK_BACKSLASH))
-	{
-		// 距離間リセット
-		m_fDistance = 40.0f;
+		m_fDistance = 10.0f;
 	}
 }
 

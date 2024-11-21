@@ -37,8 +37,8 @@ void CMotion_Manager::Update()
 	// ウィンドウを表示
 	ImVec2 Rect = { 600, 800 };
 	ImGui::SetNextWindowSize(Rect);
-	ImGui::SetNextWindowPos({ SCREEN_WIDTH - (50 + Rect.x) , 50 });
-	ImGui::Begin("Motion_Manager");
+	ImGui::SetNextWindowPos({ SCREEN_WIDTH - (Rect.x + 100), 50 });
+	ImGui::Begin("Edit MotionList");
 
 	// 編集
 	Edit();
@@ -61,8 +61,8 @@ void CMotion_Manager::Update()
 	// ウィンドウ表示終了
 	ImGui::End();
 
-	// デバッグ表示 (旧)
-	//PrintDebug();
+	// デバッグ表示
+	PrintDebug();
 }
 
 //============================================================================
@@ -197,6 +197,7 @@ void CMotion_Manager::Uninit()
 //============================================================================
 void CMotion_Manager::PrintDebug()
 {
+#if 0
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 	CRenderer::SetDebugString("総パーツ数：" + to_string(m_MotionSet->m_wMaxParts));
 	CRenderer::SetDebugString("総モーション数：" + to_string(m_MotionSet->m_wMaxMotion));
@@ -229,6 +230,16 @@ void CMotion_Manager::PrintDebug()
 			"Pos：" + utility::ToPrecision(pDest->PosTarget.x) + "：" + utility::ToPrecision(pDest->PosTarget.y) + "：" + utility::ToPrecision(pDest->PosTarget.z));
 	}
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+#else
+	// ウィンドウを表示
+	ImVec2 Rect = { 600, 500 };
+	ImGui::SetNextWindowSize(Rect);
+	ImGui::SetNextWindowPos({ 50, 50 });
+	ImGui::Begin("MotionManager Infomation");
+	ImGui::Text("Parts:%d", m_MotionSet->m_wMaxParts);
+	ImGui::Text("Motion:%d", m_MotionSet->m_wMaxMotion);
+	ImGui::End();
+#endif
 }
 
 //============================================================================
