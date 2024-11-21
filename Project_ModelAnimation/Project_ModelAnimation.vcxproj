@@ -27,6 +27,7 @@
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Resource\input_keyboard.cpp" />
+    <ClCompile Include="Resource\input_mouse.cpp" />
     <ClCompile Include="Resource\input_pad.cpp" />
     <ClCompile Include="resource\camera.cpp" />
     <ClCompile Include="resource\input.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="Resource\input_keyboard.h" />
+    <ClInclude Include="Resource\input_mouse.h" />
     <ClInclude Include="Resource\input_pad.h" />
     <ClInclude Include="resource\camera.h" />
     <ClInclude Include="resource\input.h" />

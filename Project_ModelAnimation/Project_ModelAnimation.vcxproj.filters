@@ -54,9 +54,18 @@
     <ClCompile Include="ImGui\imgui_draw.cpp">
       <Filter>&lt;ImGui&gt;</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\imgui_demo.cpp" />
-    <ClCompile Include="ImGui\imgui_tables.cpp" />
-    <ClCompile Include="ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="ImGui\imgui_widgets.cpp">
+      <Filter>&lt;ImGui&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_tables.cpp">
+      <Filter>&lt;ImGui&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_demo.cpp">
+      <Filter>&lt;ImGui&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\input_mouse.cpp">
+      <Filter>&lt;System&gt;\&lt;Input&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource\camera.h" />
@@ -121,7 +130,12 @@
     <ClInclude Include="ImGui\imstb_truetype.h">
       <Filter>&lt;ImGui&gt;</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\imstb_textedit.h" />
+    <ClInclude Include="ImGui\imstb_textedit.h">
+      <Filter>&lt;ImGui&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\input_mouse.h">
+      <Filter>&lt;System&gt;\&lt;Input&gt;</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Object&gt;">

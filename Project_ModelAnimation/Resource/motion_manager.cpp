@@ -37,7 +37,7 @@ void CMotion_Manager::Update()
 	// ウィンドウを表示
 	ImVec2 Rect = { 600, 800 };
 	ImGui::SetNextWindowSize(Rect);
-	ImGui::SetNextWindowPos({ SCREEN_WIDTH - (Rect.x + 100), 100, });
+	ImGui::SetNextWindowPos({ SCREEN_WIDTH - (50 + Rect.x) , 50 });
 	ImGui::Begin("Motion_Manager");
 
 	// 編集
@@ -61,8 +61,8 @@ void CMotion_Manager::Update()
 	// ウィンドウ表示終了
 	ImGui::End();
 
-	// デバッグ表示
-	PrintDebug();
+	// デバッグ表示 (旧)
+	//PrintDebug();
 }
 
 //============================================================================

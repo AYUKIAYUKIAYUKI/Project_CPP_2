@@ -232,7 +232,7 @@ void CObject::ReleaseAll()
 //============================================================================
 void CObject::UpdateAll()
 {
-#ifdef _DEBUG	// オブジェクト数を表示
+#if 0	// オブジェクト数を表示
 
 	CRenderer::SetDebugString("現在のオブジェクト数:" + std::to_string(m_nNumAll));
 
