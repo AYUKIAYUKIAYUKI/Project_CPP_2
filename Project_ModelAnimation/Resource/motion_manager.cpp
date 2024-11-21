@@ -362,7 +362,8 @@ void CMotion_Manager::EditKey()
 	ImGui::Text("Select:%d", m_wSelectKey);
 
 	// 総キー数の切り替え
-	if (CManager::GetKeyboard()->GetTrigger(DIK_F2) && GetSelectMotion()->wMaxKey > 1)
+	ImGui::BulletText("Edit Key");
+	if (ImGui::Button("--Key") && GetSelectMotion()->wMaxKey > 1)
 	{
 		// 総キー数をデクリメントし、ジェイソンデータに保存
 		GetSelectMotion()->wMaxKey--;
@@ -393,7 +394,8 @@ void CMotion_Manager::EditKey()
 			m_wSelectKey = GetSelectMotion()->wMaxKey - 1;
 		}
 	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_F3))
+	ImGui::SameLine();
+	if (ImGui::Button("++Key"))
 	{
 		// キー情報オブジェクトを新規作成
 		CMotion_Set::Key Key;
@@ -425,6 +427,8 @@ void CMotion_Manager::EditKey()
 		GetSelectMotion()->wMaxKey++;
 		m_Json["MaxKey"] = GetSelectMotion()->wMaxKey;
 	}
+	ImGui::SameLine();
+	ImGui::Text("MaxKey:%d", m_MotionSet->GetNowMotion()->wMaxKey);
 }
 
 //============================================================================
