@@ -14,6 +14,11 @@
 #include "renderer.h"
 
 //****************************************************
+// プリプロセッサディレクティブ
+//****************************************************
+#define SORT_ON_EXPORT 1	// エクスポート時に整理
+
+//****************************************************
 // usingディレクティブ
 //****************************************************
 using namespace abbr;
@@ -408,11 +413,13 @@ void CMotion_Manager::EditKey()
 			m_MotionSet->m_wNowKey = GetSelectMotion()->wMaxKey - 1;
 		}
 
+#if !SORT_ON_EXPORT
 		// 消去するキー番号のフレーム・目標値情報をジェイソンデータから消去
 		m_Json["MaxFrame"].erase(GetSelectMotion()->wMaxKey);
 		m_Json["ScaleTarget"].erase(GetSelectMotion()->wMaxKey);
 		m_Json["RotTarget"].erase(GetSelectMotion()->wMaxKey);
 		m_Json["PosTarget"].erase(GetSelectMotion()->wMaxKey);
+#endif	// _SORT_ON_EXPORT_
 
 		// キー情報のポインタを作成
 		CMotion_Set::Key* const pKey = &GetSelectMotion()->vpKey[GetSelectMotion()->wMaxKey];
@@ -453,11 +460,13 @@ void CMotion_Manager::EditKey()
 
 			// 新たなキーのパーツの目標値を設定し、ジェイソンデータに保存
 			pDest->ScaleTarget = { 1.0f, 1.0f, 1.0f };	// 目標縮尺
+			pDest->RotTarget = { VEC3_INIT };			// 目標向き
+			pDest->PosTarget = { VEC3_INIT };			// 目標座標
+#if !SORT_ON_EXPORT
 			m_Json["ScaleTarget"][GetSelectMotion()->wMaxKey][wCntModelParts] = { pDest->ScaleTarget.x, pDest->ScaleTarget.y, pDest->ScaleTarget.z };
-			pDest->RotTarget = { VEC3_INIT };	// 目標向き
 			m_Json["RotTarget"][GetSelectMotion()->wMaxKey][wCntModelParts] = { pDest->RotTarget.x, pDest->RotTarget.y, pDest->RotTarget.z };
-			pDest->PosTarget = { VEC3_INIT };	// 目標座標
 			m_Json["PosTarget"][GetSelectMotion()->wMaxKey][wCntModelParts] = { pDest->PosTarget.x, pDest->PosTarget.y, pDest->PosTarget.z };
+#endif	// _if !SORT_ON_EXPORT_
 		}
 
 		GetSelectMotion()->vpKey.push_back(Key);
@@ -489,9 +498,9 @@ void CMotion_Manager::EditFrame()
 	}
 
 	// 現在の再生フレームが総フレーム数を超えないよう制限
-	if (m_MotionSet->m_wNowFrame >= GetSelectKey()->nMaxFrame)
+	if (m_MotionSet->m_wNowFrame >= m_MotionSet->GetNowKey()->nMaxFrame)
 	{
-		m_MotionSet->m_wNowFrame = GetSelectKey()->nMaxFrame - 1;
+		m_MotionSet->m_wNowFrame = m_MotionSet->GetNowKey()->nMaxFrame - 1;
 	}
 
 	// 増減があればジェイソンデータを変更
@@ -628,6 +637,27 @@ void CMotion_Manager::Export()
 
 	if (Ofs.good())
 	{
+#if SORT_ON_EXPORT
+		// 元のデータを消去
+		m_Json["ScaleTarget"].clear();
+		m_Json["RotTarget"].clear();
+		m_Json["PosTarget"].clear();
+
+		for (WORD wCntKey = 0; wCntKey < m_MotionSet->m_apMotion[0].wMaxKey; ++wCntKey)
+		{
+			const CMotion_Set::Key* const pKey = &m_MotionSet->m_apMotion[0].vpKey[wCntKey];
+
+			for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_wMaxParts; ++wCntModelParts)
+			{
+				const CMotion_Set::KeyDest* const pDest = &pKey->apDest[wCntModelParts];
+
+				m_Json["ScaleTarget"][wCntKey][wCntModelParts] = { pDest->ScaleTarget.x, pDest->ScaleTarget.y, pDest->ScaleTarget.z };
+				m_Json["RotTarget"][wCntKey][wCntModelParts] = { pDest->RotTarget.x, pDest->RotTarget.y, pDest->RotTarget.z };
+				m_Json["PosTarget"][wCntKey][wCntModelParts] = { pDest->PosTarget.x, pDest->PosTarget.y, pDest->PosTarget.z };
+			}
+		}
+#endif	// _SORT_ON_EXPORT_
+
 		// ジェイソンデータをシリアライズ
 		Ofs << m_Json.dump(1, '	');	// 第一引数 -> インデント数, 第二引数 -> インデント形式
 
