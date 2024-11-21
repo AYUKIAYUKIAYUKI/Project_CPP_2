@@ -363,6 +363,7 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 
 	// ImGuiの表示スタイルを設定
 	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsLight();
 
 	// バックエンドの初期設定
 	ImGui_ImplWin32_Init(hWnd);
