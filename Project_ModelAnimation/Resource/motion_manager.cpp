@@ -232,12 +232,27 @@ void CMotion_Manager::PrintDebug()
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 #else
 	// ウィンドウを表示
-	ImVec2 Rect = { 600, 500 };
+	ImVec2 Rect = { 500, 800 };
 	ImGui::SetNextWindowSize(Rect);
 	ImGui::SetNextWindowPos({ 50, 50 });
 	ImGui::Begin("MotionManager Infomation");
-	ImGui::Text("Parts:%d", m_MotionSet->m_wMaxParts);
-	ImGui::Text("Motion:%d", m_MotionSet->m_wMaxMotion);
+	ImGui::Text("MaxParts:%d", m_MotionSet->m_wMaxParts);
+	ImGui::SameLine();
+	ImGui::Text("MaxMotion:%d", m_MotionSet->m_wMaxMotion);
+	ImGui::Separator();
+	ImGui::Text("PlayingMotion:%d :(%d)", m_MotionSet->m_wMaxMotion, m_MotionSet->m_wMaxMotion);
+	ImGui::Text("PlayingKey:%d :(%d)", m_MotionSet->m_wNowKey, m_MotionSet->GetNowMotion()->wMaxKey);
+	ImGui::Text("PlayingFrame:%d :(%d)", m_MotionSet->m_wNowFrame, m_MotionSet->GetNowKey()->nMaxFrame);
+	for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_wMaxParts; ++wCntModelParts)
+	{
+		const CMotion_Set::KeyDest* const pDest = &GetSelectKey()->apDest[wCntModelParts];
+		const CObject_Parts* const pParts = m_MotionSet->m_vpModelParts[wCntModelParts];
+		ImGui::Separator();
+		ImGui::BulletText("Parts[%d] KeyDest Infomation", wCntModelParts);
+		ImGui::Text("Scale[ X:(%.2f / %.2f) X:(%.2f / %.2f) X:(%.2f / %.2f) ]", pParts->GetScale().x, pDest->ScaleTarget.x, pParts->GetScale().y, pDest->ScaleTarget.y, pParts->GetScale().z, pDest->ScaleTarget.z);
+		ImGui::Text("Rot[ X:(%.2f / %.2f) X:(%.2f / %.2f) X:(%.2f / %.2f) ]", pParts->GetRot().x, pDest->RotTarget.x, pParts->GetRot().y, pDest->RotTarget.y, pParts->GetRot().z, pDest->RotTarget.z);
+		ImGui::Text("Pos[ X:(%.2f / %.2f) X:(%.2f / %.2f) X:(%.2f / %.2f) ]", pParts->GetPos().x, pDest->PosTarget.x, pParts->GetPos().y, pDest->PosTarget.y, pParts->GetPos().z, pDest->PosTarget.z);
+	}
 	ImGui::End();
 #endif
 }
