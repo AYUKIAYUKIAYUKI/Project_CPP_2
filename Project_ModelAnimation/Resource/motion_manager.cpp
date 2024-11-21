@@ -35,7 +35,7 @@ CMotion_Manager* CMotion_Manager::m_pMotionManager = nullptr;	// ƒ‚[ƒVƒ‡ƒ“ƒ}ƒl
 void CMotion_Manager::Update()
 {
 	// ƒEƒBƒ“ƒhƒE‚ğ•\¦
-	ImVec2 Rect = { 600, 800 };
+	ImVec2 Rect = { 600, 850 };
 	ImGui::SetNextWindowSize(Rect);
 	ImGui::SetNextWindowPos({ SCREEN_WIDTH - (Rect.x + 100), 50 });
 	ImGui::Begin("Edit MotionList");
@@ -149,6 +149,7 @@ CMotion_Manager::CMotion_Manager() :
 	m_wSelectParts{ 0 },
 	m_wSelectMotion{ 0 },
 	m_wSelectKey{ 0 },
+	m_bPartsAppeal{ false },
 	m_bPlay{ false },
 	m_bShowKeyEnd{ false }
 {
@@ -173,6 +174,9 @@ HRESULT CMotion_Manager::Init()
 
 	// ƒ‚[ƒVƒ‡ƒ“ƒZƒbƒg‚ğ¶¬
 	m_MotionSet = CMotion_Set::Create(m_Json);
+
+	// ‘I‘ğƒp[ƒc‚ğƒAƒs[ƒ‹
+	m_bPartsAppeal = true;
 
 	return S_OK;
 }
@@ -232,7 +236,7 @@ void CMotion_Manager::PrintDebug()
 	CRenderer::SetDebugString("");
 #else
 	// ƒEƒBƒ“ƒhƒE‚ğ•\¦
-	ImVec2 Rect = { 500, 800 };
+	ImVec2 Rect = { 500, 900 };
 	ImGui::SetNextWindowSize(Rect);
 	ImGui::SetNextWindowPos({ 50, 50 });
 	ImGui::Begin("MotionManager Infomation");
@@ -290,7 +294,7 @@ void CMotion_Manager::Edit()
 
 	// ƒGƒNƒXƒ|[ƒg
 	ImGui::Separator();
-	if (ImGui::Button("Export Edit Data"))
+	if (ImGui::Button("Export edit data"))
 	{
 		Export();
 	}
@@ -301,9 +305,12 @@ void CMotion_Manager::Edit()
 //============================================================================
 void CMotion_Manager::EditParts()
 {
-	// ‘I‘ğƒp[ƒcØ‚è‘Ö‚¦
+	// ‘I‘ğƒp[ƒc‚ÌƒAƒs[ƒ‹Ø‚è‘Ö‚¦
 	ImGui::Separator();
 	ImGui::BulletText("Select Parts");
+	ImGui::Checkbox("Appeal select parts", &m_bPartsAppeal);
+
+	// ‘I‘ğƒp[ƒcØ‚è‘Ö‚¦
 	if (ImGui::Button("FirstParts"))
 	{
 		m_wSelectParts = 0;
@@ -329,7 +336,7 @@ void CMotion_Manager::EditParts()
 	// ‘I‘ğƒp[ƒc‚ğ“§‰ß
 	for (WORD wCntParts = 0; wCntParts < m_MotionSet->m_vpModelParts.size(); ++wCntParts)
 	{
-		if (m_wSelectParts == wCntParts)
+		if (m_wSelectParts == wCntParts && m_bPartsAppeal)
 		{
 			m_MotionSet->m_vpModelParts[wCntParts]->SetCol({ 1.0f, 0.5f, 0.25f, 0.25f });
 			m_MotionSet->m_vpModelParts[wCntParts]->SetUseCol(true);
@@ -628,7 +635,7 @@ void CMotion_Manager::Reset()
 	// ƒGƒNƒXƒ|[ƒgƒ{ƒ^ƒ“‚Ì‰¡
 	ImGui::SameLine();
 
-	if (ImGui::Button("Reset Edit Data"))
+	if (ImGui::Button("Reset edit data"))
 	{
 		// ‘I‘ğ”Ô†î•ñ‚ğ‰Šú‰»
 		m_wSelectParts = 0;
