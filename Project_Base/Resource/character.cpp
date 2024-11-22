@@ -28,7 +28,8 @@ using namespace abbr;
 //============================================================================
 CCharacter::CCharacter() :
 	CObject_X{ LAYER::BG },
-	m_fCorrectionCoef{ 0.0f },
+	m_fCorrectCoef{ 0.0f },
+	m_fOldDirection{ 0.0f },
 	m_fDirection{ 0.0f },
 	m_fMoveSpeed{ 0.0f },
 	m_RotTarget{ VEC3_INIT },
@@ -83,6 +84,8 @@ void CCharacter::Update()
 
 	// Xオブジェクトの更新処理
 	CObject_X::Update();
+
+	m_fOldDirection = m_fDirection;
 }
 
 //============================================================================
@@ -95,11 +98,19 @@ void CCharacter::Draw()
 }
 
 //============================================================================
-// 補正係数を設定
+// 補正強度を設定
 //============================================================================
-void CCharacter::SetCorrectionCoef(float fCoef)
+void CCharacter::SetCorrectCoef(float fCoef)
 {
-	m_fCorrectionCoef = fCoef;
+	m_fCorrectCoef = fCoef;
+}
+
+//============================================================================
+// 過去の方角を取得
+//============================================================================
+const float& CCharacter::GetOldDirection() const
+{
+	return m_fOldDirection;
 }
 
 //============================================================================
@@ -212,12 +223,12 @@ void CCharacter::CorrectToTarget()
 	// 目標向きへ補正
 	Vec3 NewRot = GetRot();
 	utility::AdjustAngle(NewRot.y, m_RotTarget.y);	// 角度の差を補正
-	NewRot += (m_RotTarget - NewRot) * m_fCorrectionCoef;
+	NewRot += (m_RotTarget - NewRot) * m_fCorrectCoef;
 	SetRot(NewRot);
 
 	// 目標座標へ移動
 	Vec3 NewPos = GetPos();
-	NewPos += (m_PosTarget - NewPos) * m_fCorrectionCoef;
+	NewPos += (m_PosTarget - NewPos) * m_fCorrectCoef;
 	SetPos(NewPos);
 }
 

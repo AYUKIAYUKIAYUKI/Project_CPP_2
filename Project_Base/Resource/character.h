@@ -31,7 +31,10 @@ public:
 	void	Draw() override;	// •`‰æˆ—
 
 	// <setter>
-	void SetCorrectionCoef(float fCoef);	// •â³ŒW”‚ğİ’è
+	void SetCorrectCoef(float fCoef);	// •â³‹­“x‚ğİ’è
+
+	// <getter>
+	const float& GetOldDirection() const;	// ‰ß‹‚Ì•ûŠp‚ğæ“¾
 
 	// <getter/setter>
 	const float& GetDirection() const;		// •ûŠp‚ğæ“¾
@@ -70,7 +73,8 @@ protected:
 private:
 
 	// <data>
-	float		m_fCorrectionCoef;	// •â³ŒW”
+	float		m_fCorrectCoef;		// •â³‹­“x
+	float		m_fOldDirection;	// ‰ß‹‚Ì•ûŠp
 	float		m_fDirection;		// •ûŠp
 	float		m_fMoveSpeed;		// ˆÚ“®‘¬“x
 	D3DXVECTOR3	m_RotTarget;		// –Ú•WŒü‚«

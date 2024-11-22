@@ -70,8 +70,8 @@ HRESULT CPlayer::Init()
 		m_pState = DBG_NEW CPlayer_State_Default();
 	}
 	
-	// 補正係数を設定
-	SetCorrectionCoef(COEF_ADJUST);
+	// 補正強度を設定
+	SetCorrectCoef(CORRECT_COEF);
 
 	// 初期方角を設定
 	SetDirection(D3DX_PI * -0.5f);
@@ -121,14 +121,14 @@ void CPlayer::Update()
 	// ステートの更新
 	m_pState->Update();
 
+	// 高さの補正
+	AdjustHeight();
+
 	// 自動で目標向きを移動方向に向ける
 	AutoSetRotTarget();
 
 	// 自動で目標座標を変動した方角に合わせる
 	AutoSetPosTarget();
-
-	// 高さの補正
-	AdjustHeight();
 
 	// 当たり判定
 	HitCheck();
@@ -143,7 +143,7 @@ void CPlayer::Update()
 	if (ImGui::Begin("Player Param"))
 	{
 		ImGui::Text("State:%s", typeid(*m_pState).name());
-		ImGui::Text("Direction:%.1f", GetDirection() * (180 / D3DX_PI));
+		ImGui::Text("Direction:%.3f", GetDirection() * (180 / D3DX_PI));
 		ImGui::Text("Speed:%.1f", GetMoveSpeed());
 		ImGui::Text("Rot:X %.1f:Y %.1f:Z %.1f", GetRot().x * (180 / D3DX_PI), GetRot().y * (180 / D3DX_PI), GetRot().z * (180 / D3DX_PI));
 		ImGui::Text("RotTarget:X %.1f:Y %.1f:Z %.1f", GetRotTarget().x * (180 / D3DX_PI), GetRotTarget().y * (180 / D3DX_PI), GetRotTarget().z * (180 / D3DX_PI));
@@ -416,11 +416,22 @@ void CPlayer::HitCheck()
 			}
 			case 3:	// 左
 			{
+				// 過去の方角へ戻す
+				SetDirection(GetOldDirection());
+
+				// 目標座標を再設定
+				AutoSetPosTarget();
 
 				break;
 			}
 			case 4:	// 右
 			{
+				// 過去の方角へ戻す
+				SetDirection(GetOldDirection());
+
+				// 目標座標を再設定
+				AutoSetPosTarget();
+
 				break;
 			}
 			default:
