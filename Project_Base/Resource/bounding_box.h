@@ -22,7 +22,7 @@ class CBounding_Box : public CBounding_Volume
 public:
 
 	// <special function>
-	CBounding_Box();				// デフォルトコンストラクタ
+	CBounding_Box();				// コンストラクタ
 	CBounding_Box(CObject_X* pObj);	// ボックス表示コンストラクタ
 	~CBounding_Box() override;		// デストラクタ
 

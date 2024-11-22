@@ -21,7 +21,7 @@ class CInputKeyboard : public CInput
 public:
 
 	// <special function>
-	CInputKeyboard();	// デフォルトコンストラクタ
+	CInputKeyboard();	// コンストラクタ
 	~CInputKeyboard();	// デストラクタ
 
 	// <function>

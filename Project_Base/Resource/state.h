@@ -15,7 +15,7 @@ class CState
 {
 public:
 
-	CState();			// デフォルトコンストラクタ
+	CState();			// コンストラクタ
 	virtual ~CState();	// デストラクタ
 
 	virtual void Update() = 0;	// 更新処理

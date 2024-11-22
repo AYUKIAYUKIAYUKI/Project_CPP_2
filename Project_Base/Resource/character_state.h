@@ -22,7 +22,7 @@ class CCharacter_State : public CState
 public:
 
 	// <special function>
-	CCharacter_State();						// デフォルトコンストラクタ
+	CCharacter_State();						// コンストラクタ
 	virtual ~CCharacter_State() override;	// デストラクタ
 
 	// <virtual function>

@@ -44,7 +44,7 @@ public:
 	};
 
 	// <special function>
-	CObject();								// デフォルトコンストラクタ
+	CObject();								// コンストラクタ
 	CObject(LAYER Priority = LAYER::BG);	// 描画優先度指定コンストラクタ
 	virtual ~CObject() = 0;					// デストラクタ
 

@@ -61,7 +61,7 @@ public:
 
 private:
 
-	CModel_X_Manager();		// デフォルトコンストラクタ
+	CModel_X_Manager();		// コンストラクタ
 	~CModel_X_Manager();	// デストラクタ
 
 	void Create();									// 生成

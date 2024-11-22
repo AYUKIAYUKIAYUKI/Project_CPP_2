@@ -21,7 +21,7 @@ class CCharacter : public CObject_X
 public:
 
 	// <special function>
-	CCharacter();					// デフォルトコンストラクタ
+	CCharacter();					// コンストラクタ
 	virtual ~CCharacter() override;	// デストラクタ
 
 	// <function>

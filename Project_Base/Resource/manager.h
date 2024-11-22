@@ -60,7 +60,7 @@ public:
 private:
 
 	// <special function>
-	CManager();		// デフォルトコンストラクタ
+	CManager();		// コンストラクタ
 	~CManager();	// デストラクタ
 
 	// <function>

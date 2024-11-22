@@ -21,7 +21,7 @@ class CMesh_Dome : public CObject
 public:
 
 	// <special funvtion>
-	CMesh_Dome();	// デフォルトコンストラクタ
+	CMesh_Dome();	// コンストラクタ
 	~CMesh_Dome();	// デストラクタ
 
 	// <function>

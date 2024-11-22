@@ -20,7 +20,7 @@ class CGame : public CScene
 {
 public:
 
-	CGame();			// デフォルトコンストラクタ
+	CGame();			// コンストラクタ
 	~CGame() override;	// デストラクタ
 
 	HRESULT Init() override;	// 初期設定

@@ -16,7 +16,7 @@ class CCamera
 public:
 
 	// <special function>
-	CCamera();	// デフォルトコンストラクタ
+	CCamera();	// コンストラクタ
 	~CCamera();	// デストラクタ
 
 	// <funciton>

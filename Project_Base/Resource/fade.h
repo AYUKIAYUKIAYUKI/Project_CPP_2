@@ -30,7 +30,7 @@ public:
 
 private:
 
-	CFade();	// デフォルトコンストラクタ
+	CFade();	// コンストラクタ
 	~CFade();	// デストラクタ
 
 	void Create();	// 生成

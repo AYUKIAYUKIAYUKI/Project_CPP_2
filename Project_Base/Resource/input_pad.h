@@ -54,7 +54,7 @@ public:
 	};
 
 	// <special function>
-	CInputPad();	// デフォルトコンストラクタ
+	CInputPad();	// コンストラクタ
 	~CInputPad();	// デストラクタ
 
 	// <function>

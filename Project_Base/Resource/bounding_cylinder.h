@@ -23,7 +23,7 @@ class CBounding_Cylinder : public CBounding_Volume
 public:
 
 	// <special function>
-	CBounding_Cylinder();					// デフォルトコンストラクタ
+	CBounding_Cylinder();					// コンストラクタ
 	CBounding_Cylinder(CObject_X* pObj);	// シリンダー表示コンストラクタ
 	~CBounding_Cylinder() override;			// デストラクタ
 

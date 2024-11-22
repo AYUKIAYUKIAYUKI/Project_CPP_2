@@ -26,7 +26,7 @@ class CBlock : public CObject_X
 public:
 
 	// <special function>
-	CBlock();	// デフォルトコンストラクタ
+	CBlock();	// コンストラクタ
 	~CBlock();	// デストラクタ
 
 	// <function>

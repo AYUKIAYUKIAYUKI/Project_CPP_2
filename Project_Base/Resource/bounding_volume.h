@@ -16,7 +16,7 @@ class CBounding_Volume
 public:
 
 	// <special function>
-	CBounding_Volume();					// デフォルトコンストラクタ
+	CBounding_Volume();					// コンストラクタ
 	virtual ~CBounding_Volume() = 0;	// デストラクタ
 
 	// <getter/setter>

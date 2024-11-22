@@ -36,7 +36,7 @@ public:
 	static constexpr float COEF_ADJUST = 0.5f;
 
 	// <special function>
-	CPlayer();	// デフォルトコンストラクタ
+	CPlayer();	// コンストラクタ
 	~CPlayer();	// デストラクタ
 
 	// <function>

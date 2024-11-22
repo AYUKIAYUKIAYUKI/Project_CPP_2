@@ -21,7 +21,7 @@ class CInput
 public:
 
 	// <special function>
-	CInput();	// デフォルトコンストラクタ
+	CInput();	// コンストラクタ
 	 ~CInput();	// デストラクタ
 
 	// <function>

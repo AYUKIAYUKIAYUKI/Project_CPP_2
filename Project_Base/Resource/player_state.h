@@ -22,7 +22,7 @@ class CPlayer_State : public CCharacter_State
 public:
 
 	// <special function>
-	CPlayer_State();					// デフォルトコンストラクタ
+	CPlayer_State();					// コンストラクタ
 	CPlayer_State(CPlayer* pPlayer);	// プレイヤー取得コンストラクタ
 	virtual ~CPlayer_State() override;	// デストラクタ
 

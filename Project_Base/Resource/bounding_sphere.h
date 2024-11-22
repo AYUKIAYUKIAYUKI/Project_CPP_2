@@ -23,7 +23,7 @@ class CBounding_Sphere : public CBounding_Volume
 public:
 
 	// <special function>
-	CBounding_Sphere();					// デフォルトコンストラクタ
+	CBounding_Sphere();					// コンストラクタ
 	CBounding_Sphere(CObject_X* pObj);	// スフィア表示コンストラクタ
 	~CBounding_Sphere() override;		// デストラクタ
 

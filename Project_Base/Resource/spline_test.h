@@ -21,7 +21,7 @@ class CSpline_Test
 {
 public:
 
-	CSpline_Test();		// デフォルトコンストラクタ
+	CSpline_Test();		// コンストラクタ
 	~CSpline_Test();	// デストラクタ
 
 	HRESULT Init();		// 初期設定
