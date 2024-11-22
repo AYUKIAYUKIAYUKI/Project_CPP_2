@@ -259,7 +259,7 @@ void CField_Manager::GenerateBlock()
 		do
 		{
 			// ランダムに方角をずらす
-			fRandomRange = utility::GetRandomValue<float>();
+			//fRandomRange = utility::GetRandomValue<float>();
 
 			// 生成用の座標を決定
 			NewPos.x = cosf(fDirection + fRandomRange) * FIELD_RADIUS;
@@ -275,7 +275,7 @@ void CField_Manager::GenerateBlock()
 		} while (!m_pFan->DetectInFanRange(NewPos));
 
 		// 向きを決定
-		NewRot.y = -(fDirection + fRandomRange);
+		NewRot.y = (fDirection + fRandomRange) + D3DX_PI * 0.5f;
 
 		// ブロックを生成
 		CBlock::Create(NewPos, NewRot);
@@ -408,7 +408,7 @@ void CField_Manager::UpdateHUD()
 //============================================================================
 void CField_Manager::DEBUG_CIRCLE()
 {
-	float fDirection = D3DX_PI;						// 方角
+	float fDirection = 0.0f;						// 方角
 	float fAdder = (D3DX_PI * 2.0f) / MAX_BLOCK;	// 増加量
 
 	for (WORD i = 0; i < MAX_BLOCK; ++i)

@@ -69,6 +69,9 @@ HRESULT CPlayer::Init()
 	{
 		m_pState = DBG_NEW CPlayer_State_Default();
 	}
+	
+	// 補正係数を設定
+	SetCorrectionCoef(COEF_ADJUST);
 
 	// 初期方角を設定
 	SetDirection(D3DX_PI * -0.5f);
@@ -93,7 +96,7 @@ HRESULT CPlayer::Init()
 //============================================================================
 void CPlayer::Uninit()
 {
-	// ステートー破棄
+	// ステート破棄
 	if (m_pState)
 	{
 		// ステートの破棄
@@ -341,7 +344,6 @@ void CPlayer::HitCheck()
 			continue;
 		}
 
-#if 1
 		// バウンディングシリンダーのパラメータをコピー
 		const Vec3& CylinderPosTarget = GetPosTarget();
 		const Vec3& CylinderOldPos = GetPos();
@@ -350,57 +352,23 @@ void CPlayer::HitCheck()
 
 		// バウンディングボックスのパラメータをコピー
 		const Vec3& BoxSize = pBlock->GetSize();
-		TESTTEST->SetScale(BoxSize);
 		const Vec3& BoxPos = pBlock->GetPos();
 		const float& fBoxDirection = pBlock->GetRot().y;
+		{
+			TESTTEST->SetScale(BoxSize);
+		}
 
 		// ボックスの中心点からシリンダーの座標への相対座標を計算
 		const Vec3& RelativePos = CylinderPosTarget - BoxPos;
 		const Vec3& RelativeOldPos = CylinderOldPos - BoxPos;
 
-		// 相対座標に、ボックスの回転角度分を打ち消す回転行列を適用
+		// 相対座標に、ボックスの回転角を打ち消す回転行列を適用
 		const Vec3& ResultPos = utility::RotatePointAroundY(-fBoxDirection, RelativePos);
 		const Vec3& ResultOldPos = utility::RotatePointAroundY(-fBoxDirection, RelativeOldPos);
-
-		ててて->SetScale({ GetBndCylinder()->GetRadius(), GetBndCylinder()->GetHeight(), GetBndCylinder()->GetRadius() });
-		ててて->SetPos(ResultPos);
-#else
 		{
-			// バウンディングシリンダーのパラメータをコピー
-			const Vec3& CylinderPosTarget = GetPosTarget();
-			const Vec3& CylinderOldPos = GetPos();
-			const float& CylinderRadius = GetRadius();
-			const float& CylinderHeight = GetHeight();
-
-			// バウンディングボックスのパラメータをコピー
-			const Vec3& BoxSize = pBlock->GetSize();
-			const Vec3& BoxPos = pBlock->GetPos();
-			const float& fBoxDirection = pBlock->GetRot().y;
-
-			// ボックスの中心点からシリンダーの座標への相対座標を計算
-#if 0
-			const Vec3& RelativePos = CylinderPosTarget - BoxPos;
-			const Vec3& RelativeOldPos = CylinderOldPos - BoxPos;
-#else
-			Vec3 RelativePos = BoxPos - CylinderPosTarget;
-			RelativePos.y = -RelativePos.y;
-			Vec3 RelativeOldPos = BoxPos - CylinderOldPos;
-			RelativeOldPos.y = -RelativeOldPos.y;
-#endif
-
-			// 相対座標に、ボックスの回転角度分を打ち消す回転行列を適用
-			const Vec3& ResultPos = utility::RotatePointAroundY(fBoxDirection, RelativePos);
-			const Vec3& ResultOldPos = utility::RotatePointAroundY(fBoxDirection, RelativeOldPos);
-
-#if 0
-			CRenderer::SetDebugString("プあああああああ : " + to_string(BoxPos.x) + " :  " + to_string(BoxPos.y) + " : " + to_string(BoxPos.z));
-			CRenderer::SetDebugString("プレイヤーrelati : " + to_string(RelativePos.x) + " :  " + to_string(RelativePos.y) + " : " + to_string(RelativePos.z));
-			CRenderer::SetDebugString("プレイヤーoldrel : " + to_string(RelativeOldPos.x) + " :  " + to_string(RelativeOldPos.y) + " : " + to_string(RelativeOldPos.z));
-			CRenderer::SetDebugString("プレイヤーbububu : " + to_string(ResultPos.x) + " :  " + to_string(ResultPos.y) + " : " + to_string(ResultPos.z));
-			CRenderer::SetDebugString("プレイヤーbibibi : " + to_string(ResultOldPos.x) + " :  " + to_string(ResultOldPos.y) + " : " + to_string(ResultOldPos.z));
-#endif
+			ててて->SetScale({ GetBndCylinder()->GetRadius(), GetBndCylinder()->GetHeight(), GetBndCylinder()->GetRadius() });
+			ててて->SetPos(ResultPos);
 		}
-#endif
 
 		// ボックスの回転量を打ち消したと仮定し、シリンダーの相対座標を用いて衝突判定
 		// (ボックスの座標に関わらず、仮定したAABBとシリンダーの相対距離で判定するだけなので、渡すボックス座標は原点にする)
@@ -420,7 +388,7 @@ void CPlayer::HitCheck()
 			case 0:
 				break;
 
-			case 1:
+			case 1: // 上
 			{
 				// Y軸方向の加速度を初期化
 				SetVelY(0.0f);
@@ -433,7 +401,7 @@ void CPlayer::HitCheck()
 			
 				break;
 			}
-			case 2:
+			case 2: // 下
 			{
 				// Y軸方向の加速度を重力方向へ固定
 				SetVelY(0.0f);
@@ -446,11 +414,12 @@ void CPlayer::HitCheck()
 
 				break;
 			}
-			case 3:
+			case 3:	// 左
 			{
+
 				break;
 			}
-			case 4:
+			case 4:	// 右
 			{
 				break;
 			}

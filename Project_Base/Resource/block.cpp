@@ -94,24 +94,30 @@ void CBlock::Uninit()
 //============================================================================
 void CBlock::Update()
 {
-#if 0
 	// すぐにけせ
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	ImGui::Begin("Block Param");
+	static float fRotY = 0.0f;
+	if (ImGui::Button("--"))
+		fRotY += D3DX_PI * -0.1f;
+	ImGui::SameLine();
+	if (ImGui::Button("++"))
+		fRotY += D3DX_PI * 0.1f;
+	ImGui::SameLine();
+	ImGui::SliderFloat("Add RotY", &fRotY, -D3DX_PI, D3DX_PI);
 	Vec3 NewRot = GetRot();
-	NewRot.y += D3DX_PI * 0.01f;
+	NewRot.y = fRotY;
 	SetRot(NewRot);
-#endif
 
 	// 基底クラスの更新処理
 	CObject_X::Update();
 
-#if 0
+#if 1
 #ifdef _DEBUG
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-	CRenderer::SetDebugString("岩サイズ　 : " + to_string(GetSize().x) + " :  " + to_string(GetSize().y) + " : " + to_string(GetSize().z));
-	CRenderer::SetDebugString("岩向き　　 : " + to_string(GetRot().x * (180 / D3DX_PI)) + " :  " + to_string(GetRot().y * (180 / D3DX_PI)) + " : " + to_string(GetRot().z * (180 / D3DX_PI)));
-	CRenderer::SetDebugString("岩θ　　　　: " + to_string(GetRot().y));
-	CRenderer::SetDebugString("岩座標　　 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+	ImGui::Text("Size::X %.2f:Y %.2f:Z %.2f", GetSize().x, GetSize().y, GetSize().z);
+	ImGui::Text("Rot:X %.2f:Y %.2f:Z %.2f", GetRot().x * (180 / D3DX_PI), GetRot().y * (180 / D3DX_PI), GetRot().z * (180 / D3DX_PI));
+	ImGui::Text("Pos:X %.2f:Y %.2f:Z %.2f", GetPos().x, GetPos().y, GetPos().z);
+	ImGui::End();
 #endif // _DEBUG
 #endif
 }

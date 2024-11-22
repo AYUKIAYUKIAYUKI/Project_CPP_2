@@ -30,6 +30,9 @@ public:
 	void	Update() override;	// XVˆ—
 	void	Draw() override;	// •`‰æˆ—
 
+	// <setter>
+	void SetCorrectionCoef(float fCoef);	// •â³ŒW”‚ğİ’è
+
 	// <getter/setter>
 	const float& GetDirection() const;		// •ûŠp‚ğæ“¾
 	void SetDirection(float fDirection);	// •ûŠp‚ğİ’è
