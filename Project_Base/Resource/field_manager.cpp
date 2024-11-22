@@ -140,6 +140,24 @@ void CField_Manager::Update()
 	// 扇形の方角をプレイヤーの方角に
 	m_pFan->SetDirection(m_pPlayer->GetDirection());
 
+	/* テスト用 */
+	{	
+		// ミドルオブジェクトを取得
+		CObject* pObj = CObject::GetTopObject(CObject::LAYER::MIDDLE);
+
+		while (pObj != nullptr)
+		{
+			if (pObj->GetType() == CObject::TYPE::BLOCK)
+			{
+				CBlock* pBlock = nullptr;
+				pBlock = utility::DownCast(pBlock, pObj);
+				m_pFan->DetectInFanRange(pBlock->GetPos());
+				break;
+			}
+			pObj = pObj->GetNext();
+		}
+	}
+
 	// 扇形の更新処理
 	m_pFan->Update();
 

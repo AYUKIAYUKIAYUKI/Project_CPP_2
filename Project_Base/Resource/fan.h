@@ -34,10 +34,6 @@ public:
 	const float& GetDirection() const;		// 方角を取得
 	void SetDirection(float fDirection);	// 方角を設定
 
-	//// <getter/setter>
-	//const float& GetLength() const;	// 長さを取得
-	//void SetLength(float fLength);	// 長さを設定
-
 	// <getter/setter>
 	const float& GetRange() const;	// 範囲を取得
 	void SetRange(float fRange);	// 範囲を設定
@@ -51,8 +47,8 @@ private:
 	/// <summary> 描画用頂点数 </summary>
 	static constexpr WORD NUM_VTX = 3;
 
-	/// <summary> 描画用プリミティブ数 </summary>
-	static constexpr WORD NUM_PRIM = 2;
+	/// <summary> 方向ベクトルの数 </summary>
+	static constexpr WORD NUM_VEC = 2;
 
 	// <special fuction>
 	CFan();		// コンストラクタ
@@ -66,11 +62,12 @@ private:
 	void	SetMtxWorld();		// ワールド行列設定
 
 	// <data>
-	LPDIRECT3DVERTEXBUFFER9	m_pVtxBuff;		// 頂点バッファのポインタ
-	D3DXMATRIX				m_MtxWorld;		// ワールド行列
-	D3DXVECTOR3				m_Pos;			// 座標
-	float					m_fDirection;	// 方角
-	float					m_fRange;		// 範囲
+	LPDIRECT3DVERTEXBUFFER9	m_pVtxBuff;			// 頂点バッファのポインタ
+	D3DXMATRIX				m_MtxWorld;			// ワールド行列
+	D3DXVECTOR3				m_Pos;				// 座標
+	D3DXVECTOR3				m_DirVec[NUM_VEC];	// 方向ベクトル
+	float					m_fDirection;		// 方角
+	float					m_fRange;			// 範囲
 };
 
 #endif	// _FAN_H_

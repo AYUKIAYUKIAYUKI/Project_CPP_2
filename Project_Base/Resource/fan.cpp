@@ -50,7 +50,7 @@ void CFan::Update()
 
 #ifdef _DEBUG
 
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");;
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 	CRenderer::SetDebugString("扇形の方角：" + to_string(m_fDirection));
 	CRenderer::SetDebugString("扇形の範囲：" + to_string(m_fRange));
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
@@ -84,7 +84,7 @@ void CFan::Draw()
 	// 線の描画
 	pDev->DrawPrimitive(D3DPT_LINESTRIP,	// プリミティブの種類
 		0,									// 頂点情報の先頭アドレス
-		NUM_PRIM);							// プリミティブ数
+		NUM_VEC - 1);						// プリミティブ数
 
 	// ライトをオン
 	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
@@ -95,6 +95,25 @@ void CFan::Draw()
 //============================================================================
 bool CFan::DetectInFanRange(D3DXVECTOR3 Pos)
 {
+	// 対象物へのベクトルを出す
+	Vec3 OtherVec = Pos - m_Pos;
+
+	// 対象物へのベクトルを正規化
+	D3DXVec3Normalize(&OtherVec, &OtherVec);
+
+	// 対象物への方向ベクトルと扇形方向ベクトルから内積を作成
+	float fDot = m_DirVec[0].x * OtherVec.x + m_DirVec[0].z * OtherVec.z;
+	
+	// 対象物への方向ベクトルと扇形方向のベクトルから外積を作成
+	float fCross = m_DirVec[0].x * OtherVec.z - m_DirVec[0].z * OtherVec.x;
+
+#if 1
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+	CRenderer::SetDebugString("Dot  ：" + to_string(fDot));
+	CRenderer::SetDebugString("Cross：" + to_string(fCross));
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+#endif
+
 	return 0;
 }
 
@@ -218,6 +237,7 @@ CFan* CFan::Create(D3DXVECTOR3 Pos, float fDirection, float fRange)
 CFan::CFan() :
 	m_pVtxBuff{ nullptr },
 	m_Pos{ VEC3_INIT },
+	m_DirVec{ VEC3_INIT, VEC3_INIT },
 	m_fDirection{ 0.0f },
 	m_fRange{ 0.0f }
 {
@@ -317,10 +337,8 @@ void CFan::Uninit()
 void CFan::SetVtx()
 {
 	// 方角に合わせて範囲分の方向ベクトルを2本作成
-	Vec3 Vec[2] = { 
-		Vec3(cosf(m_fDirection + m_fRange), 0, sin(m_fDirection + m_fRange)),
-		Vec3(cosf(m_fDirection - m_fRange), 0, sin(m_fDirection - m_fRange))
-	};
+	m_DirVec[0] = { cosf(m_fDirection + m_fRange), 0, sin(m_fDirection + m_fRange) };
+	m_DirVec[1] = { cosf(m_fDirection - m_fRange), 0, sin(m_fDirection - m_fRange) };
 
 	// 頂点情報へのポインタ
 	VERTEX_3D* pVtx = nullptr;
@@ -329,13 +347,17 @@ void CFan::SetVtx()
 	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 	
 	// 頂点座標の設定
-	pVtx[0].pos = Vec[0] * CField_Manager::FIELD_RADIUS;
+	pVtx[0].pos = m_DirVec[0] * CField_Manager::FIELD_RADIUS;
 	pVtx[1].pos = m_Pos;
-	pVtx[2].pos = Vec[1] * CField_Manager::FIELD_RADIUS;
+	pVtx[2].pos = m_DirVec[1] * CField_Manager::FIELD_RADIUS;
 	
 	// すぐにけせ
+#if 0
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 	for (int i = 0; i < 2; ++i)
-	CRenderer::SetDebugString("Vec" + to_string(i) + "：" + to_string(Vec[i].x) + "：" + to_string(Vec[i].z));
+	CRenderer::SetDebugString("方向ベクトル" + to_string(i) + "：" + to_string(m_DirVec[i].x) + "：" + to_string(m_DirVec[i].z));
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+#endif
 
 	// 頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
