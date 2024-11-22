@@ -144,6 +144,12 @@
     <ClCompile Include="Resource\object_Effect.cpp">
       <Filter>&lt;Object&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\player_state_slash.cpp">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\player_state_wall.cpp">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -288,6 +294,12 @@
     </ClInclude>
     <ClInclude Include="Resource\object_Effect.h">
       <Filter>&lt;Object&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\player_state_wall.h">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\player_state_slash.h">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

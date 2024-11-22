@@ -50,12 +50,9 @@ void CFan::Update()
 
 #ifdef _DEBUG
 
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-	CRenderer::SetDebugString("扇形の方角 : " + to_string(m_fDirection));
-	CRenderer::SetDebugString("方角のベク : " + to_string(sinf(m_fDirection)) + " : " + to_string(cosf(m_fDirection)));
-	CRenderer::SetDebugString("扇形の長さ : " + to_string(m_fLength));
-	CRenderer::SetDebugString("扇形の範囲 : " + to_string(m_fRange));
-	CRenderer::SetDebugString("範囲のベク : " + to_string(cosf(m_fRange)));
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");;
+	CRenderer::SetDebugString("扇形の方角：" + to_string(m_fDirection));
+	CRenderer::SetDebugString("扇形の範囲：" + to_string(m_fRange));
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 
 #endif // _DEBUG
@@ -87,7 +84,7 @@ void CFan::Draw()
 	// 線の描画
 	pDev->DrawPrimitive(D3DPT_LINESTRIP,	// プリミティブの種類
 		0,									// 頂点情報の先頭アドレス
-		1);									// プリミティブ数
+		NUM_PRIM);							// プリミティブ数
 
 	// ライトをオン
 	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
@@ -98,34 +95,6 @@ void CFan::Draw()
 //============================================================================
 bool CFan::DetectInFanRange(D3DXVECTOR3 Pos)
 {
-	// 扇形の始点から特定座標へのベクトルを計算
-	Vec3 VecPoint = Pos - m_Pos;
-
-	// 範囲内に存在しているか、小数値を切り詰めて精密な判定を行う
-	if (static_cast<int>(sqrtf(VecPoint.x * VecPoint.x + VecPoint.z * VecPoint.z)) <= m_fLength)
-	{
-		// 座標ベクトルを正規化
-		D3DXVec3Normalize(&VecPoint, &VecPoint);
-
-		// 方角から方向ベクトルを計算
-		Vec3 VecDir = Vec3(sinf(m_fDirection), 0.0f, cosf(m_fDirection));
-
-		// 方向ベクトルを正規化
-		D3DXVec3Normalize(&VecDir, &VecDir);
-
-		// 方向ベクトルと座標ベクトルの内積を行い、扇の範囲をcosで求める
-		float fθ = D3DXVec3Dot(&VecDir, &VecPoint);
-
-		// 扇の範囲内に存在していれば
-		if (cosf(m_fRange) <= fθ ||
-			cosf(m_fRange) >= fθ)
-		{
-			CRenderer::SetDebugString("内積のなす角 : " + to_string(fθ));
-
-			return 1;
-		}
-	}
-
 	return 0;
 }
 
@@ -159,22 +128,6 @@ const float& CFan::GetDirection() const
 void CFan::SetDirection(float fDirection)
 {
 	m_fDirection = fDirection;
-}
-
-//============================================================================
-// 長さを取得
-//============================================================================
-const float& CFan::GetLength() const
-{
-	return m_fLength;
-}
-
-//============================================================================
-// 長さを設定
-//============================================================================
-void CFan::SetLength(float fLength)
-{
-	m_fLength = fLength;
 }
 
 //============================================================================
@@ -220,7 +173,6 @@ CFan* CFan::Create()
 
 		// 各種パラメータをデシリアライズ
 		pNewInstance->SetDirection(Json["Direction"]);
-		pNewInstance->SetLength(Json["Length"]);
 		pNewInstance->SetRange(Json["Range"]);
 	}
 	else
@@ -234,7 +186,7 @@ CFan* CFan::Create()
 //============================================================================
 // 生成
 //============================================================================
-CFan* CFan::Create(D3DXVECTOR3 Pos, float fDirection, float fLength, float fRange)
+CFan* CFan::Create(D3DXVECTOR3 Pos, float fDirection, float fRange)
 {
 	CFan* pNewInstance = DBG_NEW CFan();
 
@@ -249,7 +201,6 @@ CFan* CFan::Create(D3DXVECTOR3 Pos, float fDirection, float fLength, float fRang
 	// パラメータを反映
 	pNewInstance->SetPos(Pos);
 	pNewInstance->SetDirection(fDirection);
-	pNewInstance->SetLength(fLength);
 	pNewInstance->SetRange(fRange);
 
 	return pNewInstance;
@@ -268,7 +219,6 @@ CFan::CFan() :
 	m_pVtxBuff{ nullptr },
 	m_Pos{ VEC3_INIT },
 	m_fDirection{ 0.0f },
-	m_fLength{ 0.0f },
 	m_fRange{ 0.0f }
 {
 	// ワールド行列の初期化
@@ -293,6 +243,9 @@ HRESULT CFan::Init()
 	{
 		return E_FAIL;
 	}
+
+	// 扇形の範囲を設定
+	m_fRange = D3DX_PI * 0.1f;
 
 	return S_OK;
 }
@@ -363,23 +316,26 @@ void CFan::Uninit()
 //============================================================================
 void CFan::SetVtx()
 {
-	// 方角から方向ベクトルを計算
-	Vec3 VecDir = Vec3(sinf(m_fDirection), 0.0f, cosf(m_fDirection));
+	// 方角に合わせて範囲分の方向ベクトルを2本作成
+	Vec3 Vec[2] = { 
+		Vec3(cosf(m_fDirection + m_fRange), 0, sin(m_fDirection + m_fRange)),
+		Vec3(cosf(m_fDirection - m_fRange), 0, sin(m_fDirection - m_fRange))
+	};
 
 	// 頂点情報へのポインタ
 	VERTEX_3D* pVtx = nullptr;
 
 	// 頂点バッファをロック
 	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
-
+	
 	// 頂点座標の設定
-	pVtx[0].pos = m_Pos;
-	pVtx[1].pos = VecDir * 350.0f;
-
-	//for (WORD i = 0; i < NUM_VTX; ++i)
-	//{
-	//	CRenderer::SetDebugString("オオオオオ : " + to_string(pVtx[i].pos.x) + " : " + to_string(pVtx[i].pos.y) + " : " + to_string(pVtx[i].pos.z));
-	//}
+	pVtx[0].pos = Vec[0] * CField_Manager::FIELD_RADIUS;
+	pVtx[1].pos = m_Pos;
+	pVtx[2].pos = Vec[1] * CField_Manager::FIELD_RADIUS;
+	
+	// すぐにけせ
+	for (int i = 0; i < 2; ++i)
+	CRenderer::SetDebugString("Vec" + to_string(i) + "：" + to_string(Vec[i].x) + "：" + to_string(Vec[i].z));
 
 	// 頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
