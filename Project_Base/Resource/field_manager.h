@@ -31,7 +31,7 @@ public:
 	static constexpr float FIELD_RADIUS = 300.0f;
 
 	/// <summary> 最大ブロック数 </summary>
-	static constexpr int MAX_BLOCK = 5;
+	static constexpr int MAX_BLOCK = 1;
 
 	/// <summary> 重力 </summary>
 	static constexpr float FIELD_GRAVITY = -0.5f;

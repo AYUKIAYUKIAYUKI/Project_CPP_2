@@ -1,7 +1,7 @@
 b.x
 kuki.x
 cylinder.x
-mika.x
+ENVIRONMENT\\statue.x
 enemy.x
 rubble00.x
 rubble01.x
@@ -14,3 +14,4 @@ render_cylinder.x
 render_cylinder_hit.x
 ENVIRONMENT\\statue.x
 ENVIRONMENT\\around.x
+box.x

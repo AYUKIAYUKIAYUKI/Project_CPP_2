@@ -135,7 +135,7 @@ void CField_Manager::Update()
 	GenerateBlock();
 
 	// ブロックの自動削除
-	DestroyBlock();
+	//DestroyBlock();
 
 #endif	// CHANGE_FIELRDCREATE_STYLE
 
@@ -275,7 +275,7 @@ void CField_Manager::GenerateBlock()
 		} while (!m_pFan->DetectInFanRange(NewPos));
 
 		// 向きを決定
-		NewRot.y = -(fDirection + fRandomRange) + D3DX_PI * 0.5f;
+		NewRot.y = -(fDirection + fRandomRange);
 
 		// ブロックを生成
 		CBlock::Create(NewPos, NewRot);

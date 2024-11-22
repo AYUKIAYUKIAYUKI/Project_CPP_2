@@ -36,6 +36,7 @@ public:
 		RENDER_CYLINDER_HIT,	// render cylinder hit
 		STATUE,					// “º‘œ
 		AROUND,					// Žü•Ó—Ìˆæ
+		BOX,					// box
 		MAX,
 	};
 

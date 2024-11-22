@@ -318,6 +318,9 @@ void CPlayer::AdjustHeight()
 //============================================================================
 void CPlayer::HitCheck()
 {
+	static CObject_X* TESTTEST = CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\testtest.json"));
+	static CObject_X* ててて = CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ててて.json"));
+
 	// 衝突の有無を検出
 	bool bDetect = false;
 
@@ -347,6 +350,7 @@ void CPlayer::HitCheck()
 
 		// バウンディングボックスのパラメータをコピー
 		const Vec3& BoxSize = pBlock->GetSize();
+		TESTTEST->SetScale(BoxSize);
 		const Vec3& BoxPos = pBlock->GetPos();
 		const float& fBoxDirection = pBlock->GetRot().y;
 
@@ -358,6 +362,8 @@ void CPlayer::HitCheck()
 		const Vec3& ResultPos = utility::RotatePointAroundY(-fBoxDirection, RelativePos);
 		const Vec3& ResultOldPos = utility::RotatePointAroundY(-fBoxDirection, RelativeOldPos);
 
+		ててて->SetScale({ GetBndCylinder()->GetRadius(), GetBndCylinder()->GetHeight(), GetBndCylinder()->GetRadius() });
+		ててて->SetPos(ResultPos);
 #else
 		{
 			// バウンディングシリンダーのパラメータをコピー
