@@ -77,9 +77,8 @@ HRESULT CCamera::Init()
 void CCamera::Update()
 {
 	// ウィンドウを表示
-	static bool bShow = true;
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("VeiwMode"), &bShow, ImGuiChildFlags_AlwaysAutoResize)
+	if (ImGui::Begin("VeiwMode"))
 	{
 		if (ImGui::Checkbox("Track", &m_bTrack)) {}
 		ImGui::SameLine();
@@ -92,8 +91,8 @@ void CCamera::Update()
 		{
 			m_bVertical = 0;
 		}
-		ImGui::End();
 	}
+	ImGui::End();
 
 	// ビューモード分岐
 	BranchMode();
@@ -110,8 +109,8 @@ void CCamera::Update()
 	// 注視点座標を計算
 	CalcPosR();
 
+#if 0
 #ifdef _DEBUG
-
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 	CRenderer::SetDebugString("カメラ座標　　 : " + to_string(m_Pos.x) + " :  " + to_string(m_Pos.y) + " : " + to_string(m_Pos.z));
 	CRenderer::SetDebugString("目標カメラ座標 : " + to_string(m_PosTarget.x) + " :  " + to_string(m_PosTarget.y) + " : " + to_string(m_PosTarget.z));
@@ -120,8 +119,8 @@ void CCamera::Update()
 	CRenderer::SetDebugString("カメラ間距離 　: " + to_string(m_fDistance));
 	CRenderer::SetDebugString("カメラモード　 : " + to_string(m_bTrack));
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-
 #endif // _DEBUG
+#endif
 }
 
 //============================================================================

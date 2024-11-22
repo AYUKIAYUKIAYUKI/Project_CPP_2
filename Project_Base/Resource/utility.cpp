@@ -103,23 +103,21 @@ void utility::AdjustAngle(float& fAngle, const float& fDest)
 	{
 		fAngle += -D3DX_PI * 2.0f;
 
+#if 0	// どれだけの差があるか表示
 #ifdef _DEBUG
-
-		// どれだけの差があるか表示
 		CRenderer::SetTimeString("[りれき1]現在角度と目標角度の差 : " + std::to_string(fDifference), 120);
-
 #endif	// _DEBUG
+#endif
 	}
 	else if (fDifference < -D3DX_PI)
 	{
 		fAngle += D3DX_PI * 2.0f;
 	
+#if 0	// どれだけの差があるか表示
 #ifdef _DEBUG
-
-		// どれだけの差があるか表示
 		CRenderer::SetTimeString("[りれき2]現在角度と目標角度の差 : " + std::to_string(fDifference), 120);
-
 #endif	// _DEBUG
+#endif
 	}
 }
 
@@ -135,23 +133,21 @@ void utility::AdjustAngle(float& fAngle, const float& fDest, const float& fRadiu
 	{
 		fAngle += -fRadius * 2.0f;
 
+#if 0	// どれだけの差があるか表示
 #ifdef _DEBUG
-
-		// どれだけの差があるか表示
 		CRenderer::SetTimeString("[りれき1]現在角度と目標角度の差 : " + std::to_string(fDifference), 120);
-
 #endif	// _DEBUG
+#endif
 	}
 	else if (fDifference < -fRadius)
 	{
 		fAngle += fRadius * 2.0f;
 
+#if 0	// どれだけの差があるか表示
 #ifdef _DEBUG
-
-		// どれだけの差があるか表示
 		CRenderer::SetTimeString("[りれき2]現在角度と目標角度の差 : " + std::to_string(fDifference), 120);
-
 #endif	// _DEBUG
+#endif
 	}
 }
 

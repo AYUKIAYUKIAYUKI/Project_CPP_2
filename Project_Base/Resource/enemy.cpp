@@ -103,7 +103,7 @@ void CEnemy::Update()
 
 #if 1
 #ifdef _DEBUG
-
+	
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 	CRenderer::SetDebugString("エネミー体力　　 : " + to_string(GetLife()));
 	CRenderer::SetDebugString("エネミー方角　　 : " + to_string(GetDirection() * (180 / D3DX_PI)));
@@ -112,7 +112,6 @@ void CEnemy::Update()
 	CRenderer::SetDebugString("エネミー向き　　 : " + to_string(GetRot().x * (180 / D3DX_PI)) + " :  " + to_string(GetRot().y * (180 / D3DX_PI)) + " : " + to_string(GetRot().z * (180 / D3DX_PI)));
 	CRenderer::SetDebugString("エネミー目標向き : " + to_string(GetRotTarget().x * (180 / D3DX_PI)) + " :  " + to_string(GetRotTarget().y * (180 / D3DX_PI)) + " : " + to_string(GetRotTarget().z * (180 / D3DX_PI)));
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-
 #endif // _DEBUG
 #endif
 }

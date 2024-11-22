@@ -106,14 +106,12 @@ void CBlock::Update()
 
 #if 0
 #ifdef _DEBUG
-
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 	CRenderer::SetDebugString("岩サイズ　 : " + to_string(GetSize().x) + " :  " + to_string(GetSize().y) + " : " + to_string(GetSize().z));
 	CRenderer::SetDebugString("岩向き　　 : " + to_string(GetRot().x * (180 / D3DX_PI)) + " :  " + to_string(GetRot().y * (180 / D3DX_PI)) + " : " + to_string(GetRot().z * (180 / D3DX_PI)));
 	CRenderer::SetDebugString("岩θ　　　　: " + to_string(GetRot().y));
 	CRenderer::SetDebugString("岩座標　　 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-
 #endif // _DEBUG
 #endif
 }

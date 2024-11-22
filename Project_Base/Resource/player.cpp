@@ -133,21 +133,25 @@ void CPlayer::Update()
 	// キャラクタークラスの更新処理
 	CCharacter::Update();
 
+#if 1
 #ifdef _DEBUG
-
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-	CRenderer::SetDebugString("プレイヤーステート：" + static_cast<std::string>(typeid(*m_pState).name()));
-	CRenderer::SetDebugString("プレイヤー方角　　：" + to_string(GetDirection() * (180 / D3DX_PI)));
-	CRenderer::SetDebugString("プレイヤー速度　　：" + to_string(GetMoveSpeed()));
-	CRenderer::SetDebugString("プレイヤー向き　　：" + to_string(GetRot().x * (180 / D3DX_PI)) + " :  " + to_string(GetRot().y * (180 / D3DX_PI)) + " : " + to_string(GetRot().z * (180 / D3DX_PI)));
-	CRenderer::SetDebugString("プレイヤー目標向き：" + to_string(GetRotTarget().x * (180 / D3DX_PI)) + " :  " + to_string(GetRotTarget().y * (180 / D3DX_PI)) + " : " + to_string(GetRotTarget().z * (180 / D3DX_PI)));
-	CRenderer::SetDebugString("プレイヤー現在座標：" + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
-	CRenderer::SetDebugString("プレイヤー目標座標：" + to_string(GetPosTarget().x) + " :  " + to_string(GetPosTarget().y) + " : " + to_string(GetPosTarget().z));
-	CRenderer::SetDebugString("プレイヤー加速度　：" + to_string(GetVelY()));
-	CRenderer::SetDebugString("プレイヤー体力　　：" + to_string(GetLife()));
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-
-#endif // _DEBUG
+	// ウィンドウを表示
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Player Param"))
+	{
+		ImGui::Text("State:%s", typeid(*m_pState).name());
+		ImGui::Text("Direction:%.1f", GetDirection() * (180 / D3DX_PI));
+		ImGui::Text("Speed:%.1f", GetMoveSpeed());
+		ImGui::Text("Rot:X %.1f:Y %.1f:Z %.1f", GetRot().x * (180 / D3DX_PI), GetRot().y * (180 / D3DX_PI), GetRot().z * (180 / D3DX_PI));
+		ImGui::Text("RotTarget:X %.1f:Y %.1f:Z %.1f", GetRotTarget().x * (180 / D3DX_PI), GetRotTarget().y * (180 / D3DX_PI), GetRotTarget().z * (180 / D3DX_PI));
+		ImGui::Text("Pos:X %.1f:Y %.1f:Z %.1f", GetPos().x, GetPos().y, GetPos().z);
+		ImGui::Text("PosTarget:X %.1f:Y %.1f:Z %.1f", GetPosTarget().x, GetPosTarget().y, GetPosTarget().z);
+		ImGui::Text("VelY:%.1f", GetVelY());
+		ImGui::Text("Life:%df", GetLife());
+	}
+	ImGui::End();
+#endif	// _DEBUG
+#endif
 }
 
 //============================================================================

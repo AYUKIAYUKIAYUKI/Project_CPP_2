@@ -194,11 +194,15 @@ bool collision::HitCylinderToAABB(const Vec3& SelfPos, const float& fSelfRadius,
 //============================================================================
 int collision::GetCylinderToAABB(const Vec3& SelfOldPos, const Vec3& SelfNowPos, const float& fSelfRadius, const float& fSelfHeight, const Vec3& OtherPos, const Vec3& OtherSize)
 {
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-	CRenderer::SetDebugString("プレイヤー過去回転 : " + to_string(SelfOldPos.x) + " :  " + to_string(SelfOldPos.y) + " : " + to_string(SelfOldPos.z));
-	CRenderer::SetDebugString("プレイヤー現在回転 : " + to_string(SelfNowPos.x) + " :  " + to_string(SelfNowPos.y) + " : " + to_string(SelfNowPos.z));
-	CRenderer::SetDebugString("プレイヤー・右・左 : " + to_string(SelfNowPos.x + fSelfRadius) + " :  " + to_string(SelfOldPos.x - fSelfRadius));
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+	// ウィンドウを表示
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("[GetCylinderToAABB] UpdateInfo"))
+	{
+		ImGui::Text("OldPos:X %.2f:Y %.2f:Z %.2f", SelfOldPos.x, SelfOldPos.y, SelfOldPos.z);
+		ImGui::Text("NowPos:X %.2f:Y %.2f:Z %.2f", SelfNowPos.x, SelfNowPos.y, SelfNowPos.z);
+		ImGui::Text("SWidth:L %.2f:R %.2f", SelfNowPos.x + fSelfRadius, SelfNowPos.x - fSelfRadius);
+	}
+	ImGui::End();
 
 	// 衝突自体が無ければ
 	if (!HitCylinderToAABB(SelfNowPos, fSelfRadius, fSelfHeight, OtherPos, OtherSize))
@@ -214,18 +218,12 @@ int collision::GetCylinderToAABB(const Vec3& SelfOldPos, const Vec3& SelfNowPos,
 		// 上にいた
 		if (SelfOldPos.y > OtherPos.y)
 		{
-#ifdef _DEBUG
-			CRenderer::SetTimeString("[りれき]衝突面 : 上", 60);
-#endif	// _DEBUG
 			return 1;
 		}
 
 		// 下にいた
 		if (SelfOldPos.y < OtherPos.y)
 		{
-#ifdef _DEBUG
-			CRenderer::SetTimeString("[りれき]衝突面 : 下", 60);
-#endif	// _DEBUG
 			return 2;
 		}
 	}

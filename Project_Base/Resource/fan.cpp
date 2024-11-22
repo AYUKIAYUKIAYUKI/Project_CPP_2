@@ -48,14 +48,14 @@ void CFan::Update()
 	// ワールド行列設定
 	SetMtxWorld();
 
+#if 0
 #ifdef _DEBUG
-
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 	CRenderer::SetDebugString("扇形の方角：" + to_string(m_fDirection));
 	CRenderer::SetDebugString("扇形の範囲：" + to_string(m_fRange));
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-
 #endif // _DEBUG
+#endif
 }
 
 //============================================================================
