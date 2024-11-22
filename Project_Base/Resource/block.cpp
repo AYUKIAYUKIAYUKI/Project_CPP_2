@@ -50,7 +50,7 @@ CBlock::~CBlock()
 		m_pBndBox = nullptr;
 	}
 
-#if 1
+#if 0
 	for (int i = 0; i < 2; i++)
 	{
 		// ƒ‰ƒ“ƒ_ƒ€‚È‰Á‘¬“x‚ðÝ’è ( ‚â‚âYª‚É•Î‚Á‚½)
@@ -94,7 +94,7 @@ void CBlock::Uninit()
 //============================================================================
 void CBlock::Update()
 {
-#if 0
+#if 1
 	// ‚·‚®‚É‚¯‚¹
 	Vec3 NewRot = GetRot();
 	NewRot.y += D3DX_PI * 0.005f;

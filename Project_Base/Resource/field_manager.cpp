@@ -30,7 +30,6 @@
 //****************************************************
 // ƒvƒŠƒvƒƒZƒbƒTƒfƒBƒŒƒNƒeƒBƒu
 //****************************************************
-#define SHOW_CYLINDER_COLLIDER 0	// ‰~’Œ”»’è‚Ì•\¦Ø‚è‘Ö‚¦
 #define CHANGE_FIELRDCREATE_STYLE 1	// ƒuƒƒbƒN‚Ì¶¬•û–@Ø‚è‘Ö‚¦
 
 //****************************************************
@@ -54,11 +53,11 @@ CField_Manager* CField_Manager::m_pField_Manager = nullptr;	// ƒtƒB[ƒ‹ƒhƒ}ƒl[ƒ
 //============================================================================
 HRESULT CField_Manager::Init()
 {
-	// ƒ}ƒbƒv•\¦
+	// ƒ}ƒbƒv•\¦‚ğì¬
 	m_pMap = CObject_HUD::Create("Data\\JSON\\HUD\\map.json");
 	m_pMap->BindTex(CTexture_Manager::TYPE::MAP);
 
-	// ƒvƒŒƒCƒ„[‚ğŒŸõ
+	// ƒvƒŒƒCƒ„[‚ğŒŸõ‚µ•Û‚µ‚Ä‚¨‚­
 	if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
 	{
 		// ƒvƒŒƒCƒ„[‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğ•Û
@@ -69,7 +68,7 @@ HRESULT CField_Manager::Init()
 		assert(false && "ƒvƒŒƒCƒ„[‚ÌŒŸõŒ‹‰Ê‚ª‚ ‚è‚Ü‚¹‚ñ‚Å‚µ‚½");
 	}
 
-	// ƒvƒŒƒCƒ„[‚Ì‘Ì—Í‚ğ¶¬
+	// ƒvƒŒƒCƒ„[‚Ì‘Ì—Í•\¦‚ğ¶¬
 	for (WORD i = 0; i < CPlayer::MAX_LIFE; ++i)
 	{
 		std::string FilePath = "Data\\JSON\\HUD\\playerlife\\" + to_string(i) + ".json";
@@ -85,26 +84,13 @@ HRESULT CField_Manager::Init()
 	m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergaugewindow.json");
 	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAYERGAUGEWINDOW);
 
-#if SHOW_CYLINDER_COLLIDER
-
-	// ‰~’Œ‚Ì”»’è‚ğ¶¬
-	m_pCylinderCollider = CObject_X::Create(CObject::LAYER::BACK);
-	m_pCylinderCollider->Init();
-	m_pCylinderCollider->BindModel(CModel_X_Manager::TYPE::CYLINDERCOLLIDER);
-	m_pCylinderCollider->SetPos(m_pPlayer->GetPos());
-	m_pCylinderCollider->SetRot(m_pPlayer->GetRot());
-	m_pCylinderCollider->SetScale(GENERATE_RANGE_RADIUS);
-	m_pCylinderCollider->SetAlpha(0.5f);
-
-#endif	// SHOW_CYLINDER_COLLIDER
-
 	// îŒ`‚ğ¶¬
 	m_pFan = CFan::Create();
 
 #if CHANGE_FIELRDCREATE_STYLE
 
 	// ‰~‚Ì¶¬
-	TestCircle();
+	DEBUG_CIRCLE();
 
 #endif	// CHANGE_FIELRDCREATE_STYLE
 
@@ -140,41 +126,23 @@ void CField_Manager::Update()
 	// îŒ`‚Ì•ûŠp‚ğƒvƒŒƒCƒ„[‚Ì•ûŠp‚É
 	m_pFan->SetDirection(m_pPlayer->GetDirection());
 
-	/* ƒeƒXƒg—p */
-	{	
-		// ƒ~ƒhƒ‹ƒIƒuƒWƒFƒNƒg‚ğæ“¾
-		CObject* pObj = CObject::GetTopObject(CObject::LAYER::MIDDLE);
-
-		while (pObj != nullptr)
-		{
-			if (pObj->GetType() == CObject::TYPE::BLOCK)
-			{
-				CBlock* pBlock = nullptr;
-				pBlock = utility::DownCast(pBlock, pObj);
-				m_pFan->DetectInFanRange(pBlock->GetPos());
-				break;
-			}
-			pObj = pObj->GetNext();
-		}
-	}
-
 	// îŒ`‚ÌXVˆ—
 	m_pFan->Update();
 
 #if !CHANGE_FIELRDCREATE_STYLE
 
-	// ‰¼‚Ì¶¬ƒƒ\ƒbƒh
-	TestCreate();
+	// ƒuƒƒbƒN‚Ì©“®¶¬
+	GenerateBlock();
 
-	// ‰¼‚Ì”jŠüƒƒ\ƒbƒh
-	TestDelete();
+	// ƒuƒƒbƒN‚Ì©“®íœ
+	DestroyBlock();
 
 #endif	// CHANGE_FIELRDCREATE_STYLE
 
+	// ‰¼‚Ì‘S”jŠüƒƒ\ƒbƒh
 	if (CManager::GetKeyboard()->GetTrigger(DIK_DELETE))
 	{
-		// ‰¼‚Ì‘S”jŠüƒƒ\ƒbƒh
-		TestDeleteAll();
+		DestroyAllBlock();
 	}
 
 	// HUD‚ÌXV
@@ -216,14 +184,13 @@ CField_Manager* CField_Manager::GetInstance()
 //============================================================================
 
 //============================================================================
-// ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 //============================================================================
 CField_Manager::CField_Manager() :
 	m_pMap{ nullptr },
 	m_pPlayer{ nullptr },
 	m_pPlayerGauge{ nullptr },
 	m_pPlayerGaugeWindow{ nullptr },
-	m_pCylinderCollider{ nullptr },
 	m_pFan{ nullptr }
 {
 	for (WORD i = 0; i < CPlayer::MAX_LIFE; ++i)
@@ -268,111 +235,53 @@ void CField_Manager::Uninit()
 }
 
 //============================================================================
-// ‰~‚Ì¶¬ƒƒ\ƒbƒh
+// ƒuƒƒbƒN‚Ì©“®¶¬
 //============================================================================
-void CField_Manager::TestCircle()
-{
-	float fDirection = D3DX_PI;						// •ûŠp
-	float fAdder = (D3DX_PI * 2.0f) / MAX_BLOCK;	// ‘‰Á—Ê
-
-	for (WORD i = 0; i < MAX_BLOCK; ++i)
-	{
-		// ¶¬—p‚ÌÀ•W‚ğŒˆ’è
-		Vec3 NewPos = VEC3_INIT;
-		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
-		NewPos.y = 40.0f - utility::GetRandomValue<float>() * 0.15f;
-		NewPos.z = -sinf(fDirection) * FIELD_RADIUS;
-		
-		// ¶¬—p‚ÌŒü‚«‚ğŒˆ’è
-		Vec3 NewRot = VEC3_INIT;
-		//NewRot.y = utility::GetRandomValue<float>();
-		NewRot.y = fDirection;
-
-		// ƒuƒƒbƒN‚ğ¶¬
-		CBlock::Create(NewPos, NewRot);
-
-		// •ûŠp‚ğ‘‰Á
-		fDirection += fAdder;
-	}
-}
-
-//============================================================================
-// ‰¼‚Ì¶¬ƒƒ\ƒbƒh
-//============================================================================
-void CField_Manager::TestCreate()
+void CField_Manager::GenerateBlock()
 {
 	// ƒuƒƒbƒN”‚ğƒJƒEƒ“ƒg
 	int nCntBlock = CObject::CountSpecificObject(CObject::TYPE::BLOCK);
 
 #ifdef _DEBUG	// ƒuƒƒbƒN”‚Ì•\¦
-
 	CRenderer::SetDebugString("ƒuƒƒbƒN”:" + to_string(nCntBlock));
-
-#endif
+#endif	// _DEBUG
 
 	// ƒuƒƒbƒN”‚ªãŒÀ‚É–‚½‚È‚¯‚ê‚Î
 	while (nCntBlock < MAX_BLOCK)
 	{
-		CInputKeyboard* pKeyboard = CManager::GetKeyboard();
-		CInputPad* pPad = CManager::GetPad();
+		// ¶¬À•WŒvZ—p
+		const float&	fDirection = m_pPlayer->GetDirection();	// ƒvƒŒƒCƒ„[‚Ì•ûŠp‚ğƒRƒs[
+		Vec3			NewPos = VEC3_INIT, NewRot = VEC3_INIT;	// ƒuƒƒbƒN—p‚ÌÀ•WEŒü‚«‚ğì¬
+		float			fRandomRange = 0.0f;					// ƒ‰ƒ“ƒ_ƒ€‚È•ûŠp”ÍˆÍ
 
-		/* ƒXƒNƒŠ[ƒ“‰æ–Ê“à‚ÅA‚Ç‚¿‚ç‚Ì•ûŒü‚ğˆÚ“®‚µ‚Ä‚¢‚½‚© */
-		//float ScreenX = 0.0f;
-
-		/* ’¼‘O‚Ì•ûŠp‚Ì•ÏX‚ğŒŸo */
-		if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::LEFT) || pPad->GetJoyStickL().X < 0)
-		{ // ƒJƒƒ‰‚©‚çŒ©‚Ä¶‚Ö
-
-		}
-		else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT) || pPad->GetJoyStickL().X > 0)
-		{ // ƒJƒƒ‰‚©‚çŒ©‚Ä‰E‚Ö
-
-		}
-
-		/* ˆÚ“®‚µ‚Ä‚¢‚½•ûŒü‚É‡‚í‚¹‚ÄA”ÍˆÍ‚Ì’[‚©‚çV‚½‚È’nŒ`‚ª“oê‚µ‚Ä‚­‚é */
-
-		// ƒvƒŒƒCƒ„[ƒ^ƒO‚ğæ“¾
-		if (CObject::FindSpecificObject(CObject::TYPE::PLAYER))
+		// ”jŠü”ÍˆÍ‚É‚Í‚İo‚³‚¸¶¬‚³‚ê‚é‚æ‚¤‚É’²®
+		/* ‰ŠúÀ•W‚ªŒ´“_‚Ìê‡A¶¬”ÍˆÍ‚Ì”¼Œa‚ªƒtƒB[ƒ‹ƒh‚Ì”¼Œa‚ğ‰º‰ñ‚é‚Æ–³ŒÀƒ‹[ƒv */
+		do
 		{
-			// ¶¬À•WŒvZ—p
-			const float&	fDirection = m_pPlayer->GetDirection();	// ƒvƒŒƒCƒ„[‚Ì•ûŠp‚ğƒRƒs[
-			Vec3			NewPos = VEC3_INIT, NewRot = VEC3_INIT;	// ƒuƒƒbƒN—p‚ÌÀ•WEŒü‚«‚ğì¬
-			float			fRandomRange = 0.0f;					// ƒ‰ƒ“ƒ_ƒ€‚È•ûŠp”ÍˆÍ
+			// ƒ‰ƒ“ƒ_ƒ€‚É•ûŠp‚ğ‚¸‚ç‚·
+			fRandomRange = utility::GetRandomValue<float>();
 
-			// ‡@ƒvƒŒƒCƒ„[‚Ìis•ûŒü‚É‰ˆ‚Á‚Ä¶¬‚³‚ê‚é‚æ‚¤‚É•â³
+			// ¶¬—p‚ÌÀ•W‚ğŒˆ’è
+			NewPos.x = cosf(fDirection + fRandomRange) * FIELD_RADIUS;
+			NewPos.y = fabsf(utility::GetRandomValue<float>());
+			NewPos.z = sinf(fDirection + fRandomRange) * FIELD_RADIUS;
 
-			// ”jŠü”ÍˆÍ‚É‚Í‚İo‚³‚¸¶¬‚³‚ê‚é‚æ‚¤‚É’²®
-			/* ‰ŠúÀ•W‚ªŒ´“_‚Ìê‡A¶¬”ÍˆÍ‚Ì”¼Œa‚ªƒtƒB[ƒ‹ƒh‚Ì”¼Œa‚ğ‰º‰ñ‚é‚Æ–³ŒÀƒ‹[ƒv */
-			do
-			{
-#if 1
-				// ƒ‰ƒ“ƒ_ƒ€‚É•ûŠp‚ğ‚¸‚ç‚·
-				fRandomRange = utility::GetRandomValue<float>();
+			//// ƒuƒƒbƒN“¯m‚Ì•‚ğŒŸo
+			//if (DetectAdjacentBlock(NewPos))
+			//{
+			//	NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
+			//}
 
-				// ¶¬—p‚ÌÀ•W‚ğŒˆ’è
-				NewPos.x = cosf(fDirection + fRandomRange) * FIELD_RADIUS;
-				NewPos.y = fabsf(utility::GetRandomValue<float>());
-				NewPos.z = sinf(fDirection + fRandomRange) * FIELD_RADIUS;
+		} while (!m_pFan->DetectInFanRange(NewPos));
 
-				// ƒuƒƒbƒN“¯m‚Ì•‚ğŒŸo
-				if (DetectAdjacentBlock(NewPos))
-				{
-					NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
-				}
-#else
-				NewPos = { 0.0f,0.0f, FIELD_RADIUS };
-#endif
-			} while (!collision::HitCylinderToSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, NewPos, 10.0f));
+		// Œü‚«‚ğŒˆ’è
+		NewRot.y = -(fDirection + fRandomRange) + D3DX_PI * -0.5f;
 
-			// Œü‚«‚ğŒˆ’è
-			NewRot.y = 0.0f;
+		// ƒuƒƒbƒN‚ğ¶¬
+		CBlock::Create(NewPos, NewRot);
 
-			// ƒuƒƒbƒN‚ğ¶¬
-			CBlock::Create(NewPos, NewRot);
-
-			// ƒuƒƒbƒN”‚ğƒJƒEƒ“ƒgƒAƒbƒv
-			nCntBlock++;
-		}
+		// ƒuƒƒbƒN”‚ğƒJƒEƒ“ƒgƒAƒbƒv
+		nCntBlock++;
 	}
 }
 
@@ -392,13 +301,11 @@ bool CField_Manager::DetectAdjacentBlock(const D3DXVECTOR3& Pos)
 			CBlock* pBlock = nullptr;
 			pBlock = utility::DownCast(pBlock, pObj);
 
-			// ²•ûŒü‚É‚¨‚¯‚éƒuƒƒbƒN‚Ì—×Ú‚ğŒŸo‚·‚é
-
 			/* ¡‰ñ‚ÍŒ±“I‚É‚¨Œİ‚¢‚Ì‹——£‚Ì‚İ‚ğl—¶‚·‚é */
 			const Vec3& Vec = pBlock->GetPos() - Pos;
 
 			/* ‚ ‚é’ö“xÚ‹ß‚µ‚Ä‚µ‚Ü‚Á‚Ä‚¢‚éƒuƒƒbƒN‚ª‘¶İ‚·‚éê‡ */
-			if (sqrtf(Vec.x * Vec.x + Vec.y * Vec.y + Vec.z * Vec.z) <= pBlock->GetSize().x * 3.0f)
+			if (sqrtf(Vec.x * Vec.x + Vec.y * Vec.y + Vec.z * Vec.z) <= pBlock->GetSize().x)
 			{
 				// À•W‚Ì¶¬‚ğ‚â‚è’¼‚·
 				return 1;
@@ -412,9 +319,9 @@ bool CField_Manager::DetectAdjacentBlock(const D3DXVECTOR3& Pos)
 }
 
 //============================================================================
-// ‰¼‚Ì”jŠüƒƒ\ƒbƒh
+// ƒuƒƒbƒN‚Ì©“®íœ
 //============================================================================
-void CField_Manager::TestDelete()
+void CField_Manager::DestroyBlock()
 {
 	// ƒ~ƒhƒ‹ƒIƒuƒWƒFƒNƒg‚ğæ“¾
 	CObject* pObj = CObject::GetTopObject(CObject::LAYER::MIDDLE);
@@ -423,30 +330,14 @@ void CField_Manager::TestDelete()
 	{
 		if (pObj->GetType() == CObject::TYPE::BLOCK)
 		{
-			// ƒvƒŒƒCƒ„[ƒ^ƒO‚ğæ“¾
-			if (CObject::FindSpecificObject(CObject::TYPE::PLAYER))
+			// ƒIƒuƒWƒFƒNƒg‚ğƒuƒƒbƒNƒ^ƒO‚Éƒ_ƒEƒ“ƒLƒƒƒXƒg
+			CBlock* pBlock = nullptr;
+			pBlock = utility::DownCast(pBlock, pObj);
+
+			// îŒ`‚Ì”ÍˆÍ“à‚ÉƒuƒƒbƒN‚ª–³‚¯‚ê‚Î”jŠü
+			if (!m_pFan->DetectInFanRange(pBlock->GetPos()))
 			{
-				// ƒIƒuƒWƒFƒNƒg‚ğƒuƒƒbƒNƒ^ƒO‚Éƒ_ƒEƒ“ƒLƒƒƒXƒg
-				CBlock* pBlock = nullptr;
-				pBlock = utility::DownCast(pBlock, pObj);
-
-#if 1			// ”jŠü•û–@‚Ì•ÏX
-				m_pCylinderCollider->SetPos(m_pPlayer->GetPos());
-				m_pCylinderCollider->SetRot(m_pPlayer->GetRot());
-
-				// ‹t‚ÉA‰~’Œ”ÍˆÍŠO‚Ìê‡Á‹
-				if (!collision::HitCylinderToSphere(m_pPlayer->GetPos(), GENERATE_RANGE_RADIUS, GENERATE_RANGE_RADIUS, pBlock->GetPos(), 10.0f))
-				{
-					pBlock->SetRelease();
-				}
-#else
-				m_pCylinderCollider->SetPos(Vec3(FLT_MAX, FLT_MAX, FLT_MAX));
-
-				if (m_pFan->DetectInFanRange(pBlock->GetPos()))
-				{
-					pBlock->SetRelease();
-				}
-#endif
+				pBlock->SetRelease();
 			}
 		}
 
@@ -455,12 +346,12 @@ void CField_Manager::TestDelete()
 }
 
 //============================================================================
-// ‰¼‚Ì”jŠüƒƒ\ƒbƒh
+// ‘SƒuƒƒbƒN‚Ìíœ
 //============================================================================
-void CField_Manager::TestDeleteAll()
+void CField_Manager::DestroyAllBlock()
 {
 	// ƒ~ƒhƒ‹ƒIƒuƒWƒFƒNƒg‚ğæ“¾
-	CObject* pObj = CObject::GetTopObject(CObject::LAYER::BG);
+	CObject* pObj = CObject::GetTopObject(CObject::LAYER::MIDDLE);
 
 	while (pObj != nullptr)
 	{
@@ -510,4 +401,33 @@ void CField_Manager::UpdateHUD()
 	}
 
 #endif
+}
+
+//============================================================================
+// ƒfƒoƒbƒOƒT[ƒNƒ‹
+//============================================================================
+void CField_Manager::DEBUG_CIRCLE()
+{
+	float fDirection = D3DX_PI;						// •ûŠp
+	float fAdder = (D3DX_PI * 2.0f) / MAX_BLOCK;	// ‘‰Á—Ê
+
+	for (WORD i = 0; i < MAX_BLOCK; ++i)
+	{
+		// ¶¬—p‚ÌÀ•W‚ğŒˆ’è
+		Vec3 NewPos = VEC3_INIT;
+		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
+		NewPos.y = 40.0f - utility::GetRandomValue<float>() * 0.15f;
+		NewPos.z = -sinf(fDirection) * FIELD_RADIUS;
+
+		// ¶¬—p‚ÌŒü‚«‚ğŒˆ’è
+		Vec3 NewRot = VEC3_INIT;
+		//NewRot.y = utility::GetRandomValue<float>();
+		NewRot.y = fDirection;
+
+		// ƒuƒƒbƒN‚ğ¶¬
+		CBlock::Create(NewPos, NewRot);
+
+		// •ûŠp‚ğ‘‰Á
+		fDirection += fAdder;
+	}
 }
