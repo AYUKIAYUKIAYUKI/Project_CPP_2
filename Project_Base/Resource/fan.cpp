@@ -100,37 +100,26 @@ bool CFan::DetectInFanRange(D3DXVECTOR3 Pos)
 
 	// 対象物へのベクトルを正規化
 	D3DXVec3Normalize(&OtherVec, &OtherVec);
-
-	float fDot[NUM_VEC] = { 0.0f, 0.0f };
-	float fCross[NUM_VEC] = { 0.0f, 0.0f };
-
-	// 対象物への方向ベクトルと扇形方向ベクトルから内積を作成
-	for(int i = 0; i < NUM_VEC; ++i)
-		fDot[i] = m_DirVec[i].x * OtherVec.x + m_DirVec[i].z * OtherVec.z;
 	
-	// 対象物への方向ベクトルと扇形方向のベクトルから外積を作成
-	for (int i = 0; i < NUM_VEC; ++i)
-		fCross[i] = m_DirVec[i].x * OtherVec.z - m_DirVec[i].z * OtherVec.x;
+	// 片方の扇形方向のベクトルと対象物への方向ベクトルの外積を作成
+	float fCross1 = m_DirVec[0].x * OtherVec.z - m_DirVec[0].z * OtherVec.x;
 
-#if 1
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-	CRenderer::SetDebugString("Dot  ：青" + to_string(fDot[0]) + "：緑" + to_string(fDot[1]));
-	CRenderer::SetDebugString("Cross：青" + to_string(fCross[0]) + "：緑" + to_string(fCross[1]));
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-#endif
-
-	// 1つ目の方向ベクトルとの外積結果が正の角度なら範囲外
-	if (fCross[0] > 0.0f)
+	// この時点で1つ目の方向ベクトルとの外積結果が正の角度なら範囲外
+	if (fCross1 > 0.0f)
 	{
 		return 0;
 	}
+
+	// もう片方の外積も作成
+	float fCross2 = m_DirVec[1].x * OtherVec.z - m_DirVec[1].z * OtherVec.x;
 
 	// 2つ目の方向ベクトルとの外積結果が負の角度なら範囲外
-	if (fCross[1] < 0.0f)
+	if (fCross2 < 0.0f)
 	{
 		return 0;
 	}
 
+	// 条件を満たしていれば扇形の範囲内
 	return 1;
 }
 
@@ -328,7 +317,7 @@ HRESULT CFan::CreateVtxBuff()
 
 	// 頂点色の設定
 	pVtx[0].col = D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[1].col = D3DXCOLOR(0.0f, 1.0f, 0.5f, 1.0f);
+	pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	pVtx[2].col = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);
 
 	// 頂点バッファをアンロックする
@@ -366,9 +355,9 @@ void CFan::SetVtx()
 	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 	
 	// 頂点座標の設定
-	pVtx[0].pos = m_DirVec[0] * CField_Manager::FIELD_RADIUS;
+	pVtx[0].pos = m_DirVec[0] * 500.0f;
 	pVtx[1].pos = m_Pos;
-	pVtx[2].pos = m_DirVec[1] * CField_Manager::FIELD_RADIUS;
+	pVtx[2].pos = m_DirVec[1] * 500.0f;
 	
 	// すぐにけせ
 #if 0
