@@ -334,6 +334,7 @@ void CPlayer::HitCheck()
 			continue;
 		}
 
+#if 1
 		// バウンディングシリンダーのパラメータをコピー
 		const Vec3& CylinderPosTarget = GetPosTarget();
 		const Vec3& CylinderOldPos = GetPos();
@@ -346,26 +347,49 @@ void CPlayer::HitCheck()
 		const float& fBoxDirection = pBlock->GetRot().y;
 
 		// ボックスの中心点からシリンダーの座標への相対座標を計算
-#if 0
 		const Vec3& RelativePos = CylinderPosTarget - BoxPos;
 		const Vec3& RelativeOldPos = CylinderOldPos - BoxPos;
-#else
-		Vec3 RelativePos = BoxPos - CylinderPosTarget;
-		RelativePos.y = -RelativePos.y;
-		Vec3 RelativeOldPos = BoxPos - CylinderOldPos;
-		RelativeOldPos.y = -RelativeOldPos.y;
-#endif
 
 		// 相対座標に、ボックスの回転角度分を打ち消す回転行列を適用
-		const Vec3& ResultPos = utility::RotatePointAroundY(fBoxDirection, RelativePos);
-		const Vec3& ResultOldPos = utility::RotatePointAroundY(fBoxDirection, RelativeOldPos);
+		const Vec3& ResultPos = utility::RotatePointAroundY(-fBoxDirection, RelativePos);
+		const Vec3& ResultOldPos = utility::RotatePointAroundY(-fBoxDirection, RelativeOldPos);
+
+#else
+		{
+			// バウンディングシリンダーのパラメータをコピー
+			const Vec3& CylinderPosTarget = GetPosTarget();
+			const Vec3& CylinderOldPos = GetPos();
+			const float& CylinderRadius = GetRadius();
+			const float& CylinderHeight = GetHeight();
+
+			// バウンディングボックスのパラメータをコピー
+			const Vec3& BoxSize = pBlock->GetSize();
+			const Vec3& BoxPos = pBlock->GetPos();
+			const float& fBoxDirection = pBlock->GetRot().y;
+
+			// ボックスの中心点からシリンダーの座標への相対座標を計算
+#if 0
+			const Vec3& RelativePos = CylinderPosTarget - BoxPos;
+			const Vec3& RelativeOldPos = CylinderOldPos - BoxPos;
+#else
+			Vec3 RelativePos = BoxPos - CylinderPosTarget;
+			RelativePos.y = -RelativePos.y;
+			Vec3 RelativeOldPos = BoxPos - CylinderOldPos;
+			RelativeOldPos.y = -RelativeOldPos.y;
+#endif
+
+			// 相対座標に、ボックスの回転角度分を打ち消す回転行列を適用
+			const Vec3& ResultPos = utility::RotatePointAroundY(fBoxDirection, RelativePos);
+			const Vec3& ResultOldPos = utility::RotatePointAroundY(fBoxDirection, RelativeOldPos);
 
 #if 0
-		CRenderer::SetDebugString("プあああああああ : " + to_string(BoxPos.x) + " :  " + to_string(BoxPos.y) + " : " + to_string(BoxPos.z));
-		CRenderer::SetDebugString("プレイヤーrelati : " + to_string(RelativePos.x) + " :  " + to_string(RelativePos.y) + " : " + to_string(RelativePos.z));
-		CRenderer::SetDebugString("プレイヤーoldrel : " + to_string(RelativeOldPos.x) + " :  " + to_string(RelativeOldPos.y) + " : " + to_string(RelativeOldPos.z));
-		CRenderer::SetDebugString("プレイヤーbububu : " + to_string(ResultPos.x) + " :  " + to_string(ResultPos.y) + " : " + to_string(ResultPos.z));
-		CRenderer::SetDebugString("プレイヤーbibibi : " + to_string(ResultOldPos.x) + " :  " + to_string(ResultOldPos.y) + " : " + to_string(ResultOldPos.z));
+			CRenderer::SetDebugString("プあああああああ : " + to_string(BoxPos.x) + " :  " + to_string(BoxPos.y) + " : " + to_string(BoxPos.z));
+			CRenderer::SetDebugString("プレイヤーrelati : " + to_string(RelativePos.x) + " :  " + to_string(RelativePos.y) + " : " + to_string(RelativePos.z));
+			CRenderer::SetDebugString("プレイヤーoldrel : " + to_string(RelativeOldPos.x) + " :  " + to_string(RelativeOldPos.y) + " : " + to_string(RelativeOldPos.z));
+			CRenderer::SetDebugString("プレイヤーbububu : " + to_string(ResultPos.x) + " :  " + to_string(ResultPos.y) + " : " + to_string(ResultPos.z));
+			CRenderer::SetDebugString("プレイヤーbibibi : " + to_string(ResultOldPos.x) + " :  " + to_string(ResultOldPos.y) + " : " + to_string(ResultOldPos.z));
+#endif
+		}
 #endif
 
 		// ボックスの回転量を打ち消したと仮定し、シリンダーの相対座標を用いて衝突判定

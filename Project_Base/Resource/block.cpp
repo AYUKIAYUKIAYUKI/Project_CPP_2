@@ -94,10 +94,10 @@ void CBlock::Uninit()
 //============================================================================
 void CBlock::Update()
 {
-#if 1
+#if 0
 	// ‚·‚®‚É‚¯‚¹
 	Vec3 NewRot = GetRot();
-	NewRot.y += D3DX_PI * 0.005f;
+	NewRot.y += D3DX_PI * 0.01f;
 	SetRot(NewRot);
 #endif
 

@@ -30,7 +30,7 @@
 //****************************************************
 // プリプロセッサディレクティブ
 //****************************************************
-#define CHANGE_FIELRDCREATE_STYLE 1	// ブロックの生成方法切り替え
+#define CHANGE_FIELRDCREATE_STYLE 0	// ブロックの生成方法切り替え
 
 //****************************************************
 // usingディレクティブ
@@ -266,16 +266,16 @@ void CField_Manager::GenerateBlock()
 			NewPos.y = fabsf(utility::GetRandomValue<float>());
 			NewPos.z = sinf(fDirection + fRandomRange) * FIELD_RADIUS;
 
-			//// ブロック同士の幅を検出
-			//if (DetectAdjacentBlock(NewPos))
-			//{
-			//	NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
-			//}
+			// ブロック同士の幅を検出
+			if (DetectAdjacentBlock(NewPos))
+			{
+				NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
+			}
 
 		} while (!m_pFan->DetectInFanRange(NewPos));
 
 		// 向きを決定
-		NewRot.y = -(fDirection + fRandomRange) + D3DX_PI * -0.5f;
+		NewRot.y = -(fDirection + fRandomRange) + D3DX_PI * 0.5f;
 
 		// ブロックを生成
 		CBlock::Create(NewPos, NewRot);
