@@ -84,7 +84,7 @@ void CFan::Draw()
 	// 線の描画
 	pDev->DrawPrimitive(D3DPT_LINESTRIP,	// プリミティブの種類
 		0,									// 頂点情報の先頭アドレス
-		NUM_VEC - 1);						// プリミティブ数
+		NUM_VEC);							// プリミティブ数
 
 	// ライトをオン
 	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
@@ -101,20 +101,37 @@ bool CFan::DetectInFanRange(D3DXVECTOR3 Pos)
 	// 対象物へのベクトルを正規化
 	D3DXVec3Normalize(&OtherVec, &OtherVec);
 
+	float fDot[NUM_VEC] = { 0.0f, 0.0f };
+	float fCross[NUM_VEC] = { 0.0f, 0.0f };
+
 	// 対象物への方向ベクトルと扇形方向ベクトルから内積を作成
-	float fDot = m_DirVec[0].x * OtherVec.x + m_DirVec[0].z * OtherVec.z;
+	for(int i = 0; i < NUM_VEC; ++i)
+		fDot[i] = m_DirVec[i].x * OtherVec.x + m_DirVec[i].z * OtherVec.z;
 	
 	// 対象物への方向ベクトルと扇形方向のベクトルから外積を作成
-	float fCross = m_DirVec[0].x * OtherVec.z - m_DirVec[0].z * OtherVec.x;
+	for (int i = 0; i < NUM_VEC; ++i)
+		fCross[i] = m_DirVec[i].x * OtherVec.z - m_DirVec[i].z * OtherVec.x;
 
 #if 1
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-	CRenderer::SetDebugString("Dot  ：" + to_string(fDot));
-	CRenderer::SetDebugString("Cross：" + to_string(fCross));
+	CRenderer::SetDebugString("Dot  ：青" + to_string(fDot[0]) + "：緑" + to_string(fDot[1]));
+	CRenderer::SetDebugString("Cross：青" + to_string(fCross[0]) + "：緑" + to_string(fCross[1]));
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 #endif
 
-	return 0;
+	// 1つ目の方向ベクトルとの外積結果が正の角度なら範囲外
+	if (fCross[0] > 0.0f)
+	{
+		return 0;
+	}
+
+	// 2つ目の方向ベクトルとの外積結果が負の角度なら範囲外
+	if (fCross[1] < 0.0f)
+	{
+		return 0;
+	}
+
+	return 1;
 }
 
 //============================================================================
@@ -305,12 +322,14 @@ HRESULT CFan::CreateVtxBuff()
 		// 法線ベクトルの設定
 		pVtx[i].nor = VEC3_INIT;
 
-		// 頂点色の設定
-		pVtx[i].col = D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f);
-
 		// テクスチャ座標の設定
 		pVtx[i].tex = VEC2_INIT;
 	}
+
+	// 頂点色の設定
+	pVtx[0].col = D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f);
+	pVtx[1].col = D3DXCOLOR(0.0f, 1.0f, 0.5f, 1.0f);
+	pVtx[2].col = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);
 
 	// 頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
