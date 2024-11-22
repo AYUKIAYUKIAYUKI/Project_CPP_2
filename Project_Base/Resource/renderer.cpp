@@ -12,7 +12,6 @@
 
 // 描画処理用
 #include "manager.h"
-#include "mask_rectangle.h"
 
 // オブジェクト取得
 #include "object.h"
@@ -93,6 +92,10 @@ void CRenderer::Draw()
 
 		// シーンの専用描画
 		CManager::GetManager()->GetScene()->Draw();
+
+		// ImGuiの描画
+		ImGui::Render();
+		ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
 
 		// デバッグ表示
 		PrintDebug();
@@ -279,23 +282,22 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 
 	// デバイスのプレゼンテーションパラメータの設定
 	ZeroMemory(&d3dpp, sizeof(d3dpp));			// パラメータのゼロクリア
-	d3dpp.BackBufferWidth = WSCREEN_WIDTH;		// ゲームサイズ(幅)
-	d3dpp.BackBufferHeight = WSCREEN_HEIGHT;	// ゲームサイズ(高さ)
+#if 0
+	d3dpp.BackBufferWidth = SCREEN_WIDTH;		// ゲームサイズ(幅)
+	d3dpp.BackBufferHeight = SCREEN_HEIGHT;		// ゲームサイズ(高さ)
+#else
+	d3dpp.BackBufferWidth = GetSystemMetrics(SM_CXSCREEN);	// ゲームサイズ(幅)
+	d3dpp.BackBufferHeight = GetSystemMetrics(SM_CYSCREEN);	// ゲームサイズ(高さ)
+#endif
 	d3dpp.BackBufferFormat = d3ddm.Format;		// バックバッファの形式
 	d3dpp.BackBufferCount = 1;					// バックバッファの数
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;	// ダブルバッファの切り替え(映像信号に同期)
 	d3dpp.EnableAutoDepthStencil = TRUE;		// デプスバッファとステンシルバッファを作成
-
 #if ENABLE_STENCIL_BUFFER
-
 	d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;	// デプスバッファとして24bit、ステンシルバッファとして8bitを使用する
-
 #else
-
 	d3dpp.AutoDepthStencilFormat = D3DFMT_D16;	// デプスバッファとして16bitを使う
-
 #endif
-
 	d3dpp.Windowed = bWindiw;									// ウインドウモード
 	d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;	// リフレッシュレート
 	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;	// インターバル
@@ -339,6 +341,24 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+
+	// ImGuiのコンテキストを作成
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+
+	// ImGuiの入出力設定
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+	io.Fonts->AddFontFromFileTTF("Data\\FONT\\meiryo.ttc", 18.0f, nullptr);
+
+	// ImGuiの表示スタイルを設定
+	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsLight();
+
+	// バックエンドの初期設定
+	ImGui_ImplWin32_Init(hWnd);
+	ImGui_ImplDX9_Init(CRenderer::GetDeviece());
 
 	// フォントを生成
 	D3DXCreateFont(m_pD3DDevice,
@@ -389,6 +409,11 @@ void CRenderer::Uninit()
 		m_pFont->Release();
 		m_pFont = nullptr;
 	}
+
+	// ImGUiの終了処理
+	ImGui_ImplDX9_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 
 	// Direct3Dデバイスの破棄
 	if (m_pD3DDevice != nullptr)

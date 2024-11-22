@@ -40,7 +40,9 @@ CCamera::CCamera() :
 	m_fDistance{ 0.0f },
 	m_VecU{ 0.0f, 1.0f, 0.0f },
 	m_fAdjust{ 0.0f },
-	m_bTrack{ true }
+	m_bTrack{ true },
+	m_bVertical{ false },
+	m_bHorizon{ false }
 {
 	// 行列を初期化
 	D3DXMatrixIdentity(&m_MtxProjection);	// プロジェクション行列
@@ -74,6 +76,25 @@ HRESULT CCamera::Init()
 //============================================================================
 void CCamera::Update()
 {
+	// ウィンドウを表示
+	static bool bShow = true;
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("VeiwMode"), &bShow, ImGuiChildFlags_AlwaysAutoResize)
+	{
+		if (ImGui::Checkbox("Track", &m_bTrack)) {}
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Vertical", &m_bVertical))
+		{
+			m_bHorizon = 0;
+		}
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Horizon", &m_bHorizon))
+		{
+			m_bVertical = 0;
+		}
+		ImGui::End();
+	}
+
 	// ビューモード分岐
 	BranchMode();
 
@@ -220,30 +241,9 @@ void CCamera::BranchMode()
 	{
 		m_bTrack = !m_bTrack;
 	}
-	
-	if (CManager::GetKeyboard()->GetPress(DIK_F2))
-	{
-		m_Rot.x = -D3DX_PI * 0.55f;
-		m_fAdjust = 0.0f;
-	}
-	else if (CManager::GetKeyboard()->GetRelease(DIK_F2))
-	{
-		m_fAdjust = 75.0f;
-	}
-
-	if (CManager::GetKeyboard()->GetPress(DIK_F3))
-	{
-		m_Rot.x = 0.0f;
-		m_fAdjust = 0.0f;
-	}
-	else if (CManager::GetKeyboard()->GetRelease(DIK_F3))
-	{
-		m_fAdjust = 75.0f;
-	}
 
 	if (m_bTrack)
 	{ // 追従カメラモード
-
 		if (CObject::FindSpecificObject(CObject::TYPE::PLAYER))
 		{ // プレイヤーが存在していれば
 
@@ -265,6 +265,21 @@ void CCamera::BranchMode()
 
 		// カメラ操作
 		Control();
+	}
+
+	if (m_bVertical)
+	{
+		m_Rot.x = -D3DX_PI * 0.55f;
+		m_fAdjust = 0.0f;
+	}
+	else if (m_bHorizon)
+	{
+		m_Rot.x = 0.0f;
+		m_fAdjust = 0.0f;
+	}
+	else
+	{
+		m_fAdjust = 75.0f;
 	}
 }
 

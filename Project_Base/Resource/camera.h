@@ -75,6 +75,8 @@ private:
 	D3DXMATRIX	m_MtxView;			// ビュー行列
 	float		m_fAdjust;			// 俯瞰度合い
 	bool		m_bTrack;			// カメラの追従切り替え
+	bool		m_bVertical;		// 垂直ビュー
+	bool		m_bHorizon;			// 水平ビュー
 };
 
 #endif // _CAMERA_H_

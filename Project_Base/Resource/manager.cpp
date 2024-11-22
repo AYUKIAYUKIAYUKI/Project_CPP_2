@@ -38,6 +38,11 @@ CManager* CManager::m_pManager = nullptr;	// マネージャーの本体
 //============================================================================
 void CManager::Update()
 {
+	// Guiの更新を開始
+	ImGui_ImplDX9_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
 	// 四角形マスクの更新処理
 	m_pMask_Rectangle->Update();
 
@@ -58,6 +63,9 @@ void CManager::Update()
 
 	// パッドの更新
 	m_pPad->Update();
+
+	// Guiの更新を終了
+	ImGui::EndFrame();
 }
 
 //============================================================================
