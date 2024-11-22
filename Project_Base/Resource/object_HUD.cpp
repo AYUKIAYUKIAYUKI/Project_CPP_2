@@ -236,12 +236,10 @@ CObject_HUD* CObject_HUD::Create(std::string FilePath)
 
 		// ‰ŠúÀ•W‚ğİ’è
 		auto Pos = Json["Pos"];
-		pNewInstance->SetPos(Vec3(static_cast<float>(SCREEN_WIDTH) / 2.0f, static_cast<float>(SCREEN_HEIGHT) / 2.0f, 0.0f));
 		pNewInstance->SetPos(Vec3(Pos[0], Pos[1], Pos[2]));
 
 		// –Ú•WÀ•W‚ğİ’è
 		auto PosTarget = Json["PosTarget"];
-		pNewInstance->SetPosTarget(Vec3(static_cast<float>(SCREEN_WIDTH) / 2.0f, static_cast<float>(SCREEN_HEIGHT) / 2.0f, 0.0f));
 		pNewInstance->SetPosTarget(Vec3(PosTarget[0], PosTarget[1], PosTarget[2]));
 
 		// ‰ŠúŒü‚«‚ğİ’è

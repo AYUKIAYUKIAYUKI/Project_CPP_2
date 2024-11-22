@@ -61,7 +61,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 	MSG  msg;	// メッセージを格納する変数
 
 	// 画面サイズの設定用
-	RECT rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	RECT rect = { 0, 0, WSCREEN_WIDTH, WSCREEN_HEIGHT };
 
 	// ウィンドウクラスの登録
 	RegisterClassEx(&wcex);
@@ -76,8 +76,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 		WS_OVERLAPPEDWINDOW,	// ウィンドウのスタイル
 		125,					// ウィンドウの左上のX座標
 		50,						// ウィンドウの左上のY座標
-		SCREEN_WIDTH,			// ウィンドウの幅
-		SCREEN_HEIGHT,			// ウィンドウの高さ
+		WSCREEN_WIDTH,			// ウィンドウの幅
+		WSCREEN_HEIGHT,			// ウィンドウの高さ
 		NULL,					// 親ウィンドウのハンドル
 		NULL,					// メニューバーまたは子ウィンドウID
 		hInstance,				// インスタンスハンドル

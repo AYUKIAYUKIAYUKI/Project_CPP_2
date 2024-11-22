@@ -73,10 +73,12 @@
 //****************************************************
 
 /// <summary> スクリーン横幅 </summary>
-static constexpr WORD SCREEN_WIDTH = 1980;
+static const WORD	WSCREEN_WIDTH = static_cast<WORD>(GetSystemMetrics(SM_CXSCREEN));
+static const float	FSCREEN_WIDTH = static_cast<float>(GetSystemMetrics(SM_CXSCREEN));
 
 /// <summary> スクリーン縦幅 </summary>
-static constexpr WORD SCREEN_HEIGHT = 1080;
+static const WORD	WSCREEN_HEIGHT = static_cast<WORD>(GetSystemMetrics(SM_CYSCREEN));
+static const float	FSCREEN_HEIGHT = static_cast<float>(GetSystemMetrics(SM_CYSCREEN));
 
 //****************************************************
 // 名前空間を定義

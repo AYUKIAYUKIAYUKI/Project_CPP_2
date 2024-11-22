@@ -405,7 +405,7 @@ void CCamera::CalcMtxProjection()
 	// 透視投影
 	D3DXMatrixPerspectiveFovLH(&m_MtxProjection,
 		D3DXToRadian(45.0f),
-		(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
+		FSCREEN_WIDTH / FSCREEN_HEIGHT,
 		10.0f,
 		5000.0f);
 #else

@@ -60,10 +60,10 @@ HRESULT CMask_Rectangle::Init()
 	}
 
 	// 座標の設定
-	m_Pos = { SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f };
+	m_Pos = { FSCREEN_WIDTH * 0.5f, FSCREEN_HEIGHT * 0.5f, 0.0f };
 
 	// サイズの設定
-	m_Size = { SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f };
+	m_Size = { FSCREEN_WIDTH * 0.5f, FSCREEN_HEIGHT * 0.5f, 0.0f };
 
 	return S_OK;
 }

@@ -50,9 +50,9 @@ HRESULT CFade::Init()
 
 	// à íuÇÃê›íË
 	pVtx[0].pos = { 0.0f, 0.0f, 0.0f };
-	pVtx[1].pos = { SCREEN_WIDTH, 0.0f, 0.0f };
-	pVtx[2].pos = { 0.0f, SCREEN_HEIGHT, 0.0f };
-	pVtx[3].pos = { SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f };
+	pVtx[1].pos = { FSCREEN_WIDTH, 0.0f, 0.0f };
+	pVtx[2].pos = { 0.0f, FSCREEN_HEIGHT, 0.0f };
+	pVtx[3].pos = { FSCREEN_WIDTH, FSCREEN_HEIGHT, 0.0f };
 
 	// èúéZêîÇÃê›íË
 	pVtx[0].rhw = 1.0f;

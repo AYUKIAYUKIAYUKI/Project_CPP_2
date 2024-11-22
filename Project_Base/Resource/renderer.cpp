@@ -128,7 +128,7 @@ void CRenderer::PrintDebug()
 	}
 
 	// 表示位置
-	RECT Rect = { 0, 0 - wAdjustHeight, SCREEN_WIDTH, SCREEN_HEIGHT - wAdjustHeight };
+	RECT Rect = { 0, 0 - wAdjustHeight, WSCREEN_WIDTH, WSCREEN_HEIGHT - wAdjustHeight };
 
 	for (WORD i = 0; i < m_TimeStr.size(); ++i)
 	{
@@ -279,8 +279,8 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 
 	// デバイスのプレゼンテーションパラメータの設定
 	ZeroMemory(&d3dpp, sizeof(d3dpp));			// パラメータのゼロクリア
-	d3dpp.BackBufferWidth = SCREEN_WIDTH;		// ゲームサイズ(幅)
-	d3dpp.BackBufferHeight = SCREEN_HEIGHT;		// ゲームサイズ(高さ)
+	d3dpp.BackBufferWidth = WSCREEN_WIDTH;		// ゲームサイズ(幅)
+	d3dpp.BackBufferHeight = WSCREEN_HEIGHT;	// ゲームサイズ(高さ)
 	d3dpp.BackBufferFormat = d3ddm.Format;		// バックバッファの形式
 	d3dpp.BackBufferCount = 1;					// バックバッファの数
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;	// ダブルバッファの切り替え(映像信号に同期)
@@ -342,7 +342,7 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 
 	// フォントを生成
 	D3DXCreateFont(m_pD3DDevice,
-		22,
+		18,
 		0,
 		FW_HEAVY,
 		1,
