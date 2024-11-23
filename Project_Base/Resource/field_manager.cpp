@@ -422,7 +422,7 @@ void CField_Manager::DEBUG_CIRCLE()
 		// 生成用の向きを決定
 		Vec3 NewRot = VEC3_INIT;
 		//NewRot.y = utility::GetRandomValue<float>();
-		NewRot.y = fDirection;
+		NewRot.y = fDirection + D3DX_PI * 0.5f;
 
 		// ブロックを生成
 		CBlock::Create(NewPos, NewRot);

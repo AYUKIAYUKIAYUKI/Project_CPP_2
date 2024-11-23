@@ -358,11 +358,11 @@ void CPlayer::HitCheck()
 			TESTTEST->SetScale(BoxSize);
 		}
 
-		// ボックスの中心点からシリンダーの座標への相対座標を計算
+		// ①ボックスの中心点からシリンダーの座標への距離ベクトルを計算
 		const Vec3& RelativePos = CylinderPosTarget - BoxPos;
 		const Vec3& RelativeOldPos = CylinderOldPos - BoxPos;
 
-		// 相対座標に、ボックスの回転角を打ち消す回転行列を適用
+		// ②座標系を正規化するため、距離ベクトルにボックスの回転量を打ち消すように回転行列を適用
 		const Vec3& ResultPos = utility::RotatePointAroundY(-fBoxDirection, RelativePos);
 		const Vec3& ResultOldPos = utility::RotatePointAroundY(-fBoxDirection, RelativeOldPos);
 		{
@@ -370,8 +370,8 @@ void CPlayer::HitCheck()
 			ててて->SetPos(ResultPos);
 		}
 
-		// ボックスの回転量を打ち消したと仮定し、シリンダーの相対座標を用いて衝突判定
-		// (ボックスの座標に関わらず、仮定したAABBとシリンダーの相対距離で判定するだけなので、渡すボックス座標は原点にする)
+		// 座標系を正規化した仮定し、ボックスからシリンダーへの距離ベクトルを用いて衝突判定
+		// (ボックスの座標は原点で、回転は考慮せず、AABBと仮定する)
 		if (collision::HitCylinderToAABB(ResultPos, CylinderRadius, CylinderHeight, VEC3_INIT, BoxSize))
 		{
 			// 判定表示を赤色に
@@ -383,9 +383,11 @@ void CPlayer::HitCheck()
 			// 衝突面を判定
 			int nIdx = collision::GetCylinderToAABB(ResultOldPos, ResultPos, CylinderRadius, CylinderHeight, VEC3_INIT, BoxSize);
 
+			// 上下の判定は2DのY軸判定と変わらないので普通にブロックの上下幅で押し出し
+			// 左右の判定は正規化した座標で押し出しを行った後に回転させて本来のあるべき座標を設定
 			switch (nIdx)
 			{
-			case 0:
+			case 0:	// 分類不能
 				break;
 
 			case 1: // 上
@@ -394,7 +396,9 @@ void CPlayer::HitCheck()
 				SetVelY(0.0f);
 
 				// 新しい目標座標を作成
-				const Vec3& NewPosTarget = { CylinderPosTarget.x, BoxPos.y + BoxSize.y + CylinderHeight, CylinderPosTarget.z };
+				const Vec3& NewPosTarget = { CylinderPosTarget.x,
+					BoxPos.y + BoxSize.y + CylinderHeight,
+					CylinderPosTarget.z };
 			 
 				// 目標座標を反映
 				SetPosTarget(NewPosTarget);
@@ -407,7 +411,10 @@ void CPlayer::HitCheck()
 				SetVelY(0.0f);
 
 				// 新しい目標座標を作成
-				const Vec3& NewPosTarget = { CylinderPosTarget.x, BoxPos.y - BoxSize.y - CylinderHeight, CylinderPosTarget.z };
+				const Vec3& NewPosTarget = {
+					CylinderPosTarget.x,
+					BoxPos.y - BoxSize.y - CylinderHeight,
+					CylinderPosTarget.z };
 
 				// 目標座標を反映
 				SetPosTarget(NewPosTarget);
@@ -416,11 +423,29 @@ void CPlayer::HitCheck()
 			}
 			case 3:	// 左
 			{
-				// 過去の方角へ戻す
-				SetDirection(GetOldDirection());
+				// 正規化された座標系内で新しい目標座標を作成
+				Vec3 NewPosTarget = {
+					/* BoxPos.x <- 0.0f */ + BoxSize.x + CylinderRadius,
+					CylinderPosTarget.y,
+					//(ResultOldPos.z/* - BoxPos.z <- 0.0f */) * (ResultPos.x / ResultOldPos.x)};
+					//ResultOldPos.z};
+					CylinderOldPos.z * (ResultPos.x / ResultOldPos.x) };
+				/* ↑Z座標について、円弧で移動するため、膨大なスイープ判定を行うことになってしまう…
+				ボックスの中心から元のZ座標への方向成分をXのサイズ分と均等な割合になるように調整する */
 
-				// 目標座標を再設定
+				// 打ち消した回転を再度かけ合わせて本来の向きに戻す
+				NewPosTarget = utility::RotatePointAroundY(fBoxDirection + D3DX_PI * 0.5f, NewPosTarget);
+
+				CRenderer::SetTimeString("正規化座標系での座標:x " + to_string(NewPosTarget.x) + ":y " + to_string(NewPosTarget.y) + ":z " + to_string(NewPosTarget.z), 600);
+				CRenderer::SetTimeString("Z割合" + to_string((ResultPos.x / ResultOldPos.x)), 600);
+
+				// 直した向きからいるべき方角を補正
+				SetDirection(atan2f(NewPosTarget.x, NewPosTarget.z));
+
+				// 補正方角から目標座標を設定
 				AutoSetPosTarget();
+				
+				CRenderer::SetTimeString("通常座標系での座標:x " + to_string(GetPosTarget().x) + ":y " + to_string(GetPosTarget().y) + ":z " + to_string(GetPosTarget().z), 600);
 
 				break;
 			}

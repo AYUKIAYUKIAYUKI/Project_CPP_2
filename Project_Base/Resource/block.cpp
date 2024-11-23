@@ -97,17 +97,17 @@ void CBlock::Update()
 	// すぐにけせ
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	ImGui::Begin("Block Param");
-	static float fRotY = 0.0f;
-	if (ImGui::Button("--"))
-		fRotY += D3DX_PI * -0.1f;
-	ImGui::SameLine();
-	if (ImGui::Button("++"))
-		fRotY += D3DX_PI * 0.1f;
-	ImGui::SameLine();
-	ImGui::SliderFloat("Add RotY", &fRotY, -D3DX_PI, D3DX_PI);
-	Vec3 NewRot = GetRot();
-	NewRot.y = fRotY;
-	SetRot(NewRot);
+	//static float fRotY = 0.0f;
+	//if (ImGui::Button("--"))
+	//	fRotY += D3DX_PI * -0.1f;
+	//ImGui::SameLine();
+	//if (ImGui::Button("++"))
+	//	fRotY += D3DX_PI * 0.1f;
+	//ImGui::SameLine();
+	//ImGui::SliderFloat("Add RotY", &fRotY, -D3DX_PI, D3DX_PI);
+	//Vec3 NewRot = GetRot();
+	//NewRot.y = fRotY;
+	//SetRot(NewRot);
 
 	// 基底クラスの更新処理
 	CObject_X::Update();
