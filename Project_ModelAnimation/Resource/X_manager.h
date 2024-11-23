@@ -59,7 +59,7 @@ public:
 
 	// <static function>
 	static HRESULT	Create();	// 生成
-	static void		Release();		// 解放
+	static void		Release();	// 解放
 
 	// <static getter>
 	static CX_Manager* GetInstance();	// Xモデルマネージャーを取得

@@ -423,6 +423,7 @@ void CPlayer::HitCheck()
 			}
 			case 3:	// 左
 			{
+#if 0	// 押し出し方法の切り替え (調整中)
 				// 正規化された座標系内で新しい目標座標を作成
 				Vec3 NewPosTarget = {
 					/* BoxPos.x <- 0.0f */ + BoxSize.x + CylinderRadius,
@@ -446,7 +447,13 @@ void CPlayer::HitCheck()
 				AutoSetPosTarget();
 				
 				CRenderer::SetTimeString("通常座標系での座標:x " + to_string(GetPosTarget().x) + ":y " + to_string(GetPosTarget().y) + ":z " + to_string(GetPosTarget().z), 600);
+#else
+				// 過去の方角へ戻す
+				SetDirection(GetOldDirection());
 
+				// 目標座標を再設定
+				AutoSetPosTarget();
+#endif
 				break;
 			}
 			case 4:	// 右

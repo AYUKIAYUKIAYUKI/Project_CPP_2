@@ -125,7 +125,7 @@ CX_Manager* CX_Manager::GetInstance()
 //============================================================================
 CX_Manager::CX_Manager()
 {
-	for (WORD wCntModel = 0; wCntModel < static_cast<WORD>(TYPE::MAX); wCntModel++)
+	for (WORD wCntModel = 0; wCntModel < static_cast<WORD>(TYPE::MAX); ++wCntModel)
 	{
 		// モデル情報の初期化
 		m_apModelTemp[wCntModel].pMesh = nullptr;		// メッシュのポインタ
@@ -156,7 +156,7 @@ HRESULT CX_Manager::Init()
 	// デバイスを取得
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
-	for (WORD wCntModel = 0; wCntModel < static_cast<WORD>(TYPE::MAX); wCntModel++)
+	for (WORD wCntModel = 0; wCntModel < static_cast<WORD>(TYPE::MAX); ++wCntModel)
 	{
 		// モデルファイルのパスを作成する
 		const std::string& ModelFilePath = Json["ModelList"][wCntModel];
@@ -173,7 +173,6 @@ HRESULT CX_Manager::Init()
 
 		if (FAILED(hr))
 		{ // 取得失敗
-
 #ifdef _DEBUG
 			CRenderer::SetTimeString("【警告】モデル[" + ModelFilePath + "]は読み込みに失敗しました", 300);
 #endif	// _DEBUG
@@ -188,13 +187,13 @@ HRESULT CX_Manager::Init()
 		D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_apModelTemp[wCntModel].pBuffMat->GetBufferPointer();
 
 		// マテリアル数分、マテリアル色情報のポインタ配列を確保
-		m_apModelTemp[wCntModel].apColMat = DBG_NEW D3DXCOLOR[static_cast<WORD>(m_apModelTemp[wCntModel].dwNumMat)];
+		m_apModelTemp[wCntModel].apColMat = DBG_NEW D3DXCOLOR[m_apModelTemp[wCntModel].dwNumMat];
 
 		// マテリアル数分、テクスチャ情報のポインタ配列を確保
-		m_apModelTemp[wCntModel].apTex = DBG_NEW LPDIRECT3DTEXTURE9[static_cast<WORD>(m_apModelTemp[wCntModel].dwNumMat)];
+		m_apModelTemp[wCntModel].apTex = DBG_NEW LPDIRECT3DTEXTURE9[m_apModelTemp[wCntModel].dwNumMat];
 
 		// マテリアルごとにテクスチャの有無を確認
-		for (WORD wCntMat = 0; wCntMat < static_cast<WORD>(m_apModelTemp[wCntModel].dwNumMat); wCntMat++)
+		for (WORD wCntMat = 0; wCntMat < m_apModelTemp[wCntModel].dwNumMat; ++wCntMat)
 		{
 			// マテリアルの色をモデル情報内に保存しておく
 			m_apModelTemp[wCntModel].apColMat[wCntMat] = pMat[wCntMat].MatD3D.Diffuse;
@@ -215,7 +214,6 @@ HRESULT CX_Manager::Init()
 
 			if (FAILED(hr))
 			{ // 生成失敗
-
 #ifdef _DEBUG
 				CRenderer::SetTimeString("【警告】モデル[" + ModelFilePath + "]におけるテクスチャの[" + pMat[wCntMat].pTextureFilename + "]は生成に失敗しました", 600);
 #endif	// _DEBUG
@@ -332,10 +330,10 @@ D3DXVECTOR3 CX_Manager::LoadSize(std::string filename)
 //============================================================================
 void CX_Manager::Uninit()
 {
-	for (WORD wCntModel = 0; wCntModel < static_cast<WORD>(TYPE::MAX); wCntModel++)
+	for (WORD wCntModel = 0; wCntModel < static_cast<WORD>(TYPE::MAX); ++wCntModel)
 	{
 		// マテリアル用のテクスチャを破棄
-		for (WORD wCntMat = 0; wCntMat < static_cast<WORD>(m_apModelTemp[wCntModel].dwNumMat); wCntMat++)
+		for (WORD wCntMat = 0; wCntMat < m_apModelTemp[wCntModel].dwNumMat; ++wCntMat)
 		{
 			if (m_apModelTemp[wCntModel].apTex[wCntMat] != nullptr)
 			{

@@ -383,8 +383,8 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 		"Terminal",
 		&m_pFont);
 
-	// テクスチャマネージャー初期設定
-	if (FAILED(CTexture_Manager::GetInstance()->Load()))
+	// テクスチャマネージャーを生成
+	if (FAILED(CTexture_Manager::Create()))
 	{
 		return E_FAIL;
 	}
@@ -418,8 +418,8 @@ void CRenderer::Uninit()
 	// Xモデルマネージャーの破棄
 	CX_Manager::Release();
 
-	// テクスチャマネージャー破棄
-	CTexture_Manager::GetInstance()->Release();
+	// テクスチャマネージャーの破棄
+	CTexture_Manager::Release();
 
 	// フォントの破棄
 	if (m_pFont != nullptr)

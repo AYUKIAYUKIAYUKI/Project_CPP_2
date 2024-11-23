@@ -9,61 +9,53 @@
 // インクルードファイル
 //****************************************************
 #include "texture_manager.h"
-
-// デバイス取得用
 #include "renderer.h"
+
+//****************************************************
+// usingディレクティブ
+//****************************************************
+using namespace abbr;
 
 //****************************************************
 // 静的メンバ変数の初期化
 //****************************************************
-CTexture_Manager* CTexture_Manager::m_pInstance = nullptr;	// テクスチャマネージャー
+CTexture_Manager* CTexture_Manager::m_pTextureManager = nullptr;	// テクスチャマネージャーの本体
 
 //============================================================================
-// 初期設定
+//
+// publicメンバ
+//
 //============================================================================
-HRESULT CTexture_Manager::Load()
+
+//============================================================================
+// 生成
+//============================================================================
+HRESULT CTexture_Manager::Create()
 {
-	// テクスチャリストを展開
-	std::ifstream TextureList{ "Data\\TXT\\texture_path.txt" };
-
-	if (!TextureList)
-	{ // 展開に失敗
-		assert(false);
-	}
-
-	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetRenderer()->GetDeviece();
-
-	for (int i = 0; i < static_cast<int>(TYPE::MAX); i++)
+	// 既に生成されていたら
+	if (m_pTextureManager != nullptr)
 	{
-		// テクスチャ名格納先
-		std::string TextureName;
-
-		// テクスチャ名を取得する
-		std::getline(TextureList, TextureName);
-
-		// パスを作成する
-		TextureName.insert(0, "Data\\TEXTURE\\");
-
-		// テクスチャの生成
-		HRESULT hr = D3DXCreateTextureFromFileA(pDev,
-			TextureName.c_str(),
-			&m_apTexTemp[i]);
-
-		if (FAILED(hr))
-		{ // テクスチャ生成失敗
-
-#ifdef _DEBUG	// 警告表示
-
-			TextureName = TextureName.substr(TextureName.find_last_of("\\") + 1, TextureName.back());
-			CRenderer::SetTimeString("【警告】テクスチャ[" + TextureName + "]は生成に失敗しました", 300);
-
+#ifdef _DEBUG
+		CRenderer::SetTimeString("テクスチャマネージャーは既に生成されています", 120);
 #endif	// _DEBUG
-		}
+
+		return S_OK;
 	}
 
-	// ファイルを閉じる
-	TextureList.close();
+	// インスタンスを生成
+	m_pTextureManager = DBG_NEW CTexture_Manager();
+
+	// 生成失敗
+	if (m_pTextureManager == nullptr)
+	{
+		return E_FAIL;
+	}
+
+	// テクスチャマネージャーの初期設定
+	if (FAILED(m_pTextureManager->Init()))
+	{
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -73,16 +65,16 @@ HRESULT CTexture_Manager::Load()
 //============================================================================
 void CTexture_Manager::Release()
 {
-	if (m_pInstance != nullptr)
+	if (m_pTextureManager != nullptr)
 	{
-		// テクスチャを破棄
-		m_pInstance->Unload();
+		// テクスチャマネージャーの終了処理
+		m_pTextureManager->Uninit();
 
-		// メモリを解放
-		delete m_pInstance;
-	
-		// ポインタを初期化
-		m_pInstance = nullptr;
+		// メモリの解放
+		delete m_pTextureManager;
+
+		// ポインタの初期化
+		m_pTextureManager = nullptr;
 	}
 }
 
@@ -91,17 +83,17 @@ void CTexture_Manager::Release()
 //============================================================================
 LPDIRECT3DTEXTURE9 CTexture_Manager::GetTexture(TYPE Type)
 {
-	if (m_apTexTemp[static_cast<int>(Type)] == nullptr)
-	{ // テクスチャ取得不能
-
-#ifdef _DEBUG	// 警告表示
-
-		CRenderer::SetTimeString("【警告】テクスチャ取得エラー", 600);
-
+	// モデル取得不能
+	if (m_apTexture[static_cast<WORD>(Type)] == nullptr)
+	{
+#ifdef _DEBUG
+		CRenderer::SetTimeString("【警告】テクスチャ取得時にエラー発生", 300);
 #endif	// _DEBUG
+
+		return nullptr;
 	}
 
-	return m_apTexTemp[static_cast<int>(Type)];
+	return m_apTexture[static_cast<WORD>(Type)];
 }
 
 //============================================================================
@@ -109,23 +101,33 @@ LPDIRECT3DTEXTURE9 CTexture_Manager::GetTexture(TYPE Type)
 //============================================================================
 CTexture_Manager* CTexture_Manager::GetInstance()
 {
-	if (m_pInstance == nullptr)
+	// 本体が存在しなければ
+	if (m_pTextureManager == nullptr)
 	{
 		// 生成
-		m_pInstance->Create();
+		if (FAILED(Create()))
+		{
+			assert(false && "テクスチャマネージャーの取得に失敗");
+		}
 	}
 
-	return m_pInstance;
+	return m_pTextureManager;
 }
+
+//============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
 
 //============================================================================
 // コンストラクタ
 //============================================================================
 CTexture_Manager::CTexture_Manager()
 {
-	for (int i = 0; i < static_cast<int>(TYPE::MAX); i++)
+	for (WORD wCntTex = 0; wCntTex < static_cast<int>(TYPE::MAX); ++wCntTex)
 	{
-		m_apTexTemp[i] = nullptr;	// テクスチャ情報の初期化
+		m_apTexture[wCntTex] = nullptr;	// テクスチャ情報の初期化
 	}
 }
 
@@ -138,31 +140,49 @@ CTexture_Manager::~CTexture_Manager()
 }
 
 //============================================================================
-// 生成
+// 終了処理
 //============================================================================
-void CTexture_Manager::Create()
+void CTexture_Manager::Uninit()
 {
-	if (m_pInstance != nullptr)
-	{ // 二重生成禁止
-		assert(false);
+	for (WORD wCntTex = 0; wCntTex < static_cast<int>(TYPE::MAX); ++wCntTex)
+	{
+		// テクスチャの破棄
+		if (m_apTexture[wCntTex] != nullptr)
+		{
+			m_apTexture[wCntTex]->Release();
+			m_apTexture[wCntTex] = nullptr;
+		}
 	}
-
-	// インスタンスを生成
-	m_pInstance = DBG_NEW CTexture_Manager{};
 }
 
 //============================================================================
-// 終了処理
+// 初期設定
 //============================================================================
-void CTexture_Manager::Unload()
+HRESULT CTexture_Manager::Init()
 {
-	for (int i = 0; i < static_cast<int>(TYPE::MAX); i++)
+	// テクスチャリストを取得
+	JSON Json = utility::OpenJsonFile("Data\\JSON\\texture_list.json");
+
+	// デバイスを取得
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetRenderer()->GetDeviece();
+
+	for (WORD wCntTex = 0; wCntTex < static_cast<int>(TYPE::MAX); ++wCntTex)
 	{
-		// テクスチャの破棄
-		if (m_apTexTemp[i] != nullptr)
-		{
-			m_apTexTemp[i]->Release();
-			m_apTexTemp[i] = nullptr;
+		// テクスチャファイルのパスを作成する
+		const std::string& TextureFilePath = Json["ModelList"][wCntTex];
+
+		// テクスチャの生成
+		HRESULT hr = D3DXCreateTextureFromFileA(pDev,
+			TextureFilePath.c_str(),
+			&m_apTexture[wCntTex]);
+
+		if (FAILED(hr))
+		{ // テクスチャ生成失敗
+#ifdef _DEBUG
+			CRenderer::SetTimeString("【警告】テクスチャ[" + TextureFilePath + "]は生成に失敗しました", 300);
+#endif	// _DEBUG
 		}
 	}
+
+	return S_OK;
 }
