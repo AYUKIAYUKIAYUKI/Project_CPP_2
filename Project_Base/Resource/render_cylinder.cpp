@@ -55,7 +55,10 @@ HRESULT CRender_Cylinder::Init()
 	}
 
 	// •\Ž¦‚Ì“§–¾“x‚ðÝ’è
-	m_pCylinder->SetAlpha(0.5f);
+	D3DXCOLOR NewCol = m_pCylinder->GetCol();
+	NewCol.a = 0.5f;
+	m_pCylinder->SetCol(NewCol);
+	m_pCylinder->SetUseCol(true);
 
 	return S_OK;
 }

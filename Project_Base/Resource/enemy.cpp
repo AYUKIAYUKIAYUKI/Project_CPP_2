@@ -200,7 +200,7 @@ void CEnemy::AttackOnPlayer()
 			}
 
 			/* 判定表示を赤色に */
-			m_pBndCylinder->ChangeModel(CX_Manager::TYPE::RENDER_CYLINDER_HIT);
+			//m_pBndCylinder->ChangeModel(CX_Manager::TYPE::RENDER_CYLINDER_HIT);
 
 			// ダメージを与える
 			pPlayer->SetDamage(-1);
@@ -208,7 +208,7 @@ void CEnemy::AttackOnPlayer()
 		else
 		{
 			/* 判定表示を通常色に戻す */
-			m_pBndCylinder->ChangeModel(CX_Manager::TYPE::RENDER_CYLINDER);
+			//m_pBndCylinder->ChangeModel(CX_Manager::TYPE::RENDER_CYLINDER);
 		}
 	}
 	else

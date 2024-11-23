@@ -20,23 +20,17 @@ public:
 	//****************************************************
 	enum class TYPE : WORD
 	{
-		TEST = 0,				// テスト
-		TEST2,					// テスト2
-		CYLINDER,				// cylinder
-		SAMUS,					// サムス
-		ENEMY,					// 敵
-		RUBBLE_00,				// がれき00
-		RUBBLE_01,				// がれき01
-		RUBBLE_02,				// がれき02
-		CYLINDERCOLLIDER,		// cylinder collider
-		SPHERE,					// sphere
-		RENDER_SPHERE,			// render sphere
-		RENDER_SPHERE_HIT,		// render sphere hit
-		RENDER_CYLINDER,		// render cylinder
-		RENDER_CYLINDER_HIT,	// render cylinder hit
-		STATUE,					// 銅像
-		AROUND,					// 周辺領域
-		BOX,					// box
+		RENDER_SPHERE = 0,	// render sphere
+		RENDER_CYLINDER,	// render cylinder
+		RENDER_BOX,			// render box
+		STATUE,				// 銅像
+		AROUND,				// 周辺領域
+		SAMUS,				// サムス
+		ENEMY,				// 敵
+		BLOCK,				// ブロック
+		RUBBLE_00,			// がれき00
+		RUBBLE_01,			// がれき01
+		RUBBLE_02,			// がれき02
 		MAX,
 	};
 

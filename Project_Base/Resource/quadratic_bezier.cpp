@@ -83,8 +83,7 @@ HRESULT CQuadratic_Bezier::Init()
 	// ãOê’ÇÃê∂ê¨
 	for (WORD i = 0; i < NUM_TRAJECTORY; ++i)
 	{
-		m_pTrajectory[i] = CObject_X::Create();
-		m_pTrajectory[i]->BindModel(CX_Manager::TYPE::SPHERE);
+		m_pTrajectory[i] = CObject_X::Create(CX_Manager::TYPE::RENDER_SPHERE);
 	}
 
 	return S_OK;

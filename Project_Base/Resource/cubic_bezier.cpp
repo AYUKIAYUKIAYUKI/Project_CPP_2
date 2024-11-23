@@ -55,8 +55,7 @@ HRESULT CCubic_Bezier::Init()
 	}
 
 	// ŽOŽŸ‹OÕ‚Ì¶¬
-	m_pCubic_Trajectory = CObject_X::Create();
-	m_pCubic_Trajectory->BindModel(CX_Manager::TYPE::SPHERE);
+	m_pCubic_Trajectory = CObject_X::Create(CX_Manager::TYPE::RENDER_SPHERE);
 
 	return S_OK;
 }

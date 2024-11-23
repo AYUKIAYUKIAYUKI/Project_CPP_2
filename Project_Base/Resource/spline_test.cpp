@@ -74,10 +74,6 @@ HRESULT CSpline_Test::Init()
 		return E_FAIL;
 	}
 
-	/* 原点にモデルを生成 */
-	auto pTest = CObject_X::Create();
-	pTest->BindModel(CX_Manager::TYPE::SAMUS);
-
 	// 座標情報をデシリアライズ
 	const auto& Pos_List = m_Json["Pos_List"];
 

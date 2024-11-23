@@ -375,7 +375,7 @@ void CPlayer::HitCheck()
 		if (collision::HitCylinderToAABB(ResultPos, CylinderRadius, CylinderHeight, VEC3_INIT, BoxSize))
 		{
 			// ”»’è•\¦‚ğÔF‚É
-			m_pBndCylinder->ChangeModel(CX_Manager::TYPE::RENDER_CYLINDER_HIT);
+			//m_pBndCylinder->ChangeModel(CX_Manager::TYPE::RENDER_CYLINDER_HIT);
 				
 			// Õ“Ë‚ª‚ ‚Á‚½‚±‚Æ‚ğŒŸo
 			bDetect = 1;
