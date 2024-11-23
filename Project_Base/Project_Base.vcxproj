@@ -50,7 +50,6 @@
     <ClCompile Include="resource\light.cpp" />
     <ClCompile Include="resource\main.cpp" />
     <ClCompile Include="resource\manager.cpp" />
-    <ClCompile Include="Resource\model_X_manager.cpp" />
     <ClCompile Include="resource\object.cpp" />
     <ClCompile Include="resource\object_2D.cpp" />
     <ClCompile Include="resource\object_3D.cpp" />
@@ -86,6 +85,7 @@
     <ClCompile Include="resource\texture_manager.cpp" />
     <ClCompile Include="Resource\title.cpp" />
     <ClCompile Include="Resource\utility.cpp" />
+    <ClCompile Include="Resource\X_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImGui\imconfig.h" />
@@ -120,7 +120,6 @@
     <ClInclude Include="resource\light.h" />
     <ClInclude Include="resource\main.h" />
     <ClInclude Include="resource\manager.h" />
-    <ClInclude Include="Resource\model_X_manager.h" />
     <ClInclude Include="resource\object.h" />
     <ClInclude Include="resource\object_2D.h" />
     <ClInclude Include="resource\object_3D.h" />
@@ -153,6 +152,7 @@
     <ClInclude Include="resource\texture_manager.h" />
     <ClInclude Include="Resource\title.h" />
     <ClInclude Include="Resource\utility.h" />
+    <ClInclude Include="Resource\X_manager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -84,9 +84,6 @@
     <ClCompile Include="resource\sound.cpp">
       <Filter>&lt;System&gt;</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\model_X_manager.cpp">
-      <Filter>&lt;System&gt;</Filter>
-    </ClCompile>
     <ClCompile Include="resource\manager.cpp">
       <Filter>&lt;System&gt;</Filter>
     </ClCompile>
@@ -171,6 +168,9 @@
     <ClCompile Include="ImGui\imgui.cpp">
       <Filter>&lt;ImGui&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\X_manager.cpp">
+      <Filter>&lt;System&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -254,9 +254,6 @@
       <Filter>&lt;System&gt;</Filter>
     </ClInclude>
     <ClInclude Include="resource\sound.h">
-      <Filter>&lt;System&gt;</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource\model_X_manager.h">
       <Filter>&lt;System&gt;</Filter>
     </ClInclude>
     <ClInclude Include="resource\manager.h">
@@ -345,6 +342,9 @@
     </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
       <Filter>&lt;ImGui&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\X_manager.h">
+      <Filter>&lt;System&gt;</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

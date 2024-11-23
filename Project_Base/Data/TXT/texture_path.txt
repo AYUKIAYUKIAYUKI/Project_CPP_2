@@ -1,6 +1,0 @@
-test.jpg
-sea.png
-map.png
-circle.png
-gauge.png
-gauge_window.png

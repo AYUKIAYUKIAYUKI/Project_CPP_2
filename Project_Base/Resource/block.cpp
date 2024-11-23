@@ -160,7 +160,7 @@ CBlock* CBlock::Create(const D3DXVECTOR3& Pos, const D3DXVECTOR3& Rot)
 	pNewInstance->SetRot(Rot);
 
 	// モデルを設定
-	pNewInstance->BindModel(CModel_X_Manager::TYPE::TEST2);
+	pNewInstance->BindModel(CX_Manager::TYPE::TEST2);
 
 	// サイズを設定
 	pNewInstance->m_pBndBox->SetSize(pNewInstance->GetModel()->Size);

@@ -30,7 +30,7 @@ using namespace abbr;
 //============================================================================
 CRender_Cylinder::CRender_Cylinder(LAYER Priority) :
 	CRender_Collision{ Priority },
-	m_pCylinder{ CObject_X::Create(Priority, CModel_X_Manager::TYPE::RENDER_CYLINDER) }
+	m_pCylinder{ CObject_X::Create(Priority, CX_Manager::TYPE::RENDER_CYLINDER) }
 {
 
 }
@@ -94,7 +94,7 @@ void CRender_Cylinder::Draw()
 //============================================================================
 // ƒ‚ƒfƒ‹‚ð•ÏX
 //============================================================================
-void CRender_Cylinder::ChangeModel(CModel_X_Manager::TYPE Type)
+void CRender_Cylinder::ChangeModel(CX_Manager::TYPE Type)
 {
 	m_pCylinder->BindModel(Type);
 }

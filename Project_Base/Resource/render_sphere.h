@@ -12,7 +12,7 @@
 // インクルードファイル
 //****************************************************
 #include "render_collision.h"
-#include "model_X_manager.h"
+#include "X_manager.h"
 
 //****************************************************
 // スフィア判定表示クラス
@@ -32,7 +32,7 @@ public:
 	void	Draw() override;	// 描画処理
 
 	// <setter>
-	void ChangeModel(CModel_X_Manager::TYPE Type);	// モデルを変更
+	void ChangeModel(CX_Manager::TYPE Type);	// モデルを変更
 
 	// <static function>
 	static CRender_Sphere* Create(CObject_X* pRef);	// 生成

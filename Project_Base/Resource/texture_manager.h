@@ -18,7 +18,7 @@ public:
 	//****************************************************
 	// テクスチャ識別
 	//****************************************************
-	enum class TYPE
+	enum class TYPE : WORD
 	{
 		TEST0 = 0,			// テスト
 		TEST1,				// テスト
@@ -29,24 +29,37 @@ public:
 		MAX,
 	};
 
-	HRESULT Load();	// テクスチャ読込
-	void Release();	// 解放
+	// <special function>
+	CTexture_Manager(const CTexture_Manager&) = delete;				// コピーコンストラクタ
+	CTexture_Manager& operator=(const CTexture_Manager&) = delete;	// コピー代入演算子
+	CTexture_Manager(CTexture_Manager&&) = delete;					// ムーブコンストラクタ
+	CTexture_Manager& operator=(CTexture_Manager&&) = delete;		// ムーブ代入演算子
 
+	// <getter>
 	LPDIRECT3DTEXTURE9 GetTexture(TYPE Type);	// テクスチャを取得
 
+	// <static function>
+	static HRESULT	Create();	// 生成
+	static void		Release();	// 解放
+
+	// <static getter>
 	static CTexture_Manager* GetInstance();	// テクスチャマネージャーを取得
 
 private:
 
+	// <special function>
 	CTexture_Manager();		// コンストラクタ
 	~CTexture_Manager();	// デストラクタ
 
-	void Create();	// 生成
-	void Unload();	// テクスチャ破棄
+	// <function>
+	HRESULT	Init();		// 初期設定
+	void	Uninit();	// 終了処理
 
-	LPDIRECT3DTEXTURE9 m_apTexTemp[static_cast<int>(TYPE::MAX)];	// テクスチャ情報
+	// <data>
+	LPDIRECT3DTEXTURE9 m_apTexture[static_cast<WORD>(TYPE::MAX)];	// テクスチャ情報
 
-	static CTexture_Manager* m_pInstance;	// テクスチャマネージャー
+	// <static data>
+	static CTexture_Manager* m_pTextureManager;	// テクスチャマネージャーの本体
 };
 
 #endif // _TEXTURE_MANAGER_H_

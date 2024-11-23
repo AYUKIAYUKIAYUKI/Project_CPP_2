@@ -275,7 +275,7 @@ CPlayer* CPlayer::Create()
 	pNewInstance->Init();
 
 	// モデルを設定
-	pNewInstance->BindModel(CModel_X_Manager::TYPE::SAMUS);
+	pNewInstance->BindModel(CX_Manager::TYPE::SAMUS);
 
 	// 半径を設定
 	float fRad = 0.0f;
@@ -375,7 +375,7 @@ void CPlayer::HitCheck()
 		if (collision::HitCylinderToAABB(ResultPos, CylinderRadius, CylinderHeight, VEC3_INIT, BoxSize))
 		{
 			// 判定表示を赤色に
-			m_pBndCylinder->ChangeModel(CModel_X_Manager::TYPE::RENDER_CYLINDER_HIT);
+			m_pBndCylinder->ChangeModel(CX_Manager::TYPE::RENDER_CYLINDER_HIT);
 				
 			// 衝突があったことを検出
 			bDetect = 1;
@@ -480,6 +480,6 @@ void CPlayer::HitCheck()
 	if (!bDetect)
 	{
 		// 判定表示を通常色に戻す
-		m_pBndCylinder->ChangeModel(CModel_X_Manager::TYPE::RENDER_CYLINDER);
+		m_pBndCylinder->ChangeModel(CX_Manager::TYPE::RENDER_CYLINDER);
 	}
 }

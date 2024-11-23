@@ -13,7 +13,7 @@
 //****************************************************
 #include "bounding_volume.h"
 #include "render_cylinder.h"
-#include "model_X_manager.h"
+#include "X_manager.h"
 
 //****************************************************
 // バウンディングシリンダークラス
@@ -28,7 +28,7 @@ public:
 	~CBounding_Cylinder() override;			// デストラクタ
 
 	// <setter>
-	void ChangeModel(CModel_X_Manager::TYPE Type);	// モデルを変更
+	void ChangeModel(CX_Manager::TYPE Type);	// モデルを変更
 
 	// <getter/setter>
 	const float& GetRadius() const;	// 半径を取得

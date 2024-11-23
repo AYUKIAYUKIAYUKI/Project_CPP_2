@@ -56,7 +56,7 @@ CBounding_Cylinder::~CBounding_Cylinder()
 //============================================================================
 // ƒ‚ƒfƒ‹‚ð•ÏX
 //============================================================================
-void CBounding_Cylinder::ChangeModel(CModel_X_Manager::TYPE Type)
+void CBounding_Cylinder::ChangeModel(CX_Manager::TYPE Type)
 {
 	m_pRenderCylinder->ChangeModel(Type);
 }

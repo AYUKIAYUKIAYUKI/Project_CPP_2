@@ -54,7 +54,7 @@ CBounding_Sphere::~CBounding_Sphere()
 //============================================================================
 // ƒ‚ƒfƒ‹‚ð•ÏX
 //============================================================================
-void CBounding_Sphere::ChangeModel(CModel_X_Manager::TYPE Type)
+void CBounding_Sphere::ChangeModel(CX_Manager::TYPE Type)
 {
 	m_pRenderSphere->ChangeModel(Type);
 }

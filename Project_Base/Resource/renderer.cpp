@@ -18,7 +18,7 @@
 
 // シングルトン管理
 #include "texture_manager.h"
-#include "model_X_manager.h"
+#include "X_manager.h"
 
 //****************************************************
 // プリプロセッサディレクティブ
@@ -374,14 +374,14 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 		"Terminal",
 		&m_pFont);
 
-	// テクスチャマネージャー初期設定
-	if (FAILED(CTexture_Manager::GetInstance()->Load()))
+	// テクスチャマネージャーを生成
+	if (FAILED(CTexture_Manager::Create()))
 	{
 		return E_FAIL;
 	}
 
-	// Xモデルマネージャー初期設定
-	if (FAILED(CModel_X_Manager::GetInstance()->Load()))
+	// Xモデルマネージャーを生成
+	if (FAILED(CX_Manager::Create()))
 	{
 		return E_FAIL;
 	}
@@ -398,10 +398,10 @@ void CRenderer::Uninit()
 	CObject::ReleaseAll();
 
 	// Xモデルマネージャー破棄
-	CModel_X_Manager::GetInstance()->Release();
+	CX_Manager::Release();
 
 	// テクスチャマネージャー破棄
-	CTexture_Manager::GetInstance()->Release();
+	CTexture_Manager::Release();
 
 	// フォントの破棄
 	if (m_pFont != nullptr)

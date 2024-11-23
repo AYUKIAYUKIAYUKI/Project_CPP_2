@@ -30,7 +30,7 @@ using namespace abbr;
 //============================================================================
 CRender_Sphere::CRender_Sphere(LAYER Priority) :
 	CRender_Collision{ Priority },
-	m_pSphere{ CObject_X::Create(Priority, CModel_X_Manager::TYPE::RENDER_SPHERE) }
+	m_pSphere{ CObject_X::Create(Priority, CX_Manager::TYPE::RENDER_SPHERE) }
 {
 
 }
@@ -94,7 +94,7 @@ void CRender_Sphere::Draw()
 //============================================================================
 // ƒ‚ƒfƒ‹‚ð•ÏX
 //============================================================================
-void CRender_Sphere::ChangeModel(CModel_X_Manager::TYPE Type)
+void CRender_Sphere::ChangeModel(CX_Manager::TYPE Type)
 {
 	m_pSphere->BindModel(Type);
 }

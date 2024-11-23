@@ -134,21 +134,21 @@ CRubble* CRubble::Create(int nType, D3DXVECTOR3 Pos, D3DXVECTOR3 Velocity)
 	pRubble->SetVelocity(Velocity);
 
 	// モデル用ポインタ
-	CModel_X_Manager::MODEL* Model{ nullptr };
+	CX_Manager::MODEL* Model{ nullptr };
 	
 	// モデルを取得
 	switch (rand() % 2)
 	{
 	case 0:
-		Model = CModel_X_Manager::GetInstance()->GetModel(CModel_X_Manager::TYPE::RUBBLE_00);
+		Model = CX_Manager::GetInstance()->GetModel(CX_Manager::TYPE::RUBBLE_00);
 		break;
 
 	case 1:
-		Model = CModel_X_Manager::GetInstance()->GetModel(CModel_X_Manager::TYPE::RUBBLE_01);
+		Model = CX_Manager::GetInstance()->GetModel(CX_Manager::TYPE::RUBBLE_01);
 		break;
 
 	default:		
-		Model = CModel_X_Manager::GetInstance()->GetModel(CModel_X_Manager::TYPE::RUBBLE_00);
+		Model = CX_Manager::GetInstance()->GetModel(CX_Manager::TYPE::RUBBLE_00);
 		break;
 	}
 
