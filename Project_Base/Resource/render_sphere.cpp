@@ -55,9 +55,7 @@ HRESULT CRender_Sphere::Init()
 	}
 
 	// •\Ž¦‚Ì“§–¾“x‚ðÝ’è
-	D3DXCOLOR NewCol = m_pSphere->GetCol();
-	NewCol.a = 0.5f;
-	m_pSphere->SetCol(NewCol);
+	m_pSphere->SetCol({ 1.0f, 1.0f, 1.0f, 0.5f });
 	m_pSphere->SetUseCol(true);
 
 	return S_OK;

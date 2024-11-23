@@ -52,7 +52,7 @@ void CPlayer_State_Damage::Update()
 	if (m_nDamageDuration % 2 == 0)
 	{
 		m_pCharacter->SetUseCol(true);
-		m_pCharacter->SetCol({ 1.0f, 1.0f, 1.0f, 0.25f });
+		m_pCharacter->SetCol({ 1.0f, 0.0f, 0.0f, 0.25f });
 	}
 	else
 	{

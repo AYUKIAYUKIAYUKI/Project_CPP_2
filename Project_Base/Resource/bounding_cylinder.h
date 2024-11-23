@@ -29,6 +29,8 @@ public:
 
 	// <setter>
 	void ChangeModel(CX_Manager::TYPE Type);	// モデルを変更
+	void SetCol(D3DXCOLOR Col);					// 色を設定
+	void SetUseCol(bool bUse);					// 色反映を設定
 
 	// <getter/setter>
 	const float& GetRadius() const;	// 半径を取得

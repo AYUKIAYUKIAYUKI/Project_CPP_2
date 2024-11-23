@@ -76,8 +76,6 @@ void CObject_X::Uninit()
 //============================================================================
 void CObject_X::Update()
 {
-	CManager::GetKeyboard()->GetPress(DIK_1) ? m_bUseCol = 1 : m_bUseCol = 0;
-
 	// 向きを調整する
 	AdjustRotAngle();
 
@@ -102,6 +100,16 @@ void CObject_X::Draw()
 		return;
 	}
 
+	// マテリアルのバッファが異常
+	if (m_pModel->pBuffMat == nullptr)
+	{
+#ifdef _DEBUG
+		CRenderer::SetDebugString(static_cast<std::string>("【") + typeid(*this).name() + static_cast<std::string>("にマテリアル情報がありません！】"));
+#endif	// _DEBUG
+
+		return;
+	}
+
 	// デバイスを取得
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
@@ -118,20 +126,17 @@ void CObject_X::Draw()
 
 #endif	// CHANGE_DRAW_ZBUFFER
 
-	// 現在のマテリアル保存用
-	D3DMATERIAL9 matDef;
-
-	// マテリアル情報へのポインタ
-	D3DXMATERIAL* pMat = nullptr;
-
 	// ワールドマトリックスの設定
 	pDev->SetTransform(D3DTS_WORLD, &m_MtxWorld);
+
+	// 現在のマテリアル保存用
+	D3DMATERIAL9 matDef;
 
 	// 現在のマテリアルを取得
 	pDev->GetMaterial(&matDef);
 
 	// マテリアルデータへのポインタを取得
-	pMat = (D3DXMATERIAL*)m_pModel->pBuffMat->GetBufferPointer();
+	D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pModel->pBuffMat->GetBufferPointer();
 
 	for (WORD wCntMat = 0; wCntMat < static_cast<WORD>(m_pModel->dwNumMat); wCntMat++)
 	{

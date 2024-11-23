@@ -51,11 +51,11 @@ HRESULT CGame::Init()
 	CPlayer::Create();
 
 	/* エネミーを仮生成 */
-	//CEnemy::Create();
+	CEnemy::Create();
 
 	// 環境装飾を生成
-	//CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue.json"));
-	//CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\around.json"));
+	CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue.json"));
+	CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\around.json"));
 
 	// フィールドマネージャーの初期設定
 	CField_Manager::GetInstance()->Init();

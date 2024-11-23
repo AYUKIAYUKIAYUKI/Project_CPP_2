@@ -22,6 +22,11 @@
 #include "renderer.h"
 
 //****************************************************
+// プリプロセッサディレクティブ
+//****************************************************
+#define SHOW_NORMALIZED_POSITION_HITCHECK 0	// 正規化座標での当たり判定を表示
+
+//****************************************************
 // usingディレクティブ
 //****************************************************
 using namespace abbr;
@@ -321,8 +326,12 @@ void CPlayer::AdjustHeight()
 //============================================================================
 void CPlayer::HitCheck()
 {
-	static CObject_X* TESTTEST = CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\testtest.json"));
-	static CObject_X* ててて = CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ててて.json"));
+	{
+#if SHOW_NORMALIZED_POSITION_HITCHECK
+		static CObject_X* TESTTEST = CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\testtest.json"));
+		static CObject_X* ててて = CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ててて.json"));
+#endif	// _SHOW_NORMALIZED_POSITION_HITCHECK_
+	}
 
 	// 衝突の有無を検出
 	bool bDetect = false;
@@ -354,9 +363,11 @@ void CPlayer::HitCheck()
 		const Vec3& BoxSize = pBlock->GetSize();
 		const Vec3& BoxPos = pBlock->GetPos();
 		const float& fBoxDirection = pBlock->GetRot().y;
+#if SHOW_NORMALIZED_POSITION_HITCHECK
 		{
 			TESTTEST->SetScale(BoxSize);
 		}
+#endif	// _SHOW_NORMALIZED_POSITION_HITCHECK_
 
 		// ①ボックスの中心点からシリンダーの座標への距離ベクトルを計算
 		const Vec3& RelativePos = CylinderPosTarget - BoxPos;
@@ -365,17 +376,19 @@ void CPlayer::HitCheck()
 		// ②座標系を正規化するため、距離ベクトルにボックスの回転量を打ち消すように回転行列を適用
 		const Vec3& ResultPos = utility::RotatePointAroundY(-fBoxDirection, RelativePos);
 		const Vec3& ResultOldPos = utility::RotatePointAroundY(-fBoxDirection, RelativeOldPos);
+#if SHOW_NORMALIZED_POSITION_HITCHECK
 		{
 			ててて->SetScale({ GetBndCylinder()->GetRadius(), GetBndCylinder()->GetHeight(), GetBndCylinder()->GetRadius() });
 			ててて->SetPos(ResultPos);
 		}
+#endif	// _SHOW_NORMALIZED_POSITION_HITCHECK_
 
 		// 座標系を正規化した仮定し、ボックスからシリンダーへの距離ベクトルを用いて衝突判定
 		// (ボックスの座標は原点で、回転は考慮せず、AABBと仮定する)
 		if (collision::HitCylinderToAABB(ResultPos, CylinderRadius, CylinderHeight, VEC3_INIT, BoxSize))
 		{
 			// 判定表示を赤色に
-			//m_pBndCylinder->ChangeModel(CX_Manager::TYPE::RENDER_CYLINDER_HIT);
+			m_pBndCylinder->SetCol({ 1.0f, 0.0f, 0.0f, 0.5f });
 				
 			// 衝突があったことを検出
 			bDetect = 1;
@@ -480,6 +493,6 @@ void CPlayer::HitCheck()
 	if (!bDetect)
 	{
 		// 判定表示を通常色に戻す
-		m_pBndCylinder->ChangeModel(CX_Manager::TYPE::RENDER_CYLINDER);
+		m_pBndCylinder->SetCol({ 1.0f, 1.0f, 1.0f, 0.5f });
 	}
 }

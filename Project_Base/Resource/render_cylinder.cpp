@@ -55,9 +55,7 @@ HRESULT CRender_Cylinder::Init()
 	}
 
 	// 表示の透明度を設定
-	D3DXCOLOR NewCol = m_pCylinder->GetCol();
-	NewCol.a = 0.5f;
-	m_pCylinder->SetCol(NewCol);
+	m_pCylinder->SetCol({ 1.0f, 1.0f, 1.0f, 0.5f });
 	m_pCylinder->SetUseCol(true);
 
 	return S_OK;
@@ -100,6 +98,22 @@ void CRender_Cylinder::Draw()
 void CRender_Cylinder::ChangeModel(CX_Manager::TYPE Type)
 {
 	m_pCylinder->BindModel(Type);
+}
+
+//============================================================================
+// 色を設定
+//============================================================================
+void CRender_Cylinder::SetCol(D3DXCOLOR Col)
+{
+	m_pCylinder->SetCol(Col);
+}
+
+//============================================================================
+// 色反映を設定
+//============================================================================
+void CRender_Cylinder::SetUseCol(bool bUse)
+{
+	m_pCylinder->SetUseCol(bUse);
 }
 
 //============================================================================

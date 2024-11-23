@@ -83,6 +83,16 @@ void CX_Manager::Release()
 //============================================================================
 CX_Manager::MODEL* CX_Manager::GetModel(TYPE Type)
 {
+	// 範囲外のタイプ指定
+	if (Type >= TYPE::MAX)
+	{
+#ifdef _DEBUG
+		CRenderer::SetTimeString("【警告】モデル取得時に範囲外の指定", 300);
+#endif	// _DEBUG
+
+		return nullptr;
+	}
+
 	// モデル取得不能
 	if (m_apModelTemp[static_cast<WORD>(Type)].pMesh == nullptr)
 	{
