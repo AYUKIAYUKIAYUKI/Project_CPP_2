@@ -9,6 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "renderer.h"
+#include "scene.h"
 
 // 描画処理用
 #include "manager.h"
@@ -87,7 +88,7 @@ void CRenderer::Draw()
 		CObject::DrawAll();
 
 		// シーンの専用描画
-		CManager::GetManager()->GetScene()->Draw();
+		CScene_Manager::GetInstance()->GetScene()->Draw();
 
 		// ImGuiの描画
 		ImGui::Render();

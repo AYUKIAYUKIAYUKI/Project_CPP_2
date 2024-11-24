@@ -92,7 +92,7 @@ void CResult::Update()
 	// ƒ^ƒCƒgƒ‹‰æ–Ê‚Ö
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
 	{
-		CFade::SetFade(CScene::MODE::TITLE);
+		//CFade::SetFade(CScene::MODE::TITLE);
 	}
 }
 

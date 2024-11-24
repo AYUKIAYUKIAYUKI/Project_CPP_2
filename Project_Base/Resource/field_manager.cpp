@@ -150,7 +150,7 @@ void CField_Manager::Update()
 
 	if (m_pPlayer->GetLife() <= 0)
 	{
-		CFade::SetFade(CScene::MODE::RESULT);
+		//CFade::SetFade(CScene::MODE::RESULT);
 	}
 }
 

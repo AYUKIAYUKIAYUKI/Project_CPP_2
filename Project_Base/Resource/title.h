@@ -12,7 +12,6 @@
 // インクルードファイル
 //****************************************************
 #include "scene.h"
-#include "fade.h"
 
 //****************************************************
 // タイトルクラス
@@ -21,13 +20,23 @@ class CTitle : public CScene
 {
 public:
 
-	CTitle();			// コンストラクタ
-	~CTitle() override;	// デストラクタ
-
-	HRESULT Init() override;	// 初期設定
-	void Uninit() override;		// 終了処理
+	// <function>
 	void Update() override;		// 更新処理
 	void Draw() override;		// 描画処理
+	void To_Next() override;	// 次のシーンへ
+
+	// <static function>
+	static CTitle* Create();	// タイトルを生成
+
+private:
+
+	// <function>
+	HRESULT Init() override;	// 初期設定
+	void	Uninit() override;	// 終了処理
+
+	// <special function>
+	CTitle();			// コンストラクタ
+	~CTitle() override;	// デストラクタ
 };
 
 #endif // _TITLE_H_

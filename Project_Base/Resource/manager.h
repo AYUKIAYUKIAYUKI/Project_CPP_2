@@ -16,7 +16,6 @@
 #include "input_keyboard.h"
 #include "input_mouse.h"
 #include "input_pad.h"
-#include "scene.h"
 
 //****************************************************
 // 前方宣言
@@ -44,10 +43,6 @@ public:
 	CMask_Rectangle*	GetMask_Rectangle() const;	// 四角形マスクを取得
 	CCamera*			GetCamera() const;			// カメラを取得
 	CLight*				GetLight() const;			// ライトを取得
-	CScene*				GetScene() const;			// シーンを取得
-	
-	// <setter>
-	void SetScene(CScene::MODE Mode);	// シーンの設定
 
 	// <static function>
 	static HRESULT Create(HINSTANCE hInstance, HWND hWnd);	// 生成
@@ -76,7 +71,6 @@ private:
 	CMask_Rectangle*	m_pMask_Rectangle;	// 四角形マスク
 	CCamera*			m_pCamera;			// カメラ
 	CLight*				m_pLight;			// ライト
-	CScene*				m_pScene;			// シーン
 
 	// <static data>
 	static CManager* m_pManager;	// マネージャーの本体

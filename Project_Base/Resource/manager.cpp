@@ -12,8 +12,8 @@
 #include "mask_rectangle.h"
 
 // シングルトンクラス用
-#include "fade.h"
 #include "renderer.h"
+#include "scene.h"
 #include "sound.h"
 #include "texture_manager.h"
 #include "X_manager.h"
@@ -51,7 +51,7 @@ void CManager::Update()
 	CRenderer::GetRenderer()->Update();
 
 	// シーンの更新
-	m_pScene->Update();
+	CScene_Manager::GetInstance()->GetScene()->Update();
 
 	// ライトの更新
 	m_pLight->Update();
@@ -103,40 +103,6 @@ CCamera* CManager::GetCamera() const
 CLight* CManager::GetLight() const
 {
 	return m_pLight;
-}
-
-//============================================================================
-// シーンを取得
-//============================================================================
-CScene* CManager::GetScene() const
-{
-	return m_pScene;
-}
-
-//============================================================================
-// シーンの設定
-//============================================================================
-void CManager::SetScene(CScene::MODE Mode)
-{
-	// 現在のシーンを破棄
-	if (m_pScene != nullptr)
-	{
-		m_pScene->Uninit();
-		delete m_pScene;
-		m_pScene = nullptr;
-	}
-
-	// 新たなシーンを設定
-	m_pScene = CScene::Create(Mode);
-
-	// 生成失敗
-	if (!m_pScene)
-	{
-		assert(false);
-	}
-
-	// シーンの初期設定
-	m_pScene->Init();
 }
 
 //============================================================================
@@ -232,8 +198,7 @@ CManager::CManager() :
 	m_pPad{ nullptr },
 	m_pMask_Rectangle{ nullptr },
 	m_pCamera{ nullptr },
-	m_pLight{ nullptr },
-	m_pScene{ nullptr }
+	m_pLight{ nullptr }
 {
 
 }
@@ -257,8 +222,8 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 		return E_FAIL;
 	}
 
-	// フェードの初期設定 (レンダラー生成後)
-	if (FAILED(CFade::GetInstance()->Init()))
+	// シーンマネージャーの生成
+	if (FAILED(CScene_Manager::Create()))
 	{
 		return E_FAIL;
 	}
@@ -339,9 +304,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 	// パッドの初期化
 	m_pPad->Init(hInstance, hWnd);
 
-	// 最初のシーン設定
-	SetScene(CScene::MODE::TITLE);
-
 	// BGMをかける
 	CSound::GetInstance()->Play(CSound::LABEL::TEST);
 
@@ -353,14 +315,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 //============================================================================
 void CManager::Uninit()
 {
-	// シーンの破棄
-	if (m_pScene != nullptr)
-	{
-		m_pScene->Uninit();	// 終了処理
-		delete m_pScene;	// メモリを解放
-		m_pScene = nullptr;	// ポインタを初期化
-	}
-
 	// パッドの破棄
 	if (m_pPad != nullptr)
 	{
@@ -416,8 +370,8 @@ void CManager::Uninit()
 	// サウンドの破棄
 	CSound::GetInstance()->Release();
 
-	// フェードの破棄
-	CFade::GetInstance()->Release();
+	// シーンマネージャー破棄
+	CScene_Manager::Release();
 
 	// レンダラーの破棄
 	CRenderer::Release();
