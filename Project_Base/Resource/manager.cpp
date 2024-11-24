@@ -9,13 +9,14 @@
 // インクルードファイル
 //****************************************************
 #include "manager.h"
+#include "mask_rectangle.h"
 
-// シングルトン管理用
+// シングルトンクラス用
 #include "fade.h"
 #include "renderer.h"
 #include "sound.h"
-
-#include "mask_rectangle.h"
+#include "texture_manager.h"
+#include "X_manager.h"
 
 //****************************************************
 // usingディレクティブ
@@ -256,10 +257,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 		return E_FAIL;
 	}
 
-	// 四角形マスクの生成
-	m_pMask_Rectangle = CMask_Rectangle::Create(CTexture_Manager::TYPE::MAP);
-
-	// フェードの初期設定
+	// フェードの初期設定 (レンダラー生成後)
 	if (FAILED(CFade::GetInstance()->Init()))
 	{
 		return E_FAIL;
@@ -270,6 +268,21 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 	{
 		return E_FAIL;
 	}
+
+	// テクスチャマネージャーを生成
+	if (FAILED(CTexture_Manager::Create()))
+	{
+		return E_FAIL;
+	}
+
+	// Xモデルマネージャーを生成
+	if (FAILED(CX_Manager::Create()))
+	{
+		return E_FAIL;
+	}
+
+	// 四角形マスクの生成
+	m_pMask_Rectangle = CMask_Rectangle::Create(CTexture_Manager::TYPE::MAP);
 
 	// カメラの生成
 	m_pCamera = DBG_NEW CCamera();
@@ -385,13 +398,7 @@ void CManager::Uninit()
 		delete m_pCamera;		// メモリを解放
 		m_pCamera = nullptr;	// ポインタを初期化
 	}
-
-	// サウンドの破棄
-	CSound::GetInstance()->Release();
-
-	// フェードの破棄
-	CFade::GetInstance()->Release();
-
+	
 	// 四角形マスクの破棄
 	if (m_pMask_Rectangle != nullptr)
 	{
@@ -399,6 +406,18 @@ void CManager::Uninit()
 		delete m_pMask_Rectangle;		// メモリを解放
 		m_pMask_Rectangle = nullptr;	// ポインタを初期化
 	}
+
+	// Xモデルマネージャー破棄
+	CX_Manager::Release();
+
+	// テクスチャマネージャー破棄
+	CTexture_Manager::Release();
+
+	// サウンドの破棄
+	CSound::GetInstance()->Release();
+
+	// フェードの破棄
+	CFade::GetInstance()->Release();
 
 	// レンダラーの破棄
 	CRenderer::Release();
