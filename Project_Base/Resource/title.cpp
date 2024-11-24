@@ -12,8 +12,7 @@
 #include "manager.h"
 #include "renderer.h"
 #include "game.h"
-
-#include "object_HUD.h"
+#include "object_X.h"
 
 //============================================================================
 // 
@@ -107,11 +106,10 @@ CTitle::~CTitle()
 //============================================================================
 HRESULT CTitle::Init()
 {
-	/* ‰¼•\¦‚ğ¶¬ */
-	CObject_HUD* pTest = CObject_HUD::Create("Data\\JSON\\HUD\\codingocean.json");
-	pTest->BindTex(CTexture_Manager::TYPE::TEST1);
+	// ŠÂ‹«‘•ü‚ğ¶¬
+	CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree.json"));
 
-	return S_OK;;
+	return S_OK;
 }
 
 //============================================================================

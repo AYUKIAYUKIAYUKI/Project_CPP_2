@@ -9,12 +9,8 @@
 		0
 	],
 	"MaxMotion": 1,
-	"MaxKey": [
-		3
-	],
-	"Loop": [
-		false
-	],
+	"MaxKey": 3,
+	"Loop": false,
 	"MaxFrame": [
 		30,
 		60,

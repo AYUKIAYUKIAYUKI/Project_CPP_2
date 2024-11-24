@@ -32,6 +32,8 @@ public:
 		HANDL,		// ¶Žè
 		ARMR,		// ‰E˜r
 		HANDR,		// ‰EŽè
+		TREE,
+		STONE,
 		MAX,
 	};
 

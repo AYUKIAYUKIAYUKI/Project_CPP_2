@@ -11,6 +11,8 @@
 		"Data\\MODEL\\PLAYER\\armL.x",
 		"Data\\MODEL\\PLAYER\\handL.x",
 		"Data\\MODEL\\PLAYER\\armR.x",
-		"Data\\MODEL\\PLAYER\\handR.x"
+		"Data\\MODEL\\PLAYER\\handR.x",
+		"Data\\MODEL\\TREE\\onlytree.x",
+		"Data\\MODEL\\TREE\\onlystone.x"
 	]
 }
