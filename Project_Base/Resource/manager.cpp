@@ -61,6 +61,9 @@ void CManager::Update()
 	// キーボードの更新
 	m_pKeyboard->Update();
 
+	// マウスの更新
+	m_pMouse->Update();
+
 	// パッドの更新
 	m_pPad->Update();
 
@@ -198,6 +201,14 @@ CInputKeyboard* CManager::GetKeyboard()
 }
 
 //============================================================================
+// マウスを取得
+//============================================================================
+CInputMouse* CManager::GetMouse()
+{
+	return m_pManager->m_pMouse;
+}
+
+//============================================================================
 // パッドを取得
 //============================================================================
 CInputPad* CManager::GetPad()
@@ -216,6 +227,7 @@ CInputPad* CManager::GetPad()
 //============================================================================
 CManager::CManager() :
 	m_pKeyboard{ nullptr },
+	m_pMouse{ nullptr },
 	m_pPad{ nullptr },
 	m_pMask_Rectangle{ nullptr },
 	m_pCamera{ nullptr },
@@ -292,6 +304,17 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 	// キーボードの初期化
 	m_pKeyboard->Init(hInstance, hWnd);
 
+	// マウスの生成
+	m_pMouse = DBG_NEW CInputMouse();
+
+	if (m_pMouse == nullptr)
+	{ // 生成失敗
+		return E_FAIL;
+	}
+
+	// マウスの初期化
+	m_pMouse->Init(hInstance, hWnd);
+
 	// パッドの生成
 	m_pPad = DBG_NEW CInputPad();
 
@@ -331,6 +354,14 @@ void CManager::Uninit()
 		m_pPad->Uninit();	// 終了処理
 		delete m_pPad;		// メモリを解放
 		m_pPad = nullptr;	// ポインタを初期化
+	}
+
+	// マウスの破棄
+	if (m_pMouse != nullptr)
+	{
+		m_pMouse->Uninit();	// 終了処理
+		delete m_pMouse;	// メモリを解放
+		m_pMouse = nullptr;	// ポインタを初期化
 	}
 
 	// キーボードの破棄

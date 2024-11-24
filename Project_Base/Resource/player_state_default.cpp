@@ -11,6 +11,7 @@
 #include "player_state_default.h"
 #include "player_state_dash.h"
 #include "player_state_jump.h"
+#include "player_state_slash.h"
 #include "player_state_damage.h"
 
 // フィールド取得用
@@ -72,6 +73,7 @@ void CPlayer_State_Default::Control()
 {
 	// インプット系取得
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();	// キーボード
+	CInputMouse* pMouse = CManager::GetMouse();				// マウス
 	CInputPad* pPad = CManager::GetPad();					// パッド
 
 	// プレイヤーのパラメータを取得
@@ -85,23 +87,36 @@ void CPlayer_State_Default::Control()
 		// 方角を変動
 		fDirection += -fMoveSpeed;
 
+		// 移動入力時にのみ
+		if (pMouse->GetTrigger(1))
+		{
+			// ダッシュ状態へ
+			To_Dash();
+		}
 	}
 	else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT) || pPad->GetJoyStickL().X > 0)
 	{ // カメラから見て右へ
 		
 		 // 方角を変動
 		fDirection += fMoveSpeed;
+
+		// 移動入力時にのみ
+		if (pMouse->GetTrigger(1))
+		{
+			// ダッシュ状態へ
+			To_Dash();
+		}
 	}
 
-	if (pKeyboard->GetTrigger(DIK_RSHIFT))
-	{
-		// ダッシュ状態へ
-		To_Dash();
-	}
-	else if (pKeyboard->GetTrigger(DIK_SPACE))
+	if (pKeyboard->GetTrigger(DIK_SPACE))
 	{
 		// ジャンプ状態へ
 		To_Jump();
+	}
+	else if (pMouse->GetTrigger(0))
+	{
+		// 斬撃状態へ
+		To_Slash();
 	}
 
 	// 方角を反映
@@ -130,6 +145,17 @@ void CPlayer_State_Default::To_Jump()
 		m_pCharacter->SetVelY(CPlayer_State_Jump::AMOUNT_JUMPACCEL);
 
 		SetNextState(DBG_NEW CPlayer_State_Jump());
+	}
+}
+
+//============================================================================
+// 斬撃状態へ
+//============================================================================
+void CPlayer_State_Default::To_Slash()
+{
+	if (GetNextState() == nullptr)
+	{
+		SetNextState(DBG_NEW CPlayer_State_Slash());
 	}
 }
 

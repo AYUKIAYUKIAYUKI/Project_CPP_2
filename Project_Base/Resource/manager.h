@@ -14,6 +14,7 @@
 #include "camera.h"
 #include "light.h"
 #include "input_keyboard.h"
+#include "input_mouse.h"
 #include "input_pad.h"
 #include "scene.h"
 
@@ -55,6 +56,7 @@ public:
 	// <static getter>
 	static CManager*		GetManager();	// マネージャーを取得
 	static CInputKeyboard*	GetKeyboard();	// キーボードを取得
+	static CInputMouse*		GetMouse();		// マウスを取得
 	static CInputPad*		GetPad();		// パッドを取得
 
 private:
@@ -69,6 +71,7 @@ private:
 
 	// <datas>
 	CInputKeyboard*		m_pKeyboard;		// キーボード
+	CInputMouse*		m_pMouse;			// マウス
 	CInputPad*			m_pPad;				// パッド
 	CMask_Rectangle*	m_pMask_Rectangle;	// 四角形マスク
 	CCamera*			m_pCamera;			// カメラ

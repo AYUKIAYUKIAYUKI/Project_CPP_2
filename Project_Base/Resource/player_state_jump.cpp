@@ -102,6 +102,7 @@ void CPlayer_State_Jump::Control()
 {
 	// インプット系取得
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();	// キーボード
+	CInputMouse* pMouse = CManager::GetMouse();				// マウス
 	CInputPad* pPad = CManager::GetPad();					// パッド
 
 	// プレイヤーのパラメータを取得
@@ -113,19 +114,27 @@ void CPlayer_State_Jump::Control()
 	{ // カメラから見て左へ
 
 		// 方角を変動
-		fDirection += -fMoveSpeed * 0.5f;
+		fDirection += -fMoveSpeed * 1.25f;
+
+		// 移動入力時のみ
+		if (pMouse->GetTrigger(1))
+		{
+			// ダッシュ状態へ
+			To_Dash();
+		}
 	}
 	else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT) || pPad->GetJoyStickL().X > 0)
 	{ // カメラから見て右へ
 
 		 // 方角を変動
-		fDirection += fMoveSpeed * 0.5f;
-	}
+		fDirection += fMoveSpeed * 1.25f;
 
-	if (pKeyboard->GetTrigger(DIK_RSHIFT))
-	{
-		// ダッシュ状態へ
-		To_Dash();
+		// 移動入力時のみ
+		if (pMouse->GetTrigger(1))
+		{
+			// ダッシュ状態へ
+			To_Dash();
+		}
 	}
 
 	// 方角を反映

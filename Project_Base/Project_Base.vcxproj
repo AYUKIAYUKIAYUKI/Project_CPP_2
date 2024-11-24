@@ -32,6 +32,7 @@
     <ClCompile Include="Resource\bounding_volume.cpp" />
     <ClCompile Include="Resource\collision.cpp" />
     <ClCompile Include="Resource\input_keyboard.cpp" />
+    <ClCompile Include="Resource\input_mouse.cpp" />
     <ClCompile Include="Resource\input_pad.cpp" />
     <ClCompile Include="Resource\mask_rectangle.cpp" />
     <ClCompile Include="Resource\mesh_dome.cpp" />
@@ -102,6 +103,7 @@
     <ClInclude Include="Resource\bounding_volume.h" />
     <ClInclude Include="Resource\collision.h" />
     <ClInclude Include="Resource\input_keyboard.h" />
+    <ClInclude Include="Resource\input_mouse.h" />
     <ClInclude Include="Resource\input_pad.h" />
     <ClInclude Include="Resource\mask_rectangle.h" />
     <ClInclude Include="Resource\mesh_dome.h" />

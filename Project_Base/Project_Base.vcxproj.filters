@@ -171,6 +171,9 @@
     <ClCompile Include="Resource\X_manager.cpp">
       <Filter>&lt;System&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\input_mouse.cpp">
+      <Filter>&lt;System&gt;\&lt;Input&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -345,6 +348,9 @@
     </ClInclude>
     <ClInclude Include="Resource\X_manager.h">
       <Filter>&lt;System&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\input_mouse.h">
+      <Filter>&lt;System&gt;\&lt;Input&gt;</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -28,6 +28,7 @@ public:
 	void Update() override;		// 更新処理
 	void To_Dash() override;	// ダッシュ状態へ
 	void To_Jump() override;	// ジャンプ状態へ
+	void To_Slash() override;	// 斬撃状態へ
 	void To_Damage() override;	// ダメージ状態へ
 
 private:

@@ -31,7 +31,7 @@ public:
 	virtual void To_Default();			// 通常状態へ変更
 	virtual void To_Dash();				// ダッシュ状態へ変更
 	virtual void To_Jump();				// ジャンプ状態へ変更
-	virtual void To_Attck();			// 攻撃状態へ変更
+	virtual void To_Slash();			// 斬撃状態へ変更
 	virtual void To_Damage();			// ダメージ状態へ変更
 
 private:
