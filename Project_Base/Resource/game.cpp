@@ -44,7 +44,8 @@ void CGame::Update()
 	else if (CManager::GetKeyboard()->GetTrigger(DIK_F7))
 	{
 		CObject::ReleaseAll();
-		CScene_Manager::ChangeScene(CTitle::Create());
+		this->Uninit();
+		this->Init();
 	}
 #endif // _DEBUG
 }
