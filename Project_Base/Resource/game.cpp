@@ -10,6 +10,7 @@
 //****************************************************
 #include "game.h"
 #include "manager.h"
+#include "title.h"
 #include "result.h"
 
 /* test */
@@ -39,11 +40,13 @@ void CGame::Update()
 	{
 		To_Next();
 	}
+#ifdef _DEBUG	// パラメータ確認用
 	else if (CManager::GetKeyboard()->GetTrigger(DIK_F7))
 	{
-		// パラメータ確認用
-		CScene_Manager::ChangeScene(Create());
+		CObject::ReleaseAll();
+		CScene_Manager::ChangeScene(CTitle::Create());
 	}
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -63,7 +66,11 @@ void CGame::Draw()
 //============================================================================
 void CGame::To_Next()
 {
-	//CScene_Manager::ChangeScene(CResult::Create());
+	// 全オブジェクトを解放
+	CObject::ReleaseAll();
+
+	// リザルトシーンへ変更
+	CScene_Manager::ChangeScene(CResult::Create());
 }
 
 //============================================================================
@@ -116,12 +123,6 @@ CGame::~CGame()
 //============================================================================
 HRESULT CGame::Init()
 {
-	// 基底クラスの初期設定
-	//if (FAILED(CScene::Init()))
-	//{
-	//	return E_FAIL;
-	//}
-
 	// プレイヤーを生成
 	CPlayer::Create();
 
@@ -143,9 +144,6 @@ HRESULT CGame::Init()
 //============================================================================
 void CGame::Uninit()
 {
-	// 基底クラスの終了処理
-	//CScene::Uninit();
-
 	// フィールドマネージャーの解放
 	CField_Manager::GetInstance()->Release();
 }

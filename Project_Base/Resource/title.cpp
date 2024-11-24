@@ -50,6 +50,10 @@ void CTitle::Draw()
 //============================================================================
 void CTitle::To_Next()
 {
+	// 全オブジェクトを解放
+	CObject::ReleaseAll();
+
+	// ゲームシーンへ変更
 	CScene_Manager::ChangeScene(CGame::Create());
 }
 
@@ -103,12 +107,6 @@ CTitle::~CTitle()
 //============================================================================
 HRESULT CTitle::Init()
 {
-	// 基底クラスの初期設定
-	//if (FAILED(CScene::Init()))
-	//{
-	//	return E_FAIL;
-	//}
-
 	/* 仮表示を生成 */
 	CObject_HUD* pTest = CObject_HUD::Create("Data\\JSON\\HUD\\codingocean.json");
 	pTest->BindTex(CTexture_Manager::TYPE::TEST1);
@@ -121,6 +119,5 @@ HRESULT CTitle::Init()
 //============================================================================
 void CTitle::Uninit()
 {
-	// 基底クラスの終了処理
-	//CScene::Uninit();
+
 }
