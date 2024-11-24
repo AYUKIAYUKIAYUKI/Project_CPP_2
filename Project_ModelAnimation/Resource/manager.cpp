@@ -10,8 +10,13 @@
 //****************************************************
 #include "manager.h"
 #include "renderer.h"
-
 #include "object_X.h"
+
+// シングルトンクラス用
+#include "motion_manager.h"
+#include "renderer.h"
+#include "texture_manager.h"
+#include "X_manager.h"
 
 //****************************************************
 // usingディレクティブ
@@ -194,6 +199,24 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 		return E_FAIL;
 	}
 
+	// テクスチャマネージャーを生成
+	if (FAILED(CTexture_Manager::Create()))
+	{
+		return E_FAIL;
+	}
+
+	// Xモデルマネージャーを生成
+	if (FAILED(CX_Manager::Create()))
+	{
+		return E_FAIL;
+	}
+
+	// モーションマネージャーを生成 (Xモデルマネージャー生成後)
+	if (FAILED(CMotion_Manager::Create()))
+	{
+		return E_FAIL;
+	}
+
 	// カメラの生成
 	m_pCamera = DBG_NEW CCamera();
 
@@ -294,6 +317,15 @@ void CManager::Uninit()
 		delete m_pCamera;		// メモリを解放
 		m_pCamera = nullptr;	// ポインタを初期化
 	}
+
+	// モーションマネージャーの破棄
+	CMotion_Manager::Release();
+
+	// Xモデルマネージャーの破棄
+	CX_Manager::Release();
+
+	// テクスチャマネージャーの破棄
+	CTexture_Manager::Release();
 
 	// レンダラーの破棄
 	CRenderer::Release();

@@ -10,16 +10,14 @@
 //****************************************************
 #include "renderer.h"
 
+// 更新処理用
+#include "motion_manager.h"
+
 // 描画処理用
 #include "manager.h"
 
 // オブジェクト取得
 #include "object.h"
-
-// シングルトン管理
-#include "texture_manager.h"
-#include "X_manager.h"
-#include "motion_manager.h"
 
 //****************************************************
 // プリプロセッサディレクティブ
@@ -383,24 +381,6 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 		"Terminal",
 		&m_pFont);
 
-	// テクスチャマネージャーを生成
-	if (FAILED(CTexture_Manager::Create()))
-	{
-		return E_FAIL;
-	}
-
-	// Xモデルマネージャーを生成
-	if (FAILED(CX_Manager::Create()))
-	{
-		return E_FAIL;
-	}
-
-	// モーションマネージャーを生成
-	if (FAILED(CMotion_Manager::Create()))
-	{
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
@@ -411,15 +391,6 @@ void CRenderer::Uninit()
 {
 	// 全オブジェクト解放処理
 	CObject::ReleaseAll();
-
-	// モーションマネージャーの破棄
-	CMotion_Manager::Release();
-
-	// Xモデルマネージャーの破棄
-	CX_Manager::Release();
-
-	// テクスチャマネージャーの破棄
-	CTexture_Manager::Release();
 
 	// フォントの破棄
 	if (m_pFont != nullptr)
