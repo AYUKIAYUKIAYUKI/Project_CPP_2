@@ -71,6 +71,9 @@ public:
 	WORD GetNowMotion();			// 再生中のモーション番号を取得
 	void SetNowMotion(WORD wIdx);	// 再生中のモーション番号を設定
 
+	// <getter>
+	CObject_Parts* GetParentParts();	// 親パーツを取得
+
 	// <static function>
 	static CMotion_Set* Create(JSON Json);	// 生成
 
@@ -90,6 +93,7 @@ private:
 	WORD						m_wNowKey;		// 再生中のキー
 	WORD						m_wNowFrame;	// 再生中のフレーム
 	std::vector<CObject_Parts*>	m_vpModelParts;	// モデルパーツ
+	CObject_Parts*				m_pMostParent;	// 親パーツ
 	WORD						m_wMaxParts;	// モデルの総パーツ数
 	WORD						m_wMaxMotion;	// 総モーション数
 	std::vector<Motion>			m_vpMotion;		// モーション情報

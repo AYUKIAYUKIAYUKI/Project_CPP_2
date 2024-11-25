@@ -31,6 +31,7 @@ CMotion_Set::CMotion_Set() :
 	m_wNowKey{ 0 },
 	m_wNowFrame{ 0 },
 	m_vpModelParts{},
+	m_pMostParent{ nullptr },
 	m_wMaxParts{ 0 },
 	m_wMaxMotion{ 0 },
 	m_vpMotion{}
@@ -157,7 +158,12 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 		{
 			// インデックスが-1のものは親を持たない
 			pParts->SetParent(nullptr);
+
+			// 親にのみ縮尺オフセットを反映
 			pParts->SetScaleOffset(utility::JsonConvertToVec3(Json["ScaleOffset"]));
+
+			// 親パーツをセット
+			pNew->m_pMostParent = pParts;
 		}
 		else
 		{
@@ -237,6 +243,14 @@ void CMotion_Set::SetNowMotion(WORD nIdx)
 }
 
 //============================================================================
+// 親パーツを取得
+//============================================================================
+CObject_Parts* CMotion_Set::GetParentParts()
+{
+	return m_pMostParent;
+}
+
+//============================================================================
 // 
 // privateメンバ
 // 
@@ -288,8 +302,8 @@ void CMotion_Set::CorrectTarget()
 	// フレームの進行度合を作成 (総フレーム数 - 現在のフレーム)
 	WORD wFrameCoef = static_cast<WORD>(m_vpMotion[m_wNowMotion].vpKey[m_wNowKey].nMaxFrame - m_wNowFrame);
 
-	// 全てのパーツがそれぞれの目標値へ補正したパラメータを設定する
-	for (WORD wCntModelParts = 0; wCntModelParts < m_wMaxParts; ++wCntModelParts)
+	// 親パーツ以外がそれぞれの目標値へ補正したパラメータを設定する
+	for (WORD wCntModelParts = 1; wCntModelParts < m_wMaxParts; ++wCntModelParts)
 	{
 		// 目標縮尺
 		Vec3 NewScale = m_vpModelParts[wCntModelParts]->GetScale();

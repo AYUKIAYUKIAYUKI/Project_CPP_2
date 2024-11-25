@@ -12,8 +12,8 @@
 #include "manager.h"
 #include "renderer.h"
 #include "game.h"
-#include "object.h"
 #include "motion_set.h"
+#include "object_parts.h"
 
 //============================================================================
 // 
@@ -116,7 +116,9 @@ CTitle::~CTitle()
 HRESULT CTitle::Init()
 {
 	// ŠÂ‹«‘•ü‚ð¶¬
-	m_pTree = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\tree_motion.json"));
+	m_pTree = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree_motion.json"));
+	auto TreeParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree.json");
+	m_pTree->GetParentParts()->SetPos(utility::JsonConvertToVec3(TreeParam["Pos"]));
 
 	return S_OK;
 }
