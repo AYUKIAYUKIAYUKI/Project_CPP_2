@@ -157,6 +157,7 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 		{
 			// インデックスが-1のものは親を持たない
 			pParts->SetParent(nullptr);
+			pParts->SetScaleOffset(utility::JsonConvertToVec3(Json["ScaleOffset"]));
 		}
 		else
 		{
@@ -165,8 +166,7 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 		}
 
 		// オフセット値を設定
-		//pParts->SetScaleOffset(utility::JsonConvertToVec3(Json["ScaleOffset"][wCntParts]));
-		//pParts->SetRotOffset(utility::JsonConvertToVec3(Json["RotOffset"][wCntParts]));
+		pParts->SetRotOffset(utility::JsonConvertToVec3(Json["RotOffset"][wCntParts]));
 		pParts->SetPosOffset(utility::JsonConvertToVec3(Json["PosOffset"][wCntParts]));
 	}
 

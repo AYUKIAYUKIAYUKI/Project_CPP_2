@@ -53,6 +53,7 @@ private:
 	void	PrintDebug();	// デバッグ表示
 	void	Edit();			// 編集
 	void	EditParts();	// パーツ情報の編集
+	void	EditOffset();	// オフセット情報の編集
 	void	EditMotion();	// モーション情報の編集
 	void	EditKey();		// キー情報の編集
 	void	EditFrame();	// フレーム情報の編集

@@ -240,9 +240,9 @@ void CMotion_Manager::PrintDebug()
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 #else
 	// ウィンドウを表示
-	ImVec2 Rect = { 500, 900 };
+	ImVec2 Rect = { 500, 400 };
 	ImGui::SetNextWindowSize(Rect);
-	ImGui::SetNextWindowPos({ 50, 50 });
+	ImGui::SetNextWindowPos({ 50, 550 });
 	ImGui::Begin("MotionManager Infomation");
 	ImGui::Text("MaxParts:%d", m_MotionSet->m_wMaxParts);
 	ImGui::SameLine();
@@ -349,6 +349,114 @@ void CMotion_Manager::EditParts()
 		{
 			m_MotionSet->m_vpModelParts[wCntParts]->SetUseCol(false);
 		}
+	}
+
+	// オフセット情報の編集
+	EditOffset();
+}
+
+//============================================================================
+// オフセット情報の編集
+//============================================================================
+void CMotion_Manager::EditOffset()
+{
+	// 選択中のパーツのポインタ
+	CObject_Parts* const pParts = m_MotionSet->m_vpModelParts[m_wSelectParts];
+
+	// オフセット情報をコピー
+	Vec3 ScaleOffset = m_MotionSet->m_vpModelParts[0]->GetScaleOffset(), RotOffset = pParts->GetRotOffset(), PosOffset = pParts->GetPosOffset();
+
+	// ウィンドウを生成
+	ImVec2 Rect = { 600, 450 };
+	ImGui::SetNextWindowSize(Rect);
+	ImGui::SetNextWindowPos({ 50, 50 });
+	if (ImGui::Begin("Parts Offset"))
+	{
+		// 縮尺オフセットを変動
+		ImGui::Separator();
+		ImGui::BulletText("ScaleOffset");
+		{
+			// 縮尺：X
+			if (ImGui::Button("Reset:ScaleX"))
+			{
+				ScaleOffset.x = 0.0f;
+			}
+			ImGui::SameLine();
+			ImGui::DragFloat("Scale:X", &ScaleOffset.x, 0.01f, 0.0f);
+			// 縮尺：Y
+			if (ImGui::Button("Reset:ScaleY"))
+			{
+				ScaleOffset.y = 0.0f;
+			}
+			ImGui::SameLine();
+			ImGui::DragFloat("Scale:Y", &ScaleOffset.y, 0.01f, 0.0f);
+			// 縮尺：Z
+			if (ImGui::Button("Reset:ScaleZ"))
+			{
+				ScaleOffset.z = 0.0f;
+			}
+			ImGui::SameLine();
+			ImGui::DragFloat("Scale:Z", &ScaleOffset.z, 0.01f, 0.0f);
+			m_MotionSet->m_vpModelParts[0]->SetScaleOffset(ScaleOffset);
+		}
+
+		// 向きオフセットを変動
+		ImGui::Separator();
+		ImGui::BulletText("RotOffset");
+		{
+			// 向き：X
+			if (ImGui::Button("Reset:RotX"))
+			{
+				RotOffset.x = 0.0f;
+			}
+			ImGui::SameLine();
+			ImGui::DragFloat("Rot:X", &RotOffset.x, D3DX_PI * 0.01f, -D3DX_PI, D3DX_PI);
+			// 向き：X
+			if (ImGui::Button("Reset:RotY"))
+			{
+				RotOffset.y = 0.0f;
+			}
+			ImGui::SameLine();
+			ImGui::DragFloat("Rot:Y", &RotOffset.y, D3DX_PI * 0.01f, -D3DX_PI, D3DX_PI);
+			// 向き：Z
+			if (ImGui::Button("Reset:RotZ"))
+			{
+				RotOffset.z = 0.0f;
+			}
+			ImGui::SameLine();
+			ImGui::DragFloat("Rot:Z", &RotOffset.z, D3DX_PI * 0.01f, -D3DX_PI, D3DX_PI);
+			pParts->SetRotOffset(RotOffset);
+		}
+
+		// 座標オフセットを変動
+		ImGui::Separator();
+		ImGui::BulletText("PosOffset");
+		{
+			// 座標：X
+			if (ImGui::Button("Reset:PosX"))
+			{
+				PosOffset.x = 0.0f;
+			}
+			ImGui::SameLine();
+			ImGui::DragFloat("Pos:X", &PosOffset.x, 0.01f);
+			// 座標：Y
+			if (ImGui::Button("Reset:PosY"))
+			{
+				PosOffset.y = 0.0f;
+			}
+			ImGui::SameLine();
+			ImGui::DragFloat("Pos:Y", &PosOffset.y, 0.01f);
+			// 座標：Z
+			if (ImGui::Button("Reset:PosZ"))
+			{
+				PosOffset.z = 0.0f;
+			}
+			ImGui::SameLine();
+			ImGui::DragFloat("Pos:Z", &PosOffset.z, 0.01f);
+			pParts->SetPosOffset(PosOffset);
+		}
+
+		ImGui::End();
 	}
 }
 
@@ -778,8 +886,20 @@ void CMotion_Manager::Export()
 		// 親パーツのインデックス
 		Export["ParentIdx"] = m_Json["ParentIdx"];
 
-		// オフセット位置
-		Export["PosOffset"] = m_Json["PosOffset"];
+		// 縮尺オフセット
+		Export["ScaleOffset"] = { m_MotionSet->m_vpModelParts[0]->GetScaleOffset().x, m_MotionSet->m_vpModelParts[0]->GetScaleOffset().y, m_MotionSet->m_vpModelParts[0]->GetScaleOffset().z };
+			
+		for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_wMaxParts; ++wCntModelParts)
+		{
+			// 選択中のパーツのポインタ
+			CObject_Parts* const pParts = m_MotionSet->m_vpModelParts[wCntModelParts];
+
+			// 向きオフセット
+			Export["RotOffset"][wCntModelParts] = { pParts->GetRotOffset().x, pParts->GetRotOffset().y, pParts->GetRotOffset().z };
+			
+			// 座標オフセット
+			Export["PosOffset"][wCntModelParts] = { pParts->GetPosOffset().x, pParts->GetPosOffset().y, pParts->GetPosOffset().z };
+		}
 
 		for (WORD wCntMotion = 0; wCntMotion < m_MotionSet->m_wMaxMotion; ++wCntMotion)
 		{
