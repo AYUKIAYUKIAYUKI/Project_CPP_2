@@ -159,6 +159,14 @@ void CObject_Parts::Draw()
 }
 
 //============================================================================
+// シンクロ座標の設定
+//============================================================================
+void CObject_Parts::SetPosSync(D3DXVECTOR3 Pos)
+{
+	m_PosSync = Pos;
+}
+
+//============================================================================
 // 親パーツのポインタ取得
 //============================================================================
 const CObject_Parts* const CObject_Parts::GetParent()const
@@ -336,6 +344,14 @@ const D3DXMATRIX& CObject_Parts::GetMtxWorld() const
 }
 
 //============================================================================
+// ワールド行列を設定
+//============================================================================
+void CObject_Parts::SetMtxWorld(D3DXMATRIX Mtx)
+{
+	m_MtxWorld = Mtx;
+}
+
+//============================================================================
 // サイズを取得
 //============================================================================
 D3DXVECTOR3 CObject_Parts::GetSize() const
@@ -435,11 +451,22 @@ void CObject_Parts::SetMtxWorld()
 		&m_MtxWorld,
 		&mtxRot);
 
-	// 平行移動行列作成
-	D3DXMatrixTranslation(&mtxTrans,
-		m_PosOffset.x + m_Pos.x,
-		m_PosOffset.y + m_Pos.y,
-		m_PosOffset.z + m_Pos.z);
+	if (m_pParent == nullptr)
+	{
+		// 平行移動行列作成
+		D3DXMatrixTranslation(&mtxTrans,
+			m_PosOffset.x + m_Pos.x + m_PosSync.x,
+			m_PosOffset.y + m_Pos.y + m_PosSync.y,
+			m_PosOffset.z + m_Pos.z + m_PosSync.z);
+	}
+	else
+	{
+		// 平行移動行列作成
+		D3DXMatrixTranslation(&mtxTrans,
+			m_PosOffset.x + m_Pos.x,
+			m_PosOffset.y + m_Pos.y,
+			m_PosOffset.z + m_Pos.z);
+	}
 
 	// 平行移動行列との掛け算
 	D3DXMatrixMultiply(&m_MtxWorld,

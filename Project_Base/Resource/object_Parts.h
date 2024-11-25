@@ -33,6 +33,9 @@ public:
 	void	Update() override;	// 更新処理
 	void	Draw() override;	// 描画処理
 
+	// <setter>
+	void SetPosSync(D3DXVECTOR3 Pos);	// シンクロ座標の設定
+	
 	// <getter/setter>
 	const CObject_Parts *const GetParent() const;	// 親パーツのポインタ取得
 	void SetParent(CObject_Parts* pParent);			// 親パーツのポインタ設定
@@ -76,6 +79,7 @@ public:
 
 	// <getter>
 	const D3DXMATRIX& GetMtxWorld() const;	// ワールド行列を取得
+	void SetMtxWorld(D3DXMATRIX Mtx);		// ワールド行列を設定
 
 	// <virtual getter>
 	virtual D3DXVECTOR3 GetSize() const;	// サイズを取得
@@ -92,6 +96,7 @@ private:
 	void SetMtxWorld();		// ワールド行列設定
 
 	// <data>
+	D3DXVECTOR3			m_PosSync;		// シンクロ座標
 	CObject_Parts*		m_pParent;		// 親パーツのポインタ
 	CX_Manager::MODEL*	m_pModel;		// モデル情報
 	D3DXVECTOR3			m_ScaleOffset;	// 縮尺オフセット

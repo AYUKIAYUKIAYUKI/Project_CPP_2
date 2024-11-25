@@ -29,6 +29,15 @@ void CTitle::Update()
 	// 基底クラスの更新処理
 	CScene::Update();
 
+	static D3DXVECTOR3 Pos = { 0.0f, 0.0f, 0.0f };
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	ImGui::Begin("msadadwadfge");
+	ImGui::DragFloat("PosX", &Pos.x);
+	ImGui::DragFloat("PosY", &Pos.y);
+	ImGui::DragFloat("PosZ", &Pos.z);
+	m_pTree->SetPosSync(Pos);
+	ImGui::End();
+
 	// 次のシーンへ
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
 	{
@@ -118,7 +127,7 @@ HRESULT CTitle::Init()
 	// 環境装飾を生成
 	m_pTree = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree_motion.json"));
 	auto TreeParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree.json");
-	m_pTree->GetParentParts()->SetPos(utility::JsonConvertToVec3(TreeParam["Pos"]));
+	m_pTree->SetPosSync(utility::JsonConvertToVec3(TreeParam["Pos"]));
 
 	return S_OK;
 }

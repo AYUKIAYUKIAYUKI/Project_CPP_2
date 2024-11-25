@@ -65,6 +65,9 @@ public:
 	void	Update() override;	// 更新処理
 	void	Draw() override;	// 描画処理
 
+	// <setter>
+	void SetPosSync(D3DXVECTOR3 Pos);	// シンクロ座標を設定
+
 	// <getter/setter>
 	WORD GetNowMotion();			// 再生中のモーション番号を取得
 	void SetNowMotion(WORD wIdx);	// 再生中のモーション番号を設定

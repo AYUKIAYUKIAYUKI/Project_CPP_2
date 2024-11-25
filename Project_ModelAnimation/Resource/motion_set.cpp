@@ -303,7 +303,7 @@ void CMotion_Set::CorrectTarget()
 	WORD wFrameCoef = static_cast<WORD>(m_vpMotion[m_wNowMotion].vpKey[m_wNowKey].nMaxFrame - m_wNowFrame);
 
 	// 親パーツ以外がそれぞれの目標値へ補正したパラメータを設定する
-	for (WORD wCntModelParts = 1; wCntModelParts < m_wMaxParts; ++wCntModelParts)
+	for (WORD wCntModelParts = 0; wCntModelParts < m_wMaxParts; ++wCntModelParts)
 	{
 		// 目標縮尺
 		Vec3 NewScale = m_vpModelParts[wCntModelParts]->GetScale();
@@ -316,9 +316,12 @@ void CMotion_Set::CorrectTarget()
 		m_vpModelParts[wCntModelParts]->SetRot(NewRot);
 
 		// 目標座標
-		Vec3 NewPos = m_vpModelParts[wCntModelParts]->GetPos();
-		NewPos += (m_vpMotion[m_wNowMotion].vpKey[m_wNowKey].apDest[wCntModelParts].PosTarget - NewPos) / wFrameCoef;
-		m_vpModelParts[wCntModelParts]->SetPos(NewPos);
+		if (wCntModelParts != 0)
+		{
+			Vec3 NewPos = m_vpModelParts[wCntModelParts]->GetPos();
+			NewPos += (m_vpMotion[m_wNowMotion].vpKey[m_wNowKey].apDest[wCntModelParts].PosTarget - NewPos) / wFrameCoef;
+			m_vpModelParts[wCntModelParts]->SetPos(NewPos);
+		}
 	}
 }
 

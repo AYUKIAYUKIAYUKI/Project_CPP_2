@@ -119,7 +119,7 @@ void CMotion_Set::Update()
 //============================================================================
 void CMotion_Set::Draw()
 {
-	// 抽象化対策
+	/* 抽象化対策 */
 }
 
 //============================================================================
@@ -225,6 +225,18 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 }
 
 //============================================================================
+// シンクロ座標を反映
+//============================================================================
+void CMotion_Set::SetPosSync(D3DXVECTOR3 Pos)
+{
+	// シンクロ座標を全てのパーツに反映
+	for (WORD wCntParts = 0; wCntParts < m_wMaxParts; ++wCntParts)
+	{
+		m_vpModelParts[wCntParts]->SetPosSync(Pos);
+	}
+}
+
+//============================================================================
 // 再生中のモーション番号を取得
 //============================================================================
 WORD CMotion_Set::GetNowMotion()
@@ -303,7 +315,7 @@ void CMotion_Set::CorrectTarget()
 	WORD wFrameCoef = static_cast<WORD>(m_vpMotion[m_wNowMotion].vpKey[m_wNowKey].nMaxFrame - m_wNowFrame);
 
 	// 親パーツ以外がそれぞれの目標値へ補正したパラメータを設定する
-	for (WORD wCntModelParts = 1; wCntModelParts < m_wMaxParts; ++wCntModelParts)
+	for (WORD wCntModelParts = 0; wCntModelParts < m_wMaxParts; ++wCntModelParts)
 	{
 		// 目標縮尺
 		Vec3 NewScale = m_vpModelParts[wCntModelParts]->GetScale();
