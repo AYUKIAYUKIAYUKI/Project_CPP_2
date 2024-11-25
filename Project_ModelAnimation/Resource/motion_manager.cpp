@@ -382,6 +382,18 @@ void CMotion_Manager::EditMotion()
 	ImGui::SameLine();
 	ImGui::Text("Select:%d", m_MotionSet->m_wNowMotion);
 
+	// 現在の再生キーが総キー数を超えないよう制限
+	if (m_MotionSet->m_wNowKey >= GetSelectMotion()->wMaxKey)
+	{
+		m_MotionSet->m_wNowKey = GetSelectMotion()->wMaxKey - 1;
+	}
+
+	// 選択キー番号を調整
+	if (m_wSelectKey >= GetSelectMotion()->wMaxKey)
+	{
+		m_wSelectKey = GetSelectMotion()->wMaxKey - 1;
+	}
+
 	// 総モーション数の切り替え
 	ImGui::BulletText("Edit Motion");
 	if (ImGui::Button("--Motion") && m_MotionSet->m_wMaxMotion > 1)
