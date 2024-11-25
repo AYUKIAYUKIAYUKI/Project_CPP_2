@@ -115,60 +115,6 @@ void CMotion_Set::Animation()
 }
 
 //============================================================================
-// フレームカウント
-//============================================================================
-void CMotion_Set::CountFrame()
-{
-	// 現在のフレーム数をインクリメント
-	m_wNowFrame++;
-
-	// フレーム数が、現在再生中のキーの総フレーム数に達したら
-	if (m_wNowFrame >= GetNowKey()->nMaxFrame)
-	{
-		// 現在のフレーム数をリセット
-		m_wNowFrame = 0;
-
-		// 現在のキー数をインクリメント
-		m_wNowKey++;
-
-		// キー数が、現在再生中のモーションの総キー数に達したら
-		if (m_wNowKey >= GetNowMotion()->wMaxKey)
-		{
-			// 現在のキー数をリセット
-			m_wNowKey = 0;
-		}
-	}
-}
-
-//============================================================================
-// 目標値への補正
-//============================================================================
-void CMotion_Set::CorrectTarget()
-{
-	// フレームの進行度合を作成 (総フレーム数 - 現在のフレーム)
-	const WORD wFrameCoef = m_vpMotion[m_wNowMotion].vpKey[m_wNowKey].nMaxFrame - m_wNowFrame;
-
-	// 全てのパーツがそれぞれの目標値へ補正したパラメータを設定する
-	for (WORD wCntModelParts = 0; wCntModelParts < m_wMaxParts; ++wCntModelParts)
-	{
-		// 目標縮尺
-		Vec3 NewScale = m_vpModelParts[wCntModelParts]->GetScale();
-		NewScale += (m_vpMotion[m_wNowMotion].vpKey[m_wNowKey].apDest[wCntModelParts].ScaleTarget - NewScale) / wFrameCoef;
-		m_vpModelParts[wCntModelParts]->SetScale(NewScale);
-
-		// 目標向き
-		Vec3 NewRot = m_vpModelParts[wCntModelParts]->GetRot();
-		NewRot += (m_vpMotion[m_wNowMotion].vpKey[m_wNowKey].apDest[wCntModelParts].RotTarget - NewRot) / wFrameCoef;
-		m_vpModelParts[wCntModelParts]->SetRot(NewRot);
-
-		// 目標座標
-		Vec3 NewPos = m_vpModelParts[wCntModelParts]->GetPos();
-		NewPos += (m_vpMotion[m_wNowMotion].vpKey[m_wNowKey].apDest[wCntModelParts].PosTarget - NewPos) / wFrameCoef;
-		m_vpModelParts[wCntModelParts]->SetPos(NewPos);
-	}
-}
-
-//============================================================================
 // 生成
 //============================================================================
 CMotion_Set* CMotion_Set::Create(JSON Json)
@@ -266,15 +212,88 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 }
 
 //============================================================================
+// 再生中のモーション番号を取得
+//============================================================================
+WORD CMotion_Set::GetNowMotion()
+{
+	return m_wNowMotion;
+}
+
+//============================================================================
+// 再生中のモーション番号を設定
+//============================================================================
+void CMotion_Set::SetNowMotion(WORD nIdx)
+{
+	m_wNowMotion = nIdx;
+	m_wNowKey = 0;
+	m_wNowFrame = 0;
+}
+
+
+//============================================================================
 // 
 // privateメンバ
 // 
 //============================================================================
 
 //============================================================================
+// フレームカウント
+//============================================================================
+void CMotion_Set::CountFrame()
+{
+	// 現在のフレーム数をインクリメント
+	m_wNowFrame++;
+
+	// フレーム数が、現在再生中のキーの総フレーム数に達したら
+	if (m_wNowFrame >= GetNowKey()->nMaxFrame)
+	{
+		// 現在のフレーム数をリセット
+		m_wNowFrame = 0;
+
+		// 現在のキー数をインクリメント
+		m_wNowKey++;
+
+		// キー数が、現在再生中のモーションの総キー数に達したら
+		if (m_wNowKey >= GetNowMotionPtr()->wMaxKey)
+		{
+			// 現在のキー数をリセット
+			m_wNowKey = 0;
+		}
+	}
+}
+
+//============================================================================
+// 目標値への補正
+//============================================================================
+void CMotion_Set::CorrectTarget()
+{
+	// フレームの進行度合を作成 (総フレーム数 - 現在のフレーム)
+	WORD wFrameCoef = static_cast<WORD>(m_vpMotion[m_wNowMotion].vpKey[m_wNowKey].nMaxFrame - m_wNowFrame);
+
+	// 全てのパーツがそれぞれの目標値へ補正したパラメータを設定する
+	for (WORD wCntModelParts = 0; wCntModelParts < m_wMaxParts; ++wCntModelParts)
+	{
+		// 目標縮尺
+		Vec3 NewScale = m_vpModelParts[wCntModelParts]->GetScale();
+		NewScale += (m_vpMotion[m_wNowMotion].vpKey[m_wNowKey].apDest[wCntModelParts].ScaleTarget - NewScale) / wFrameCoef;
+		m_vpModelParts[wCntModelParts]->SetScale(NewScale);
+
+		// 目標向き
+		Vec3 NewRot = m_vpModelParts[wCntModelParts]->GetRot();
+		NewRot += (m_vpMotion[m_wNowMotion].vpKey[m_wNowKey].apDest[wCntModelParts].RotTarget - NewRot) / wFrameCoef;
+		m_vpModelParts[wCntModelParts]->SetRot(NewRot);
+
+		// 目標座標
+		Vec3 NewPos = m_vpModelParts[wCntModelParts]->GetPos();
+		NewPos += (m_vpMotion[m_wNowMotion].vpKey[m_wNowKey].apDest[wCntModelParts].PosTarget - NewPos) / wFrameCoef;
+		m_vpModelParts[wCntModelParts]->SetPos(NewPos);
+	}
+}
+
+//============================================================================
 // 現在のモーションのポインタを取得
 //============================================================================
-CMotion_Set::Motion* const CMotion_Set::GetNowMotion()
+CMotion_Set::Motion* const CMotion_Set::GetNowMotionPtr()
 {
 	return &m_vpMotion[m_wNowMotion];
 }
@@ -284,5 +303,5 @@ CMotion_Set::Motion* const CMotion_Set::GetNowMotion()
 //============================================================================
 CMotion_Set::Key* const CMotion_Set::GetNowKey()
 {
-	return &GetNowMotion()->vpKey[m_wNowKey];
+	return &GetNowMotionPtr()->vpKey[m_wNowKey];
 }

@@ -249,7 +249,7 @@ void CMotion_Manager::PrintDebug()
 	ImGui::Text("MaxMotion:%d", m_MotionSet->m_wMaxMotion);
 	ImGui::Separator();
 	ImGui::Text("PlayingMotion:%d :(%d)", m_MotionSet->m_wNowMotion, m_MotionSet->m_wMaxMotion);
-	ImGui::Text("PlayingKey:%d :(%d)", m_MotionSet->m_wNowKey, m_MotionSet->GetNowMotion()->wMaxKey);
+	ImGui::Text("PlayingKey:%d :(%d)", m_MotionSet->m_wNowKey, m_MotionSet->GetNowMotionPtr()->wMaxKey);
 	ImGui::Text("PlayingFrame:%d :(%d)", m_MotionSet->m_wNowFrame, m_MotionSet->GetNowKey()->nMaxFrame);
 	for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_wMaxParts; ++wCntModelParts)
 	{
@@ -596,7 +596,7 @@ void CMotion_Manager::EditKey()
 #endif	// _SORT_ON_EXPORT_
 	}
 	ImGui::SameLine();
-	ImGui::Text("MaxKey:%d", m_MotionSet->GetNowMotion()->wMaxKey);
+	ImGui::Text("MaxKey:%d", m_MotionSet->GetNowMotionPtr()->wMaxKey);
 }
 
 //============================================================================

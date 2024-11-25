@@ -56,20 +56,26 @@ public:
 	~CMotion_Set();	// デストラクタ
 
 	// <function>
-	void Release();			// 破棄
-	void Update();			// 更新処理
-	void Animation();		// 動作
-	void CountFrame();		// フレームをカウント
-	void CorrectTarget();	// 目標値への補正
+	void Release();		// 破棄
+	void Update();		// 更新処理
+	void Animation();	// 動作
+
+	// <getter/setter>
+	WORD GetNowMotion();			// 再生中のモーション番号を取得
+	void SetNowMotion(WORD wIdx);	// 再生中のモーション番号を設定
 
 	// <static function>
 	static CMotion_Set* Create(JSON Json);
 
 private:
 
+	// <function>
+	void CountFrame();		// フレームをカウント
+	void CorrectTarget();	// 目標値への補正
+
 	// <getter>
-	CMotion_Set::Motion* const GetNowMotion();	// 現在のモーションのポインタを取得
-	CMotion_Set::Key* const GetNowKey();		// 現在のキーのポインタを取得
+	CMotion_Set::Motion* const GetNowMotionPtr();	// 現在のモーションのポインタを取得
+	CMotion_Set::Key* const GetNowKey();			// 現在のキーのポインタを取得
 
 	// <data>
 	WORD						m_wNowMotion;	// 再生中のモーション
