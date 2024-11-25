@@ -30,12 +30,16 @@ void CTitle::Update()
 	CScene::Update();
 
 	static D3DXVECTOR3 Pos = { 0.0f, 0.0f, 0.0f };
+	static D3DXVECTOR3 Rot = { 0.0f, 0.0f, 0.0f };
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	ImGui::Begin("msadadwadfge");
 	ImGui::DragFloat("PosX", &Pos.x);
 	ImGui::DragFloat("PosY", &Pos.y);
 	ImGui::DragFloat("PosZ", &Pos.z);
-	m_pTree->SetPosSync(Pos);
+	ImGui::SliderFloat("RotX", &Rot.x, -D3DX_PI, D3DX_PI);
+	ImGui::SliderFloat("RotY", &Rot.y, -D3DX_PI, D3DX_PI);
+	ImGui::SliderFloat("RotZ", &Rot.z, -D3DX_PI, D3DX_PI);
+	m_pTree->SetRotAndPosSync(Rot, Pos);
 	ImGui::End();
 
 	// Ÿ‚ÌƒV[ƒ“‚Ö

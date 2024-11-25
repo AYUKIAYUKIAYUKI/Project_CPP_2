@@ -28,6 +28,7 @@ using namespace abbr;
 CObject_Parts::CObject_Parts(LAYER Priority) :
 	CObject{ Priority },
 	m_PosSync{ VEC3_INIT },
+	m_RotSync{ VEC3_INIT },
 	m_pParent{ nullptr },
 	m_pModel{ nullptr },
 	m_ScaleOffset{ VEC3_INIT },
@@ -157,6 +158,14 @@ void CObject_Parts::Draw()
 	pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
 #endif	// CHANGE_DRAW_ZBUFFER
+}
+
+//============================================================================
+// ÉVÉìÉNÉçå¸Ç´ÇÃê›íË
+//============================================================================
+void CObject_Parts::SetRotSync(D3DXVECTOR3 Rot)
+{
+	m_RotSync = Rot;
 }
 
 //============================================================================
@@ -443,9 +452,9 @@ void CObject_Parts::SetMtxWorld()
 
 	// âÒì]çsóÒçÏê¨
 	D3DXMatrixRotationYawPitchRoll(&mtxRot,
-		m_RotOffset.x + m_Rot.x,
-		m_RotOffset.y + m_Rot.y,
-		m_RotOffset.z + m_Rot.z);
+		m_RotOffset.x + m_Rot.x + m_RotSync.x,
+		m_RotOffset.y + m_Rot.y + m_RotSync.y,
+		m_RotOffset.z + m_Rot.z + m_RotSync.z);
 
 	// âÒì]çsóÒÇ∆ÇÃä|ÇØéZ
 	D3DXMatrixMultiply(&m_MtxWorld,

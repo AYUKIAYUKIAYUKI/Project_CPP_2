@@ -34,6 +34,7 @@ public:
 	void	Draw() override;	// 描画処理
 
 	// <setter>
+	void SetRotSync(D3DXVECTOR3 Rot);	// シンクロ向きの設定
 	void SetPosSync(D3DXVECTOR3 Pos);	// シンクロ座標の設定
 	
 	// <getter/setter>
@@ -96,6 +97,7 @@ private:
 	void SetMtxWorld();		// ワールド行列設定
 
 	// <data>
+	D3DXVECTOR3			m_RotSync;		// シンクロ向き
 	D3DXVECTOR3			m_PosSync;		// シンクロ座標
 	CObject_Parts*		m_pParent;		// 親パーツのポインタ
 	CX_Manager::MODEL*	m_pModel;		// モデル情報
