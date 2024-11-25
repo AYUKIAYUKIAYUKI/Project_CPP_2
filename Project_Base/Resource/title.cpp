@@ -12,7 +12,8 @@
 #include "manager.h"
 #include "renderer.h"
 #include "game.h"
-#include "object_X.h"
+#include "object.h"
+#include "motion_set.h"
 
 //============================================================================
 // 
@@ -27,6 +28,9 @@ void CTitle::Update()
 {
 	// 基底クラスの更新処理
 	CScene::Update();
+
+	// 環境装飾の更新処理
+	m_pTree->Update();
 
 	// 次のシーンへ
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
@@ -95,7 +99,8 @@ CTitle* CTitle::Create()
 // コンストラクタ
 //============================================================================
 CTitle::CTitle() :
-	CScene{}
+	CScene{},
+	m_pTree{ nullptr }
 {
 
 }
@@ -114,7 +119,7 @@ CTitle::~CTitle()
 HRESULT CTitle::Init()
 {
 	// 環境装飾を生成
-	CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree.json"));
+	m_pTree = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\tree_motion.json"));
 
 	return S_OK;
 }
@@ -124,5 +129,9 @@ HRESULT CTitle::Init()
 //============================================================================
 void CTitle::Uninit()
 {
-
+	if (m_pTree != nullptr)
+	{
+		m_pTree->Release();
+		m_pTree = nullptr;
+	}
 }

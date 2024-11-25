@@ -51,12 +51,14 @@
     <ClCompile Include="resource\light.cpp" />
     <ClCompile Include="resource\main.cpp" />
     <ClCompile Include="resource\manager.cpp" />
+    <ClCompile Include="Resource\motion_set.cpp" />
     <ClCompile Include="resource\object.cpp" />
     <ClCompile Include="resource\object_2D.cpp" />
     <ClCompile Include="resource\object_3D.cpp" />
     <ClCompile Include="Resource\object_Billboard.cpp" />
     <ClCompile Include="Resource\object_Effect.cpp" />
     <ClCompile Include="Resource\object_HUD.cpp" />
+    <ClCompile Include="Resource\object_Parts.cpp" />
     <ClCompile Include="resource\object_X.cpp" />
     <ClCompile Include="resource\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -122,12 +124,14 @@
     <ClInclude Include="resource\light.h" />
     <ClInclude Include="resource\main.h" />
     <ClInclude Include="resource\manager.h" />
+    <ClInclude Include="Resource\motion_set.h" />
     <ClInclude Include="resource\object.h" />
     <ClInclude Include="resource\object_2D.h" />
     <ClInclude Include="resource\object_3D.h" />
     <ClInclude Include="Resource\object_Billboard.h" />
     <ClInclude Include="Resource\object_Effect.h" />
     <ClInclude Include="Resource\object_HUD.h" />
+    <ClInclude Include="Resource\object_Parts.h" />
     <ClInclude Include="resource\object_X.h" />
     <ClInclude Include="resource\pch.h" />
     <ClInclude Include="Resource\player.h" />

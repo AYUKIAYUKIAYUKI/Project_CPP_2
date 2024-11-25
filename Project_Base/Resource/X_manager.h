@@ -23,7 +23,8 @@ public:
 		RENDER_SPHERE = 0,	// render sphere
 		RENDER_CYLINDER,	// render cylinder
 		RENDER_BOX,			// render box
-		TREE,				// ÷
+		ONLYTREE,			// ÷‚Ì‚İ
+		ONLYSTONE,			// ÷‚ÌÎ
 		STATUE,				// “º‘œ
 		AROUND,				// ü•Ó—Ìˆæ
 		SAMUS,				// ƒTƒ€ƒX

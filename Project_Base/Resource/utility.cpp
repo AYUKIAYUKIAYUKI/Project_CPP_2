@@ -212,3 +212,11 @@ nlohmann::json utility::OpenJsonFile(std::string FilePath)
 
 	return nullptr;
 }
+
+//============================================================================
+// JsonÉfÅ[É^ÇD3DXVECTOR3Ç…ïœä∑
+//============================================================================
+D3DXVECTOR3 utility::JsonConvertToVec3(nlohmann::json Json)
+{
+	return D3DXVECTOR3(static_cast<float>(Json[0]), static_cast<float>(Json[1]), static_cast<float>(Json[2]));
+}
