@@ -29,9 +29,6 @@ void CTitle::Update()
 	// 基底クラスの更新処理
 	CScene::Update();
 
-	// 環境装飾の更新処理
-	m_pTree->Update();
-
 	// 次のシーンへ
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
 	{
@@ -129,9 +126,5 @@ HRESULT CTitle::Init()
 //============================================================================
 void CTitle::Uninit()
 {
-	if (m_pTree != nullptr)
-	{
-		m_pTree->Release();
-		m_pTree = nullptr;
-	}
+
 }

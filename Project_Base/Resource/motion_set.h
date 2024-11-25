@@ -9,6 +9,12 @@
 #define _MOTION_SET_H_	// 二重インクルード防止
 
 //****************************************************
+// インクルードファイル
+//****************************************************
+#include "motion_set.h"
+#include "object.h"
+
+//****************************************************
 // 前方宣言
 //****************************************************
 class CObject_Parts;
@@ -16,10 +22,8 @@ class CObject_Parts;
 //****************************************************
 // モーションセットクラス
 //****************************************************
-class CMotion_Set
+class CMotion_Set : public CObject
 {
-	friend class CMotion_Manager;
-
 public:
 
 	//****************************************************
@@ -52,24 +56,26 @@ public:
 	};
 
 	// <special function>
-	CMotion_Set();	// コンストラクタ
-	~CMotion_Set();	// デストラクタ
+	CMotion_Set();				// コンストラクタ
+	~CMotion_Set() override;	// デストラクタ
 
 	// <function>
-	void Release();		// 破棄
-	void Update();		// 更新処理
-	void Animation();	// 動作
+	HRESULT	Init() override;	// 初期設定
+	void	Uninit() override;	// 終了処理
+	void	Update() override;	// 更新処理
+	void	Draw() override;	// 描画処理
 
 	// <getter/setter>
 	WORD GetNowMotion();			// 再生中のモーション番号を取得
 	void SetNowMotion(WORD wIdx);	// 再生中のモーション番号を設定
 
 	// <static function>
-	static CMotion_Set* Create(JSON Json);
+	static CMotion_Set* Create(JSON Json);	// 生成
 
 private:
 
 	// <function>
+	void Animation();		// 動作
 	void CountFrame();		// フレームをカウント
 	void CorrectTarget();	// 目標値への補正
 
