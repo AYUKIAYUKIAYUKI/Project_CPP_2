@@ -71,6 +71,14 @@ public:
 	void SetRotAndPosSync(D3DXVECTOR3 Rot, D3DXVECTOR3 Pos);	// シンクロ向き・座標を設定
 
 	// <getter/setter>
+	D3DXVECTOR3 GetRot();			// 向きを取得
+	void SetRot(D3DXVECTOR3 Rot);	// 向きを設定
+	
+	// <getter/setter>
+	D3DXVECTOR3 GetPos();			// 座標を取得
+	void SetPos(D3DXVECTOR3 Pos);	// 座標を設定
+
+	// <getter/setter>
 	WORD GetNowMotion();			// 再生中のモーション番号を取得
 	void SetNowMotion(WORD wIdx);	// 再生中のモーション番号を設定
 
@@ -92,6 +100,8 @@ private:
 	CMotion_Set::Key* const GetNowKey();			// 現在のキーのポインタを取得
 
 	// <data>
+	D3DXVECTOR3					m_Rot;			// 向き
+	D3DXVECTOR3					m_Pos;			// 座標
 	WORD						m_wNowMotion;	// 再生中のモーション
 	WORD						m_wNowKey;		// 再生中のキー
 	WORD						m_wNowFrame;	// 再生中のフレーム

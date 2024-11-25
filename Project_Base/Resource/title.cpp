@@ -29,18 +29,22 @@ void CTitle::Update()
 	// 基底クラスの更新処理
 	CScene::Update();
 
-	static D3DXVECTOR3 Pos = { 0.0f, 0.0f, 0.0f };
-	static D3DXVECTOR3 Rot = { 0.0f, 0.0f, 0.0f };
+	// 樹の向き・座標を設定
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	ImGui::Begin("msadadwadfge");
-	ImGui::DragFloat("PosX", &Pos.x);
-	ImGui::DragFloat("PosY", &Pos.y);
-	ImGui::DragFloat("PosZ", &Pos.z);
-	ImGui::SliderFloat("RotX", &Rot.x, -D3DX_PI, D3DX_PI);
-	ImGui::SliderFloat("RotY", &Rot.y, -D3DX_PI, D3DX_PI);
-	ImGui::SliderFloat("RotZ", &Rot.z, -D3DX_PI, D3DX_PI);
-	m_pTree->SetRotAndPosSync(Rot, Pos);
-	ImGui::End();
+	if (ImGui::Begin("Tree Param Edit"))
+	{
+		D3DXVECTOR3 NewRot = m_pTree->GetRot();
+		ImGui::SliderFloat("RotX", &NewRot.x, -D3DX_PI, D3DX_PI);
+		ImGui::SliderFloat("RotY", &NewRot.y, -D3DX_PI, D3DX_PI);
+		ImGui::SliderFloat("RotZ", &NewRot.z, -D3DX_PI, D3DX_PI);
+		m_pTree->SetRot(NewRot);
+		D3DXVECTOR3 NewPos = m_pTree->GetPos();
+		ImGui::DragFloat("PosX", &NewPos.x);
+		ImGui::DragFloat("PosY", &NewPos.y);
+		ImGui::DragFloat("PosZ", &NewPos.z);
+		m_pTree->SetPos(NewPos);
+		ImGui::End();
+	}
 
 	// 次のシーンへ
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
@@ -131,7 +135,7 @@ HRESULT CTitle::Init()
 	// 環境装飾を生成
 	m_pTree = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree_motion.json"));
 	auto TreeParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree.json");
-	m_pTree->SetPosSync(utility::JsonConvertToVec3(TreeParam["Pos"]));
+	m_pTree->SetPos(utility::JsonConvertToVec3(TreeParam["Pos"]));
 
 	return S_OK;
 }
