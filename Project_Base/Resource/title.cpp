@@ -135,6 +135,7 @@ HRESULT CTitle::Init()
 	// ŠÂ‹«‘•ü‚ð¶¬
 	m_pTree = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree_motion.json"));
 	auto TreeParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree.json");
+	m_pTree->SetRot(utility::JsonConvertToVec3(TreeParam["Rot"]));
 	m_pTree->SetPos(utility::JsonConvertToVec3(TreeParam["Pos"]));
 
 	return S_OK;
