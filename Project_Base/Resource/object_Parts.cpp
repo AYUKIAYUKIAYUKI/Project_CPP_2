@@ -27,6 +27,7 @@ using namespace abbr;
 //============================================================================
 CObject_Parts::CObject_Parts(LAYER Priority) :
 	CObject{ Priority },
+	m_PosSync{ VEC3_INIT },
 	m_pParent{ nullptr },
 	m_pModel{ nullptr },
 	m_ScaleOffset{ VEC3_INIT },
@@ -451,22 +452,11 @@ void CObject_Parts::SetMtxWorld()
 		&m_MtxWorld,
 		&mtxRot);
 
-	if (m_pParent == nullptr)
-	{
-		// 平行移動行列作成
-		D3DXMatrixTranslation(&mtxTrans,
-			m_PosOffset.x + m_Pos.x + m_PosSync.x,
-			m_PosOffset.y + m_Pos.y + m_PosSync.y,
-			m_PosOffset.z + m_Pos.z + m_PosSync.z);
-	}
-	else
-	{
-		// 平行移動行列作成
-		D3DXMatrixTranslation(&mtxTrans,
-			m_PosOffset.x + m_Pos.x,
-			m_PosOffset.y + m_Pos.y,
-			m_PosOffset.z + m_Pos.z);
-	}
+	// 平行移動行列作成
+	D3DXMatrixTranslation(&mtxTrans,
+		m_PosOffset.x + m_Pos.x + m_PosSync.x,
+		m_PosOffset.y + m_Pos.y + m_PosSync.y,
+		m_PosOffset.z + m_Pos.z + m_PosSync.z);
 
 	// 平行移動行列との掛け算
 	D3DXMatrixMultiply(&m_MtxWorld,

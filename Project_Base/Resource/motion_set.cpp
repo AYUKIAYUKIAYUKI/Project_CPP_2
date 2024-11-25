@@ -229,11 +229,8 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 //============================================================================
 void CMotion_Set::SetPosSync(D3DXVECTOR3 Pos)
 {
-	// シンクロ座標を全てのパーツに反映
-	for (WORD wCntParts = 0; wCntParts < m_wMaxParts; ++wCntParts)
-	{
-		m_vpModelParts[wCntParts]->SetPosSync(Pos);
-	}
+	// シンクロ座標を親パーツに反映
+	m_pMostParent->SetPosSync(Pos);
 }
 
 //============================================================================
