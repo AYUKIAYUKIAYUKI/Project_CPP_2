@@ -40,7 +40,7 @@ CMotion_Manager* CMotion_Manager::m_pMotionManager = nullptr;	// ƒ‚[ƒVƒ‡ƒ“ƒ}ƒl
 void CMotion_Manager::Update()
 {
 	// ƒEƒBƒ“ƒhƒE‚ğ•\¦
-	ImVec2 Rect = { 600, 850 };
+	ImVec2 Rect = { 600, 950 };
 	ImGui::SetNextWindowSize(Rect);
 	ImGui::SetNextWindowPos({ SCREEN_WIDTH - (Rect.x + 100), 50 });
 	ImGui::Begin("Edit MotionList");
@@ -249,7 +249,7 @@ void CMotion_Manager::PrintDebug()
 	ImGui::SameLine();
 	ImGui::Text("MaxMotion:%d", m_MotionSet->m_wMaxMotion);
 	ImGui::Separator();
-	ImGui::Text("PlayingMotion:%d :(%d)", m_MotionSet->m_wMaxMotion, m_MotionSet->m_wMaxMotion);
+	ImGui::Text("PlayingMotion:%d :(%d)", 999, m_MotionSet->m_wMaxMotion);
 	ImGui::Text("PlayingKey:%d :(%d)", m_MotionSet->m_wNowKey, m_MotionSet->GetNowMotion()->wMaxKey);
 	ImGui::Text("PlayingFrame:%d :(%d)", m_MotionSet->m_wNowFrame, m_MotionSet->GetNowKey()->nMaxFrame);
 	for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_wMaxParts; ++wCntModelParts)
@@ -358,15 +358,121 @@ void CMotion_Manager::EditParts()
 //============================================================================
 void CMotion_Manager::EditMotion()
 {
-	// ‘I‘ğƒ‚[ƒVƒ‡ƒ“Ø‚è‘Ö‚¦
-	if (CManager::GetKeyboard()->GetTrigger(DIK_3))
+	// ‘I‘ğƒL[Ø‚è‘Ö‚¦
+	ImGui::Separator();
+	ImGui::BulletText("Select Motion");
+	if (ImGui::Button("FirstMotion"))
+	{
+		m_wSelectMotion = 0;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("PrevMotion"))
 	{
 		m_wSelectMotion > 0 ? m_wSelectMotion-- : m_wSelectMotion = m_MotionSet->m_wMaxMotion - 1;
 	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_4))
+	ImGui::SameLine();
+	if (ImGui::Button("NextMotion"))
 	{
 		m_wSelectMotion < m_MotionSet->m_wMaxMotion - 1 ? m_wSelectMotion++ : m_wSelectMotion = 0;
 	}
+	ImGui::SameLine();
+	if (ImGui::Button("LastMotion"))
+	{
+		m_wSelectMotion = m_MotionSet->m_wMaxMotion - 1;
+	}
+	ImGui::SameLine();
+	ImGui::Text("Select:%d", m_wSelectMotion);
+
+	// ‘ƒ‚[ƒVƒ‡ƒ“”‚ÌØ‚è‘Ö‚¦
+	ImGui::BulletText("Edit Motion");
+	if (ImGui::Button("--Motion") && m_MotionSet->m_wMaxMotion > 1)
+	{
+		// ‘ƒ‚[ƒVƒ‡ƒ“”‚ğƒfƒNƒŠƒƒ“ƒg‚µ
+		m_MotionSet->m_wMaxMotion--;
+#if !SORT_ON_EXPORT
+		m_Json["MaxMotion"] = m_MotionSet->m_wMaxMotion;
+#endif	// _SORT_ON_EXPORT_
+
+		// Œ»İ‚ÌÄ¶ƒ‚[ƒVƒ‡ƒ“‚ª‘ƒ‚[ƒVƒ‡ƒ“”‚ğ’´‚¦‚È‚¢‚æ‚¤§ŒÀ
+		if (m_MotionSet->m_wNowMotion >= m_MotionSet->m_wMaxMotion)
+		{
+			m_MotionSet->m_wNowMotion = m_MotionSet->m_wMaxMotion - 1;
+		}
+
+		// ‘I‘ğƒ‚[ƒVƒ‡ƒ“”Ô†‚ğ’²®
+		if (m_wSelectMotion >= m_MotionSet->m_wMaxMotion)
+		{
+			m_wSelectMotion = m_MotionSet->m_wMaxMotion - 1;
+		}
+
+		// ƒ‚[ƒVƒ‡ƒ“î•ñ‚Ìƒ|ƒCƒ“ƒ^‚ğì¬
+		CMotion_Set::Motion* pMotion = &m_MotionSet->m_vpMotion[m_MotionSet->m_wMaxMotion];
+
+		// ƒL[”•ª‚Ì–Ú•W’lî•ñ‚Ìƒ|ƒCƒ“ƒ^”z—ñ‚ğ”jŠü
+		for (WORD wCntKey = 0; wCntKey < pMotion->wMaxKey; ++wCntKey)
+		{
+			if (pMotion->vpKey[wCntKey].apDest != nullptr)
+			{
+				delete[] pMotion->vpKey[wCntKey].apDest;
+				pMotion->vpKey[wCntKey].apDest = nullptr;
+			}
+
+			// ƒL[î•ñ‚àíœ
+			pMotion->vpKey.pop_back();
+		}
+
+		// ––”ö‚Ìƒ‚[ƒVƒ‡ƒ“î•ñ‚ğíœ
+		m_MotionSet->m_vpMotion.pop_back();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("++Motion"))
+	{
+		// ƒ‚[ƒVƒ‡ƒ“î•ñƒIƒuƒWƒFƒNƒg‚ğV‹Kì¬
+		CMotion_Set::Motion Motion;
+
+		// V‚½‚Èƒ‚[ƒVƒ‡ƒ“‚Ì‘ƒL[”‚ğİ’è
+		Motion.wMaxKey = 1;
+#if !SORT_ON_EXPORT
+		m_Json["MaxKey"][m_MotionSet->m_wMaxMotion] = 1;
+#endif	// _SORT_ON_EXPORT_
+
+		// ƒL[î•ñƒIƒuƒWƒFƒNƒg‚ğV‹Kì¬
+		CMotion_Set::Key Key;
+
+		// V‚½‚ÈƒL[‚Ì‘ƒtƒŒ[ƒ€”‚ğİ’è
+		Key.nMaxFrame = 1;
+#if !SORT_ON_EXPORT
+		m_Json["MaxFrame"][Motion.wMaxKey] = 1;
+#endif	// _SORT_ON_EXPORT_
+
+		// ƒp[ƒc”•ª‚Ì–Ú•W’lî•ñ‚ğ’Ç‰Á¶¬
+		Key.apDest = DBG_NEW CMotion_Set::KeyDest[m_MotionSet->m_wMaxParts];
+
+		for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_wMaxParts; ++wCntModelParts)
+		{
+			// –Ú•W’lî•ñ‚Ìƒ|ƒCƒ“ƒ^‚ğì¬
+			CMotion_Set::KeyDest* const pDest = &Key.apDest[wCntModelParts];
+
+			// V‚½‚Èƒ‚[ƒVƒ‡ƒ“‚Ìƒp[ƒc‚Ì–Ú•W’l‚ğİ’è
+			pDest->ScaleTarget = { 1.0f, 1.0f, 1.0f };	// –Ú•WkÚ
+			pDest->RotTarget = { VEC3_INIT };			// –Ú•WŒü‚«
+			pDest->PosTarget = { VEC3_INIT };			// –Ú•WÀ•W
+		}
+
+		// ƒL[î•ñ‚ğ’Ç‰Á
+		Motion.vpKey.push_back(Key);
+
+		// ƒ‚[ƒVƒ‡ƒ“î•ñ‚ğ’Ç‰Á
+		m_MotionSet->m_vpMotion.push_back(Motion);
+
+		// ‘ƒ‚[ƒVƒ‡ƒ“”‚ğƒCƒ“ƒNƒŠƒƒ“ƒg
+		m_MotionSet->m_wMaxMotion++;
+#if !SORT_ON_EXPORT
+		m_Json["MaxMotion"] = m_MotionSet->m_wMaxMotion;
+#endif	// _SORT_ON_EXPORT_
+	}
+	ImGui::SameLine();
+	ImGui::Text("MaxMotion:%d", m_MotionSet->m_wMaxMotion);
 }
 
 //============================================================================
@@ -403,14 +509,22 @@ void CMotion_Manager::EditKey()
 	ImGui::BulletText("Edit Key");
 	if (ImGui::Button("--Key") && GetSelectMotion()->wMaxKey > 1)
 	{
-		// ‘ƒL[”‚ğƒfƒNƒŠƒƒ“ƒg‚µAƒWƒFƒCƒ\ƒ“ƒf[ƒ^‚É•Û‘¶
+		// ‘ƒL[”‚ğƒfƒNƒŠƒƒ“ƒg‚µ
 		GetSelectMotion()->wMaxKey--;
+#if !SORT_ON_EXPORT
 		m_Json["MaxKey"] = GetSelectMotion()->wMaxKey;
+#endif	// _SORT_ON_EXPORT_
 
 		// Œ»İ‚ÌÄ¶ƒL[‚ª‘ƒL[”‚ğ’´‚¦‚È‚¢‚æ‚¤§ŒÀ
 		if (m_MotionSet->m_wNowKey >= GetSelectMotion()->wMaxKey)
 		{
 			m_MotionSet->m_wNowKey = GetSelectMotion()->wMaxKey - 1;
+		}
+
+		// ‘I‘ğƒL[”Ô†‚ğ’²®
+		if (m_wSelectKey >= GetSelectMotion()->wMaxKey)
+		{
+			m_wSelectKey = GetSelectMotion()->wMaxKey - 1;
 		}
 
 #if !SORT_ON_EXPORT
@@ -433,12 +547,6 @@ void CMotion_Manager::EditKey()
 
 		// ––”ö‚ÌƒL[î•ñ‚ğíœ
 		GetSelectMotion()->vpKey.pop_back();
-
-		// ‘I‘ğƒL[”Ô†‚ğ’²®
-		if (m_wSelectKey >= GetSelectMotion()->wMaxKey)
-		{
-			m_wSelectKey = GetSelectMotion()->wMaxKey - 1;
-		}
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("++Key"))
@@ -446,9 +554,11 @@ void CMotion_Manager::EditKey()
 		// ƒL[î•ñƒIƒuƒWƒFƒNƒg‚ğV‹Kì¬
 		CMotion_Set::Key Key;
 
-		// V‚½‚ÈƒL[‚Ì‘ƒtƒŒ[ƒ€”‚ğİ’è‚µAƒWƒFƒCƒ\ƒ“ƒf[ƒ^‚É•Û‘¶
+		// V‚½‚ÈƒL[‚Ì‘ƒtƒŒ[ƒ€”‚ğİ’è
 		Key.nMaxFrame = 1;
+#if !SORT_ON_EXPORT
 		m_Json["MaxFrame"][GetSelectMotion()->wMaxKey] = Key.nMaxFrame;
+#endif	// _SORT_ON_EXPORT_
 
 		// ƒp[ƒc”•ª‚Ì–Ú•W’lî•ñ‚ğ’Ç‰Á¶¬
 		Key.apDest = DBG_NEW CMotion_Set::KeyDest[m_MotionSet->m_wMaxParts];
@@ -471,9 +581,11 @@ void CMotion_Manager::EditKey()
 
 		GetSelectMotion()->vpKey.push_back(Key);
 
-		// ‘ƒL[”‚ğƒCƒ“ƒNƒŠƒƒ“ƒgAƒWƒFƒCƒ\ƒ“ƒf[ƒ^‚É•Û‘¶
+		// ‘ƒL[”‚ğƒCƒ“ƒNƒŠƒƒ“ƒg
 		GetSelectMotion()->wMaxKey++;
+#if !SORT_ON_EXPORT
 		m_Json["MaxKey"] = GetSelectMotion()->wMaxKey;
+#endif	// _SORT_ON_EXPORT_
 	}
 	ImGui::SameLine();
 	ImGui::Text("MaxKey:%d", m_MotionSet->GetNowMotion()->wMaxKey);
@@ -503,11 +615,13 @@ void CMotion_Manager::EditFrame()
 		m_MotionSet->m_wNowFrame = m_MotionSet->GetNowKey()->nMaxFrame - 1;
 	}
 
+#if !SORT_ON_EXPORT
 	// ‘Œ¸‚ª‚ ‚ê‚ÎƒWƒFƒCƒ\ƒ“ƒf[ƒ^‚ğ•ÏX
 	if (nOldMaxFrame != GetSelectKey()->nMaxFrame)
 	{
 		m_Json["MaxFrame"][m_wSelectKey] = GetSelectKey()->nMaxFrame;
 	}
+#endif	// _SORT_ON_EXPORT_
 }
 
 //============================================================================
@@ -599,10 +713,12 @@ void CMotion_Manager::EditDest()
 		ImGui::DragFloat("Pos:Z", &pDest->PosTarget.z, 0.01f);
 	}
 
+#if !SORT_ON_EXPORT
 	// –Ú•W’l‚ğ”½‰f
 	m_Json["ScaleTarget"][m_wSelectKey][m_wSelectParts] = { pDest->ScaleTarget.x, pDest->ScaleTarget.y, pDest->ScaleTarget.z };
 	m_Json["RotTarget"][m_wSelectKey][m_wSelectParts] = { pDest->RotTarget.x, pDest->RotTarget.y, pDest->RotTarget.z };
 	m_Json["PosTarget"][m_wSelectKey][m_wSelectParts] = { pDest->PosTarget.x, pDest->PosTarget.y, pDest->PosTarget.z };
+#endif	// _SORT_ON_EXPORT_
 }
 
 //============================================================================
@@ -614,13 +730,13 @@ void CMotion_Manager::ShowKeyEnd()
 	for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_wMaxParts; ++wCntModelParts)
 	{
 		// –Ú•WkÚ
-		m_MotionSet->m_vpModelParts[wCntModelParts]->SetScale(m_MotionSet->m_apMotion->vpKey[m_wSelectKey].apDest[wCntModelParts].ScaleTarget);
+		m_MotionSet->m_vpModelParts[wCntModelParts]->SetScale(m_MotionSet->m_vpMotion[m_wSelectMotion].vpKey[m_wSelectKey].apDest[wCntModelParts].ScaleTarget);
 
 		// –Ú•WŒü‚«
-		m_MotionSet->m_vpModelParts[wCntModelParts]->SetRot(m_MotionSet->m_apMotion->vpKey[m_wSelectKey].apDest[wCntModelParts].RotTarget);
+		m_MotionSet->m_vpModelParts[wCntModelParts]->SetRot(m_MotionSet->m_vpMotion[m_wSelectMotion].vpKey[m_wSelectKey].apDest[wCntModelParts].RotTarget);
 
 		// –Ú•WÀ•W
-		m_MotionSet->m_vpModelParts[wCntModelParts]->SetPos(m_MotionSet->m_apMotion->vpKey[m_wSelectKey].apDest[wCntModelParts].PosTarget);
+		m_MotionSet->m_vpModelParts[wCntModelParts]->SetPos(m_MotionSet->m_vpMotion[m_wSelectMotion].vpKey[m_wSelectKey].apDest[wCntModelParts].PosTarget);
 	}
 }
 
@@ -638,28 +754,54 @@ void CMotion_Manager::Export()
 	if (Ofs.good())
 	{
 #if SORT_ON_EXPORT
-		// Œ³‚Ìƒf[ƒ^‚ğÁ‹
-		m_Json["ScaleTarget"].clear();
-		m_Json["RotTarget"].clear();
-		m_Json["PosTarget"].clear();
 
-		for (WORD wCntKey = 0; wCntKey < m_MotionSet->m_apMotion[0].wMaxKey; ++wCntKey)
+		// ‘‚«o‚µ—pƒWƒFƒCƒ\ƒ“ƒIƒuƒWƒFƒNƒg‚ğì¬
+		JSON Export;
+
+		// ‘ƒ‚[ƒVƒ‡ƒ“”
+		Export["MaxMotion"] = m_MotionSet->m_wMaxMotion;
+
+		// ‘ƒp[ƒc”
+		Export["MaxParts"] = m_MotionSet->m_wMaxParts;
+
+		// ƒ‚ƒfƒ‹ƒ^ƒCƒv
+		Export["ModelType"] = m_Json["ModelType"];
+
+		// eƒp[ƒc‚ÌƒCƒ“ƒfƒbƒNƒX
+		Export["ParentIdx"] = m_Json["ParentIdx"];
+
+		// ƒIƒtƒZƒbƒgˆÊ’u
+		Export["PosOffset"] = m_Json["PosOffset"];
+
+		for (WORD wCntMotion = 0; wCntMotion < m_MotionSet->m_wMaxMotion; ++wCntMotion)
 		{
-			const CMotion_Set::Key* const pKey = &m_MotionSet->m_apMotion[0].vpKey[wCntKey];
+			// ƒ‹[ƒvƒtƒ‰ƒO
+			Export["Loop"][wCntMotion] = m_MotionSet->m_vpMotion[wCntMotion].bLoop;
 
-			for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_wMaxParts; ++wCntModelParts)
+			// ‘ƒL[”
+			Export["MaxKey"][wCntMotion] = m_MotionSet->m_vpMotion[wCntMotion].wMaxKey;
+
+			for (WORD wCntKey = 0; wCntKey < m_MotionSet->m_vpMotion[wCntMotion].wMaxKey; ++wCntKey)
 			{
-				const CMotion_Set::KeyDest* const pDest = &pKey->apDest[wCntModelParts];
+				const CMotion_Set::Key* const pKey = &m_MotionSet->m_vpMotion[wCntMotion].vpKey[wCntKey];
 
-				m_Json["ScaleTarget"][wCntKey][wCntModelParts] = { pDest->ScaleTarget.x, pDest->ScaleTarget.y, pDest->ScaleTarget.z };
-				m_Json["RotTarget"][wCntKey][wCntModelParts] = { pDest->RotTarget.x, pDest->RotTarget.y, pDest->RotTarget.z };
-				m_Json["PosTarget"][wCntKey][wCntModelParts] = { pDest->PosTarget.x, pDest->PosTarget.y, pDest->PosTarget.z };
+				// ‘ƒtƒŒ[ƒ€”
+				Export["MaxFrame"][wCntMotion][wCntKey] = pKey->nMaxFrame;
+
+				for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_wMaxParts; ++wCntModelParts)
+				{
+					const CMotion_Set::KeyDest* const pDest = &pKey->apDest[wCntModelParts];
+
+					Export["ScaleTarget"][wCntMotion][wCntKey][wCntModelParts] = { pDest->ScaleTarget.x, pDest->ScaleTarget.y, pDest->ScaleTarget.z };
+					Export["RotTarget"][wCntMotion][wCntKey][wCntModelParts] = { pDest->RotTarget.x, pDest->RotTarget.y, pDest->RotTarget.z };
+					Export["PosTarget"][wCntMotion][wCntKey][wCntModelParts] = { pDest->PosTarget.x, pDest->PosTarget.y, pDest->PosTarget.z };
+				}
 			}
 		}
 #endif	// _SORT_ON_EXPORT_
 
 		// ƒWƒFƒCƒ\ƒ“ƒf[ƒ^‚ğƒVƒŠƒAƒ‰ƒCƒY
-		Ofs << m_Json.dump(1, '	');	// ‘æˆêˆø” -> ƒCƒ“ƒfƒ“ƒg”, ‘æ“ñˆø” -> ƒCƒ“ƒfƒ“ƒgŒ`®
+		Ofs << Export.dump(1, '	');	// ‘æˆêˆø” -> ƒCƒ“ƒfƒ“ƒg”, ‘æ“ñˆø” -> ƒCƒ“ƒfƒ“ƒgŒ`®
 
 		CRenderer::SetTimeString("ƒ‚[ƒVƒ‡ƒ“ƒf[ƒ^[" + FileName + "]‚ğ‘‚«o‚µ‚Ü‚µ‚½", 120);
 	}
@@ -705,7 +847,7 @@ CObject_Parts* const CMotion_Manager::GetSelectParts() const
 //============================================================================
 CMotion_Set::Motion* const CMotion_Manager::GetSelectMotion() const
 {
-	return &m_MotionSet->m_apMotion[m_wSelectMotion];
+	return &m_MotionSet->m_vpMotion[m_wSelectMotion];
 }
 
 //============================================================================

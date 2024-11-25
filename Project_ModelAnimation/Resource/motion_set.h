@@ -68,8 +68,8 @@ public:
 private:
 
 	// <getter>
-	CMotion_Set::Motion* const GetNowMotion() const;	// 現在のモーションのポインタを取得
-	CMotion_Set::Key* const GetNowKey() const;			// 現在のキーのポインタを取得
+	CMotion_Set::Motion* const GetNowMotion();	// 現在のモーションのポインタを取得
+	CMotion_Set::Key* const GetNowKey();		// 現在のキーのポインタを取得
 
 	// <data>
 	WORD						m_wNowMotion;	// 再生中のモーション
@@ -78,7 +78,7 @@ private:
 	std::vector<CObject_Parts*>	m_vpModelParts;	// モデルパーツ
 	WORD						m_wMaxParts;	// モデルの総パーツ数
 	WORD						m_wMaxMotion;	// 総モーション数
-	Motion*						m_apMotion;		// モーション情報
+	std::vector<Motion>			m_vpMotion;		// モーション情報
 };
 
 #endif	// _MOTION_SET_

@@ -33,6 +33,13 @@ void CTitle::Update()
 	{
 		To_Next();
 	}
+#ifdef _DEBUG	// パラメータ確認用
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_F7))
+	{
+		CObject::ReleaseAll();
+		CScene_Manager::ChangeScene(Create());
+	}
+#endif // _DEBUG
 }
 
 //============================================================================
