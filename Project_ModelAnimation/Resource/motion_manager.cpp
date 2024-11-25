@@ -152,7 +152,6 @@ CMotion_Manager::CMotion_Manager() :
 	m_Json{},
 	m_MotionSet{ nullptr },
 	m_wSelectParts{ 0 },
-	m_wSelectMotion{ 0 },
 	m_wSelectKey{ 0 },
 	m_bPartsAppeal{ false },
 	m_bPlay{ false },
@@ -249,7 +248,7 @@ void CMotion_Manager::PrintDebug()
 	ImGui::SameLine();
 	ImGui::Text("MaxMotion:%d", m_MotionSet->m_wMaxMotion);
 	ImGui::Separator();
-	ImGui::Text("PlayingMotion:%d :(%d)", 999, m_MotionSet->m_wMaxMotion);
+	ImGui::Text("PlayingMotion:%d :(%d)", m_MotionSet->m_wNowMotion, m_MotionSet->m_wMaxMotion);
 	ImGui::Text("PlayingKey:%d :(%d)", m_MotionSet->m_wNowKey, m_MotionSet->GetNowMotion()->wMaxKey);
 	ImGui::Text("PlayingFrame:%d :(%d)", m_MotionSet->m_wNowFrame, m_MotionSet->GetNowKey()->nMaxFrame);
 	for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_wMaxParts; ++wCntModelParts)
@@ -363,25 +362,25 @@ void CMotion_Manager::EditMotion()
 	ImGui::BulletText("Select Motion");
 	if (ImGui::Button("FirstMotion"))
 	{
-		m_wSelectMotion = 0;
+		m_MotionSet->m_wNowMotion = 0;
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("PrevMotion"))
 	{
-		m_wSelectMotion > 0 ? m_wSelectMotion-- : m_wSelectMotion = m_MotionSet->m_wMaxMotion - 1;
+		m_MotionSet->m_wNowMotion > 0 ? m_MotionSet->m_wNowMotion-- : m_MotionSet->m_wNowMotion = m_MotionSet->m_wMaxMotion - 1;
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("NextMotion"))
 	{
-		m_wSelectMotion < m_MotionSet->m_wMaxMotion - 1 ? m_wSelectMotion++ : m_wSelectMotion = 0;
+		m_MotionSet->m_wNowMotion < m_MotionSet->m_wMaxMotion - 1 ? m_MotionSet->m_wNowMotion++ : m_MotionSet->m_wNowMotion = 0;
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("LastMotion"))
 	{
-		m_wSelectMotion = m_MotionSet->m_wMaxMotion - 1;
+		m_MotionSet->m_wNowMotion = m_MotionSet->m_wMaxMotion - 1;
 	}
 	ImGui::SameLine();
-	ImGui::Text("Select:%d", m_wSelectMotion);
+	ImGui::Text("Select:%d", m_MotionSet->m_wNowMotion);
 
 	// 総モーション数の切り替え
 	ImGui::BulletText("Edit Motion");
@@ -397,12 +396,6 @@ void CMotion_Manager::EditMotion()
 		if (m_MotionSet->m_wNowMotion >= m_MotionSet->m_wMaxMotion)
 		{
 			m_MotionSet->m_wNowMotion = m_MotionSet->m_wMaxMotion - 1;
-		}
-
-		// 選択モーション番号を調整
-		if (m_wSelectMotion >= m_MotionSet->m_wMaxMotion)
-		{
-			m_wSelectMotion = m_MotionSet->m_wMaxMotion - 1;
 		}
 
 		// モーション情報のポインタを作成
@@ -429,6 +422,9 @@ void CMotion_Manager::EditMotion()
 	{
 		// モーション情報オブジェクトを新規作成
 		CMotion_Set::Motion Motion;
+
+		// 新たなモーションのループフラグを設定
+		Motion.bLoop = false;
 
 		// 新たなモーションの総キー数を設定
 		Motion.wMaxKey = 1;
@@ -730,13 +726,13 @@ void CMotion_Manager::ShowKeyEnd()
 	for (WORD wCntModelParts = 0; wCntModelParts < m_MotionSet->m_wMaxParts; ++wCntModelParts)
 	{
 		// 目標縮尺
-		m_MotionSet->m_vpModelParts[wCntModelParts]->SetScale(m_MotionSet->m_vpMotion[m_wSelectMotion].vpKey[m_wSelectKey].apDest[wCntModelParts].ScaleTarget);
+		m_MotionSet->m_vpModelParts[wCntModelParts]->SetScale(m_MotionSet->m_vpMotion[m_MotionSet->m_wNowMotion].vpKey[m_wSelectKey].apDest[wCntModelParts].ScaleTarget);
 
 		// 目標向き
-		m_MotionSet->m_vpModelParts[wCntModelParts]->SetRot(m_MotionSet->m_vpMotion[m_wSelectMotion].vpKey[m_wSelectKey].apDest[wCntModelParts].RotTarget);
+		m_MotionSet->m_vpModelParts[wCntModelParts]->SetRot(m_MotionSet->m_vpMotion[m_MotionSet->m_wNowMotion].vpKey[m_wSelectKey].apDest[wCntModelParts].RotTarget);
 
 		// 目標座標
-		m_MotionSet->m_vpModelParts[wCntModelParts]->SetPos(m_MotionSet->m_vpMotion[m_wSelectMotion].vpKey[m_wSelectKey].apDest[wCntModelParts].PosTarget);
+		m_MotionSet->m_vpModelParts[wCntModelParts]->SetPos(m_MotionSet->m_vpMotion[m_MotionSet->m_wNowMotion].vpKey[m_wSelectKey].apDest[wCntModelParts].PosTarget);
 	}
 }
 
@@ -823,7 +819,6 @@ void CMotion_Manager::Reset()
 	{
 		// 選択番号情報を初期化
 		m_wSelectParts = 0;
-		m_wSelectMotion = 0;
 		m_wSelectKey = 0;
 
 		// 一旦解放
@@ -847,7 +842,7 @@ CObject_Parts* const CMotion_Manager::GetSelectParts() const
 //============================================================================
 CMotion_Set::Motion* const CMotion_Manager::GetSelectMotion() const
 {
-	return &m_MotionSet->m_vpMotion[m_wSelectMotion];
+	return &m_MotionSet->m_vpMotion[m_MotionSet->m_wNowMotion];
 }
 
 //============================================================================
