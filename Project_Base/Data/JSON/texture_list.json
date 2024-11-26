@@ -1,7 +1,7 @@
 {
 	"ModelList": [
-		"Data\\TEXTURE\\test.jpg",
-		"Data\\TEXTURE\\sea.png",
+		"Data\\TEXTURE\\title.png",
+		"Data\\TEXTURE\\start.png",
 		"Data\\TEXTURE\\map.png",
 		"Data\\TEXTURE\\circle.png",
 		"Data\\TEXTURE\\gauge.png",

@@ -383,7 +383,7 @@ HRESULT CObject_Billboard::CreateVtxBuff()
 	VERTEX_3D* pVtx = nullptr;
 
 	// 頂点バッファをロック
-	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 
 	for (WORD wNumVtx = 0; wNumVtx < NUM_VTX; ++wNumVtx)
 	{

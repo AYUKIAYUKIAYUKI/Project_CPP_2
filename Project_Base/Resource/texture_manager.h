@@ -20,8 +20,8 @@ public:
 	//****************************************************
 	enum class TYPE : WORD
 	{
-		TEST0 = 0,			// テスト
-		TEST1,				// テスト
+		TITLE = 0,			// タイトル
+		START,				// スタート表示
 		MAP,				// 仮マップ
 		CIRCLE,				// サークル
 		PLAYERGAUGE,		// プレイヤーのゲージ

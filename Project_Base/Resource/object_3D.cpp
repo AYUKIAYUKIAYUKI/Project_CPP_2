@@ -1,6 +1,6 @@
 //============================================================================
 // 
-// 3Dオブジェクト管理 [object_3D.cpp]
+// 3Dオブジェクト [object_3D.cpp]
 // Author : 福田歩希
 // 
 //============================================================================
@@ -9,9 +9,12 @@
 // インクルードファイル
 //****************************************************
 #include "object_3D.h"
-
-// デバイス取得用
 #include "renderer.h"
+
+//****************************************************
+// usingディレクティブ
+//****************************************************
+using namespace abbr;
 
 //============================================================================
 // 
@@ -26,14 +29,15 @@ CObject_3D::CObject_3D(LAYER Priority) :
 	CObject{ Priority },
 	m_pVtxBuff{ nullptr },
 	m_pTex{ nullptr },
-	m_Pos{ 0.0f, 0.0f, 0.0f },
-	m_Rot{ 0.0f, 0.0f, 0.0f },
-	m_Size{ 0.0f, 0.0f, 0.0f },
-	m_Col{ 1.0f, 1.0f, 1.0f, 1.0f },
+	m_Pos{ VEC3_INIT },
+	m_Rot{ VEC3_INIT },
+	m_Size{ VEC3_INIT },
+	m_Col{ XCOL_INIT },
 	m_fLength{ 0.0f },
 	m_fAngle{ 0.0f }
 {
-	D3DXMatrixIdentity(&m_MtxWorld);	// ワールド行列
+	// ワールド行列の初期化
+	D3DXMatrixIdentity(&m_MtxWorld);
 }
 
 //============================================================================
@@ -49,54 +53,11 @@ CObject_3D::~CObject_3D()
 //============================================================================
 HRESULT CObject_3D::Init()
 {
-	// デバイスを取得
-	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
-
 	// 頂点バッファの生成
-	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * 4,
-		D3DUSAGE_WRITEONLY,
-		FVF_VERTEX_3D,
-		D3DPOOL_MANAGED,
-		&m_pVtxBuff,
-		nullptr);
-
-	if (m_pVtxBuff == nullptr)
-	{ // 生成失敗
+	if (FAILED(CreateVtxBuff()))
+	{
 		return E_FAIL;
 	}
-
-	// 頂点情報へのポインタ
-	VERTEX_3D* pVtx = nullptr;
-
-	// 頂点バッファをロック
-	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-
-	// 位置の設定
-	pVtx[0].pos = { 0.0f, 0.0f, 0.0f };
-	pVtx[1].pos = { 0.0f, 0.0f, 0.0f };
-	pVtx[2].pos = { 0.0f, 0.0f, 0.0f };
-	pVtx[3].pos = { 0.0f, 0.0f, 0.0f };
-
-	// 法線ベクトルの設定
-	pVtx[0].nor = { 0.0f, 1.0f, 0.0f };
-	pVtx[1].nor = { 0.0f, 1.0f, 0.0f };
-	pVtx[2].nor = { 0.0f, 1.0f, 0.0f };
-	pVtx[3].nor = { 0.0f, 1.0f, 0.0f };
-
-	// 色の設定
-	pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-
-	// テクスチャの設定
-	pVtx[0].tex = { 0.0f, 0.0f };
-	pVtx[1].tex = { 1.0f, 0.0f };
-	pVtx[2].tex = { 0.0f, 1.0f };
-	pVtx[3].tex = { 1.0f, 1.0f };
-
-	// 頂点バッファをアンロックする
-	m_pVtxBuff->Unlock();
 
 	return S_OK;
 }
@@ -134,7 +95,7 @@ void CObject_3D::Update()
 	// 頂点バッファをロック
 	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 
-	// 位置の設定
+	// 頂点座標の設定
 	pVtx[0].pos = {
 		sinf(m_Rot.z - (D3DX_PI - m_fAngle)) * m_fLength,
 		-cosf(m_Rot.z - (D3DX_PI - m_fAngle)) * m_fLength,
@@ -159,10 +120,11 @@ void CObject_3D::Update()
 		0.0f
 	};
 
-	pVtx[0].col = m_Col;
-	pVtx[1].col = m_Col;
-	pVtx[2].col = m_Col;
-	pVtx[3].col = m_Col;
+	// 頂点色の設定
+	for (WORD wCntVtx = 0; wCntVtx < NUM_VTX; ++wCntVtx)
+	{
+		pVtx[wCntVtx].col = m_Col;
+	}
 
 	// 頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
@@ -194,7 +156,7 @@ void CObject_3D::Draw()
 	// ポリゴンの描画
 	pDev->DrawPrimitive(D3DPT_TRIANGLESTRIP,	// プリミティブの種類
 		0,										// 頂点情報の先頭アドレス
-		2);										// プリミティブ数
+		NUM_PRIM);									// プリミティブ数
 }
 
 //============================================================================
@@ -323,6 +285,57 @@ CObject_3D* CObject_3D::Create()
 // privateメンバ
 // 
 //============================================================================
+
+//============================================================================
+// 頂点バッファの生成
+//============================================================================
+HRESULT CObject_3D::CreateVtxBuff()
+{
+	// デバイスを取得
+	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
+
+	// 頂点バッファの生成
+	pDev->CreateVertexBuffer(sizeof(VERTEX_3D) * NUM_VTX,
+		D3DUSAGE_WRITEONLY,
+		FVF_VERTEX_3D,
+		D3DPOOL_MANAGED,
+		&m_pVtxBuff,
+		nullptr);
+
+	if (m_pVtxBuff == nullptr)
+	{ // 生成失敗
+		return E_FAIL;
+	}
+
+	// 頂点情報へのポインタ
+	VERTEX_3D* pVtx = nullptr;
+
+	// 頂点バッファをロック
+	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
+
+	for (WORD wNumVtx = 0; wNumVtx < NUM_VTX; ++wNumVtx)
+	{
+		// 頂点座標の設定
+		pVtx[wNumVtx].pos = { VEC3_INIT };
+
+		// 法線ベクトルの設定
+		pVtx[wNumVtx].nor = { VEC3_INIT };
+
+		// 頂点色の設定
+		pVtx[wNumVtx].col = XCOL_INIT;
+	}
+
+	// テクスチャ座標の設定
+	pVtx[0].tex = { 0.0f, 0.0f };
+	pVtx[1].tex = { 1.0f, 0.0f };
+	pVtx[2].tex = { 0.0f, 1.0f };
+	pVtx[3].tex = { 1.0f, 1.0f };
+
+	// 頂点バッファをアンロックする
+	m_pVtxBuff->Unlock();
+
+	return S_OK;
+}
 
 //============================================================================
 // ワールド行列設定
