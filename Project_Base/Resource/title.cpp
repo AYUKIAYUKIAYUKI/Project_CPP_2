@@ -34,16 +34,16 @@ void CTitle::Update()
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Tree Param Edit"))
 	{
-		D3DXVECTOR3 NewRot = m_pTree->GetRot();
+		D3DXVECTOR3 NewRot = m_pButterfly->GetRot();
 		ImGui::SliderFloat("RotX", &NewRot.x, -D3DX_PI, D3DX_PI);
 		ImGui::SliderFloat("RotY", &NewRot.y, -D3DX_PI, D3DX_PI);
 		ImGui::SliderFloat("RotZ", &NewRot.z, -D3DX_PI, D3DX_PI);
-		m_pTree->SetRot(NewRot);
-		D3DXVECTOR3 NewPos = m_pTree->GetPos();
+		m_pButterfly->SetRot(NewRot);
+		D3DXVECTOR3 NewPos = m_pButterfly->GetPos();
 		ImGui::DragFloat("PosX", &NewPos.x);
 		ImGui::DragFloat("PosY", &NewPos.y);
 		ImGui::DragFloat("PosZ", &NewPos.z);
-		m_pTree->SetPos(NewPos);
+		m_pButterfly->SetPos(NewPos);
 		ImGui::End();
 	}
 
@@ -138,10 +138,10 @@ HRESULT CTitle::Init()
 	// ŠÂ‹«‘•ü‚ð¶¬
 	{
 		// ’±
-		//m_pButterfly = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\butterfly_motion.json"));
-		//auto ButterflyParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\butterfly.json");
-		//m_pButterfly->SetRot(utility::JsonConvertToVec3(ButterflyParam["Rot"]));
-		//m_pButterfly->SetPos(utility::JsonConvertToVec3(ButterflyParam["Pos"]));
+		m_pButterfly = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\butterfly_motion.json"));
+		auto ButterflyParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\butterfly.json");
+		m_pButterfly->SetRot(utility::JsonConvertToVec3(ButterflyParam["Rot"]));
+		m_pButterfly->SetPos(utility::JsonConvertToVec3(ButterflyParam["Pos"]));
 
 		// Ž÷
 		m_pTree = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree_motion.json"));
@@ -150,7 +150,7 @@ HRESULT CTitle::Init()
 		m_pTree->SetPos(utility::JsonConvertToVec3(TreeParam["Pos"]));
 
 		// ŒŠ
-		m_pHole = CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\hole.json"));
+		//m_pHole = CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\hole.json"));
 	}
 
 	return S_OK;

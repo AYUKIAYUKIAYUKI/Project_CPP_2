@@ -23,6 +23,9 @@ public:
 		RENDER_SPHERE = 0,	// render sphere
 		RENDER_CYLINDER,	// render cylinder
 		RENDER_BOX,			// render box
+		BUTBODY,			// ’±“·
+		BUTLWING,			// ’±¶‰H
+		BUTRWING,			// ’±‰E‰H
 		ONLYTREE,			// ÷‚Ì‚İ
 		ONLYSTONE,			// ÷‚ÌÎ
 		STATUE,				// “º‘œ
