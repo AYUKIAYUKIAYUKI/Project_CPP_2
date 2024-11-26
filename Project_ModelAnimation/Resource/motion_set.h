@@ -22,7 +22,7 @@ class CObject_Parts;
 //****************************************************
 // モーションセットクラス
 //****************************************************
-class CMotion_Set : public CObject
+class CMotion_Set
 {
 	friend class CMotion_Manager;
 
@@ -58,14 +58,12 @@ public:
 	};
 
 	// <special function>
-	CMotion_Set();				// コンストラクタ
-	~CMotion_Set() override;	// デストラクタ
+	CMotion_Set();	// コンストラクタ
+	~CMotion_Set();	// デストラクタ
 
-	// <function>
-	HRESULT	Init() override;	// 初期設定
-	void	Uninit() override;	// 終了処理
-	void	Update() override;	// 更新処理
-	void	Draw() override;	// 描画処理
+	// <fuction>
+	void Release();	// 解放
+	void Update();	// 更新処理
 
 	// <getter/setter>
 	WORD GetNowMotion();			// 再生中のモーション番号を取得
