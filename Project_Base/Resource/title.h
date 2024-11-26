@@ -47,8 +47,10 @@ private:
 	~CTitle() override;	// デストラクタ
 
 	// <data>
+	bool					 m_bTransition;	// 遷移フラグ
+	CObject_X*				 m_pStatue;		// 銅像
 	CMotion_Set*			 m_pButterfly;	// 蝶
-	std::vector<D3DXVECTOR3> m_Path;		// パス
+	std::vector<D3DXVECTOR3> m_vPath;		// パス
 	int						 m_nNowFrame;	// フレーム
 	int						 m_nMaxFrame;	// 最大フレーム
 	CMotion_Set*			 m_pTree;		// 樹

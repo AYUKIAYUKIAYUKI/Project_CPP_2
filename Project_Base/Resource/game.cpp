@@ -124,10 +124,6 @@ CGame::~CGame()
 //============================================================================
 HRESULT CGame::Init()
 {
-	// 環境装飾を生成
-	CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue.json"));
-	CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\around.json"));
-
 	// プレイヤーを生成
 	CPlayer::Create();
 
