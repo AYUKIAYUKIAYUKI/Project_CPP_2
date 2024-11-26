@@ -342,7 +342,7 @@ void CMotion_Manager::EditParts()
 	{
 		if (m_wSelectParts == wCntParts && m_bPartsAppeal)
 		{
-			m_MotionSet->m_vpModelParts[wCntParts]->SetCol({ 1.0f, 0.5f, 0.25f, 0.25f });
+			m_MotionSet->m_vpModelParts[wCntParts]->SetCol({ 1.0f, 1.0f, 1.0f, 0.25f });
 			m_MotionSet->m_vpModelParts[wCntParts]->SetUseCol(true);
 		}
 		else
@@ -529,10 +529,10 @@ void CMotion_Manager::EditMotion()
 				delete[] pMotion->vpKey[wCntKey].apDest;
 				pMotion->vpKey[wCntKey].apDest = nullptr;
 			}
-
-			// キー情報も削除
-			pMotion->vpKey.pop_back();
 		}
+
+		// キー情報も削除
+		pMotion->vpKey.clear();
 
 		// 末尾のモーション情報を削除
 		m_MotionSet->m_vpMotion.pop_back();

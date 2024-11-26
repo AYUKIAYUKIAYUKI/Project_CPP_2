@@ -225,7 +225,7 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 				// Ý’è‚³‚ê‚½ƒp[ƒc”•ª‚Ìî•ñ‚ª‘¶Ý‚µ‚È‚¯‚ê‚Î‰Šú‰»
 				if (wCntModelParts > wLastMaxPats - 1)
 				{
-					pDest->ScaleTarget = VEC3_INIT;
+					pDest->ScaleTarget = { 1.0f, 1.0f, 1.0f };
 					pDest->RotTarget = VEC3_INIT;
 					pDest->PosTarget = VEC3_INIT;
 					continue;
