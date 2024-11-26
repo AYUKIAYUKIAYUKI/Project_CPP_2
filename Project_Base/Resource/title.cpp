@@ -44,7 +44,6 @@ void CTitle::Update()
 #ifdef _DEBUG	// パラメータ確認用
 	else if (CManager::GetKeyboard()->GetTrigger(DIK_F7))
 	{
-		CObject::ReleaseAll();
 		CScene_Manager::ChangeScene(Create());
 	}
 #endif // _DEBUG
@@ -64,9 +63,6 @@ void CTitle::Draw()
 //============================================================================
 void CTitle::To_Next()
 {
-	// 全オブジェクトを解放
-	CObject::ReleaseAll();
-
 	// ゲームシーンへ変更
 	CScene_Manager::ChangeScene(CGame::Create());
 }
@@ -163,7 +159,11 @@ HRESULT CTitle::Init()
 //============================================================================
 void CTitle::Uninit()
 {
+	// 蝶を破棄
+	m_pButterfly->SetRelease();
 
+	// 樹を破棄
+	m_pTree->SetRelease();
 }
 
 //============================================================================

@@ -350,6 +350,7 @@ void CPlayer::HitCheck()
 		// ƒLƒƒƒXƒgŽ¸”s‚Å
 		if (!pBlock)
 		{
+			pObj = pObj->GetNext();
 			continue;
 		}
 
