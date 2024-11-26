@@ -19,6 +19,9 @@
 class CMotion_Set;
 class CObject_X;
 
+/* 消せ */
+class CObject_3D;
+
 //****************************************************
 // タイトルクラス
 //****************************************************
@@ -45,6 +48,9 @@ private:
 	// <special function>
 	CTitle();			// コンストラクタ
 	~CTitle() override;	// デストラクタ
+
+	/* 消せ */
+	CObject_3D* m_pKESE;
 
 	// <data>
 	bool					 m_bTransition;	// 遷移フラグ

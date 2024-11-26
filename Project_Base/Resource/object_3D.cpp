@@ -29,9 +29,9 @@ CObject_3D::CObject_3D(LAYER Priority) :
 	CObject{ Priority },
 	m_pVtxBuff{ nullptr },
 	m_pTex{ nullptr },
-	m_Pos{ VEC3_INIT },
-	m_Rot{ VEC3_INIT },
 	m_Size{ VEC3_INIT },
+	m_Rot{ VEC3_INIT },
+	m_Pos{ VEC3_INIT },
 	m_Col{ XCOL_INIT },
 	m_fLength{ 0.0f },
 	m_fAngle{ 0.0f }
@@ -141,6 +141,14 @@ void CObject_3D::Draw()
 	// デバイスを取得
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
+	// アルファテストを有効にする
+	pDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	pDev->SetRenderState(D3DRS_ALPHAREF, 0);
+	pDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+	// ライト反映を無効にする
+	pDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+
 	// ワールド行列の設定
 	pDev->SetTransform(D3DTS_WORLD, &m_MtxWorld);
 
@@ -156,7 +164,13 @@ void CObject_3D::Draw()
 	// ポリゴンの描画
 	pDev->DrawPrimitive(D3DPT_TRIANGLESTRIP,	// プリミティブの種類
 		0,										// 頂点情報の先頭アドレス
-		NUM_PRIM);									// プリミティブ数
+		NUM_PRIM);								// プリミティブ数
+
+	// ライト反映を有効にする
+	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
+
+	// アルファテストを無効にする
+	pDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
 //============================================================================
@@ -176,19 +190,19 @@ void CObject_3D::BindTex(CTexture_Manager::TYPE Type)
 }
 
 //============================================================================
-// 座標取得
+// サイズ取得
 //============================================================================
-const D3DXVECTOR3& CObject_3D::GetPos() const
+const D3DXVECTOR3& CObject_3D::GetSize() const
 {
-	return m_Pos;
+	return m_Size;
 }
 
 //============================================================================
-// 座標設定
+// サイズ設定
 //============================================================================
-void CObject_3D::SetPos(D3DXVECTOR3 Pos)
+void CObject_3D::SetSize(D3DXVECTOR3 Size)
 {
-	m_Pos = Pos;
+	m_Size = Size;
 }
 
 //============================================================================
@@ -208,19 +222,19 @@ void CObject_3D::SetRot(D3DXVECTOR3 Rot)
 }
 
 //============================================================================
-// サイズ取得
+// 座標取得
 //============================================================================
-const D3DXVECTOR3& CObject_3D::GetSize() const
+const D3DXVECTOR3& CObject_3D::GetPos() const
 {
-	return m_Size;
+	return m_Pos;
 }
 
 //============================================================================
-// サイズ設定
+// 座標設定
 //============================================================================
-void CObject_3D::SetSize(D3DXVECTOR3 Size)
+void CObject_3D::SetPos(D3DXVECTOR3 Pos)
 {
-	m_Size = Size;
+	m_Pos = Pos;
 }
 
 //============================================================================
