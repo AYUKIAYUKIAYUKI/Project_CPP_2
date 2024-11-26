@@ -140,7 +140,7 @@ HRESULT CTitle::Init()
 
 		// カメラ情報を変更
 		CCamera* pCamera = CManager::GetManager()->GetCamera();
-		pCamera->SetDistance(50.0f);
+		pCamera->SetDistance(100.0f);
 		pCamera->SetUpAdjust(0.0f);
 		pCamera->SetPos(utility::JsonConvertToVec3(ButterflyParam["Pos"]));
 		pCamera->SetPosTarget(utility::JsonConvertToVec3(ButterflyParam["Pos"]));
@@ -198,11 +198,15 @@ void CTitle::UpdateButterfly()
 		D3DXVECTOR3 NewPos = m_pButterfly->GetPos();
 		int nFrameCoef = m_nMaxFrame - m_nNowFrame;
 		NewPos += (m_Path[0] - NewPos) / nFrameCoef;
+
+		// さらに、上下に揺れる
+		NewPos.y += utility::GetRandomValue<float>() * 0.01f;
 		m_pButterfly->SetPos(NewPos);
 
 		// カメラ追従
 		CCamera* pCamera = CManager::GetManager()->GetCamera();
-		pCamera->SetPos(NewPos);
+		D3DXVECTOR3 CameraPos = pCamera->GetPos();
+		pCamera->SetPos({ NewPos.x, CameraPos.y, NewPos.z });
 		pCamera->SetPosTarget(NewPos);
 	}
 	else if (m_nNowFrame == m_nMaxFrame)
