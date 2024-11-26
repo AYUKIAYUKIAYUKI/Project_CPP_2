@@ -27,10 +27,13 @@
 //============================================================================
 void CTitle::Update()
 {
+	// フレームをインクリメント
+	m_nNowFrame++;
+
 	// 基底クラスの更新処理
 	CScene::Update();
 
-	// 樹の向き・座標を設定
+	// 向き・座標を設定
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Tree Param Edit"))
 	{
@@ -40,11 +43,29 @@ void CTitle::Update()
 		ImGui::SliderFloat("RotZ", &NewRot.z, -D3DX_PI, D3DX_PI);
 		m_pButterfly->SetRot(NewRot);
 		D3DXVECTOR3 NewPos = m_pButterfly->GetPos();
+#if 0
 		ImGui::DragFloat("PosX", &NewPos.x);
 		ImGui::DragFloat("PosY", &NewPos.y);
 		ImGui::DragFloat("PosZ", &NewPos.z);
+#else
+		static D3DXVECTOR3 Path = { 0.0f, 0.0f, 0.0f };
+		ImGui::DragFloat("PosX", &Path.x);
+		ImGui::DragFloat("PosY", &Path.y);
+		ImGui::DragFloat("PosZ", &Path.z);
+
+		if (m_nNowFrame < m_nMaxFrame)
+		{
+			int nFrameCoef = m_nMaxFrame - m_nNowFrame;
+			NewPos += (Path - NewPos) / nFrameCoef;
+		}
+#endif
 		m_pButterfly->SetPos(NewPos);
 		ImGui::End();
+
+		// カメラ配置を変更
+		CCamera* pCamera = CManager::GetManager()->GetCamera();
+		pCamera->SetPos(NewPos);
+		pCamera->SetPosTarget(NewPos);
 	}
 
 	// 次のシーンへ
@@ -116,10 +137,13 @@ CTitle* CTitle::Create()
 CTitle::CTitle() :
 	CScene{},
 	m_pButterfly{ nullptr },
+	m_Path{},
+	m_nNowFrame{ 0 },
+	m_nMaxFrame{ 0 },
 	m_pTree{ nullptr },
 	m_pHole{ nullptr }
 {
-
+	m_Path.clear();
 }
 
 //============================================================================
@@ -137,11 +161,19 @@ HRESULT CTitle::Init()
 {
 	// 環境装飾を生成
 	{
+		// カメラ情報を変更
+		CCamera* pCamera = CManager::GetManager()->GetCamera();
+		pCamera->SetDistance(100.0f);
+		pCamera->SetUpAdjust(0.0f);
+
 		// 蝶
 		m_pButterfly = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\butterfly_motion.json"));
 		auto ButterflyParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\butterfly.json");
 		m_pButterfly->SetRot(utility::JsonConvertToVec3(ButterflyParam["Rot"]));
 		m_pButterfly->SetPos(utility::JsonConvertToVec3(ButterflyParam["Pos"]));
+		m_pButterfly->SetNowMotion(1);
+		m_Path.push_back(utility::JsonConvertToVec3(ButterflyParam["Path"]));
+		m_nMaxFrame = ButterflyParam["MaxFrame"];
 
 		// 樹
 		m_pTree = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree_motion.json"));

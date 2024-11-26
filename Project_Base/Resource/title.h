@@ -45,9 +45,12 @@ private:
 	~CTitle() override;	// デストラクタ
 
 	// <data>
-	CMotion_Set* m_pButterfly;	// 蝶
-	CMotion_Set* m_pTree;		// 樹
-	CObject_X*	 m_pHole;		// 穴
+	CMotion_Set*			 m_pButterfly;	// 蝶
+	std::vector<D3DXVECTOR3> m_Path;		// パス
+	int						 m_nNowFrame;	// フレーム
+	int						 m_nMaxFrame;	// 最大フレーム
+	CMotion_Set*			 m_pTree;		// 樹
+	CObject_X*				 m_pHole;		// 穴
 };
 
 #endif // _TITLE_H_

@@ -44,20 +44,20 @@ void CManager::Update()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	// 四角形マスクの更新処理
-	m_pMask_Rectangle->Update();
-
 	// レンダラーの更新
 	CRenderer::GetRenderer()->Update();
 
-	// シーンの更新
-	CScene_Manager::GetInstance()->GetScene()->Update();
+	// 四角形マスクの更新処理
+	m_pMask_Rectangle->Update();
 
 	// ライトの更新
 	m_pLight->Update();
 
 	// カメラの更新
 	m_pCamera->Update();
+
+	// シーンの更新
+	CScene_Manager::GetInstance()->GetScene()->Update();
 
 	// キーボードの更新
 	m_pKeyboard->Update();
@@ -222,7 +222,18 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 		return E_FAIL;
 	}
 
-	// シーンマネージャーの生成
+	// カメラの生成
+	m_pCamera = DBG_NEW CCamera();
+
+	if (m_pCamera == nullptr)
+	{ // 生成失敗
+		return E_FAIL;
+	}
+
+	// カメラの初期化
+	m_pCamera->Init();
+
+	// シーンマネージャーの生成 (カメラ生成後)
 	if (FAILED(CScene_Manager::Create()))
 	{
 		return E_FAIL;
@@ -248,17 +259,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 
 	// 四角形マスクの生成
 	m_pMask_Rectangle = CMask_Rectangle::Create(CTexture_Manager::TYPE::MAP);
-
-	// カメラの生成
-	m_pCamera = DBG_NEW CCamera();
-
-	if (m_pCamera == nullptr)
-	{ // 生成失敗
-		return E_FAIL;
-	}
-
-	// カメラの初期化
-	m_pCamera->Init();
 
 	// ライトの生成
 	m_pLight = DBG_NEW CLight();

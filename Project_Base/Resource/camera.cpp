@@ -231,6 +231,22 @@ void CCamera::SetDistance(float fDistance)
 }
 
 //============================================================================
+// 俯瞰度合いを取得
+//============================================================================
+const float& CCamera::GetUpAdjust() const
+{
+	return m_fAdjust;
+}
+
+//============================================================================
+// 俯瞰度合いを設定
+//============================================================================
+void CCamera::SetUpAdjust(float fAdjust)
+{
+	m_fAdjust = fAdjust;
+}
+
+//============================================================================
 // モード分岐
 //============================================================================
 void CCamera::BranchMode()
@@ -251,6 +267,7 @@ void CCamera::BranchMode()
 			m_RotTarget.y = atan2f(NegVec.x, NegVec.z);			// カメラの目標向きを逆位置ベクトル方向に
 			utility::AdjustAngle(m_Rot.y, m_RotTarget.y);		// 角度の差を補正
 			m_fDistance = 250.0f;								// 間距離を固定
+			m_fAdjust = 75.0f;									// 俯瞰度合い
 		}
 	}
 	else
@@ -269,10 +286,6 @@ void CCamera::BranchMode()
 	{
 		m_Rot.x = 0.0f;
 		m_fAdjust = 0.0f;
-	}
-	else
-	{
-		m_fAdjust = 75.0f;
 	}
 }
 

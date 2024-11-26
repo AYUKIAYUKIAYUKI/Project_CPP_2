@@ -44,6 +44,10 @@ public:
 	const float& GetDistance() const;	// 間距離を取得
 	void SetDistance(float fDistance);	// 間距離を設定
 
+	// <getter/setter>
+	const float& GetUpAdjust() const;	// 俯瞰度合いを取得
+	void SetUpAdjust(float fAdjust);	// 俯瞰度合いを設定
+
 private:
 
 	/// <summary> 目標値への補間強度 </summary>
