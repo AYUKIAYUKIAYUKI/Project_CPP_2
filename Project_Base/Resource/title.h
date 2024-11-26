@@ -17,6 +17,7 @@
 // 前方宣言
 //****************************************************
 class CMotion_Set;
+class CObject_X;
 
 //****************************************************
 // タイトルクラス
@@ -44,7 +45,9 @@ private:
 	~CTitle() override;	// デストラクタ
 
 	// <data>
-	CMotion_Set* m_pTree;	// 樹
+	CMotion_Set* m_pButterfly;	// 蝶
+	CMotion_Set* m_pTree;		// 樹
+	CObject_X*	 m_pHole;		// 穴
 };
 
 #endif // _TITLE_H_

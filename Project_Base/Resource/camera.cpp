@@ -235,12 +235,6 @@ void CCamera::SetDistance(float fDistance)
 //============================================================================
 void CCamera::BranchMode()
 {
-	// カメラの追従切り替え
-	if (CManager::GetKeyboard()->GetTrigger(DIK_F1))
-	{
-		m_bTrack = !m_bTrack;
-	}
-
 	if (m_bTrack)
 	{ // 追従カメラモード
 		if (CObject::FindSpecificObject(CObject::TYPE::PLAYER))

@@ -34,6 +34,9 @@ public:
 		HANDR,		// ‰EŽè
 		TREE,
 		STONE,
+		BUTBODY,
+		BUTLWING,
+		BUTRWING,
 		MAX,
 	};
 

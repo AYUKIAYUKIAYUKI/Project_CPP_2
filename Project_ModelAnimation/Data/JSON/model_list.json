@@ -13,6 +13,9 @@
 		"Data\\MODEL\\PLAYER\\armR.x",
 		"Data\\MODEL\\PLAYER\\handR.x",
 		"Data\\MODEL\\TREE\\onlytree.x",
-		"Data\\MODEL\\TREE\\onlystone.x"
+		"Data\\MODEL\\TREE\\onlystone.x",
+		"Data\\MODEL\\CHARACTER\\BUTTERFLY\\body.x",
+		"Data\\MODEL\\CHARACTER\\BUTTERFLY\\Lwing.x",
+		"Data\\MODEL\\CHARACTER\\BUTTERFLY\\Rwing.x"
 	]
 }

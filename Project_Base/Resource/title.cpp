@@ -14,6 +14,7 @@
 #include "game.h"
 #include "motion_set.h"
 #include "object_parts.h"
+#include "object_X.h"
 
 //============================================================================
 // 
@@ -114,7 +115,9 @@ CTitle* CTitle::Create()
 //============================================================================
 CTitle::CTitle() :
 	CScene{},
-	m_pTree{ nullptr }
+	m_pButterfly{ nullptr },
+	m_pTree{ nullptr },
+	m_pHole{ nullptr }
 {
 
 }
@@ -133,10 +136,22 @@ CTitle::~CTitle()
 HRESULT CTitle::Init()
 {
 	// ŠÂ‹«‘•ü‚ð¶¬
-	m_pTree = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree_motion.json"));
-	auto TreeParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree.json");
-	m_pTree->SetRot(utility::JsonConvertToVec3(TreeParam["Rot"]));
-	m_pTree->SetPos(utility::JsonConvertToVec3(TreeParam["Pos"]));
+	{
+		// ’±
+		//m_pButterfly = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\butterfly_motion.json"));
+		//auto ButterflyParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\butterfly.json");
+		//m_pButterfly->SetRot(utility::JsonConvertToVec3(ButterflyParam["Rot"]));
+		//m_pButterfly->SetPos(utility::JsonConvertToVec3(ButterflyParam["Pos"]));
+
+		// Ž÷
+		m_pTree = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree_motion.json"));
+		auto TreeParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree.json");
+		m_pTree->SetRot(utility::JsonConvertToVec3(TreeParam["Rot"]));
+		m_pTree->SetPos(utility::JsonConvertToVec3(TreeParam["Pos"]));
+
+		// ŒŠ
+		m_pHole = CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\hole.json"));
+	}
 
 	return S_OK;
 }

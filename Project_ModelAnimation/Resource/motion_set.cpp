@@ -136,6 +136,9 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 		return nullptr;
 	}
 
+	// 前回のセットの総パーツ数を、保存情報から抜き出す
+	WORD wLastMaxPats = Json["RotOffset"].size();
+
 	// 総パーツ数を取得
 	pNew->m_wMaxParts = static_cast<WORD>(Json["MaxParts"]);
 
@@ -169,6 +172,14 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 		{
 			// 親パーツのポインタを渡す
 			pParts->SetParent(pNew->m_vpModelParts[shParentIdx]);
+		}
+
+		// 設定されたパーツ数分の情報が存在しなければ初期化
+		if (wCntParts > wLastMaxPats - 1)
+		{
+			pParts->SetRotOffset(VEC3_INIT);
+			pParts->SetPosOffset(VEC3_INIT);
+			continue;
 		}
 
 		// オフセット値を設定
@@ -210,6 +221,15 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 			{
 				// 目標値情報のポインタを作成
 				KeyDest* const pDest = &Key.apDest[wCntModelParts];
+
+				// 設定されたパーツ数分の情報が存在しなければ初期化
+				if (wCntModelParts > wLastMaxPats - 1)
+				{
+					pDest->ScaleTarget = VEC3_INIT;
+					pDest->RotTarget = VEC3_INIT;
+					pDest->PosTarget = VEC3_INIT;
+					continue;
+				}
 
 				// 各種パラメータを設定
 				pDest->ScaleTarget = utility::JsonConvertToVec3(Json["ScaleTarget"][wCntMotion][wCntMotionKey][wCntModelParts]);	// 目標縮尺
