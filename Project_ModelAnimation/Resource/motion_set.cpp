@@ -317,12 +317,9 @@ void CMotion_Set::CorrectTarget()
 		m_vpModelParts[wCntModelParts]->SetRot(NewRot);
 
 		// –Ú•WÀ•W
-		if (wCntModelParts != 0)
-		{
-			Vec3 NewPos = m_vpModelParts[wCntModelParts]->GetPos();
-			NewPos += (m_vpMotion[m_wNowMotion].vpKey[m_wNowKey].apDest[wCntModelParts].PosTarget - NewPos) / wFrameCoef;
-			m_vpModelParts[wCntModelParts]->SetPos(NewPos);
-		}
+		Vec3 NewPos = m_vpModelParts[wCntModelParts]->GetPos();
+		NewPos += (m_vpMotion[m_wNowMotion].vpKey[m_wNowKey].apDest[wCntModelParts].PosTarget - NewPos) / wFrameCoef;
+		m_vpModelParts[wCntModelParts]->SetPos(NewPos);
 	}
 }
 
