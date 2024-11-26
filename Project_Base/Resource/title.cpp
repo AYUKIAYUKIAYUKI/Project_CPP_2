@@ -33,40 +33,8 @@ void CTitle::Update()
 	// 基底クラスの更新処理
 	CScene::Update();
 
-	// 向き・座標を設定
-	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("Tree Param Edit"))
-	{
-		D3DXVECTOR3 NewRot = m_pButterfly->GetRot();
-		ImGui::SliderFloat("RotX", &NewRot.x, -D3DX_PI, D3DX_PI);
-		ImGui::SliderFloat("RotY", &NewRot.y, -D3DX_PI, D3DX_PI);
-		ImGui::SliderFloat("RotZ", &NewRot.z, -D3DX_PI, D3DX_PI);
-		m_pButterfly->SetRot(NewRot);
-		D3DXVECTOR3 NewPos = m_pButterfly->GetPos();
-#if 0
-		ImGui::DragFloat("PosX", &NewPos.x);
-		ImGui::DragFloat("PosY", &NewPos.y);
-		ImGui::DragFloat("PosZ", &NewPos.z);
-#else
-		static D3DXVECTOR3 Path = { 0.0f, 0.0f, 0.0f };
-		ImGui::DragFloat("PosX", &Path.x);
-		ImGui::DragFloat("PosY", &Path.y);
-		ImGui::DragFloat("PosZ", &Path.z);
-
-		if (m_nNowFrame < m_nMaxFrame)
-		{
-			int nFrameCoef = m_nMaxFrame - m_nNowFrame;
-			NewPos += (Path - NewPos) / nFrameCoef;
-		}
-#endif
-		m_pButterfly->SetPos(NewPos);
-		ImGui::End();
-
-		// カメラ配置を変更
-		CCamera* pCamera = CManager::GetManager()->GetCamera();
-		pCamera->SetPos(NewPos);
-		pCamera->SetPosTarget(NewPos);
-	}
+	// 環境装飾の更新
+	UpdateEnvironment();
 
 	// 次のシーンへ
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
@@ -161,11 +129,6 @@ HRESULT CTitle::Init()
 {
 	// 環境装飾を生成
 	{
-		// カメラ情報を変更
-		CCamera* pCamera = CManager::GetManager()->GetCamera();
-		pCamera->SetDistance(100.0f);
-		pCamera->SetUpAdjust(0.0f);
-
 		// 蝶
 		m_pButterfly = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\butterfly_motion.json"));
 		auto ButterflyParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\butterfly.json");
@@ -174,6 +137,13 @@ HRESULT CTitle::Init()
 		m_pButterfly->SetNowMotion(1);
 		m_Path.push_back(utility::JsonConvertToVec3(ButterflyParam["Path"]));
 		m_nMaxFrame = ButterflyParam["MaxFrame"];
+
+		// カメラ情報を変更
+		CCamera* pCamera = CManager::GetManager()->GetCamera();
+		pCamera->SetDistance(50.0f);
+		pCamera->SetUpAdjust(0.0f);
+		pCamera->SetPos(utility::JsonConvertToVec3(ButterflyParam["Pos"]));
+		pCamera->SetPosTarget(utility::JsonConvertToVec3(ButterflyParam["Pos"]));
 
 		// 樹
 		m_pTree = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree_motion.json"));
@@ -194,4 +164,49 @@ HRESULT CTitle::Init()
 void CTitle::Uninit()
 {
 
+}
+
+//============================================================================
+// 環境装飾の更新
+//============================================================================
+void CTitle::UpdateEnvironment()
+{
+	// 蝶の更新
+	UpdateButterfly();
+
+	if (m_nNowFrame >= m_nMaxFrame)
+	{
+		CCamera* pCamera = CManager::GetManager()->GetCamera();
+		pCamera->SetPosTarget({ 100.0f, -50.0f, 0.0f });
+		float fDistance = pCamera->GetDistance();
+
+		if (fDistance < 300.0f)
+		{
+			pCamera->SetDistance(fDistance += 5.0f);
+		}
+	}
+}
+
+//============================================================================
+// 蝶の更新
+//============================================================================
+void CTitle::UpdateButterfly()
+{
+	if (m_nNowFrame < m_nMaxFrame)
+	{
+		// 目標地点へ移動
+		D3DXVECTOR3 NewPos = m_pButterfly->GetPos();
+		int nFrameCoef = m_nMaxFrame - m_nNowFrame;
+		NewPos += (m_Path[0] - NewPos) / nFrameCoef;
+		m_pButterfly->SetPos(NewPos);
+
+		// カメラ追従
+		CCamera* pCamera = CManager::GetManager()->GetCamera();
+		pCamera->SetPos(NewPos);
+		pCamera->SetPosTarget(NewPos);
+	}
+	else if (m_nNowFrame == m_nMaxFrame)
+	{
+		m_pButterfly->SetNowMotion(0);
+	}
 }

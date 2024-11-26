@@ -37,8 +37,10 @@ public:
 private:
 
 	// <function>
-	HRESULT Init() override;	// 初期設定
-	void	Uninit() override;	// 終了処理
+	HRESULT Init() override;		// 初期設定
+	void	Uninit() override;		// 終了処理
+	void	UpdateEnvironment();	// 環境装飾の更新
+	void	UpdateButterfly();		// 蝶の更新
 
 	// <special function>
 	CTitle();			// コンストラクタ
