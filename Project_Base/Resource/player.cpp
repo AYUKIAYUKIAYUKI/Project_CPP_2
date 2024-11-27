@@ -130,14 +130,14 @@ void CPlayer::Update()
 	// 高さの補正
 	AdjustHeight();
 
-	// 自動で目標向きを移動方向に向ける
-	AutoSetRotTarget();
-
 	// 自動で目標座標を変動した方角に合わせる
 	AutoSetPosTarget();
 
 	// 当たり判定 (判定手順は、変動した目標方角・目標座標がセーフかどうか)
 	HitCheck();
+
+	// 自動で目標向きを移動方向に向ける
+	AutoSetRotTarget();
 
 	// キャラクタークラスの更新処理
 	CCharacter::Update();
@@ -390,8 +390,10 @@ void CPlayer::HitCheck()
 		// (ボックスの座標は原点で、回転は考慮せず、AABBと仮定する)
 		if (collision::HitCylinderToAABB(ResultPos, CylinderRadius, CylinderHeight, VEC3_INIT, BoxSize))
 		{
+#ifdef _DEBUG
 			// 判定表示を赤色に
 			m_pBndCylinder->SetCol({ 1.0f, 0.0f, 0.0f, 0.5f });
+#endif // _DEBUG
 				
 			// 衝突があったことを記録
 			bDetect = 1;
@@ -497,7 +499,9 @@ void CPlayer::HitCheck()
 	// 何にも衝突していなければ
 	if (!bDetect)
 	{
+#ifdef _DEBUG
 		// 判定表示を通常色に戻す
 		m_pBndCylinder->SetCol({ 1.0f, 1.0f, 1.0f, 0.5f });
+#endif // _DEBUG
 	}
 }

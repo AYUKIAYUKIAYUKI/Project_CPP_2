@@ -1,6 +1,6 @@
 //============================================================================
 //
-// バウンディングシリンダー [bouding_cylinder.cpp]
+// バウンディングシリンダー [bouding_cylinder.cpp]97
 // Author : 福田歩希
 //
 //============================================================================
@@ -27,8 +27,12 @@ using namespace abbr;
 CBounding_Cylinder::CBounding_Cylinder() :
 	CBounding_Volume{},
 	m_fRadius{ 0.0f },
+#ifdef _DEBUG
 	m_fHeight{ 0.0f },
 	m_pRenderCylinder{ nullptr }
+#else
+	m_fHeight{ 0.0f }
+#endif // _DEBUG
 {
 
 }
@@ -39,8 +43,12 @@ CBounding_Cylinder::CBounding_Cylinder() :
 CBounding_Cylinder::CBounding_Cylinder(CObject_X* pObj) :
 	CBounding_Volume{},
 	m_fRadius{ 0.0f },
+#ifdef _DEBUG
 	m_fHeight{ 0.0f },
 	m_pRenderCylinder{ CRender_Cylinder::Create(pObj) }
+#else
+	m_fHeight{ 0.0f }
+#endif // _DEBUG
 {
 
 }
@@ -53,6 +61,7 @@ CBounding_Cylinder::~CBounding_Cylinder()
 
 }
 
+#ifdef _DEBUG
 //============================================================================
 // モデルを変更
 //============================================================================
@@ -76,6 +85,7 @@ void CBounding_Cylinder::SetUseCol(bool bUse)
 {
 	m_pRenderCylinder->SetUseCol(bUse);
 }
+#endif // _DEBUG
 
 //============================================================================
 // 半径を取得

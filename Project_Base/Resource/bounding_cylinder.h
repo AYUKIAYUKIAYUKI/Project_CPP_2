@@ -27,10 +27,12 @@ public:
 	CBounding_Cylinder(CObject_X* pObj);	// シリンダー表示コンストラクタ
 	~CBounding_Cylinder() override;			// デストラクタ
 
+#ifdef _DEBUG
 	// <setter>
 	void ChangeModel(CX_Manager::TYPE Type);	// モデルを変更
 	void SetCol(D3DXCOLOR Col);					// 色を設定
 	void SetUseCol(bool bUse);					// 色反映を設定
+#endif // _DEBUG
 
 	// <getter/setter>
 	const float& GetRadius() const;	// 半径を取得
@@ -45,7 +47,9 @@ private:
 	// <data>
 	float m_fRadius;						// 半径
 	float m_fHeight;						// 高さ
+#ifdef _DEBUG
 	CRender_Cylinder* m_pRenderCylinder;	// シリンダー表示
+#endif // _DEBUG
 };
 
 #endif	// _BOUNDING_CYLINDER_H_

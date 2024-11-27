@@ -232,18 +232,12 @@ void CCharacter::CorrectToTarget()
 	// 目標向きへ向ける
 	Vec3 NewRot = GetRot();
 	utility::AdjustAngle(NewRot.y, m_RotTarget.y);	// 角度の差を補正
-	NewRot += (m_RotTarget - NewRot) * m_fCorrectCoef;
+	NewRot += (m_RotTarget - NewRot) * 0.1f;
 	SetRot(NewRot);
 
 	// 目標座標へ移動
 	Vec3 NewPos = GetPos();
-#if 0
-	NewPos.x = m_PosTarget.x;
-	NewPos.y += (m_PosTarget.y - NewPos.y) * m_fCorrectCoef;
-	NewPos.z = m_PosTarget.z;
-#else
 	NewPos += (m_PosTarget - NewPos) * m_fCorrectCoef;
-#endif
 	SetPos(NewPos);
 }
 

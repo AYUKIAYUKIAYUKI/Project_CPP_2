@@ -203,16 +203,20 @@ void CEnemy::AttackOnPlayer()
 				return;
 			}
 
+#ifdef _DEBUG
 			/* 判定表示を赤色に */
 			m_pBndCylinder->SetCol({ 1.0f, 0.0f, 0.0f, 0.5f });
+#endif // _DEBUG
 
 			// ダメージを与える
 			pPlayer->SetDamage(-1);
 		}
 		else
 		{
+#ifdef _DEBUG
 			/* 判定表示を通常色に戻す */
 			m_pBndCylinder->SetCol({ 1.0f, 1.0f, 1.0f, 0.5f });
+#endif // _DEBUG
 		}
 	}
 	else

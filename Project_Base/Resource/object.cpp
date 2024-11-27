@@ -9,8 +9,6 @@
 // インクルードファイル
 //****************************************************
 #include "object.h"
-
-// デバッグ表示用
 #include "renderer.h"
 
 //****************************************************
@@ -323,7 +321,6 @@ void CObject::DrawAll()
 			pDev->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILCAPS_KEEP);	// Zテスト・ステンシルテストに失敗
 
 #endif
-
 			// 描画処理
 			pObj->Draw();
 

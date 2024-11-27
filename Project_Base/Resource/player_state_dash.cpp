@@ -117,11 +117,11 @@ void CPlayer_State_Dash::SetPosTarget_Unnamed()
 	// Ý’è‚³‚ê‚Ä‚¢‚éˆÚ“®•ûŒü‚É•ûŠp‚ð‘‰Á
 	if (m_bDirection)
 	{
-		fDirectionTarget += m_pCharacter->GetMoveSpeed() * 5.0f;
+		fDirectionTarget += m_pCharacter->GetMoveSpeed() * 3.0f;
 	}
 	else
 	{
-		fDirectionTarget += m_pCharacter->GetMoveSpeed() * -5.0f;
+		fDirectionTarget += m_pCharacter->GetMoveSpeed() * -3.0f;
 	}
 
 	// –Ú•W•ûŠp‚ð”½‰f
