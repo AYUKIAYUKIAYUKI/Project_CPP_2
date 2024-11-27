@@ -1,6 +1,6 @@
 //============================================================================
 //
-// バウンディングシリンダー [bouding_cylinder.cpp]
+// 円柱バウンディング [bouding_cylinder.cpp]
 // Author : 福田歩希
 //
 //============================================================================
@@ -38,61 +38,27 @@ CBounding_Cylinder::CBounding_Cylinder() :
 }
 
 //============================================================================
-// シリンダー表示コンストラクタ
-//============================================================================
-CBounding_Cylinder::CBounding_Cylinder(CObject_X* pObj) :
-	CBounding_Volume{},
-	m_fRadius{ 0.0f },
-#ifdef _DEBUG
-	m_fHeight{ 0.0f },
-	m_pRenderCylinder{ CRender_Cylinder::Create(pObj) }
-#else
-	m_fHeight{ 0.0f }
-#endif // _DEBUG
-{
-
-}
-
-//============================================================================
 // デストラクタ
 //============================================================================
 CBounding_Cylinder::~CBounding_Cylinder()
 {
-
+	// 円柱表示を破棄予約
+	if (m_pRenderCylinder != nullptr)
+	{
+		m_pRenderCylinder->SetRelease();
+		m_pRenderCylinder = nullptr;
+	}
 }
-
-#ifdef _DEBUG
-//============================================================================
-// モデルを変更
-//============================================================================
-void CBounding_Cylinder::ChangeModel(CX_Manager::TYPE Type)
-{
-	m_pRenderCylinder->ChangeModel(Type);
-}
-
-//============================================================================
-// 色を設定
-//============================================================================
-void CBounding_Cylinder::SetCol(D3DXCOLOR Col)
-{
-	m_pRenderCylinder->SetCol(Col);
-}
-
-//============================================================================
-// 色反映を設定
-//============================================================================
-void CBounding_Cylinder::SetUseCol(bool bUse)
-{
-	m_pRenderCylinder->SetUseCol(bUse);
-}
-#endif // _DEBUG
 
 //============================================================================
 // 中心点を設定
 //============================================================================
 void CBounding_Cylinder::SetCenterPos(D3DXVECTOR3 Pos)
 {
+	// バウンディング基底クラスの持つ中心点にセット
 	CBounding_Volume::SetCenterPos(Pos);
+
+	// 円柱表示の持つシンクロ座標にセット
 	m_pRenderCylinder->SetCenterSyncPos(Pos);
 }
 
@@ -109,7 +75,10 @@ const float& CBounding_Cylinder::GetRadius() const
 //============================================================================
 void CBounding_Cylinder::SetRadius(float fRad)
 {
+	// 自身の半径にセット
 	m_fRadius = fRad;
+
+	// 円柱表示の持つシンクロ半径にセット
 	m_pRenderCylinder->SetSyncRadius(fRad);
 }
 
@@ -126,6 +95,9 @@ const float& CBounding_Cylinder::GetHeight() const
 //============================================================================
 void CBounding_Cylinder::SetHeight(float fHeight)
 {
+	// 自身の高さにセット
 	m_fHeight = fHeight;
+
+	// 円柱表示の持つシンクロ高さにセット
 	m_pRenderCylinder->SetSyncHeight(fHeight);
 }

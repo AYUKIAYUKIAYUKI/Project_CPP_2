@@ -393,7 +393,7 @@ void CPlayer::HitCheck()
 		{
 #ifdef _DEBUG
 			// 判定表示を赤色に
-			m_pBndCylinder->SetCol({ 1.0f, 0.0f, 0.0f, 0.5f });
+			//m_pBndCylinder->SetCol({ 1.0f, 0.0f, 0.0f, 0.5f });
 #endif // _DEBUG
 				
 			// 衝突があったことを記録
@@ -502,7 +502,7 @@ void CPlayer::HitCheck()
 	{
 #ifdef _DEBUG
 		// 判定表示を通常色に戻す
-		m_pBndCylinder->SetCol({ 1.0f, 1.0f, 1.0f, 0.5f });
+		//m_pBndCylinder->SetCol({ 1.0f, 1.0f, 1.0f, 0.5f });
 #endif // _DEBUG
 	}
 }

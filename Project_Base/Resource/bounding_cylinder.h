@@ -1,6 +1,6 @@
 //============================================================================
 //
-// バウンディングシリンダー、ヘッダファイル [bouding_cylinder.h]
+// 円柱バウンディング、ヘッダファイル [bouding_cylinder.h]
 // Author : 福田歩希
 //
 //============================================================================
@@ -13,26 +13,17 @@
 //****************************************************
 #include "bounding_volume.h"
 #include "render_cylinder.h"
-#include "X_manager.h"
 
 //****************************************************
-// バウンディングシリンダークラス
+// 円柱バウンディングクラス
 //****************************************************
 class CBounding_Cylinder : public CBounding_Volume
 {
 public:
 
 	// <special function>
-	CBounding_Cylinder();					// コンストラクタ
-	CBounding_Cylinder(CObject_X* pObj);	// シリンダー表示コンストラクタ
-	~CBounding_Cylinder() override;			// デストラクタ
-
-#ifdef _DEBUG
-	// <setter>
-	void ChangeModel(CX_Manager::TYPE Type);	// モデルを変更
-	void SetCol(D3DXCOLOR Col);					// 色を設定
-	void SetUseCol(bool bUse);					// 色反映を設定
-#endif // _DEBUG
+	CBounding_Cylinder();			// コンストラクタ
+	~CBounding_Cylinder() override;	// デストラクタ
 
 	// <setter>
 	void SetCenterPos(D3DXVECTOR3 Pos) override;	// 中心点を設定
@@ -48,8 +39,8 @@ public:
 private:
 
 	// <data>
-	float m_fRadius;						// 半径
-	float m_fHeight;						// 高さ
+	float			  m_fRadius;			// 半径
+	float			  m_fHeight;			// 高さ
 #ifdef _DEBUG
 	CRender_Cylinder* m_pRenderCylinder;	// シリンダー表示
 #endif // _DEBUG

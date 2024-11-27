@@ -9,8 +9,8 @@
 // インクルードファイル
 //****************************************************
 #include "render_sphere.h"
-#include "object_X.h"
 #include "renderer.h"
+#include "object_X.h"
 
 //****************************************************
 // usingディレクティブ

@@ -1,6 +1,6 @@
 //============================================================================
 // 
-// シリンダー表示、ヘッダファイル [render_cylinder.h]
+// 円柱表示、ヘッダファイル [render_cylinder.h]
 // Author : 福田歩希
 // 
 //============================================================================
@@ -12,7 +12,6 @@
 // インクルードファイル
 //****************************************************
 #include "render_collision.h"
-#include "X_manager.h"
 
 //****************************************************
 // シリンダー判定表示クラス
@@ -32,22 +31,18 @@ public:
 	void	Draw() override;	// 描画処理
 
 	// <setter>
-	void SetSyncRadius(float fRadius);			// シンクロ半径を設定
-	void SetSyncHeight(float fHeight);			// シンクロ高さを設定
-	void SetCol(D3DXCOLOR Col);					// 色を設定
-	void SetUseCol(bool bUse);					// 色反映を設定
-	void ChangeModel(CX_Manager::TYPE Type);	// モデルを変更
+	void SetSyncRadius(float fRadius);	// シンクロ半径を設定
+	void SetSyncHeight(float fHeight);	// シンクロ高さを設定
 
 	// <static function>
-	static CRender_Cylinder* Create();					// 生成
-	static CRender_Cylinder* Create(CObject_X* pRef);	// 生成
+	static CRender_Cylinder* Create();	// 生成
 
 private:
 
 	// <data>
 	float	   m_fSyncRadius;		// シンクロ半径
 	float	   m_fSyncHeight;		// シンクロ高さ
-	CObject_X* m_pCylinderModel;	// シリンダーモデル
+	CObject_X* m_pCylinderModel;	// 円柱モデル
 };
 
 #endif	// _RENDER_CYLINDER_H_

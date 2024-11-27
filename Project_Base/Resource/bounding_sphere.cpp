@@ -74,6 +74,6 @@ void CBounding_Sphere::SetRadius(float fRad)
 	// 自身の半径にセット
 	m_fRadius = fRad;
 
-	// 判定表示の持つシンクロ半径にセット
+	// 球表示の持つシンクロ半径にセット
 	m_pRenderSphere->SetSyncRadius(fRad);
 }
