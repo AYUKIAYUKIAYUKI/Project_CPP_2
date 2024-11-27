@@ -31,12 +31,12 @@ public:
 	void	Draw() override;	// •`‰æˆ—
 
 	// <static function>
-	static void Generate(D3DXVECTOR3 Pos);	// ”­¶
+	static void GenerateSpread(D3DXVECTOR3 Pos);	// ŠgU”­¶
 
 private:
 
-	/// <summary> ¶¬ƒXƒpƒ“ </summary>
-	static constexpr WORD NUM_GENERATE_SPAN = 30;
+	/// <summary> ŠgU”­¶ƒXƒpƒ“ </summary>
+	static constexpr WORD SPREAD_SPAN = 10;
 
 	// <static fuction>
 	static void Create(D3DXVECTOR3 Pos);	// ¶¬

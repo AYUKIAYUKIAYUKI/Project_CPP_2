@@ -16,6 +16,7 @@
 #include "object_parts.h"
 #include "object_X.h"
 #include "field_manager.h"
+#include "constellation.h"
 
 #include "object_3D.h"
 
@@ -241,6 +242,13 @@ void CTitle::UpdateEnvironment()
 //============================================================================
 void CTitle::UpdateButterfly()
 {
+	// 羽ばたきモーションの時
+	if (m_pButterfly->GetNowMotion() == 1)
+	{
+		// 星座エフェクトを拡散発生
+		CConstellation::GenerateSpread(m_pButterfly->GetPos());
+	}
+
 	// タイトルの進行に合わせて蝶の挙動を変化
 	if (m_bTransition)
 	{ // ゲームシーンへ遷移を開始したら

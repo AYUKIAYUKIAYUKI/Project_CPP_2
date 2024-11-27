@@ -99,21 +99,35 @@ void CConstellation::Draw()
 }
 
 //============================================================================
-// 発生
+// 拡散発生
 //============================================================================
-void CConstellation::Generate(D3DXVECTOR3 Pos)
+void CConstellation::GenerateSpread(D3DXVECTOR3 Pos)
 {
 	// 生成スパンをカウントアップ
 	m_nCntGenerateSpan++;
 
 	// 設定された生成スパンに到達で
-	if (m_nCntGenerateSpan > NUM_GENERATE_SPAN)
+	if (m_nCntGenerateSpan > SPREAD_SPAN)
 	{
 		// 生成スパンのカウントをリセット
 		m_nCntGenerateSpan = 0;
 
-		// 生成
-		Create(Pos);
+		// オフセットをコピー
+		auto Offset = n_InitParam["Offset"];
+
+		// いくつか生成
+		for (WORD wCnt = 0; wCnt < 3; ++wCnt)
+		{
+			// 渡された座標をランダムにずらす
+			Pos += {
+				utility::GetRandomValue<float>() * static_cast<float>(Offset),
+				utility::GetRandomValue<float>() * static_cast<float>(Offset),
+				utility::GetRandomValue<float>() * static_cast<float>(Offset)
+			};
+
+			// 星座の生成
+			Create(Pos);
+		}
 	}
 }
 
@@ -139,18 +153,11 @@ void CConstellation::Create(D3DXVECTOR3 Pos)
 	// 星座の初期設定
 	pNew->Init();
 
-	// パラメータをコピー
+	// 基礎パラメータをコピー
 	auto const& CorrectionCoef = n_InitParam["CorrectionCoef"];
 	auto const& SizeTarget = n_InitParam["SizeTarget"];
 	auto const& ColTarget = n_InitParam["ColTarget"];
 	auto const& MaxDuration = n_InitParam["MaxDuration"];
-
-	// 渡された座標をランダムにずらす
-	Pos += {
-		utility::GetRandomValue<float>() * 1.5f,
-		utility::GetRandomValue<float>() * 1.5f,
-		utility::GetRandomValue<float>() * 1.5f
-	};
 
 	// 各種パラメータ設定
 	CTexture_Manager::TYPE Type = CTexture_Manager::TYPE::CONSTELLATION0;
