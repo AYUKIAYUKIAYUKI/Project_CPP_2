@@ -31,13 +31,14 @@ public:
 	void ChangeModel(CX_Manager::TYPE Type);	// ƒ‚ƒfƒ‹‚ğ•ÏX
 
 	// <getter/setter>
-	const float& GetRadius() const;	// ”¼Œa‚ğæ“¾
-	void SetRadius(float fRad);		// ”¼Œa‚ğİ’è
+	const float& GetRadius() const;					// ”¼Œa‚ğæ“¾
+	void SetRadius(float fRad);						// ”¼Œa‚ğİ’è
+	void SetCenterPos(D3DXVECTOR3 Pos) override;	// ’†S“_‚ğİ’è
 
 private:
 
 	// <data>
-	float m_fRadius;					// ”¼Œa
+	float			m_fRadius;			// ”¼Œa
 	CRender_Sphere* m_pRenderSphere;	// ƒXƒtƒBƒA•\¦
 };
 

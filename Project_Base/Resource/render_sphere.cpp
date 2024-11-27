@@ -30,6 +30,7 @@ using namespace abbr;
 //============================================================================
 CRender_Sphere::CRender_Sphere(LAYER Priority) :
 	CRender_Collision{ Priority },
+	m_fSyncRadius{ 0.0f },
 	m_pSphere{ CObject_X::Create(Priority, CX_Manager::TYPE::RENDER_SPHERE) }
 {
 
@@ -40,7 +41,11 @@ CRender_Sphere::CRender_Sphere(LAYER Priority) :
 //============================================================================
 CRender_Sphere::~CRender_Sphere()
 {
-
+	// スフィア表示を破棄予約
+	if (m_pSphere != nullptr)
+	{
+		m_pSphere->SetRelease();
+	}
 }
 
 //============================================================================
@@ -75,13 +80,35 @@ void CRender_Sphere::Uninit()
 //============================================================================
 void CRender_Sphere::Update()
 {
-	// 判定のサイズに合わせてスケールを拡大
-	const float& fRad = m_pRef->GetRadius();
-	const Vec3& Scale = { fRad, fRad, fRad };
-	m_pSphere->SetScale(Scale);
+	// ウィンドウを表示
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Sphere"))
+	{
+		ImGui::Text("Pos:X %.1f:Y %.1f:Z %.1f", m_pSphere->GetPos().x, m_pSphere->GetPos().y, m_pSphere->GetPos().z);
+	}
+	ImGui::End();
 
-	// オブジェクトの座標に判定を表示
-	m_pSphere->SetPos(m_pRef->GetPos());
+	if (m_pRef != nullptr)
+	{ // 対象オブジェクトが設定されていたら
+
+		// 判定のサイズに合わせてスケールを拡大
+		const float& fRad = m_pRef->GetRadius();
+		const Vec3& Scale = { fRad, fRad, fRad };
+		m_pSphere->SetScale(Scale);
+
+		// オブジェクトの座標に判定を表示
+		m_pSphere->SetPos(m_pRef->GetPos());
+	}
+	else
+	{ // 対象オブジェクトが設定されていない
+
+		// 判定のサイズに合わせてスケールを拡大
+		const Vec3& Scale = { m_fSyncRadius, m_fSyncRadius, m_fSyncRadius };
+		m_pSphere->SetScale(Scale);
+
+		// オブジェクトの座標に判定を表示
+		m_pSphere->SetPos(m_CenterSyncPos);
+	}
 }
 
 //============================================================================
@@ -93,11 +120,39 @@ void CRender_Sphere::Draw()
 }
 
 //============================================================================
+// 半径を設定
+//============================================================================
+void CRender_Sphere::SetSyncRadius(float fRadius)
+{
+	m_fSyncRadius = fRadius;
+}
+
+//============================================================================
 // モデルを変更
 //============================================================================
 void CRender_Sphere::ChangeModel(CX_Manager::TYPE Type)
 {
 	m_pSphere->BindModel(Type);
+}
+
+//============================================================================
+// 生成
+//============================================================================
+CRender_Sphere* CRender_Sphere::Create()
+{
+	// 判定表示を生成
+	CRender_Sphere* pRender_Collision = DBG_NEW CRender_Sphere(LAYER::FRONT);
+
+	// 生成失敗
+	if (pRender_Collision == nullptr)
+	{
+		assert(false && "スフィア表示の生成に失敗しました");
+	}
+
+	// 判定表示の初期設定
+	pRender_Collision->Init();
+
+	return pRender_Collision;
 }
 
 //============================================================================

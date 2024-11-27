@@ -38,13 +38,15 @@ public:
 	virtual void Draw() override = 0;	// 描画処理
 
 	// <setter>
-	void SetRefObj(CObject_X* pRef);	// 対象オブジェクトの設定
+	void SetCenterSyncPos(D3DXVECTOR3 Pos);		// 中心点を設定
+	void SetRefObj(CObject_X* pRef);			// 対象オブジェクトの設定
 
 protected:
 
 	// <data>
-	CObject_X*	m_pRef;		// 対象オブジェクト
-	D3DXMATRIX	m_MtxWorld;	// ワールド行列
+	D3DXVECTOR3	m_CenterSyncPos;	// 中心点
+	CObject_X*	m_pRef;				// 対象オブジェクト
+	D3DXMATRIX	m_MtxWorld;			// ワールド行列
 
 private:
 

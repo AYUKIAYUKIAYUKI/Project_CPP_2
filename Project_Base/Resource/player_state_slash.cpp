@@ -36,9 +36,11 @@ CPlayer_State_Slash::CPlayer_State_Slash() :
 	CPlayer_State{},
 	m_nSlashDuration{ 0 },
 	m_SlashType{ SLASH_TYPE::LEFT },
-	m_pBndSlash{ std::make_unique<CBounding_Sphere*>() }
+	m_pBndSlash{ std::make_unique<CBounding_Sphere>() }
 {
-
+	// 斬撃のバウンディングのパラメータを設定
+	m_pBndSlash->SetCenterPos(m_pCharacter->GetPos());
+	m_pBndSlash->SetRadius(150.0f);
 }
 
 //============================================================================
@@ -46,7 +48,11 @@ CPlayer_State_Slash::CPlayer_State_Slash() :
 //============================================================================
 CPlayer_State_Slash::~CPlayer_State_Slash()
 {
-
+	// 斬撃のバウンディングを破棄
+	if (m_pBndSlash != nullptr)
+	{
+		m_pBndSlash.reset();
+	}
 }
 
 //============================================================================

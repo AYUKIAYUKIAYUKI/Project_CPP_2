@@ -27,7 +27,7 @@ using namespace abbr;
 CBounding_Sphere::CBounding_Sphere() :
 	CBounding_Volume{},
 	m_fRadius{ 0.0f },
-	m_pRenderSphere{ nullptr }
+	m_pRenderSphere{ CRender_Sphere::Create() }
 {
 
 }
@@ -48,7 +48,11 @@ CBounding_Sphere::CBounding_Sphere(CObject_X* pObj) :
 //============================================================================
 CBounding_Sphere::~CBounding_Sphere()
 {
-
+	// スフィア表示を破棄予約
+	if (m_pRenderSphere != nullptr)
+	{
+		m_pRenderSphere->SetRelease();
+	}
 }
 
 //============================================================================
@@ -73,4 +77,14 @@ const float& CBounding_Sphere::GetRadius() const
 void CBounding_Sphere::SetRadius(float fRad)
 {
 	m_fRadius = fRad;
+	m_pRenderSphere->SetSyncRadius(fRad);
+}
+
+//============================================================================
+// 中心点を設定
+//============================================================================
+void CBounding_Sphere::SetCenterPos(D3DXVECTOR3 Pos)
+{
+	CBounding_Volume::SetCenterPos(Pos);
+	m_pRenderSphere->SetCenterSyncPos(Pos);
 }

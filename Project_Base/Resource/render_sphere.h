@@ -32,15 +32,18 @@ public:
 	void	Draw() override;	// 描画処理
 
 	// <setter>
+	void SetSyncRadius(float fRadius);			// 半径を設定
 	void ChangeModel(CX_Manager::TYPE Type);	// モデルを変更
 
 	// <static function>
+	static CRender_Sphere* Create();				// 生成
 	static CRender_Sphere* Create(CObject_X* pRef);	// 生成
 
 private:
 
 	// <data>
-	CObject_X* m_pSphere;	// スフィア
+	float	   m_fSyncRadius;	// 半径
+	CObject_X* m_pSphere;		// スフィア
 };
 
 #endif	// _RENDER_SPHERE_H_

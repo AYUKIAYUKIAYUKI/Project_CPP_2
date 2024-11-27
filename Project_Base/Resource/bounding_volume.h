@@ -21,7 +21,7 @@ public:
 
 	// <getter/setter>
 	const D3DXVECTOR3& GetCenterPos() const;	// 中心点を取得
-	void SetCenterPos(D3DXVECTOR3 Pos);			// 中心点を設定
+	virtual void SetCenterPos(D3DXVECTOR3 Pos);	// 中心点を設定
 
 private:
 

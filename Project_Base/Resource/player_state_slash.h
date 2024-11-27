@@ -53,7 +53,7 @@ private:
 	// <data>
 	int									m_nSlashDuration;	// 継続期間
 	SLASH_TYPE							m_SlashType;		// 斬撃方向のタイプ
-	std::unique_ptr<CBounding_Sphere*>	m_pBndSlash;		// 斬撃のバウンディング
+	std::unique_ptr<CBounding_Sphere>	m_pBndSlash;		// 斬撃のバウンディング
 	
 };
 
