@@ -280,7 +280,7 @@ CPlayer* CPlayer::Create()
 	pNewInstance->Init();
 
 	// ƒ‚ƒfƒ‹‚ğİ’è
-	pNewInstance->BindModel(CX_Manager::TYPE::SAMUS);
+	pNewInstance->BindModel(CX_Manager::TYPE::STATUE);
 
 	// ”¼Œa‚ğİ’è
 	float fRad = 0.0f;

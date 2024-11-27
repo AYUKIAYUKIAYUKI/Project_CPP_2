@@ -26,11 +26,21 @@ public:
 		BUTBODY,			// 蝶胴
 		BUTLWING,			// 蝶左羽
 		BUTRWING,			// 蝶右羽
+		PLAWAIST,			// 人腰
+		PLABODY,			// 人胴
+		PLAHEAD,			// 人頭
+		PLALEGL,			// 人左脚
+		PLAFOOTL,			// 人左足
+		PLALEGR,			// 人右脚
+		PLAFOOTR,			// 人右足
+		PLAARML,			// 人左腕
+		PLAHANDL,			// 人左手
+		PLAARMR,			// 人右腕
+		PLAHANDR,			// 人右手
 		ONLYTREE,			// 樹のみ
 		ONLYSTONE,			// 樹の石
 		STATUE,				// 銅像
 		AROUND,				// 周辺領域
-		SAMUS,				// サムス
 		ENEMY,				// 敵
 		BLOCK,				// ブロック
 		RUBBLE_00,			// がれき00
