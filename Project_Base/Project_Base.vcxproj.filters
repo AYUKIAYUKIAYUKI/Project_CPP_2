@@ -24,18 +24,6 @@
     <ClCompile Include="Resource\bounding_volume.cpp">
       <Filter>&lt;Collider&gt;</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\render_box.cpp">
-      <Filter>&lt;Collider&gt;</Filter>
-    </ClCompile>
-    <ClCompile Include="Resource\render_collision.cpp">
-      <Filter>&lt;Collider&gt;</Filter>
-    </ClCompile>
-    <ClCompile Include="Resource\render_cylinder.cpp">
-      <Filter>&lt;Collider&gt;</Filter>
-    </ClCompile>
-    <ClCompile Include="Resource\render_sphere.cpp">
-      <Filter>&lt;Collider&gt;</Filter>
-    </ClCompile>
     <ClCompile Include="Resource\title.cpp">
       <Filter>&lt;Scene&gt;</Filter>
     </ClCompile>
@@ -186,6 +174,18 @@
     <ClCompile Include="Resource\character_motion.cpp">
       <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\render_collision.cpp">
+      <Filter>&lt;Collider&gt;\&lt;Render&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\render_cylinder.cpp">
+      <Filter>&lt;Collider&gt;\&lt;Render&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\render_sphere.cpp">
+      <Filter>&lt;Collider&gt;\&lt;Render&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\render_box.cpp">
+      <Filter>&lt;Collider&gt;\&lt;Render&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -209,18 +209,6 @@
       <Filter>&lt;Collider&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\bounding_volume.h">
-      <Filter>&lt;Collider&gt;</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource\render_box.h">
-      <Filter>&lt;Collider&gt;</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource\render_collision.h">
-      <Filter>&lt;Collider&gt;</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource\render_cylinder.h">
-      <Filter>&lt;Collider&gt;</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource\render_sphere.h">
       <Filter>&lt;Collider&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\title.h">
@@ -376,6 +364,18 @@
     <ClInclude Include="Resource\character_motion.h">
       <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\render_sphere.h">
+      <Filter>&lt;Collider&gt;\&lt;Render&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\render_collision.h">
+      <Filter>&lt;Collider&gt;\&lt;Render&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\render_cylinder.h">
+      <Filter>&lt;Collider&gt;\&lt;Render&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\render_box.h">
+      <Filter>&lt;Collider&gt;\&lt;Render&gt;</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Object&gt;">
@@ -410,6 +410,9 @@
     </Filter>
     <Filter Include="&lt;Utility&gt;">
       <UniqueIdentifier>{07c8b80b-d72f-4cd8-8cb3-d5880e69bd8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;Collider&gt;\&lt;Render&gt;">
+      <UniqueIdentifier>{a9a65daa-9cd0-43a7-a0b3-d88ebdc5c175}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

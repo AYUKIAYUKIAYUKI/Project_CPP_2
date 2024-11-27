@@ -40,7 +40,7 @@ CPlayer_State_Slash::CPlayer_State_Slash() :
 {
 	// 斬撃のバウンディングのパラメータを設定
 	m_pBndSlash->SetCenterPos(m_pCharacter->GetPos());
-	m_pBndSlash->SetRadius(10.0f);
+	m_pBndSlash->SetRadius(100.0f);
 }
 
 //============================================================================

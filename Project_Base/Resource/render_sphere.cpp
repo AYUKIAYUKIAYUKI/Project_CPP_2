@@ -1,6 +1,6 @@
 //============================================================================
 // 
-// スフィア表示 [render_sphere.cpp]
+// 球表示 [render_sphere.cpp]
 // Author : 福田歩希
 // 
 //============================================================================
@@ -10,8 +10,6 @@
 //****************************************************
 #include "render_sphere.h"
 #include "object_X.h"
-
-// デバイス取得用
 #include "renderer.h"
 
 //****************************************************
@@ -31,9 +29,10 @@ using namespace abbr;
 CRender_Sphere::CRender_Sphere(LAYER Priority) :
 	CRender_Collision{ Priority },
 	m_fSyncRadius{ 0.0f },
-	m_pSphere{ CObject_X::Create(Priority, CX_Manager::TYPE::RENDER_SPHERE) }
+	m_pSphereModel{ nullptr }
 {
-
+	// 球モデルを生成
+	m_pSphereModel = CObject_X::Create(Priority, CX_Manager::TYPE::RENDER_SPHERE);
 }
 
 //============================================================================
@@ -41,10 +40,11 @@ CRender_Sphere::CRender_Sphere(LAYER Priority) :
 //============================================================================
 CRender_Sphere::~CRender_Sphere()
 {
-	// スフィア表示を破棄予約
-	if (m_pSphere != nullptr)
+	// 球モデルを破棄予約
+	if (m_pSphereModel != nullptr)
 	{
-		m_pSphere->SetRelease();
+		m_pSphereModel->SetRelease();
+		m_pSphereModel = nullptr;
 	}
 }
 
@@ -53,15 +53,17 @@ CRender_Sphere::~CRender_Sphere()
 //============================================================================
 HRESULT CRender_Sphere::Init()
 {
-	// 判定表示の初期設定
+	// 判定表示クラスの初期設定
 	if (FAILED(CRender_Collision::Init()))
 	{
 		return E_FAIL;
 	}
 
-	// 表示の透明度を設定
-	m_pSphere->SetCol({ 1.0f, 1.0f, 1.0f, 0.5f });
-	m_pSphere->SetUseCol(true);
+	// 表示の初期透明度を設定
+	m_pSphereModel->SetCol({ 1.0f, 1.0f, 1.0f, 0.5f });
+
+	// 設定カラーを使用する
+	m_pSphereModel->SetUseCol(true);
 
 	return S_OK;
 }
@@ -71,7 +73,7 @@ HRESULT CRender_Sphere::Init()
 //============================================================================
 void CRender_Sphere::Uninit()
 {
-	// 判定表示の終了処理
+	// 判定表示クラスの終了処理
 	CRender_Collision::Uninit();
 }
 
@@ -80,35 +82,12 @@ void CRender_Sphere::Uninit()
 //============================================================================
 void CRender_Sphere::Update()
 {
-	// ウィンドウを表示
-	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("Sphere"))
-	{
-		ImGui::Text("Pos:X %.1f:Y %.1f:Z %.1f", m_pSphere->GetPos().x, m_pSphere->GetPos().y, m_pSphere->GetPos().z);
-	}
-	ImGui::End();
+	// バウンディングのサイズに合わせて球モデルのスケールをセット
+	const Vec3& Scale = { m_fSyncRadius, m_fSyncRadius, m_fSyncRadius };
+	m_pSphereModel->SetScale(Scale);
 
-	if (m_pRef != nullptr)
-	{ // 対象オブジェクトが設定されていたら
-
-		// 判定のサイズに合わせてスケールを拡大
-		const float& fRad = m_pRef->GetRadius();
-		const Vec3& Scale = { fRad, fRad, fRad };
-		m_pSphere->SetScale(Scale);
-
-		// オブジェクトの座標に判定を表示
-		m_pSphere->SetPos(m_pRef->GetPos());
-	}
-	else
-	{ // 対象オブジェクトが設定されていない
-
-		// 判定のサイズに合わせてスケールを拡大
-		const Vec3& Scale = { m_fSyncRadius, m_fSyncRadius, m_fSyncRadius };
-		m_pSphere->SetScale(Scale);
-
-		// オブジェクトの座標に判定を表示
-		m_pSphere->SetPos(m_CenterSyncPos);
-	}
+	// バウンディングの中心点に合わせて球モデルの座標をセット
+	m_pSphereModel->SetPos(m_CenterSyncPos);
 }
 
 //============================================================================
@@ -116,11 +95,11 @@ void CRender_Sphere::Update()
 //============================================================================
 void CRender_Sphere::Draw()
 {
-
+	/* オーバーライド用 */
 }
 
 //============================================================================
-// 半径を設定
+// シンクロ半径を設定
 //============================================================================
 void CRender_Sphere::SetSyncRadius(float fRadius)
 {
@@ -128,52 +107,21 @@ void CRender_Sphere::SetSyncRadius(float fRadius)
 }
 
 //============================================================================
-// モデルを変更
-//============================================================================
-void CRender_Sphere::ChangeModel(CX_Manager::TYPE Type)
-{
-	m_pSphere->BindModel(Type);
-}
-
-//============================================================================
 // 生成
 //============================================================================
 CRender_Sphere* CRender_Sphere::Create()
 {
-	// 判定表示を生成
-	CRender_Sphere* pRender_Collision = DBG_NEW CRender_Sphere(LAYER::FRONT);
+	// 球表示を生成
+	CRender_Sphere* pNew = DBG_NEW CRender_Sphere(LAYER::FRONT);
 
 	// 生成失敗
-	if (pRender_Collision == nullptr)
+	if (pNew == nullptr)
 	{
-		assert(false && "スフィア表示の生成に失敗しました");
+		assert(false && "球表示の生成に失敗しました");
 	}
 
-	// 判定表示の初期設定
-	pRender_Collision->Init();
+	// 球表示の初期設定
+	pNew->Init();
 
-	return pRender_Collision;
-}
-
-//============================================================================
-// 生成
-//============================================================================
-CRender_Sphere* CRender_Sphere::Create(CObject_X* pRef)
-{
-	// 判定表示を生成
-	CRender_Sphere* pRender_Collision = DBG_NEW CRender_Sphere(LAYER::FRONT);
-
-	// 生成失敗
-	if (pRender_Collision == nullptr)
-	{
-		assert(false && "スフィア表示の生成に失敗しました");
-	}
-
-	// 判定表示の初期設定
-	pRender_Collision->Init();
-
-	// 対象オブジェクトの設定
-	pRender_Collision->SetRefObj(pRef);
-
-	return pRender_Collision;
+	return pNew;
 }

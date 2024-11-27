@@ -1,6 +1,6 @@
 //============================================================================
 // 
-// スフィア表示、ヘッダファイル [render_sphere.h]
+// 球表示、ヘッダファイル [RENDER_SPHERE.h]
 // Author : 福田歩希
 // 
 //============================================================================
@@ -12,10 +12,9 @@
 // インクルードファイル
 //****************************************************
 #include "render_collision.h"
-#include "X_manager.h"
 
 //****************************************************
-// スフィア判定表示クラス
+// 球表示クラス
 //****************************************************
 class CRender_Sphere : public CRender_Collision
 {
@@ -32,18 +31,16 @@ public:
 	void	Draw() override;	// 描画処理
 
 	// <setter>
-	void SetSyncRadius(float fRadius);			// 半径を設定
-	void ChangeModel(CX_Manager::TYPE Type);	// モデルを変更
+	void SetSyncRadius(float fRadius);	// シンクロ半径を設定
 
 	// <static function>
-	static CRender_Sphere* Create();				// 生成
-	static CRender_Sphere* Create(CObject_X* pRef);	// 生成
+	static CRender_Sphere* Create();	// 生成
 
 private:
 
 	// <data>
-	float	   m_fSyncRadius;	// 半径
-	CObject_X* m_pSphere;		// スフィア
+	float	   m_fSyncRadius;	// シンクロ半径
+	CObject_X* m_pSphereModel;	// 球モデル
 };
 
 #endif	// _RENDER_SPHERE_H_

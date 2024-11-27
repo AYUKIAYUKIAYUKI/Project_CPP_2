@@ -19,8 +19,10 @@ public:
 	CBounding_Volume();					// コンストラクタ
 	virtual ~CBounding_Volume() = 0;	// デストラクタ
 
-	// <getter/setter>
+	// <getter>
 	const D3DXVECTOR3& GetCenterPos() const;	// 中心点を取得
+
+	// <virtual setter>
 	virtual void SetCenterPos(D3DXVECTOR3 Pos);	// 中心点を設定
 
 private:
