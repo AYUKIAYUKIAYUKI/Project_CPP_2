@@ -27,7 +27,7 @@ public:
 
 	// <special function>
 	CRender_Collision(LAYER Priority = LAYER::FRONT);	// 描画優先度指定コンストラクタ
-	~CRender_Collision() override;						// デストラクタ
+	virtual ~CRender_Collision() override;				// デストラクタ
 
 	// <function>
 	HRESULT Init() override;	// 初期設定
@@ -38,14 +38,12 @@ public:
 	virtual void Draw() override = 0;	// 描画処理
 
 	// <setter>
-	void SetCenterSyncPos(D3DXVECTOR3 Pos);		// 中心点を設定
-	void SetRefObj(CObject_X* pRef);			// 対象オブジェクトの設定
+	void SetCenterSyncPos(D3DXVECTOR3 Pos);	// シンクロ中心点を設定
 
 protected:
 
 	// <data>
-	D3DXVECTOR3	m_CenterSyncPos;	// 中心点
-	CObject_X*	m_pRef;				// 対象オブジェクト
+	D3DXVECTOR3	m_CenterSyncPos;	// シンクロ中心点
 	D3DXMATRIX	m_MtxWorld;			// ワールド行列
 
 private:

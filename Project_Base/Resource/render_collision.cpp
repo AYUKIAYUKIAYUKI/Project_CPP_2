@@ -9,10 +9,8 @@
 // インクルードファイル
 //****************************************************
 #include "render_collision.h"
-#include "object_X.h"
-
-// デバイス取得用
 #include "renderer.h"
+#include "object_X.h"
 
 //****************************************************
 // usingディレクティブ
@@ -30,8 +28,7 @@ using namespace abbr;
 //============================================================================
 CRender_Collision::CRender_Collision(LAYER Priority) :
 	CObject{ Priority },
-	m_CenterSyncPos{ VEC3_INIT },
-	m_pRef{ nullptr }
+	m_CenterSyncPos{ VEC3_INIT }
 {
 	// ワールド行列の初期化
 	D3DXMatrixIdentity(&m_MtxWorld);
@@ -50,6 +47,8 @@ CRender_Collision::~CRender_Collision()
 //============================================================================
 HRESULT CRender_Collision::Init()
 {
+	/* オーバーライド用 */
+
 	return S_OK;
 }
 
@@ -58,7 +57,7 @@ HRESULT CRender_Collision::Init()
 //============================================================================
 void CRender_Collision::Uninit()
 {
-
+	/* オーバーライド用 */
 }
 
 //============================================================================
@@ -71,19 +70,11 @@ void CRender_Collision::Update()
 }
 
 //============================================================================
-// 中心点を設定
+// シンクロ中心点を設定
 //============================================================================
 void CRender_Collision::SetCenterSyncPos(D3DXVECTOR3 Pos)
 {
 	m_CenterSyncPos = Pos;
-}
-
-//============================================================================
-// 対象オブジェクトの設定
-//============================================================================
-void CRender_Collision::SetRefObj(CObject_X* pRef)
-{
-	m_pRef = pRef;
 }
 
 //============================================================================
@@ -103,24 +94,11 @@ void CRender_Collision::SetMtxWorld()
 	// ワールド行列を初期化
 	D3DXMatrixIdentity(&m_MtxWorld);
 
-	if (m_pRef != nullptr)
-	{ // 対象オブジェクトが設定されていたら
-
-		// 平行移動行列作成
-		D3DXMatrixTranslation(&mtxTrans,
-			m_pRef->GetPos().x,
-			m_pRef->GetPos().y,
-			m_pRef->GetPos().z);
-	}
-	else
-	{ // 対象オブジェクトが設定されていない
-		
-		// 平行移動行列作成
-		D3DXMatrixTranslation(&mtxTrans,
-			m_CenterSyncPos.x,
-			m_CenterSyncPos.y,
-			m_CenterSyncPos.z);
-	}
+	// 平行移動行列作成
+	D3DXMatrixTranslation(&mtxTrans,
+		m_CenterSyncPos.x,
+		m_CenterSyncPos.y,
+		m_CenterSyncPos.z);
 
 	// 平行移動行列との掛け算
 	D3DXMatrixMultiply(&m_MtxWorld,

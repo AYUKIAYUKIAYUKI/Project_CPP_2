@@ -1,6 +1,6 @@
 //============================================================================
 //
-// バウンディングボックス、ヘッダファイル [bouding_box.h]
+// 箱バウンディング、ヘッダファイル [bouding_box.h]
 // Author : 福田歩希
 //
 //============================================================================
@@ -22,19 +22,26 @@ class CBounding_Box : public CBounding_Volume
 public:
 
 	// <special function>
-	CBounding_Box();				// コンストラクタ
-	CBounding_Box(CObject_X* pObj);	// ボックス表示コンストラクタ
-	~CBounding_Box() override;		// デストラクタ
+	CBounding_Box();			// コンストラクタ
+	~CBounding_Box() override;	// デストラクタ
+
+	// <setter>
+	void SetCenterPos(D3DXVECTOR3 Pos) override;	// 中心点を設定
 
 	// <getter/setter>
 	const D3DXVECTOR3& GetSize() const;	// サイズを取得
 	void SetSize(D3DXVECTOR3 Size);		// サイズを設定
 
+	// <getter/setter>
+	const D3DXVECTOR3& GetRot() const;	// 向きを取得
+	void SetRot(D3DXVECTOR3 Rot);		// 向きを設定
+
 private:
 
 	// <data>
 	D3DXVECTOR3		m_Size;			// サイズ
-	CRender_Box*	m_pRenderBox;	// ボックス表示
+	D3DXVECTOR3		m_Rot;			// 向き
+	CRender_Box*	m_pRenderBox;	// 箱表示
 };
 
 #endif	// _BOUNDING_BOX_H_

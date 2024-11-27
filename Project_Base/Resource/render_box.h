@@ -1,6 +1,6 @@
 //============================================================================
 // 
-// ボックス表示、ヘッダファイル [render_box.h]
+// 箱表示、ヘッダファイル [render_box.h]
 // Author : 福田歩希
 // 
 //============================================================================
@@ -30,8 +30,12 @@ public:
 	void	Update() override;	// 更新処理
 	void	Draw() override;	// 描画処理
 
+	// <setter>
+	void SetSyncSize(D3DXVECTOR3 Size);	// シンクロサイズを設定
+	void SetSyncRot(D3DXVECTOR3 Rot);	// シンクロ向きを設定
+
 	// <static function>
-	static CRender_Box* Create(CObject_X* pRef);	// 生成
+	static CRender_Box* Create();	// 生成
 
 private:
 
@@ -52,6 +56,8 @@ private:
 	// <data>
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	// 頂点バッファのポインタ
 	LPDIRECT3DINDEXBUFFER9	m_pIdxBuff;	// インデックスバッファのポインタ
+	D3DXVECTOR3				m_SyncSize;	// シンクロサイズ
+	D3DXVECTOR3				m_SyncRot;	// シンクロ向き
 };
 
 #endif	// _RENDER_BOX_H_

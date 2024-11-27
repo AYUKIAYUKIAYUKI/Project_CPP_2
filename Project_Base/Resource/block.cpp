@@ -30,7 +30,7 @@ using namespace abbr;
 //============================================================================
 CBlock::CBlock() :
 	CObject_X{ LAYER::MIDDLE },
-	m_pBndBox{ DBG_NEW CBounding_Box(this) }
+	m_pBndBox{ DBG_NEW CBounding_Box() }
 {
 
 }
@@ -95,19 +95,25 @@ void CBlock::Uninit()
 void CBlock::Update()
 {
 	// すぐにけせ
-	//ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	//ImGui::Begin("Block Param");
-	//static float fRotY = 0.0f;
-	//if (ImGui::Button("--"))
-	//	fRotY += D3DX_PI * -0.1f;
-	//ImGui::SameLine();
-	//if (ImGui::Button("++"))
-	//	fRotY += D3DX_PI * 0.1f;
-	//ImGui::SameLine();
-	//ImGui::SliderFloat("Add RotY", &fRotY, -D3DX_PI, D3DX_PI);
-	//Vec3 NewRot = GetRot();
-	//NewRot.y = fRotY;
-	//SetRot(NewRot);
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	ImGui::Begin("Block Param");
+	static float fRotY = 0.0f;
+	if (ImGui::Button("--"))
+		fRotY += D3DX_PI * -0.1f;
+	ImGui::SameLine();
+	if (ImGui::Button("++"))
+		fRotY += D3DX_PI * 0.1f;
+	ImGui::SameLine();
+	ImGui::SliderFloat("Add RotY", &fRotY, -D3DX_PI, D3DX_PI);
+	Vec3 NewRot = GetRot();
+	NewRot.y = fRotY;
+	SetRot(NewRot);
+	ImGui::End();
+
+	// 箱バウンディングに中心点・サイズ・向きをセット
+	m_pBndBox->SetCenterPos(GetPos());
+	m_pBndBox->SetSize(GetSize());
+	m_pBndBox->SetRot(GetRot());
 
 	// 基底クラスの更新処理
 	CObject_X::Update();

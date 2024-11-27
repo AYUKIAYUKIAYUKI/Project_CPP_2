@@ -1,6 +1,6 @@
 //============================================================================
 // 
-// ボックス表示 [render_box.cpp]
+// 箱表示 [render_box.cpp]
 // Author : 福田歩希
 // 
 //============================================================================
@@ -9,10 +9,8 @@
 // インクルードファイル
 //****************************************************
 #include "render_box.h"
-#include "object_X.h"
-
-// デバイス取得用
 #include "renderer.h"
+#include "object_X.h"
 
 //****************************************************
 // usingディレクティブ
@@ -31,7 +29,9 @@ using namespace abbr;
 CRender_Box::CRender_Box(LAYER Priority) :
 	CRender_Collision{ Priority },
 	m_pVtxBuff{ nullptr },
-	m_pIdxBuff{ nullptr }
+	m_pIdxBuff{ nullptr },
+	m_SyncSize{ VEC3_INIT },
+	m_SyncRot{ VEC3_INIT }
 {
 
 }
@@ -49,7 +49,7 @@ CRender_Box::~CRender_Box()
 //============================================================================
 HRESULT CRender_Box::Init()
 {
-	// 判定表示の初期設定
+	// 判定表示クラスの初期設定
 	if (FAILED(CRender_Collision::Init()))
 	{
 		return E_FAIL;
@@ -89,7 +89,7 @@ void CRender_Box::Uninit()
 		m_pIdxBuff = nullptr;
 	}
 
-	// 判定表示の終了処理
+	// 判定表示クラスの終了処理
 	CRender_Collision::Uninit();
 }
 
@@ -101,7 +101,7 @@ void CRender_Box::Update()
 	// 頂点の設定
 	SetVtx();
 
-	// 判定表示の更新処理
+	// 判定表示クラスの更新処理
 	CRender_Collision::Update();
 }
 
@@ -144,26 +144,39 @@ void CRender_Box::Draw()
 }
 
 //============================================================================
+// シンクロサイズを設定
+//============================================================================
+void CRender_Box::SetSyncSize(D3DXVECTOR3 Size)
+{
+	m_SyncSize = Size;
+}
+
+//============================================================================
+// シンクロ向きを設定
+//============================================================================
+void CRender_Box::SetSyncRot(D3DXVECTOR3 Rot)
+{
+	m_SyncRot = Rot;
+}
+
+//============================================================================
 // 生成
 //============================================================================
-CRender_Box* CRender_Box::Create(CObject_X* pRef)
+CRender_Box* CRender_Box::Create()
 {
 	// 判定表示を生成
-	CRender_Box* pRender_Collision = DBG_NEW CRender_Box(LAYER::FRONT);
+	CRender_Box* pNew = DBG_NEW CRender_Box(LAYER::FRONT);
 
 	// 生成失敗
-	if (pRender_Collision == nullptr)
+	if (pNew == nullptr)
 	{
-		assert(false && "ボックス表示の生成に失敗しました");
+		assert(false && "箱表示の生成に失敗しました");
 	}
 
 	// 判定表示の初期設定
-	pRender_Collision->Init();
+	pNew->Init();
 
-	// 対象オブジェクトの設定
-	pRender_Collision->SetRefObj(pRef);
-
-	return pRender_Collision;
+	return pNew;
 }
 
 //============================================================================
@@ -283,16 +296,10 @@ void CRender_Box::SetVtx()
 	// 頂点バッファをロックし頂点情報時へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 
-	// サイズをコピー
-	const Vec3& Size = m_pRef->GetSize();
-
-	// 向きをコピー
-	const Vec3& Rot = m_pRef->GetRot();
-
 	// 回転行列を用いて頂点座標をセット
-	for (WORD i = 0; i < NUM_VTX; ++i)
+	for (WORD wCntVtx = 0; wCntVtx < NUM_VTX; ++wCntVtx)
 	{
-		pVtx[i].pos = utility::RotateBoxAroundY(i, Rot.y, Size);
+		pVtx[wCntVtx].pos = utility::RotateBoxAroundY(wCntVtx, m_SyncRot.y, m_SyncSize);
 	}
 
 	// 頂点バッファをアンロック
