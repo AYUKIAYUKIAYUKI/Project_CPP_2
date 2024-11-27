@@ -1,0 +1,7 @@
+{
+	"Priority": 4,
+	"CorrectionCoef" : 0.01,
+	"SizeTarget": [ 10.0, 10.0, 10.0 ],
+	"ColTarget": [ 1.0, 1.0, 1.0, 1.0 ],
+	"MaxDuration": 180
+}

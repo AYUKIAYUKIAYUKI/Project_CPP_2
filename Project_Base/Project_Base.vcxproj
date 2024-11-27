@@ -31,6 +31,7 @@
     <ClCompile Include="Resource\bounding_sphere.cpp" />
     <ClCompile Include="Resource\bounding_volume.cpp" />
     <ClCompile Include="Resource\collision.cpp" />
+    <ClCompile Include="Resource\constellation.cpp" />
     <ClCompile Include="Resource\input_keyboard.cpp" />
     <ClCompile Include="Resource\input_mouse.cpp" />
     <ClCompile Include="Resource\input_pad.cpp" />
@@ -104,6 +105,7 @@
     <ClInclude Include="Resource\bounding_sphere.h" />
     <ClInclude Include="Resource\bounding_volume.h" />
     <ClInclude Include="Resource\collision.h" />
+    <ClInclude Include="Resource\constellation.h" />
     <ClInclude Include="Resource\input_keyboard.h" />
     <ClInclude Include="Resource\input_mouse.h" />
     <ClInclude Include="Resource\input_pad.h" />

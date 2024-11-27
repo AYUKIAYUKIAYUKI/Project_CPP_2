@@ -2,6 +2,10 @@
 	"ModelList": [
 		"Data\\TEXTURE\\title.png",
 		"Data\\TEXTURE\\start.png",
+		"Data\\TEXTURE\\constellation0.png",
+		"Data\\TEXTURE\\constellation1.png",
+		"Data\\TEXTURE\\constellation2.png",
+		"Data\\TEXTURE\\constellation3.png",
 		"Data\\TEXTURE\\map.png",
 		"Data\\TEXTURE\\circle.png",
 		"Data\\TEXTURE\\gauge.png",

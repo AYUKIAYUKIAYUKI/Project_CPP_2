@@ -22,12 +22,28 @@ public:
 	{
 		TITLE = 0,			// タイトル
 		START,				// スタート表示
+		CONSTELLATION0,		// 星座0
+		CONSTELLATION1,		// 星座1
+		CONSTELLATION2,		// 星座2
+		CONSTELLATION3,		// 星座3
 		MAP,				// 仮マップ
 		CIRCLE,				// サークル
 		PLAYERGAUGE,		// プレイヤーのゲージ
 		PLAYERGAUGEWINDOW,	// プレイヤーのゲージウィンドウ
 		MAX,
 	};
+
+	// +演算子のオーバーロード
+	friend TYPE operator+(TYPE Type, WORD wNum)
+	{
+		return static_cast<TYPE>(static_cast<WORD>(Type) + wNum);
+	}
+
+	// +=演算子のオーバーロード
+	friend TYPE operator+=(TYPE Type, WORD wNum)
+	{
+		return static_cast<TYPE>(static_cast<WORD>(Type) + wNum);
+	}
 
 	// <special function>
 	CTexture_Manager(const CTexture_Manager&) = delete;				// コピーコンストラクタ
