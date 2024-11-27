@@ -21,7 +21,7 @@ using namespace abbr;
 WORD CConstellation::m_nCntGenerateSpan = 0;	// 生成スパンのカウント
 
 // 基礎パラメータの展開
-JSON CConstellation::n_InitParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\constellation.json");
+JSON CConstellation::m_InitParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\constellation.json");
 
 //============================================================================
 // 
@@ -113,7 +113,7 @@ void CConstellation::GenerateSpread(D3DXVECTOR3 Pos)
 		m_nCntGenerateSpan = 0;
 
 		// オフセットをコピー
-		auto Offset = n_InitParam["Offset"];
+		auto Offset = m_InitParam["Offset"];
 
 		// いくつか生成
 		for (WORD wCnt = 0; wCnt < 3; ++wCnt)
@@ -154,10 +154,10 @@ void CConstellation::Create(D3DXVECTOR3 Pos)
 	pNew->Init();
 
 	// 基礎パラメータをコピー
-	auto const& CorrectionCoef = n_InitParam["CorrectionCoef"];
-	auto const& SizeTarget = n_InitParam["SizeTarget"];
-	auto const& ColTarget = n_InitParam["ColTarget"];
-	auto const& MaxDuration = n_InitParam["MaxDuration"];
+	auto const& CorrectionCoef = m_InitParam["CorrectionCoef"];
+	auto const& SizeTarget = m_InitParam["SizeTarget"];
+	auto const& ColTarget = m_InitParam["ColTarget"];
+	auto const& MaxDuration = m_InitParam["MaxDuration"];
 
 	// 各種パラメータ設定
 	CTexture_Manager::TYPE Type = CTexture_Manager::TYPE::CONSTELLATION0;

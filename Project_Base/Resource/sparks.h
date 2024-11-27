@@ -48,6 +48,7 @@ private:
 
 	// <static data>
 	static WORD m_nCntGenerateSpan;	// 生成スパンのカウント
+	static JSON m_InitParam;		// 基礎パラメータ
 };
 
 #endif	// _SPARKS_H_

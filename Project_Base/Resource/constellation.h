@@ -46,7 +46,7 @@ private:
 
 	// <static data>
 	static WORD m_nCntGenerateSpan;	// 生成スパンのカウント
-	static JSON n_InitParam;		// 基礎パラメータ
+	static JSON m_InitParam;		// 基礎パラメータ
 };
 
 #endif	// _CONSTELLATION_H_

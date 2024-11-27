@@ -20,6 +20,9 @@ using namespace abbr;
 //****************************************************
 WORD CSparks::m_nCntGenerateSpan = 0;	// 生成スパンのカウント
 
+// 基礎パラメータの展開
+JSON CSparks::m_InitParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\sparks.json");
+
 //============================================================================
 // 
 // publicメンバ
@@ -143,17 +146,14 @@ void CSparks::Create()
 	// 火の粉の初期設定
 	pNewInstance->Init();
 
-	// 基礎パラメータを取得
-	JSON Json = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\sparks.json");
-
 	// パラメータをコピー
-	auto const& TextureType = Json["TextureType"];
-	auto const& CorrectionCoef = Json["CorrectionCoef"];
-	auto const& SizeTarget = Json["SizeTarget"];
-	auto const& ColTarget = Json["ColTarget"];
-	auto const& MaxDuration = Json["MaxDuration"];
-	auto const& WaveCoef = Json["WaveCoef"];
-	auto const& AdderY = Json["AdderY"];
+	auto const& TextureType = m_InitParam["TextureType"];
+	auto const& CorrectionCoef = m_InitParam["CorrectionCoef"];
+	auto const& SizeTarget = m_InitParam["SizeTarget"];
+	auto const& ColTarget = m_InitParam["ColTarget"];
+	auto const& MaxDuration = m_InitParam["MaxDuration"];
+	auto const& WaveCoef = m_InitParam["WaveCoef"];
+	auto const& AdderY = m_InitParam["AdderY"];
 
 	// ランダムな座標を作成
 	pNewInstance->m_InitPos = {

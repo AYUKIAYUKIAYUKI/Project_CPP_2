@@ -335,8 +335,8 @@ void CTitle::UpdateButterfly()
 
 		// 蝶が目標地点へ飛行
 		D3DXVECTOR3 NewPos = m_pButterfly->GetPos();
-		int nFrameCoef = m_nMaxFrame - m_nNowFrame;
-		NewPos += (m_vPath[0] - NewPos) / nFrameCoef;
+		float fFrameCoef = static_cast<float>(m_nMaxFrame - m_nNowFrame);
+		NewPos += (m_vPath[0] - NewPos) / fFrameCoef;
 
 		// さらに、飛びながら上下に揺れる
 		NewPos.y += utility::GetRandomValue<float>() * 0.01f;
