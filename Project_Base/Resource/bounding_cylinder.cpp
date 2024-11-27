@@ -29,7 +29,7 @@ CBounding_Cylinder::CBounding_Cylinder() :
 	m_fRadius{ 0.0f },
 #ifdef _DEBUG
 	m_fHeight{ 0.0f },
-	m_pRenderCylinder{ nullptr }
+	m_pRenderCylinder{ CRender_Cylinder::Create() }
 #else
 	m_fHeight{ 0.0f }
 #endif // _DEBUG
@@ -88,6 +88,15 @@ void CBounding_Cylinder::SetUseCol(bool bUse)
 #endif // _DEBUG
 
 //============================================================================
+// ’†S“_‚ðÝ’è
+//============================================================================
+void CBounding_Cylinder::SetCenterPos(D3DXVECTOR3 Pos)
+{
+	CBounding_Volume::SetCenterPos(Pos);
+	m_pRenderCylinder->SetCenterSyncPos(Pos);
+}
+
+//============================================================================
 // ”¼Œa‚ðŽæ“¾
 //============================================================================
 const float& CBounding_Cylinder::GetRadius() const
@@ -101,6 +110,7 @@ const float& CBounding_Cylinder::GetRadius() const
 void CBounding_Cylinder::SetRadius(float fRad)
 {
 	m_fRadius = fRad;
+	m_pRenderCylinder->SetSyncRadius(fRad);
 }
 
 //============================================================================
@@ -117,4 +127,5 @@ const float& CBounding_Cylinder::GetHeight() const
 void CBounding_Cylinder::SetHeight(float fHeight)
 {
 	m_fHeight = fHeight;
+	m_pRenderCylinder->SetSyncHeight(fHeight);
 }

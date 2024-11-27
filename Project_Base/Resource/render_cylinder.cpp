@@ -30,7 +30,9 @@ using namespace abbr;
 //============================================================================
 CRender_Cylinder::CRender_Cylinder(LAYER Priority) :
 	CRender_Collision{ Priority },
-	m_pCylinder{ CObject_X::Create(Priority, CX_Manager::TYPE::RENDER_CYLINDER) }
+	m_fSyncRadius{ 0.0f },
+	m_fSyncHeight{ 0.0f },
+	m_pCylinderModel{ CObject_X::Create(Priority, CX_Manager::TYPE::RENDER_CYLINDER) }
 {
 
 }
@@ -55,8 +57,8 @@ HRESULT CRender_Cylinder::Init()
 	}
 
 	// 表示の透明度を設定
-	m_pCylinder->SetCol({ 1.0f, 1.0f, 1.0f, 0.5f });
-	m_pCylinder->SetUseCol(true);
+	m_pCylinderModel->SetCol({ 1.0f, 1.0f, 1.0f, 0.5f });
+	m_pCylinderModel->SetUseCol(true);
 
 	return S_OK;
 }
@@ -75,13 +77,27 @@ void CRender_Cylinder::Uninit()
 //============================================================================
 void CRender_Cylinder::Update()
 {
-	// 判定のサイズに合わせてスケールを拡大
-	const float& fRad = m_pRef->GetRadius(), fHeight = m_pRef->GetHeight();
-	const Vec3& Scale = { fRad, fHeight, fRad };
-	m_pCylinder->SetScale(Scale);
+	if (m_pRef != nullptr)
+	{ // 対象オブジェクトが設定されていたら
 
-	// オブジェクトの座標に判定を表示
-	m_pCylinder->SetPos(m_pRef->GetPos());
+		// 判定のサイズに合わせてスケールを拡大
+		const float& fRad = m_pRef->GetRadius(), fHeight = m_pRef->GetHeight();
+		const Vec3& Scale = { fRad, fHeight, fRad };
+		m_pCylinderModel->SetScale(Scale);
+
+		// オブジェクトの座標に判定を表示
+		m_pCylinderModel->SetPos(m_pRef->GetPos());
+	}
+	else
+	{ // 対象オブジェクトが設定されていない
+
+		// 判定のサイズに合わせてスケールを拡大
+		const Vec3& Scale = { m_fSyncRadius, m_fSyncHeight, m_fSyncRadius };
+		m_pCylinderModel->SetScale(Scale);
+
+		// オブジェクトの座標に判定を表示
+		m_pCylinderModel->SetPos(m_CenterSyncPos);
+	}
 }
 
 //============================================================================
@@ -93,11 +109,19 @@ void CRender_Cylinder::Draw()
 }
 
 //============================================================================
-// モデルを変更
+// シンクロ半径を設定
 //============================================================================
-void CRender_Cylinder::ChangeModel(CX_Manager::TYPE Type)
+void CRender_Cylinder::SetSyncRadius(float fRadius)
 {
-	m_pCylinder->BindModel(Type);
+	m_fSyncRadius = fRadius;
+}
+
+//============================================================================
+// シンクロ高さを設定
+//============================================================================
+void CRender_Cylinder::SetSyncHeight(float fHeight)
+{
+	m_fSyncHeight = fHeight;
 }
 
 //============================================================================
@@ -105,7 +129,7 @@ void CRender_Cylinder::ChangeModel(CX_Manager::TYPE Type)
 //============================================================================
 void CRender_Cylinder::SetCol(D3DXCOLOR Col)
 {
-	m_pCylinder->SetCol(Col);
+	m_pCylinderModel->SetCol(Col);
 }
 
 //============================================================================
@@ -113,7 +137,36 @@ void CRender_Cylinder::SetCol(D3DXCOLOR Col)
 //============================================================================
 void CRender_Cylinder::SetUseCol(bool bUse)
 {
-	m_pCylinder->SetUseCol(bUse);
+	m_pCylinderModel->SetUseCol(bUse);
+}
+
+//============================================================================
+// モデルを変更
+//============================================================================
+void CRender_Cylinder::ChangeModel(CX_Manager::TYPE Type)
+{
+	m_pCylinderModel->BindModel(Type);
+}
+
+//============================================================================
+// 生成
+//============================================================================
+CRender_Cylinder* CRender_Cylinder::Create()
+{
+	// 判定表示を生成
+	CRender_Cylinder* pRender_Collision = DBG_NEW CRender_Cylinder(LAYER::FRONT);
+
+	// 生成失敗
+	if (pRender_Collision == nullptr)
+	{
+		assert(false && "シリンダー表示の生成に失敗しました");
+	}
+
+	// 判定表示の初期設定
+	pRender_Collision->Init();
+
+
+	return pRender_Collision;
 }
 
 //============================================================================

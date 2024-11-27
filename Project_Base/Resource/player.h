@@ -47,8 +47,8 @@ public:
 	void	SetDamage(int nDamage);	// ダメージを受ける
 
 	// <getter>
-	float GetRadius() const override;						// 半径を取得
-	float GetHeight() const override;						// 高さを取得
+	float GetRadius() const;								// 半径を取得
+	float GetHeight() const;								// 高さを取得
 	const CBounding_Cylinder* const GetBndCylinder() const;	// バウンディングシリンダーを取得
 	const CPlayer_State* const GetNowState() const;			// 現在のステートを取得
 

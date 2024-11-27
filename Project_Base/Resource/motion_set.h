@@ -88,6 +88,11 @@ public:
 	// <static function>
 	static CMotion_Set* Create(JSON Json);	// 生成
 
+protected:
+
+	// <function>
+	void SetMotion(JSON Json);	// モーション情報をセット
+
 private:
 
 	// <function>

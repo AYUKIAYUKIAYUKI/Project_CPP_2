@@ -11,12 +11,12 @@
 //****************************************************
 // インクルードファイル
 //****************************************************
-#include "object_X.h"
+#include "motion_set.h"
 
 //****************************************************
 // キャラクタークラス
 //****************************************************
-class CCharacter : public CObject_X
+class CCharacter : public CMotion_Set
 {
 public:
 
@@ -33,7 +33,7 @@ public:
 	// <setter>
 	void SetCorrectCoef(float fCoef);	// 補正強度を設定
 
-	// <getter>
+	// <getter/setter>
 	const float& GetDirection() const;		// 方角を取得
 	void SetDirection(float fDirection);	// 方角を設定
 
@@ -64,12 +64,15 @@ public:
 protected:
 
 	// <function>
-	void CorrectToTarget();		// 目標値への補正
-	void AdjustLife();			// 体力の調整
+	void CorrectToTarget();	// 目標値への補間
+	void AdjustLife();		// 体力の調整
 
 	// <virtual function>
 	virtual void AutoSetRotTarget();	// 目標向きを移動方向から自動で設定
 	virtual void AutoSetPosTarget();	// 目標座標を方角から自動で設定
+
+	// <setter>
+	void SetMotion(JSON Json);	// モーションをセット
 
 private:
 
@@ -84,4 +87,4 @@ private:
 	int			m_nLife;			// 体力
 };
 
-#endif // _PLAYER_H_
+#endif // _CHARACTER_H_

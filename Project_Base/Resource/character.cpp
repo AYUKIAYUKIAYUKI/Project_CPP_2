@@ -26,10 +26,9 @@ using namespace abbr;
 // コンストラクタ
 //============================================================================
 CCharacter::CCharacter() :
-	CObject_X{ LAYER::BG },
+	CMotion_Set{},
 	m_fCorrectCoef{ 0.0f },
 	m_fDirection{ 0.0f },
-	m_fDirectionTarget{ 0.0f },
 	m_fMoveSpeed{ 0.0f },
 	m_RotTarget{ VEC3_INIT },
 	m_PosTarget{ VEC3_INIT },
@@ -52,8 +51,8 @@ CCharacter::~CCharacter()
 //============================================================================
 HRESULT CCharacter::Init()
 {
-	// Xオブジェクトの初期設定
-	if (FAILED(CObject_X::Init()))
+	// モーションセットの初期設定
+	if (FAILED(CMotion_Set::Init()))
 	{
 		return E_FAIL;
 	}
@@ -66,8 +65,8 @@ HRESULT CCharacter::Init()
 //============================================================================
 void CCharacter::Uninit()
 {
-	// Xオブジェクトの終了処理
-	CObject_X::Uninit();
+	// モーションセットの終了処理
+	CMotion_Set::Uninit();
 }
 
 //============================================================================
@@ -75,14 +74,17 @@ void CCharacter::Uninit()
 //============================================================================
 void CCharacter::Update()
 {
-	// 目標値への補間
+	// 目標値への補正
 	CorrectToTarget();
 
 	// 体力の調整
 	AdjustLife();
 
-	// Xオブジェクトの更新処理
-	CObject_X::Update();
+	// シンクロ向き・座標を設定
+	SetRotAndPosSync(GetRot(), GetPos());
+
+	// モーションセットの更新処理
+	CMotion_Set::Update();
 }
 
 //============================================================================
@@ -90,12 +92,12 @@ void CCharacter::Update()
 //============================================================================
 void CCharacter::Draw()
 {
-	// Xオブジェクトの描画処理
-	CObject_X::Draw();
+	// モーションセットの描画処理
+	CMotion_Set::Draw();
 }
 
 //============================================================================
-// 補正強度を設定
+// 補間強度を設定
 //============================================================================
 void CCharacter::SetCorrectCoef(float fCoef)
 {
@@ -133,6 +135,7 @@ void CCharacter::SetDirectionTarget(float fDirection)
 {
 	m_fDirectionTarget = fDirection;
 }
+
 
 //============================================================================
 // 移動速度を取得
@@ -221,7 +224,7 @@ void CCharacter::SetLife(int nLife)
 //============================================================================
 
 //============================================================================
-// 目標値への補間
+// 目標値への補正
 //============================================================================
 void CCharacter::CorrectToTarget()
 {
@@ -269,4 +272,14 @@ void CCharacter::AutoSetPosTarget()
 {
 	m_PosTarget.x = cosf(m_fDirectionTarget) * CField_Manager::FIELD_RADIUS;	// X方向の目標座標を設定
 	m_PosTarget.z = sinf(m_fDirectionTarget) * CField_Manager::FIELD_RADIUS;	// Z方向の目標座標を設定
+}
+
+
+//============================================================================
+// モーションをセット
+//============================================================================
+void CCharacter::SetMotion(JSON Json)
+{
+	// モーションセットクラスにモーション情報を渡す
+	CMotion_Set::SetMotion(Json);
 }

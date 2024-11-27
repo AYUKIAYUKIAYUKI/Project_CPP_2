@@ -32,17 +32,22 @@ public:
 	void	Draw() override;	// 描画処理
 
 	// <setter>
-	void ChangeModel(CX_Manager::TYPE Type);	// モデルを変更
+	void SetSyncRadius(float fRadius);			// シンクロ半径を設定
+	void SetSyncHeight(float fHeight);			// シンクロ高さを設定
 	void SetCol(D3DXCOLOR Col);					// 色を設定
 	void SetUseCol(bool bUse);					// 色反映を設定
+	void ChangeModel(CX_Manager::TYPE Type);	// モデルを変更
 
 	// <static function>
+	static CRender_Cylinder* Create();					// 生成
 	static CRender_Cylinder* Create(CObject_X* pRef);	// 生成
 
 private:
 
 	// <data>
-	CObject_X* m_pCylinder;	// シリンダー
+	float	   m_fSyncRadius;		// シンクロ半径
+	float	   m_fSyncHeight;		// シンクロ高さ
+	CObject_X* m_pCylinderModel;	// シリンダーモデル
 };
 
 #endif	// _RENDER_CYLINDER_H_

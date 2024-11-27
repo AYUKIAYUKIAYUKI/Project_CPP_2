@@ -129,6 +129,92 @@ void CMotion_Set::Draw()
 }
 
 //============================================================================
+// シンクロ向きを反映
+//============================================================================
+void CMotion_Set::SetRotSync(D3DXVECTOR3 Rot)
+{
+	// シンクロ向きを親パーツに反映
+	m_pMostParent->SetRotSync(Rot);
+}
+
+//============================================================================
+// シンクロ座標を反映
+//============================================================================
+void CMotion_Set::SetPosSync(D3DXVECTOR3 Pos)
+{
+	// シンクロ座標を親パーツに反映
+	m_pMostParent->SetPosSync(Pos);
+}
+
+//============================================================================
+// シンクロ向き・座標を反映
+//============================================================================
+void CMotion_Set::SetRotAndPosSync(D3DXVECTOR3 Rot, D3DXVECTOR3 Pos)
+{
+	// シンクロ向き・座標を親パーツに反映
+	m_pMostParent->SetRotSync(Rot);
+	m_pMostParent->SetPosSync(Pos);
+}
+
+//============================================================================
+// 向きを取得
+//============================================================================
+D3DXVECTOR3 CMotion_Set::GetRot()
+{
+	return m_Rot;
+}
+
+//============================================================================
+// 向きを設定
+//============================================================================
+void CMotion_Set::SetRot(D3DXVECTOR3 Rot)
+{
+	m_Rot = Rot;
+}
+
+//============================================================================
+// 座標を取得
+//============================================================================
+D3DXVECTOR3 CMotion_Set::GetPos()
+{
+	return m_Pos;
+}
+
+//============================================================================
+// 座標を設定
+//============================================================================
+void CMotion_Set::SetPos(D3DXVECTOR3 Pos)
+{
+	m_Pos = Pos;
+}
+
+//============================================================================
+// 再生中のモーション番号を取得
+//============================================================================
+WORD CMotion_Set::GetNowMotion()
+{
+	return m_wNowMotion;
+}
+
+//============================================================================
+// 再生中のモーション番号を設定
+//============================================================================
+void CMotion_Set::SetNowMotion(WORD nIdx)
+{
+	m_wNowMotion = nIdx;
+	m_wNowKey = 0;
+	m_wNowFrame = 0;
+}
+
+//============================================================================
+// 親パーツを取得
+//============================================================================
+CObject_Parts* CMotion_Set::GetParentParts()
+{
+	return m_pMostParent;
+}
+
+//============================================================================
 // 生成
 //============================================================================
 CMotion_Set* CMotion_Set::Create(JSON Json)
@@ -231,89 +317,100 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 }
 
 //============================================================================
-// シンクロ向きを反映
+// 
+// protectedメンバ
+// 
 //============================================================================
-void CMotion_Set::SetRotSync(D3DXVECTOR3 Rot)
-{
-	// シンクロ向きを親パーツに反映
-	m_pMostParent->SetRotSync(Rot);
-}
 
 //============================================================================
-// シンクロ座標を反映
+// モーションを設定
 //============================================================================
-void CMotion_Set::SetPosSync(D3DXVECTOR3 Pos)
+void CMotion_Set::SetMotion(JSON Json)
 {
-	// シンクロ座標を親パーツに反映
-	m_pMostParent->SetPosSync(Pos);
-}
+	// 総パーツ数を取得
+	m_wMaxParts = static_cast<WORD>(Json["MaxParts"]);
 
-//============================================================================
-// シンクロ向き・座標を反映
-//============================================================================
-void CMotion_Set::SetRotAndPosSync(D3DXVECTOR3 Rot, D3DXVECTOR3 Pos)
-{
-	// シンクロ向き・座標を親パーツに反映
-	m_pMostParent->SetRotSync(Rot);
-	m_pMostParent->SetPosSync(Pos);
-}
+	// パーツ数分のパーツオブジェクトを先行して生成
+	for (WORD wCntParts = 0; wCntParts < m_wMaxParts; ++wCntParts)
+	{
+		m_vpModelParts.push_back(CObject_Parts::Create(static_cast<CX_Manager::TYPE>(Json["ModelType"][wCntParts]), nullptr));
+	}
 
-//============================================================================
-// 向きを取得
-//============================================================================
-D3DXVECTOR3 CMotion_Set::GetRot()
-{
-	return m_Rot;
-}
+	// 生成されたパーツに対し、各種設定を行う
+	for (WORD wCntParts = 0; wCntParts < m_wMaxParts; ++wCntParts)
+	{
+		// 親パーツのインデックス番号を取得
+		const SHORT& shParentIdx = static_cast<SHORT>(Json["ParentIdx"][wCntParts]);
 
-//============================================================================
-// 向きを設定
-//============================================================================
-void CMotion_Set::SetRot(D3DXVECTOR3 Rot)
-{
-	m_Rot = Rot;
-}
+		// パーツのポインタをコピー
+		CObject_Parts* pParts = m_vpModelParts[wCntParts];
 
-//============================================================================
-// 座標を取得
-//============================================================================
-D3DXVECTOR3 CMotion_Set::GetPos()
-{
-	return m_Pos;
-}
+		if (shParentIdx == -1)
+		{
+			// インデックスが-1のものは親を持たない
+			pParts->SetParent(nullptr);
 
-//============================================================================
-// 座標を設定
-//============================================================================
-void CMotion_Set::SetPos(D3DXVECTOR3 Pos)
-{
-	m_Pos = Pos;
-}
+			// 親にのみ縮尺オフセットを反映
+			pParts->SetScaleOffset(utility::JsonConvertToVec3(Json["ScaleOffset"]));
 
-//============================================================================
-// 再生中のモーション番号を取得
-//============================================================================
-WORD CMotion_Set::GetNowMotion()
-{
-	return m_wNowMotion;
-}
+			// 親パーツをセット
+			m_pMostParent = pParts;
+		}
+		else
+		{
+			// 親パーツのポインタを渡す
+			pParts->SetParent(m_vpModelParts[shParentIdx]);
+		}
 
-//============================================================================
-// 再生中のモーション番号を設定
-//============================================================================
-void CMotion_Set::SetNowMotion(WORD nIdx)
-{
-	m_wNowMotion = nIdx;
-	m_wNowKey = 0;
-	m_wNowFrame = 0;
-}
+		// オフセット値を設定
+		pParts->SetRotOffset(utility::JsonConvertToVec3(Json["RotOffset"][wCntParts]));
+		pParts->SetPosOffset(utility::JsonConvertToVec3(Json["PosOffset"][wCntParts]));
+	}
 
-//============================================================================
-// 親パーツを取得
-//============================================================================
-CObject_Parts* CMotion_Set::GetParentParts()
-{
-	return m_pMostParent;
+	// 総モーション数を取得
+	m_wMaxMotion = static_cast<WORD>(Json["MaxMotion"]);
+
+	// モーション数分のモーション情報を生成
+	m_vpMotion.resize(m_wMaxMotion);
+
+	// モーション情報の設定
+	for (WORD wCntMotion = 0; wCntMotion < m_wMaxMotion; ++wCntMotion)
+	{
+		// モーション情報のポインタを作成
+		Motion* const pMotion = &m_vpMotion[wCntMotion];
+
+		// ループフラグを取得
+		pMotion->bLoop = static_cast<bool>(Json["Loop"][wCntMotion]);
+
+		// モーションの総キー数を取得
+		pMotion->wMaxKey = static_cast<WORD>(Json["MaxKey"][wCntMotion]);
+
+		// キー情報の設定
+		for (WORD wCntMotionKey = 0; wCntMotionKey < pMotion->wMaxKey; ++wCntMotionKey)
+		{
+			// キー情報オブジェクトを作成
+			Key Key;
+
+			// キーの総フレーム数を取得
+			Key.nMaxFrame = static_cast<WORD>(Json["MaxFrame"][wCntMotion][wCntMotionKey]);
+
+			// パーツ数分の目標値情報を生成
+			Key.apDest = DBG_NEW CMotion_Set::KeyDest[m_wMaxParts];
+
+			for (WORD wCntModelParts = 0; wCntModelParts < m_wMaxParts; ++wCntModelParts)
+			{
+				// 目標値情報のポインタを作成
+				KeyDest* const pDest = &Key.apDest[wCntModelParts];
+
+				// 各種パラメータを設定
+				pDest->ScaleTarget = utility::JsonConvertToVec3(Json["ScaleTarget"][wCntMotion][wCntMotionKey][wCntModelParts]);	// 目標縮尺
+				pDest->RotTarget = utility::JsonConvertToVec3(Json["RotTarget"][wCntMotion][wCntMotionKey][wCntModelParts]);		// 目標向き
+				pDest->PosTarget = utility::JsonConvertToVec3(Json["PosTarget"][wCntMotion][wCntMotionKey][wCntModelParts]);		// 目標座標
+			}
+
+			pMotion->vpKey.push_back(Key);
+		}
+	}
 }
 
 //============================================================================

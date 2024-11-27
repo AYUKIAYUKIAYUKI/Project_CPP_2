@@ -42,7 +42,7 @@ using namespace abbr;
 //============================================================================
 CPlayer::CPlayer() :
 	CCharacter{},
-	m_pBndCylinder{ DBG_NEW CBounding_Cylinder(this) },
+	m_pBndCylinder{ DBG_NEW CBounding_Cylinder() },
 	m_pState{ nullptr }
 {
 
@@ -135,6 +135,9 @@ void CPlayer::Update()
 
 	// 当たり判定 (判定手順は、変動した目標方角・目標座標がセーフかどうか)
 	HitCheck();
+
+	// 判定表示の中心座標を設定
+	m_pBndCylinder->SetCenterPos(GetPos());
 
 	// 自動で目標向きを移動方向に向ける
 	AutoSetRotTarget();
@@ -281,16 +284,14 @@ CPlayer* CPlayer::Create()
 	// 初期設定
 	pNewInstance->Init();
 
-	// モデルを設定
-	pNewInstance->BindModel(CX_Manager::TYPE::STATUE);
+	// モーションをセット
+	pNewInstance->SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\player_motion.json"));
 
 	// 半径を設定
-	float fRad = 0.0f;
-	pNewInstance->GetModel()->Size.x > pNewInstance->GetModel()->Size.z ? fRad = pNewInstance->GetModel()->Size.x : fRad = pNewInstance->GetModel()->Size.z;
-	pNewInstance->m_pBndCylinder->SetRadius(fRad);
+	pNewInstance->m_pBndCylinder->SetRadius(20.0f);
 
 	// 高さを設定
-	pNewInstance->m_pBndCylinder->SetHeight(pNewInstance->GetModel()->Size.y);
+	pNewInstance->m_pBndCylinder->SetHeight(20.0f);
 
 	return pNewInstance;
 }

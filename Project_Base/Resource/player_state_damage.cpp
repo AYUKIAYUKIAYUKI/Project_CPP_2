@@ -51,19 +51,19 @@ void CPlayer_State_Damage::Update()
 	// 点滅
 	if (m_nDamageDuration % 2 == 0)
 	{
-		m_pCharacter->SetUseCol(true);
-		m_pCharacter->SetCol({ 1.0f, 0.0f, 0.0f, 0.25f });
+		//m_pCharacter->SetUseCol(true);
+		//m_pCharacter->SetCol({ 1.0f, 0.0f, 0.0f, 0.25f });
 	}
 	else
 	{
-		m_pCharacter->SetUseCol(false);
+		//m_pCharacter->SetUseCol(false);
 	}
 
 	// 継続期間が最大に到達で
 	if (m_nDamageDuration >= MAX_DASH_DURATION)
 	{
 		// 通常カラーに設定
-		m_pCharacter->SetUseCol(false);
+		//m_pCharacter->SetUseCol(false);
 
 		// 通常状態へ
 		To_Default();

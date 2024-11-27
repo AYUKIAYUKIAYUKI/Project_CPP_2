@@ -34,6 +34,9 @@ public:
 	void SetUseCol(bool bUse);					// F”½‰f‚ğİ’è
 #endif // _DEBUG
 
+	// <setter>
+	void SetCenterPos(D3DXVECTOR3 Pos) override;	// ’†S“_‚ğİ’è
+
 	// <getter/setter>
 	const float& GetRadius() const;	// ”¼Œa‚ğæ“¾
 	void SetRadius(float fRad);		// ”¼Œa‚ğİ’è
