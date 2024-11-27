@@ -123,7 +123,7 @@ void CField_Manager::Update()
 	// 火の粉を生成
 	CSparks::AutoGenerate();
 
-	// 扇形の方角をプレイヤーの方角に
+	// プレイヤーの現在の方角を扇形の方角にする
 	m_pFan->SetDirection(m_pPlayer->GetDirection());
 
 	// 扇形の更新処理
@@ -250,7 +250,7 @@ void CField_Manager::GenerateBlock()
 	while (nCntBlock < MAX_BLOCK)
 	{
 		// 生成座標計算用
-		const float&	fDirection = m_pPlayer->GetDirection();	// プレイヤーの方角をコピー
+		const float&	fDirection = m_pPlayer->GetDirection();	// プレイヤーの現在の方角をコピー
 		Vec3			NewPos = VEC3_INIT, NewRot = VEC3_INIT;	// ブロック用の座標・向きを作成
 		float			fRandomRange = 0.0f;					// ランダムな方角範囲
 

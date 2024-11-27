@@ -183,6 +183,9 @@
     <ClCompile Include="Resource\constellation.cpp">
       <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\character_motion.cpp">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -369,6 +372,9 @@
     </ClInclude>
     <ClInclude Include="Resource\constellation.h">
       <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\character_motion.h">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

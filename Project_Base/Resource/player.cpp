@@ -77,9 +77,10 @@ HRESULT CPlayer::Init()
 	
 	// 補正強度を設定
 	SetCorrectCoef(CORRECT_COEF);
-
+	
 	// 初期方角を設定
 	SetDirection(D3DX_PI * -0.5f);
+	SetDirectionTarget(D3DX_PI * -0.5f);
 
 	// 初期移動速度を設定
 	SetMoveSpeed(DEFAULT_MOVE_SPEED);
@@ -135,7 +136,7 @@ void CPlayer::Update()
 	// 自動で目標座標を変動した方角に合わせる
 	AutoSetPosTarget();
 
-	// 当たり判定
+	// 当たり判定 (判定手順は、変動した目標方角・目標座標がセーフかどうか)
 	HitCheck();
 
 	// キャラクタークラスの更新処理
@@ -149,6 +150,7 @@ void CPlayer::Update()
 	{
 		ImGui::Text("State:%s", typeid(*m_pState).name());
 		ImGui::Text("Direction:%.3f", GetDirection() * (180 / D3DX_PI));
+		ImGui::Text("DirectionTarget:%.3f", GetDirectionTarget() * (180 / D3DX_PI));
 		ImGui::Text("Speed:%.1f", GetMoveSpeed());
 		ImGui::Text("Rot:X %.1f:Y %.1f:Z %.1f", GetRot().x * (180 / D3DX_PI), GetRot().y * (180 / D3DX_PI), GetRot().z * (180 / D3DX_PI));
 		ImGui::Text("RotTarget:X %.1f:Y %.1f:Z %.1f", GetRotTarget().x * (180 / D3DX_PI), GetRotTarget().y * (180 / D3DX_PI), GetRotTarget().z * (180 / D3DX_PI));
@@ -333,11 +335,11 @@ void CPlayer::HitCheck()
 #endif	// _SHOW_NORMALIZED_POSITION_HITCHECK_
 	}
 
-	// 衝突の有無を検出
+	// 衝突の有無を記録
 	bool bDetect = false;
 
-	// 当たり判定の中心点を設定
-	m_pBndCylinder->SetCenterPos(GetPos());
+	// 当たり判定の中心点を設定 (移動予定となる目標座標を使用)
+	m_pBndCylinder->SetCenterPos(GetPosTarget());
 
 	// ミドルオブジェクトを取得
 	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
@@ -355,15 +357,15 @@ void CPlayer::HitCheck()
 		}
 
 		// バウンディングシリンダーのパラメータをコピー
-		const Vec3& CylinderPosTarget = GetPosTarget();
-		const Vec3& CylinderOldPos = GetPos();
-		const float& CylinderRadius = GetRadius();
-		const float& CylinderHeight = GetHeight();
+		const Vec3& CylinderPosTarget = GetPosTarget();	// 目標座標
+		const Vec3& CylinderOldPos = GetPos();			// 現在座標
+		const float& CylinderRadius = GetRadius();		// 半径
+		const float& CylinderHeight = GetHeight();		// 高さ
 
 		// バウンディングボックスのパラメータをコピー
-		const Vec3& BoxSize = pBlock->GetSize();
-		const Vec3& BoxPos = pBlock->GetPos();
-		const float& fBoxDirection = pBlock->GetRot().y;
+		const Vec3& BoxSize = pBlock->GetSize();			// ブロックの座標
+		const Vec3& BoxPos = pBlock->GetPos();				// ブロックの座標
+		const float& fBoxDirection = pBlock->GetRot().y;	// ブロックの回転方向
 #if SHOW_NORMALIZED_POSITION_HITCHECK
 		{
 			TESTTEST->SetScale(BoxSize);
@@ -391,7 +393,7 @@ void CPlayer::HitCheck()
 			// 判定表示を赤色に
 			m_pBndCylinder->SetCol({ 1.0f, 0.0f, 0.0f, 0.5f });
 				
-			// 衝突があったことを検出
+			// 衝突があったことを記録
 			bDetect = 1;
 			
 			// 衝突面を判定
@@ -462,20 +464,20 @@ void CPlayer::HitCheck()
 				
 				CRenderer::SetTimeString("通常座標系での座標:x " + to_string(GetPosTarget().x) + ":y " + to_string(GetPosTarget().y) + ":z " + to_string(GetPosTarget().z), 600);
 #else
-				// 過去の方角へ戻す
-				SetDirection(GetOldDirection());
+				// 変更された目標方角の現在の方角へ戻す
+				SetDirectionTarget(GetDirection());
 
-				// 目標座標を再設定
+				// 変更された目標座標を現在の座標に戻す
 				AutoSetPosTarget();
 #endif
 				break;
 			}
 			case 4:	// 右
 			{
-				// 過去の方角へ戻す
-				SetDirection(GetOldDirection());
+				// 変更された目標方角の現在の方角へ戻す
+				SetDirectionTarget(GetDirection());
 
-				// 目標座標を再設定
+				// 変更された目標座標を現在の座標に戻す
 				AutoSetPosTarget();
 
 				break;

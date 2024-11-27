@@ -128,7 +128,7 @@ HRESULT CGame::Init()
 	CPlayer::Create();
 
 	/* エネミーを仮生成 */
-	CEnemy::Create();
+	//CEnemy::Create();
 
 	// フィールドマネージャーの初期設定
 	CField_Manager::GetInstance()->Init();

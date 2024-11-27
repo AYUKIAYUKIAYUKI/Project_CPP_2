@@ -111,23 +111,19 @@ void CPlayer_State_Dash::To_Damage()
 //============================================================================
 void CPlayer_State_Dash::SetPosTarget_Unnamed()
 {
-	// Œ»Ý‚Ì•ûŠp‚ðŽæ“¾
-	float fDirection = m_pCharacter->GetDirection();
+	// –Ú•W•ûŠp‚ðƒRƒs[
+	float fDirectionTarget = m_pCharacter->GetDirectionTarget();
 
 	// Ý’è‚³‚ê‚Ä‚¢‚éˆÚ“®•ûŒü‚É•ûŠp‚ð‘‰Á
 	if (m_bDirection)
 	{
-		fDirection += m_pCharacter->GetMoveSpeed() * 5.0f;
+		fDirectionTarget += m_pCharacter->GetMoveSpeed() * 5.0f;
 	}
 	else
 	{
-		fDirection += m_pCharacter->GetMoveSpeed() * -5.0f;
+		fDirectionTarget += m_pCharacter->GetMoveSpeed() * -5.0f;
 	}
 
-	m_pCharacter->SetDirection(fDirection);
-
-	Vec3 NewPosTarget = m_pCharacter->GetPosTarget();					// V‹K–Ú•WÀ•W‚ðì¬
-	NewPosTarget.x = cosf(fDirection) * CField_Manager::FIELD_RADIUS;	// X•ûŒü‚ÌÀ•W‚ðÝ’è
-	NewPosTarget.z = sinf(fDirection) * CField_Manager::FIELD_RADIUS;	// Z•ûŒü‚ÌÀ•W‚ðÝ’è
-	m_pCharacter->SetPosTarget(NewPosTarget);							// –Ú•WÀ•W‚ð”½‰f
+	// –Ú•W•ûŠp‚ð”½‰f
+	m_pCharacter->SetDirectionTarget(fDirectionTarget);
 }

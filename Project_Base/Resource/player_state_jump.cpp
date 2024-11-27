@@ -106,15 +106,15 @@ void CPlayer_State_Jump::Control()
 	CInputPad* pPad = CManager::GetPad();					// パッド
 
 	// プレイヤーのパラメータを取得
-	float fDirection = m_pCharacter->GetDirection();		// 方角を取得
-	const float& fMoveSpeed = m_pCharacter->GetMoveSpeed();	// 移動速度を取得
+	float fDirectionTarget = m_pCharacter->GetDirectionTarget();	// 目標方角を取得
+	const float& fMoveSpeed = m_pCharacter->GetMoveSpeed();			// 移動速度を取得
 
 	// X軸の入力
 	if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::LEFT) || pPad->GetJoyStickL().X < 0)
 	{ // カメラから見て左へ
 
 		// 方角を変動
-		fDirection += -fMoveSpeed * 1.25f;
+		fDirectionTarget += -fMoveSpeed * 1.25f;
 
 		// 移動入力時のみ
 		if (pMouse->GetTrigger(1))
@@ -127,7 +127,7 @@ void CPlayer_State_Jump::Control()
 	{ // カメラから見て右へ
 
 		 // 方角を変動
-		fDirection += fMoveSpeed * 1.25f;
+		fDirectionTarget += fMoveSpeed * 1.25f;
 
 		// 移動入力時のみ
 		if (pMouse->GetTrigger(1))
@@ -138,7 +138,7 @@ void CPlayer_State_Jump::Control()
 	}
 
 	// 方角を反映
-	m_pCharacter->SetDirection(fDirection);
+	m_pCharacter->SetDirectionTarget(fDirectionTarget);
 }
 
 //============================================================================

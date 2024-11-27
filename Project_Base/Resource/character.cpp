@@ -9,7 +9,6 @@
 // インクルードファイル
 //****************************************************
 #include "character.h"
-
 #include "field_manager.h"
 
 //****************************************************
@@ -29,8 +28,8 @@ using namespace abbr;
 CCharacter::CCharacter() :
 	CObject_X{ LAYER::BG },
 	m_fCorrectCoef{ 0.0f },
-	m_fOldDirection{ 0.0f },
 	m_fDirection{ 0.0f },
+	m_fDirectionTarget{ 0.0f },
 	m_fMoveSpeed{ 0.0f },
 	m_RotTarget{ VEC3_INIT },
 	m_PosTarget{ VEC3_INIT },
@@ -76,7 +75,7 @@ void CCharacter::Uninit()
 //============================================================================
 void CCharacter::Update()
 {
-	// 目標値への補正
+	// 目標値への補間
 	CorrectToTarget();
 
 	// 体力の調整
@@ -84,8 +83,6 @@ void CCharacter::Update()
 
 	// Xオブジェクトの更新処理
 	CObject_X::Update();
-
-	m_fOldDirection = m_fDirection;
 }
 
 //============================================================================
@@ -106,14 +103,6 @@ void CCharacter::SetCorrectCoef(float fCoef)
 }
 
 //============================================================================
-// 過去の方角を取得
-//============================================================================
-const float& CCharacter::GetOldDirection() const
-{
-	return m_fOldDirection;
-}
-
-//============================================================================
 // 方角を取得
 //============================================================================
 const float& CCharacter::GetDirection() const
@@ -127,6 +116,22 @@ const float& CCharacter::GetDirection() const
 void CCharacter::SetDirection(float fDirection)
 {
 	m_fDirection = fDirection;
+}
+
+//============================================================================
+// 目標方角を取得
+//============================================================================
+const float& CCharacter::GetDirectionTarget() const
+{
+	return m_fDirectionTarget;
+}
+
+//============================================================================
+// 目標方角を設定
+//============================================================================
+void CCharacter::SetDirectionTarget(float fDirection)
+{
+	m_fDirectionTarget = fDirection;
 }
 
 //============================================================================
@@ -216,11 +221,15 @@ void CCharacter::SetLife(int nLife)
 //============================================================================
 
 //============================================================================
-// 目標値への補正
+// 目標値への補間
 //============================================================================
 void CCharacter::CorrectToTarget()
 {
-	// 目標向きへ補正
+	// 目標方角へ向ける
+	utility::AdjustDirection(m_fDirectionTarget, m_fDirection);	// 方角の差を補間
+	m_fDirection += (m_fDirectionTarget - m_fDirection) * m_fCorrectCoef;
+
+	// 目標向きへ向ける
 	Vec3 NewRot = GetRot();
 	utility::AdjustAngle(NewRot.y, m_RotTarget.y);	// 角度の差を補正
 	NewRot += (m_RotTarget - NewRot) * m_fCorrectCoef;
@@ -228,7 +237,13 @@ void CCharacter::CorrectToTarget()
 
 	// 目標座標へ移動
 	Vec3 NewPos = GetPos();
+#if 0
+	NewPos.x = m_PosTarget.x;
+	NewPos.y += (m_PosTarget.y - NewPos.y) * m_fCorrectCoef;
+	NewPos.z = m_PosTarget.z;
+#else
 	NewPos += (m_PosTarget - NewPos) * m_fCorrectCoef;
+#endif
 	SetPos(NewPos);
 }
 
@@ -258,6 +273,6 @@ void CCharacter::AutoSetRotTarget()
 //============================================================================
 void CCharacter::AutoSetPosTarget()
 {
-	m_PosTarget.x = cosf(m_fDirection) * CField_Manager::FIELD_RADIUS;	// X方向の座標を設定
-	m_PosTarget.z = sinf(m_fDirection) * CField_Manager::FIELD_RADIUS;	// Z方向の座標を設定
+	m_PosTarget.x = cosf(m_fDirectionTarget) * CField_Manager::FIELD_RADIUS;	// X方向の目標座標を設定
+	m_PosTarget.z = sinf(m_fDirectionTarget) * CField_Manager::FIELD_RADIUS;	// Z方向の目標座標を設定
 }

@@ -86,11 +86,11 @@ void CEnemy::Update()
 	// 当たり判定の中心点を設定
 	m_pBndCylinder->SetCenterPos(GetPos());
 
-	// 方角の取得
-	float fNewDirection = GetDirection();
-	utility::AdjustDirection(fNewDirection);
-	fNewDirection += -DEFAULT_MOVE_SPEED * 3.0f;
-	SetDirection(fNewDirection);
+	// 目標方角の取得
+	float fNewDirectionTarget = GetDirectionTarget();
+	//utility::AdjustDirection(fNewDirectionTarget);
+	fNewDirectionTarget += -DEFAULT_MOVE_SPEED * 3.0f;
+	SetDirectionTarget(fNewDirectionTarget);
 
 	// 目標向きを移動方向に
 	AutoSetRotTarget();
@@ -108,12 +108,13 @@ void CEnemy::Update()
 #ifdef _DEBUG
 	
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-	CRenderer::SetDebugString("エネミー体力　　 : " + to_string(GetLife()));
-	CRenderer::SetDebugString("エネミー方角　　 : " + to_string(GetDirection() * (180 / D3DX_PI)));
-	CRenderer::SetDebugString("エネミー座標　　 : " + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
-	CRenderer::SetDebugString("エネミー速度　　 : " + to_string(GetMoveSpeed()));
-	CRenderer::SetDebugString("エネミー向き　　 : " + to_string(GetRot().x * (180 / D3DX_PI)) + " :  " + to_string(GetRot().y * (180 / D3DX_PI)) + " : " + to_string(GetRot().z * (180 / D3DX_PI)));
-	CRenderer::SetDebugString("エネミー目標向き : " + to_string(GetRotTarget().x * (180 / D3DX_PI)) + " :  " + to_string(GetRotTarget().y * (180 / D3DX_PI)) + " : " + to_string(GetRotTarget().z * (180 / D3DX_PI)));
+	CRenderer::SetDebugString("エネミー体力　　：" + to_string(GetLife()));
+	CRenderer::SetDebugString("エネミー方角　　：" + to_string(GetDirection() * (180 / D3DX_PI)));
+	CRenderer::SetDebugString("エネミー目標方角：" + to_string(GetDirectionTarget() * (180 / D3DX_PI)));
+	CRenderer::SetDebugString("エネミー座標　　：" + to_string(GetPos().x) + " :  " + to_string(GetPos().y) + " : " + to_string(GetPos().z));
+	CRenderer::SetDebugString("エネミー速度　　：" + to_string(GetMoveSpeed()));
+	CRenderer::SetDebugString("エネミー向き　　：" + to_string(GetRot().x * (180 / D3DX_PI)) + " :  " + to_string(GetRot().y * (180 / D3DX_PI)) + " : " + to_string(GetRot().z * (180 / D3DX_PI)));
+	CRenderer::SetDebugString("エネミー目標向き：" + to_string(GetRotTarget().x * (180 / D3DX_PI)) + " :  " + to_string(GetRotTarget().y * (180 / D3DX_PI)) + " : " + to_string(GetRotTarget().z * (180 / D3DX_PI)));
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 #endif // _DEBUG
 #endif

@@ -34,11 +34,12 @@ public:
 	void SetCorrectCoef(float fCoef);	// 補正強度を設定
 
 	// <getter>
-	const float& GetOldDirection() const;	// 過去の方角を取得
-
-	// <getter/setter>
 	const float& GetDirection() const;		// 方角を取得
 	void SetDirection(float fDirection);	// 方角を設定
+
+	// <getter/setter>
+	const float& GetDirectionTarget() const;	// 目標方角を取得
+	void SetDirectionTarget(float fDirection);	// 目標方角を設定
 
 	// <getter/setter>
 	const float& GetMoveSpeed() const;		// 移動速度を取得
@@ -73,9 +74,9 @@ protected:
 private:
 
 	// <data>
-	float		m_fCorrectCoef;		// 補正強度
-	float		m_fOldDirection;	// 過去の方角
+	float		m_fCorrectCoef;		// 補間強度
 	float		m_fDirection;		// 方角
+	float		m_fDirectionTarget;	// 目標方角
 	float		m_fMoveSpeed;		// 移動速度
 	D3DXVECTOR3	m_RotTarget;		// 目標向き
 	D3DXVECTOR3	m_PosTarget;		// 目標座標

@@ -77,15 +77,15 @@ void CPlayer_State_Default::Control()
 	CInputPad* pPad = CManager::GetPad();					// ƒpƒbƒh
 
 	// ƒvƒŒƒCƒ„[‚Ìƒpƒ‰ƒ[ƒ^‚ðŽæ“¾
-	float fDirection = m_pCharacter->GetDirection();		// •ûŠp‚ðŽæ“¾
-	const float& fMoveSpeed = m_pCharacter->GetMoveSpeed();	// ˆÚ“®‘¬“x‚ðŽæ“¾
+	float fDirectionTarget = m_pCharacter->GetDirectionTarget();	// –Ú•W•ûŠp‚ðŽæ“¾
+	const float& fMoveSpeed = m_pCharacter->GetMoveSpeed();			// ˆÚ“®‘¬“x‚ðŽæ“¾
 
 	// XŽ²‚Ì“ü—Í
 	if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::LEFT) || pPad->GetJoyStickL().X < 0)
 	{ // ƒJƒƒ‰‚©‚çŒ©‚Ä¶‚Ö
 
 		// •ûŠp‚ð•Ï“®
-		fDirection += -fMoveSpeed;
+		fDirectionTarget += -fMoveSpeed;
 
 		// ˆÚ“®“ü—ÍŽž‚É‚Ì‚Ý
 		if (pMouse->GetTrigger(1))
@@ -98,7 +98,7 @@ void CPlayer_State_Default::Control()
 	{ // ƒJƒƒ‰‚©‚çŒ©‚Ä‰E‚Ö
 		
 		 // •ûŠp‚ð•Ï“®
-		fDirection += fMoveSpeed;
+		fDirectionTarget += fMoveSpeed;
 
 		// ˆÚ“®“ü—ÍŽž‚É‚Ì‚Ý
 		if (pMouse->GetTrigger(1))
@@ -119,8 +119,8 @@ void CPlayer_State_Default::Control()
 		To_Slash();
 	}
 
-	// •ûŠp‚ð”½‰f
-	m_pCharacter->SetDirection(fDirection);
+	// –Ú•W•ûŠp‚ð”½‰f
+	m_pCharacter->SetDirectionTarget(fDirectionTarget);
 }
 
 //============================================================================
