@@ -271,7 +271,12 @@ void CMotion_Manager::PrintDebug()
 void CMotion_Manager::Edit()
 {
 	// 再生切り替え
-	ImGui::Checkbox("Playing motion", &m_bPlay);
+	if( ImGui::Checkbox("Playing motion", &m_bPlay))
+	{
+		// 再生を押したときにモーションストップのフラグが立っていたら
+		if (m_bPlay && m_MotionSet->m_bStop)
+			m_MotionSet->m_bStop = false;
+	}
 	ImGui::SameLine();
 	ImGui::Checkbox("Show this key end", &m_bShowKeyEnd);
 
