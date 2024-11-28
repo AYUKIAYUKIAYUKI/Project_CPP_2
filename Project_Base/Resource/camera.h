@@ -20,9 +20,10 @@ public:
 	~CCamera();	// デストラクタ
 
 	// <funciton>
-	HRESULT	Init();			// 初期設定
-	void	Update();		// 更新処理
-	void	SetCamera();	// カメラをセット
+	HRESULT	Init();				// 初期設定
+	void	Update();			// 更新処理
+	void	SetCamera();		// カメラをセット
+	void	SetAppearBoss();	// ボス登場用のカメラセット
 
 	// <getter/setter>
 	const D3DXVECTOR3& GetPos() const;	// 座標を取得

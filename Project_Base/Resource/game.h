@@ -30,13 +30,16 @@ public:
 
 private:
 
+	// <special function>
+	CGame();			// コンストラクタ
+	~CGame() override;	// デストラクタ
+
 	// <function>
 	HRESULT Init() override;	// 初期設定
 	void	Uninit() override;	// 終了処理
 
-	// <special function>
-	CGame();			// コンストラクタ
-	~CGame() override;	// デストラクタ
+	// <data>
+	int m_nApeearLimitBOSS;	// ボス登場カウント 
 };
 
 #endif // _GAME_H_

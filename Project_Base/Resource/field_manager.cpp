@@ -12,13 +12,12 @@
 #include "manager.h"
 #include "renderer.h"
 #include "motion_set.h"
-#include "player.h"
 #include "object_HUD.h"
-
-// オブジェクト用
+#include "player.h"
+#include "boss.h"
+#include "sparks.h"
 #include "block.h"
 #include "collision.h"
-#include "sparks.h"
 
 // デバッグ表示用
 #include "fan.h"
@@ -51,6 +50,9 @@ void CField_Manager::Update()
 {
 	// 環境装飾の更新
 	UpdateEnvironment();
+
+	// ボス登場イベント
+	AppearBossEvent();
 
 	// プレイヤーの現在の方角を扇形の方角にする
 	//m_pRenderFan->SetDirection(m_pPlayer->GetDirection());
@@ -85,6 +87,15 @@ void CField_Manager::Draw()
 {
 	// 扇形の描画処理
 	m_pRenderFan->Draw();
+}
+
+//============================================================================
+// ボス出現
+//============================================================================
+void CField_Manager::AppearBoss()
+{
+	// 銅像が振動を始める
+	m_pStatue->SetNowMotion(0);
 }
 
 //============================================================================
@@ -166,6 +177,7 @@ CField_Manager* CField_Manager::GetInstance()
 // コンストラクタ
 //============================================================================
 CField_Manager::CField_Manager() :
+	m_nCntStatueVibration{ 0 },
 	m_pStatue{ nullptr },
 	m_pMap{ nullptr },
 	m_pPlayer{ nullptr },
@@ -282,6 +294,36 @@ void CField_Manager::UpdateEnvironment()
 {
 	// 火の粉を生成
 	CSparks::AutoGenerate();
+}
+
+//============================================================================
+// ボス登場イベント
+//============================================================================
+void CField_Manager::AppearBossEvent()
+{
+	// 銅像振動カウントが最大ならこのメソッドを無視
+	if (m_nCntStatueVibration == MAX_CNT_STATUEVIBERATION)
+		return;
+
+	if (m_pStatue->GetNowMotion() == 0)
+	{ // 銅像が振動モーション再生中
+
+		// 銅像振動カウントをインクリメント
+		++m_nCntStatueVibration;
+
+		// カメラをボス登場用にセット
+		CManager::GetManager()->GetCamera()->SetAppearBoss();
+	}
+
+	// カウントが最大値に達したら
+	if (m_nCntStatueVibration == MAX_CNT_STATUEVIBERATION)
+	{
+		// 銅像が吹き飛ばされるモーションをセット
+		m_pStatue->SetNowMotion(1);
+
+		// ボスを生成する
+		CBoss::Create();
+	}
 }
 
 //============================================================================

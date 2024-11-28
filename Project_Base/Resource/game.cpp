@@ -28,6 +28,16 @@ void CGame::Update()
 	// 基底クラスの更新処理
 	CScene::Update();
 
+	// ボス登場カウントをインクリメント
+	++m_nApeearLimitBOSS;
+
+	// とりあえず30フレーム経過で
+	if (m_nApeearLimitBOSS == 30)
+	{
+		// ボス登場
+		CField_Manager::GetInstance()->AppearBoss();
+	}
+
 	// リザルト画面へ
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
 	{
@@ -37,7 +47,9 @@ void CGame::Update()
 	else if (CManager::GetKeyboard()->GetTrigger(DIK_F7))
 	{
 		CObject::ReleaseAll();
+		CField_Manager::Release();
 		this->Uninit();
+		CField_Manager::Create();
 		this->Init();
 	}
 #endif // _DEBUG
@@ -96,7 +108,8 @@ CGame* CGame::Create()
 // コンストラクタ
 //============================================================================
 CGame::CGame() :
-	CScene{}
+	CScene{},
+	m_nApeearLimitBOSS{ 0 }
 {
 
 }

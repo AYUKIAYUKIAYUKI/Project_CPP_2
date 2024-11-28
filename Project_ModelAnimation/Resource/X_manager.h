@@ -47,6 +47,7 @@ public:
 		UP2,		// ã2
 		UP3,		// ã3
 		UP5,		// ã4
+		PUMPKIN,	// ƒpƒ“ƒvƒLƒ“
 		MAX,
 	};
 

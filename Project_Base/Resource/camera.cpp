@@ -62,12 +62,6 @@ CCamera::~CCamera()
 //============================================================================
 HRESULT CCamera::Init()
 {
-	// 間距離を設定
-	m_fDistance = 250.0f;
-
-	// 俯瞰度合いを設定
-	m_fAdjust = 75.0f;
-
 	return S_OK;
 }
 
@@ -76,24 +70,6 @@ HRESULT CCamera::Init()
 //============================================================================
 void CCamera::Update()
 {
-	// ウィンドウを表示
-	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("VeiwMode"))
-	{
-		if (ImGui::Checkbox("Track", &m_bTrack)) {}
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Vertical", &m_bVertical))
-		{
-			m_bHorizon = 0;
-		}
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Horizon", &m_bHorizon))
-		{
-			m_bVertical = 0;
-		}
-	}
-	ImGui::End();
-
 	// ビューモード分岐
 	BranchMode();
 
@@ -148,6 +124,18 @@ void CCamera::SetCamera()
 
 	// ビュー行列を計算
 	CalcMtxView();
+}
+
+//============================================================================
+// ボス登場用のカメラセット
+//============================================================================
+void CCamera::SetAppearBoss()
+{
+	// 距離を目標値まで補間
+	m_fDistance += 800.0f - m_fDistance * 0.1f;
+
+	// 俯瞰度合いを目標値まで補間
+	m_fAdjust += 800.0f - m_fAdjust * 0.1f;
 }
 
 //============================================================================
@@ -251,12 +239,31 @@ void CCamera::SetUpAdjust(float fAdjust)
 //============================================================================
 void CCamera::BranchMode()
 {
+	// モード選択用ウィンドウを表示
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("VeiwMode"))
+	{
+		if (ImGui::Checkbox("Track", &m_bTrack)) {}
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Vertical", &m_bVertical))
+		{
+			m_bHorizon = 0;
+		}
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Horizon", &m_bHorizon))
+		{
+			m_bVertical = 0;
+		}
+		ImGui::End();
+	}
+
 	if (m_bTrack)
 	{ // 追従カメラモード
+
 		if (CObject::FindSpecificObject(CObject::TYPE::PLAYER))
 		{ // プレイヤーが存在していれば
 
-			// プレイヤータグを取得
+			// プレイヤーを取得
 			CPlayer* pPlayer = nullptr;
 			pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
 

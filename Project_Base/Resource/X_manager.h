@@ -50,6 +50,7 @@ public:
 		STAUP3,				// 銅像上3
 		STAUP4,				// 銅像上4
 		AROUND,				// 周辺領域
+		PUMPKIN,			// パンプキン
 		ENEMY,				// 敵
 		BLOCK,				// ブロック
 		RUBBLE_00,			// がれき00

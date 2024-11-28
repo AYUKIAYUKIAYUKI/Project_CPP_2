@@ -25,6 +25,7 @@ public:
 	{
 		NONE = 0,	// 無し
 		PLAYER,		// プレイヤー
+		BOSS,		// ボス
 		ENEMY,		// エネミー
 		BLOCK,		// ブロック
 		MAX,

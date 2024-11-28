@@ -44,8 +44,9 @@ public:
 	CField_Manager& operator=(CField_Manager&&) = delete;		// ムーブ代入演算子
 
 	// <function>
-	void Update();	// 更新処理
-	void Draw();	// 描画処理
+	void Update();		// 更新処理
+	void Draw();		// 描画処理
+	void AppearBoss();	// ボス登場
 
 	// <setter>
 	/* 方法を考えてください*/
@@ -60,6 +61,9 @@ public:
 
 private:
 
+	/// <summary> 最大銅像振動カウント </summary>
+	static constexpr float MAX_CNT_STATUEVIBERATION = 300;
+
 	// <special function>
 	CField_Manager();	// コンストラクタ
 	~CField_Manager();	// デストラクタ
@@ -69,6 +73,7 @@ private:
 	void	InitEnvironment();								// 環境装飾の初期設定
 	void	Uninit();										// 終了処理
 	void	UpdateEnvironment();							// 環境装飾の更新処理
+	void	AppearBossEvent();								// ボス登場イベント
 	void	GenerateBlock();								// ブロックの自動生成
 	bool	DetectAdjacentBlock(const D3DXVECTOR3& Pos);	// 隣接し合うブロックを検出
 	void	DestroyBlock();									// ブロックの自動削除
@@ -80,6 +85,7 @@ private:
 
 	// <data>
 	CMotion_Set* m_pStatue;				// 銅像
+	int			 m_nCntStatueVibration;	// 銅像振動カウント
 	CPlayer*	 m_pPlayer;				// プレイヤー情報
 	CObject_HUD* m_pMap;				// マップ表示
 	CObject_HUD* m_pPlayerLife[5];		// プレイヤーの体力表示
