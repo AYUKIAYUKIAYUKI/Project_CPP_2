@@ -12,12 +12,12 @@
 // インクルードファイル
 //****************************************************
 #include "object_X.h"
-#include "player.h"
 
 //****************************************************
 // 前方宣言
 //****************************************************
 class CObject_HUD;
+class CPlayer;
 class CFan;
 
 //****************************************************
@@ -36,14 +36,22 @@ public:
 	/// <summary> 重力 </summary>
 	static constexpr float FIELD_GRAVITY = -0.5f;
 
+	// <special function>
+	CField_Manager(const CField_Manager&) = delete;				// コピーコンストラクタ
+	CField_Manager& operator=(const CField_Manager&) = delete;	// コピー代入演算子
+	CField_Manager(CField_Manager&&) = delete;					// ムーブコンストラクタ
+	CField_Manager& operator=(CField_Manager&&) = delete;		// ムーブ代入演算子
+
 	// <function>
-	HRESULT Init();	// 初期設定
-	void Release();	// 解放
 	void Update();	// 更新処理
 	void Draw();	// 描画処理
 
 	// <static function>
-	static CField_Manager* GetInstance();	// 自インスタンスを取得
+	static HRESULT	Create();	// 生成
+	static void		Release();	// 解放
+
+	// <static getter>
+	static CField_Manager* GetInstance();	// フィールドマネージャーを取得
 
 private:
 
@@ -52,27 +60,27 @@ private:
 	~CField_Manager();	// デストラクタ
 
 	// <function>
-	void Create();										// 生成
-	void Uninit();										// 終了処理
-	void GenerateBlock();								// ブロックの自動生成
-	bool DetectAdjacentBlock(const D3DXVECTOR3& Pos);	// 隣接し合うブロックを検出
-	void DestroyBlock();								// ブロックの自動削除
-	void DestroyAllBlock();								// 全ブロックの削除
-	void UpdateHUD();									// HUDの更新処理
+	HRESULT Init();											// 初期設定
+	void	Uninit();										// 終了処理
+	void	GenerateBlock();								// ブロックの自動生成
+	bool	DetectAdjacentBlock(const D3DXVECTOR3& Pos);	// 隣接し合うブロックを検出
+	void	DestroyBlock();									// ブロックの自動削除
+	void	DestroyAllBlock();								// 全ブロックの削除
+	void	UpdateHUD();									// HUDの更新処理
 
 	/* けします */
 	void DEBUG_CIRCLE();	// デバッグサークル
 
 	// <data>
-	CObject_HUD*	m_pMap;								// マップ
-	CPlayer*		m_pPlayer;							// プレイヤー	
-	CObject_HUD*	m_pPlayerLife[CPlayer::MAX_LIFE];	// プレイヤーの体力
-	CObject_HUD*	m_pPlayerGauge;						// プレイヤーのゲージ
-	CObject_HUD*	m_pPlayerGaugeWindow;				// プレイヤーのゲージウィンドウ
-	CFan*			m_pFan;								// 扇形
+	CPlayer*		m_pPlayer;				// プレイヤー情報
+	CObject_HUD*	m_pMap;					// マップ表示
+	CObject_HUD*	m_pPlayerLife[5];		// プレイヤーの体力表示
+	CObject_HUD*	m_pPlayerGauge;			// プレイヤーのゲージ表示
+	CObject_HUD*	m_pPlayerGaugeWindow;	// プレイヤーのゲージウィンドウ表示
+	CFan*			m_pRenderFan;			// 扇形表示
 
 	// <static data>
-	static CField_Manager* m_pField_Manager;	// フィールドマネージャーの本体 
+	static CField_Manager* m_pFieldManager;	// フィールドマネージャーの本体 
 };
 
 #endif // _FIELD_MANAGER_H_

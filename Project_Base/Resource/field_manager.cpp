@@ -11,16 +11,16 @@
 #include "field_manager.h"
 #include "manager.h"
 #include "renderer.h"
-
-// デバッグ表示用
-#include "fan.h"
+#include "player.h"
+#include "object_HUD.h"
 
 // オブジェクト用
 #include "block.h"
 #include "collision.h"
-#include "object_HUD.h"
-#include "player.h"
 #include "sparks.h"
+
+// デバッグ表示用
+#include "fan.h"
 
 //****************************************************
 // プリプロセッサディレクティブ
@@ -35,80 +35,13 @@ using namespace abbr;
 //****************************************************
 // 静的メンバ変数の初期化
 //****************************************************
-CField_Manager* CField_Manager::m_pField_Manager = nullptr;	// フィールドマネージャーの本体
+CField_Manager* CField_Manager::m_pFieldManager = nullptr;	// フィールドマネージャーの本体
 
 //============================================================================
 // 
 // publicメンバ
 // 
 //============================================================================
-
-//============================================================================
-// 初期設定
-//============================================================================
-HRESULT CField_Manager::Init()
-{
-	// マップ表示を作成
-	m_pMap = CObject_HUD::Create("Data\\JSON\\HUD\\map.json");
-	m_pMap->BindTex(CTexture_Manager::TYPE::MAP);
-
-	// プレイヤーを検索し保持しておく
-	if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
-	{
-		// プレイヤーへのポインタを保持
-		m_pPlayer = utility::DownCast(m_pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
-	}
-	else
-	{
-		assert(false && "プレイヤーの検索結果がありませんでした");
-	}
-
-	// プレイヤーの体力表示を生成
-	for (WORD i = 0; i < CPlayer::MAX_LIFE; ++i)
-	{
-		std::string FilePath = "Data\\JSON\\HUD\\playerlife\\" + to_string(i) + ".json";
-		m_pPlayerLife[i] = CObject_HUD::Create(FilePath);
-		m_pPlayerLife[i]->BindTex(CTexture_Manager::TYPE::CIRCLE);
-	}
-
-	// プレイヤーのゲージを生成
-	m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergauge.json");
-	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAYERGAUGE);
-
-	// プレイヤーのゲージウィンドウを生成
-	m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergaugewindow.json");
-	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAYERGAUGEWINDOW);
-
-	// 扇形を生成
-	m_pFan = CFan::Create();
-
-#if CHANGE_FIELRDCREATE_STYLE
-
-	// 円の生成
-	DEBUG_CIRCLE();
-
-#endif	// CHANGE_FIELRDCREATE_STYLE
-
-	return S_OK;
-}
-
-//============================================================================
-// 解放
-//============================================================================
-void CField_Manager::Release()
-{
-	if (m_pField_Manager != nullptr)
-	{
-		// 終了処理
-		m_pField_Manager->Uninit();
-
-		// メモリを解放
-		delete m_pField_Manager;
-
-		// ポインタを初期化
-		m_pField_Manager = nullptr;
-	}
-}
 
 //============================================================================
 // 更新処理
@@ -119,10 +52,10 @@ void CField_Manager::Update()
 	CSparks::AutoGenerate();
 
 	// プレイヤーの現在の方角を扇形の方角にする
-	m_pFan->SetDirection(m_pPlayer->GetDirection());
+	m_pRenderFan->SetDirection(m_pPlayer->GetDirection());
 
-	// 扇形の更新処理
-	m_pFan->Update();
+	// 扇形表示の更新処理
+	m_pRenderFan->Update();
 
 #if !CHANGE_FIELRDCREATE_STYLE
 
@@ -145,7 +78,7 @@ void CField_Manager::Update()
 
 	if (m_pPlayer->GetLife() <= 0)
 	{
-		//CFade::SetFade(CScene::MODE::RESULT);
+		
 	}
 }
 
@@ -155,21 +88,76 @@ void CField_Manager::Update()
 void CField_Manager::Draw()
 {
 	// 扇形の描画処理
-	m_pFan->Draw();
+	m_pRenderFan->Draw();
 }
 
 //============================================================================
-// 自インスタンスを取得
+// 生成
+//============================================================================
+HRESULT CField_Manager::Create()
+{
+	// 既に生成されていたら
+	if (m_pFieldManager != nullptr)
+	{
+#ifdef _DEBUG
+		CRenderer::SetTimeString("フィールドマネージャーは既に生成されています", 120);
+#endif	// _DEBUG
+
+		return S_OK;
+	}
+
+	// インスタンスを生成
+	m_pFieldManager = DBG_NEW CField_Manager();
+
+	// 生成失敗
+	if (m_pFieldManager == nullptr)
+	{
+		return E_FAIL;
+	}
+
+	// フィールドマネージャーの初期設定
+	if (FAILED(m_pFieldManager->Init()))
+	{
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+//============================================================================
+// 解放
+//============================================================================
+void CField_Manager::Release()
+{
+	if (m_pFieldManager != nullptr)
+	{
+		// 終了処理
+		m_pFieldManager->Uninit();
+
+		// メモリを解放
+		delete m_pFieldManager;
+
+		// ポインタを初期化
+		m_pFieldManager = nullptr;
+	}
+}
+
+//============================================================================
+// フィールドマネージャーを取得
 //============================================================================
 CField_Manager* CField_Manager::GetInstance()
 {
-	if (m_pField_Manager == nullptr)
+	// 本体が存在しなければ
+	if (m_pFieldManager == nullptr)
 	{
 		// 生成
-		m_pField_Manager->Create();
+		if (FAILED(Create()))
+		{
+			assert(false && "フィールドマネージャーの取得に失敗");
+		}
 	}
 
-	return m_pField_Manager;
+	return m_pFieldManager;
 }
 
 //============================================================================
@@ -186,11 +174,12 @@ CField_Manager::CField_Manager() :
 	m_pPlayer{ nullptr },
 	m_pPlayerGauge{ nullptr },
 	m_pPlayerGaugeWindow{ nullptr },
-	m_pFan{ nullptr }
+	m_pRenderFan{ nullptr }
 {
-	for (WORD i = 0; i < CPlayer::MAX_LIFE; ++i)
+	// プレイヤーの体力表示を初期化
+	for (WORD wCnt = 0; wCnt < CPlayer::MAX_LIFE; ++wCnt)
 	{
-		m_pPlayerLife[i] = nullptr;
+		m_pPlayerLife[wCnt] = nullptr;
 	}
 }
 
@@ -203,17 +192,55 @@ CField_Manager::~CField_Manager()
 }
 
 //============================================================================
-// 生成
+// 初期設定
 //============================================================================
-void CField_Manager::Create()
+HRESULT CField_Manager::Init()
 {
-	if (m_pField_Manager != nullptr)
-	{ // 二重生成禁止
-		assert(false);
+	// プレイヤーを検索
+	if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
+	{ // 発見
+
+		// プレイヤーへのポインタを保持
+		m_pPlayer = utility::DownCast(m_pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+	}
+	else
+	{ // 見つからない
+
+		// プレイヤーを生成
+		m_pPlayer = CPlayer::Create();
 	}
 
-	// インスタンスを生成
-	m_pField_Manager = DBG_NEW CField_Manager();
+	// マップ表示を作成
+	m_pMap = CObject_HUD::Create("Data\\JSON\\HUD\\map.json");
+	m_pMap->BindTex(CTexture_Manager::TYPE::MAP);
+
+	// プレイヤーの体力表示を生成
+	for (WORD i = 0; i < CPlayer::MAX_LIFE; ++i)
+	{
+		std::string FilePath = "Data\\JSON\\HUD\\playerlife\\" + to_string(i) + ".json";
+		m_pPlayerLife[i] = CObject_HUD::Create(FilePath);
+		m_pPlayerLife[i]->BindTex(CTexture_Manager::TYPE::CIRCLE);
+	}
+
+	// プレイヤーのゲージを生成
+	m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergauge.json");
+	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAYERGAUGE);
+
+	// プレイヤーのゲージウィンドウを生成
+	m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergaugewindow.json");
+	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAYERGAUGEWINDOW);
+
+	// 扇形表示を生成
+	m_pRenderFan = CFan::Create();
+
+#if CHANGE_FIELRDCREATE_STYLE
+
+	// 円の生成
+	DEBUG_CIRCLE();
+
+#endif	// CHANGE_FIELRDCREATE_STYLE
+
+	return S_OK;
 }
 
 //============================================================================
@@ -221,11 +248,11 @@ void CField_Manager::Create()
 //============================================================================
 void CField_Manager::Uninit()
 {
-	// 扇形を破棄
-	if (m_pFan != nullptr)
+	// 扇形表示を破棄
+	if (m_pRenderFan != nullptr)
 	{
-		m_pFan->Release();	// 解放
-		m_pFan = nullptr;	// ポインタを初期化
+		m_pRenderFan->Release();	// 解放
+		m_pRenderFan = nullptr;		// ポインタを初期化
 	}
 }
 
@@ -267,7 +294,7 @@ void CField_Manager::GenerateBlock()
 				NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
 			}
 
-		} while (!m_pFan->DetectInFanRange(NewPos));
+		} while (!m_pRenderFan->DetectInFanRange(NewPos));
 
 		// 向きを決定
 		NewRot.y = (fDirection + fRandomRange) + D3DX_PI * 0.5f;
@@ -329,8 +356,8 @@ void CField_Manager::DestroyBlock()
 			CBlock* pBlock = nullptr;
 			pBlock = utility::DownCast(pBlock, pObj);
 
-			// 扇形の範囲内にブロックが無ければ破棄
-			if (!m_pFan->DetectInFanRange(pBlock->GetPos()))
+			// 扇形表示の範囲内にブロックが無ければ破棄
+			if (!m_pRenderFan->DetectInFanRange(pBlock->GetPos()))
 			{
 				pBlock->SetRelease();
 			}

@@ -12,6 +12,7 @@
 #include "mask_rectangle.h"
 
 // シングルトンクラス用
+#include "field_manager.h"
 #include "renderer.h"
 #include "scene.h"
 #include "sound.h"
@@ -222,12 +223,18 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 		return E_FAIL;
 	}
 
+	// フィールドマネージャーの生成 (レンダラー生成後)
+	if (FAILED(CField_Manager::Create()))
+	{
+		return E_FAIL;
+	}
+
 	// カメラの生成
 	m_pCamera = DBG_NEW CCamera();
 
 	if (m_pCamera == nullptr)
-	{ // 生成失敗
-		return E_FAIL;
+	{
+		return E_FAIL;	// 生成失敗
 	}
 
 	// カメラの初期化
@@ -235,9 +242,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 
 	// シーンマネージャーの生成 (カメラ生成後)
 	if (FAILED(CScene_Manager::Create()))
-	{
 		return E_FAIL;
-	}
 
 	// サウンド初期設定
 	if (FAILED(CSound::GetInstance()->Init(hWnd)))
@@ -370,8 +375,11 @@ void CManager::Uninit()
 	// サウンドの破棄
 	CSound::GetInstance()->Release();
 
-	// シーンマネージャー破棄
+	// シーンマネージャーの破棄
 	CScene_Manager::Release();
+
+	// フィールドマネージャーの破棄
+	CField_Manager::Release();
 
 	// レンダラーの破棄
 	CRenderer::Release();

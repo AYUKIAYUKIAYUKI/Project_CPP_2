@@ -13,11 +13,6 @@
 #include "title.h"
 #include "result.h"
 
-/* test */
-#include "enemy.h"
-#include "player.h"
-#include "field_manager.h"
-
 //============================================================================
 // 
 // publicメンバ
@@ -31,9 +26,6 @@ void CGame::Update()
 {
 	// 基底クラスの更新処理
 	CScene::Update();
-
-	// フィールドマネージャーの更新
-	CField_Manager::GetInstance()->Update();
 
 	// リザルト画面へ
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
@@ -57,9 +49,6 @@ void CGame::Draw()
 {
 	// 基底クラスの描画処理
 	CScene::Draw();
-
-	// フィールドマネージャーの描画
-	CField_Manager::GetInstance()->Draw();
 }
 
 //============================================================================
@@ -124,15 +113,6 @@ CGame::~CGame()
 //============================================================================
 HRESULT CGame::Init()
 {
-	// プレイヤーを生成
-	CPlayer::Create();
-
-	/* エネミーを仮生成 */
-	//CEnemy::Create();
-
-	// フィールドマネージャーの初期設定
-	CField_Manager::GetInstance()->Init();
-
 	return S_OK;
 }
 
@@ -141,6 +121,5 @@ HRESULT CGame::Init()
 //============================================================================
 void CGame::Uninit()
 {
-	// フィールドマネージャーの解放
-	CField_Manager::GetInstance()->Release();
+
 }
