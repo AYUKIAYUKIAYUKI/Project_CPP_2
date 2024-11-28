@@ -152,13 +152,13 @@ CMotion_Manager::CMotion_Manager() :
 	m_Json{},
 	m_MotionSet{ nullptr },
 	m_wSelectParts{ 0 },
-	m_CopyKey{},
+	m_CopyKey{ 0, nullptr },
 	m_wSelectKey{ 0 },
 	m_bPartsAppeal{ false },
 	m_bPlay{ false },
 	m_bShowKeyEnd{ false }
 {
-	
+
 }
 
 //============================================================================
@@ -322,10 +322,19 @@ void CMotion_Manager::Copy()
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Copy Motion"))
 	{
-		if (ImGui::Button("Cooy"))
-			m_CopyKey = GetSelectMotion()->vpKey[m_MotionSet->m_wNowKey];
-		if (ImGui::Button("Paste"))
-			GetSelectMotion()->vpKey.push_back(m_CopyKey);
+		if (m_CopyKey.apDest == nullptr)
+		{
+			if (ImGui::Button("Cooy"))
+			{
+				// 総フレーム数をコピー
+				m_CopyKey.nMaxFrame = GetSelectMotion()->vpKey[m_MotionSet->m_wNowKey].nMaxFrame;
+			}
+		}
+		else
+		{
+			if (ImGui::Button("Paste"))
+				GetSelectMotion()->vpKey.push_back(m_CopyKey);
+		}
 	}
 	ImGui::End();
 }
