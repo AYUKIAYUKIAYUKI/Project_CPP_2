@@ -56,6 +56,7 @@ public:
 		RUBBLE_00,			// ‚ª‚ê‚«00
 		RUBBLE_01,			// ‚ª‚ê‚«01
 		RUBBLE_02,			// ‚ª‚ê‚«02
+		DOME,				// ƒh[ƒ€
 		MAX,
 	};
 

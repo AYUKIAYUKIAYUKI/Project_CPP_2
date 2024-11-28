@@ -9,13 +9,9 @@
 #define _FIELD_MANAGER_H_	// 二重インクルード防止
 
 //****************************************************
-// インクルードファイル
-//****************************************************
-#include "object_X.h"
-
-//****************************************************
 // 前方宣言
 //****************************************************
+class CObject_X;
 class CMotion_Set;
 class CObject_HUD;
 class CPlayer;
@@ -84,6 +80,7 @@ private:
 	void DEBUG_CIRCLE();	// デバッグサークル
 
 	// <data>
+	CObject_X*	 m_pDome;				// ドーム
 	CMotion_Set* m_pStatue;				// 銅像
 	int			 m_nCntStatueVibration;	// 銅像振動カウント
 	CPlayer*	 m_pPlayer;				// プレイヤー情報

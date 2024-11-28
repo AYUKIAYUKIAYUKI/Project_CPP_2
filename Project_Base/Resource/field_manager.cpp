@@ -181,6 +181,7 @@ CField_Manager* CField_Manager::GetInstance()
 // コンストラクタ
 //============================================================================
 CField_Manager::CField_Manager() :
+	m_pDome{ nullptr },
 	m_nCntStatueVibration{ 0 },
 	m_pStatue{ nullptr },
 	m_pMap{ nullptr },
