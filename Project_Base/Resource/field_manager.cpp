@@ -9,16 +9,11 @@
 // インクルードファイル
 //****************************************************
 #include "field_manager.h"
-#include "fan.h"
-
-// 入力取得用
 #include "manager.h"
-
-// デバッグ表示用
 #include "renderer.h"
 
-// シーン切り替え用
-#include "fade.h"
+// デバッグ表示用
+#include "fan.h"
 
 // オブジェクト用
 #include "block.h"

@@ -17,6 +17,7 @@
 #include "object_X.h"
 #include "field_manager.h"
 #include "constellation.h"
+#include "sparks.h"
 
 #include "object_3D.h"
 
@@ -200,6 +201,9 @@ void CTitle::Uninit()
 //============================================================================
 void CTitle::UpdateEnvironment()
 {
+	// ’±‚Ìü•Ó‚É‰Î‚Ì•²‚ğ”­¶
+	CSparks::AreaGenerate(m_pButterfly->GetPos());
+
 	// ’±‚ÌXV
 	UpdateButterfly();
 

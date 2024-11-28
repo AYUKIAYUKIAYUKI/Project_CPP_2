@@ -1,10 +1,10 @@
 {
 	"Priority": 3,
 	"TextureType": 7,
-	"CorrectionCoef" : 0.01,
-	"SizeTarget": [ 3.5, 3.5, 3.5 ],
-	"ColTarget": [ 1.0, 0.5, 0.25, 0.8 ],
-	"MaxDuration": 360,
-	"WaveCoef": 15.0,
-	"AdderY": 20.0
+	"CorrectionCoef" : 0.025,
+	"SizeTarget": [ 3.0, 3.0, 3.0 ],
+	"ColTarget": [ 1.0, 0.5, 0.25, 0.35 ],
+	"MaxDuration": 300,
+	"WaveCoef": 5.0,
+	"AdderY": 5.0
 }

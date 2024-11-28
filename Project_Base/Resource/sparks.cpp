@@ -106,7 +106,7 @@ void CSparks::Draw()
 }
 
 //============================================================================
-// 自動生成
+// 自動発生
 //============================================================================
 void CSparks::AutoGenerate()
 {
@@ -114,13 +114,32 @@ void CSparks::AutoGenerate()
 	m_nCntGenerateSpan++;
 
 	// 設定された生成スパンに到達で
-	if (m_nCntGenerateSpan > NUM_GENERATE_SPAN)
+	if (m_nCntGenerateSpan > AUTOGENERATE_SPAN)
 	{
 		// 生成スパンのカウントをリセット
 		m_nCntGenerateSpan = 0;
 
-		// 生成
-		Create();
+		// 自動生成
+		AutoCreate();
+	}
+}
+
+//============================================================================
+// 局所発生
+//============================================================================
+void CSparks::AreaGenerate(D3DXVECTOR3 Pos)
+{
+	// 生成スパンをカウントアップ
+	m_nCntGenerateSpan++;
+
+	// 設定された生成スパンに到達で
+	if (m_nCntGenerateSpan > AREAGENERATE_SPAN)
+	{
+		// 生成スパンのカウントをリセット
+		m_nCntGenerateSpan = 0;
+
+		// 局所生成
+		AreaCreate(Pos);
 	}
 }
 
@@ -131,9 +150,9 @@ void CSparks::AutoGenerate()
 //============================================================================
 
 //============================================================================
-// 生成
+// 自動生成
 //============================================================================
-void CSparks::Create()
+void CSparks::AutoCreate()
 {
 	CSparks* pNewInstance = DBG_NEW CSparks();
 
@@ -160,6 +179,51 @@ void CSparks::Create()
 		utility::GetRandomValue<float>() * 1.5f,
 		fabsf(utility::GetRandomValue<float>()),
 		utility::GetRandomValue<float>() * 1.5f
+	};
+
+	// 各種パラメータ設定
+	pNewInstance->BindTex(static_cast<CTexture_Manager::TYPE>(TextureType));					// テクスチャ
+	pNewInstance->SetCorrectionCoef(static_cast<float>(CorrectionCoef));						// 補正係数
+	pNewInstance->SetSizeTarget(Vec3(SizeTarget[0], SizeTarget[1], SizeTarget[2]));				// 目標サイズ
+	pNewInstance->SetPos(pNewInstance->m_InitPos);												// 座標
+	pNewInstance->SetPosTarget(pNewInstance->m_InitPos);										// 目標座標
+	pNewInstance->SetColTarget(XCol(ColTarget[0], ColTarget[1], ColTarget[2], ColTarget[3]));	// 目標色
+	pNewInstance->SetMaxDuration(static_cast<int>(MaxDuration));								// 最大期間
+	pNewInstance->m_fWaveCoef = static_cast<float>(WaveCoef);									// 波打ち強度
+	pNewInstance->m_fAdderY = static_cast<float>(AdderY);										// 上昇量
+}
+
+//============================================================================
+// 局所生成
+//============================================================================
+void CSparks::AreaCreate(D3DXVECTOR3 Pos)
+{
+	// 火の粉を生成
+	CSparks* pNewInstance = DBG_NEW CSparks();
+
+	// 生成失敗
+	if (!pNewInstance)
+	{
+		assert(false && "火の粉の生成に失敗");
+	}
+
+	// 火の粉の初期設定
+	pNewInstance->Init();
+
+	// パラメータをコピー
+	auto const& TextureType = m_InitParam["TextureType"];
+	auto const& CorrectionCoef = m_InitParam["CorrectionCoef"];
+	auto const& SizeTarget = m_InitParam["SizeTarget"];
+	auto const& ColTarget = m_InitParam["ColTarget"];
+	auto const& MaxDuration = m_InitParam["MaxDuration"];
+	auto const& WaveCoef = m_InitParam["WaveCoef"];
+	auto const& AdderY = m_InitParam["AdderY"];
+
+	// 指定された場所を基準にランダムな座標を作成
+	pNewInstance->m_InitPos = {
+		Pos.x + utility::GetRandomValue<float>(),
+		Pos.y + fabsf(utility::GetRandomValue<float>()),
+		Pos.z + utility::GetRandomValue<float>()
 	};
 
 	// 各種パラメータ設定

@@ -31,15 +31,20 @@ public:
 	void	Draw() override;	// 描画処理
 
 	// <static function>
-	static void AutoGenerate();	// 自動生成
+	static void AutoGenerate();					// 自動発生
+	static void AreaGenerate(D3DXVECTOR3 Pos);	// 局所発生
 
 private:
 
-	/// <summary> 生成スパン </summary>
-	static constexpr WORD NUM_GENERATE_SPAN = 30;
+	/// <summary> 自動発生スパン </summary>
+	static constexpr WORD AUTOGENERATE_SPAN = 30;
+
+	/// <summary> 局所発生スパン </summary>
+	static constexpr WORD AREAGENERATE_SPAN = 10;
 
 	// <static fuction>
-	static void Create();	// 生成
+	static void AutoCreate();				// 自動生成
+	static void AreaCreate(D3DXVECTOR3);	// 局所生成
 
 	// <data>
 	D3DXVECTOR3	m_InitPos;		// 初期座標
