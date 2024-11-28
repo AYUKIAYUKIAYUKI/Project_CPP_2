@@ -116,6 +116,9 @@ void CPlayer_State_Jump::Control()
 		// •ûŠp‚ð•Ï“®
 		fDirectionTarget += -fMoveSpeed * 1.25f;
 
+		// Ž©“®‚Å–Ú•WÀ•W‚ð•Ï“®‚µ‚½•ûŠp‚É‡‚í‚¹‚é
+		m_pCharacter->AutoSetRotTarget();
+
 		// ˆÚ“®“ü—ÍŽž‚Ì‚Ý
 		if (pMouse->GetTrigger(1))
 		{
@@ -128,6 +131,9 @@ void CPlayer_State_Jump::Control()
 
 		 // •ûŠp‚ð•Ï“®
 		fDirectionTarget += fMoveSpeed * 1.25f;
+
+		// Ž©“®‚Å–Ú•WÀ•W‚ð•Ï“®‚µ‚½•ûŠp‚É‡‚í‚¹‚é
+		m_pCharacter->AutoSetRotTarget();
 
 		// ˆÚ“®“ü—ÍŽž‚Ì‚Ý
 		if (pMouse->GetTrigger(1))

@@ -139,9 +139,6 @@ void CPlayer::Update()
 	// 円柱バウンディングの中心点をプレイヤーの座標に
 	m_pBndCylinder->SetCenterPos(GetPos());
 
-	// 自動で目標向きを移動方向に向ける
-	AutoSetRotTarget();
-
 	// キャラクタークラスの更新処理
 	CCharacter::Update();
 

@@ -30,7 +30,7 @@ public:
 	static constexpr int MAX_LIFE = 5;
 
 	/// <summary> プレイヤーのデフォルト移動速度 </summary>
-	static constexpr float DEFAULT_MOVE_SPEED = 0.005f;
+	static constexpr float DEFAULT_MOVE_SPEED = 0.0035f;
 
 	/// <summary> 目標値への補間強度 </summary>
 	static constexpr float CORRECT_COEF = 0.5f;

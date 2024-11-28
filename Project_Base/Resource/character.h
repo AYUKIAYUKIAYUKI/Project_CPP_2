@@ -61,6 +61,9 @@ public:
 	const int& GetLife() const;	// 体力を取得
 	void SetLife(int nLife);	// 体力を設定
 
+	// <virtual function>
+	virtual void AutoSetRotTarget();	// 目標向きを移動方向から自動で設定
+
 protected:
 
 	// <function>
@@ -68,7 +71,6 @@ protected:
 	void AdjustLife();		// 体力の調整
 
 	// <virtual function>
-	virtual void AutoSetRotTarget();	// 目標向きを移動方向から自動で設定
 	virtual void AutoSetPosTarget();	// 目標座標を方角から自動で設定
 
 	// <setter>

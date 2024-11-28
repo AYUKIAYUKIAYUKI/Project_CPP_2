@@ -9,6 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "player_state_default.h"
+#include "character.h"
 #include "player_state_dash.h"
 #include "player_state_jump.h"
 #include "player_state_slash.h"
@@ -87,6 +88,9 @@ void CPlayer_State_Default::Control()
 		// 方角を変動
 		fDirectionTarget += -fMoveSpeed;
 
+		// 自動で目標座標を変動した方角に合わせる
+		m_pCharacter->AutoSetRotTarget();
+
 		// 移動入力時にのみ
 		if (pMouse->GetTrigger(1))
 		{
@@ -99,6 +103,9 @@ void CPlayer_State_Default::Control()
 		
 		 // 方角を変動
 		fDirectionTarget += fMoveSpeed;
+
+		// 自動で目標座標を変動した方角に合わせる
+		m_pCharacter->AutoSetRotTarget();
 
 		// 移動入力時にのみ
 		if (pMouse->GetTrigger(1))

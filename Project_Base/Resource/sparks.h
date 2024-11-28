@@ -40,7 +40,7 @@ private:
 	static constexpr WORD AUTOGENERATE_SPAN = 30;
 
 	/// <summary> ã«èäî≠ê∂ÉXÉpÉì </summary>
-	static constexpr WORD AREAGENERATE_SPAN = 10;
+	static constexpr WORD AREAGENERATE_SPAN = 20;
 
 	// <static fuction>
 	static void AutoCreate();				// é©ìÆê∂ê¨

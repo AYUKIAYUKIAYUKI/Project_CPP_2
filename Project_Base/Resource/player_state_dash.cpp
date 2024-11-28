@@ -126,4 +126,7 @@ void CPlayer_State_Dash::SetPosTarget_Unnamed()
 
 	// –Ú•W•ûŠp‚ð”½‰f
 	m_pCharacter->SetDirectionTarget(fDirectionTarget);
+
+	// Ž©“®‚Å–Ú•WÀ•W‚ð•Ï“®‚µ‚½•ûŠp‚É‡‚í‚¹‚é
+	m_pCharacter->AutoSetRotTarget();
 }
