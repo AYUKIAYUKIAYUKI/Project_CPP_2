@@ -40,7 +40,7 @@ CMotion_Manager* CMotion_Manager::m_pMotionManager = nullptr;	// ƒ‚[ƒVƒ‡ƒ“ƒ}ƒl
 void CMotion_Manager::Update()
 {
 	// ƒEƒBƒ“ƒhƒE‚ğ•\¦
-	ImVec2 Rect = { 600, 950 };
+	ImVec2 Rect = { 600, 975 };
 	ImGui::SetNextWindowSize(Rect);
 	ImGui::SetNextWindowPos({ SCREEN_WIDTH - (Rect.x + 100), 50 });
 	ImGui::Begin("Edit MotionList");

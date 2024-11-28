@@ -23,8 +23,8 @@
 	"MaxMotion": 2,
 	"MaxParts": 2,
 	"ModelType": [
-		6,
-		7
+		12,
+		13
 	],
 	"ParentIdx": [
 		-1,
@@ -235,9 +235,9 @@
 		]
 	],
 	"ScaleOffset": [
-		10.0,
-		10.0,
-		10.0
+		20.0,
+		20.0,
+		20.0
 	],
 	"ScaleTarget": [
 		[
