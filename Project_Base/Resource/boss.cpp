@@ -91,6 +91,12 @@ void CBoss::Uninit()
 //============================================================================
 void CBoss::Update()
 {
+	// 登場モーションが終了したら通常モーションへ
+	if (GetNowMotion() == 0 && GetStopState())
+	{
+		SetNowMotion(1);
+	}
+
 	// 円柱バウンディングの中心点をモデルの中心に
 	m_pBndCylinder->SetCenterPos(GetParentParts()->GetPos());
 

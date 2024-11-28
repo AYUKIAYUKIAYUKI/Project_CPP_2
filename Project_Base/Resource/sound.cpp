@@ -308,7 +308,7 @@ CSound::CSound()
 	m_aSizeAudio[static_cast<int>(LABEL::MAX)] = {};	// オーディオデータサイズ
 
 	// サウンド情報
-	m_aSoundInfo[0] = { "Data\\BGM\\test.wav", -1, 1.0f };
+	m_aSoundInfo[0] = { "Data\\BGM\\inst.wav", -1, 1.0f };
 }
 
 //=============================================================================
