@@ -465,7 +465,7 @@ void CMotion_Manager::EditOffset()
 //============================================================================
 void CMotion_Manager::EditMotion()
 {
-	// 選択キー切り替え
+	// 選択モーション切り替え
 	ImGui::Separator();
 	ImGui::BulletText("Select Motion");
 	if (ImGui::Button("FirstMotion"))
@@ -501,9 +501,16 @@ void CMotion_Manager::EditMotion()
 	{
 		m_wSelectKey = GetSelectMotion()->wMaxKey - 1;
 	}
+	
+	// ループフラグ切り替え
+	ImGui::BulletText("Edit Motion");
+	ImGui::Checkbox("Motion Loop", &m_MotionSet->m_vpMotion[m_MotionSet->m_wNowMotion].bLoop);
+
+	// 選択中のモーションのループフラグを立てたときに、現在の再生モーションがストップしていたら
+	if (m_MotionSet->m_vpMotion[m_MotionSet->m_wNowMotion].bLoop && m_MotionSet->m_bStop)
+		m_MotionSet->m_bStop = false;
 
 	// 総モーション数の切り替え
-	ImGui::BulletText("Edit Motion");
 	if (ImGui::Button("--Motion") && m_MotionSet->m_wMaxMotion > 1)
 	{
 		// 総モーション数をデクリメントし
