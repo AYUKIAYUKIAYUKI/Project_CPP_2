@@ -37,6 +37,16 @@ public:
 		BUTBODY,
 		BUTLWING,
 		BUTRWING,
+		AROUND,		// é¸ï”
+		DOWN0,		// â∫0
+		DOWN1,		// â∫1
+		DOWN2,		// â∫2
+		DOWN3,		// â∫3
+		UP0,		// è„0
+		UP1,		// è„1
+		UP2,		// è„2
+		UP3,		// è„3
+		UP5,		// è„4
 		MAX,
 	};
 

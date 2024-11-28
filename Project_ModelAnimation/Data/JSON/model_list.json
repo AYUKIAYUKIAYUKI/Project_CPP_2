@@ -16,6 +16,16 @@
 		"Data\\MODEL\\TREE\\onlystone.x",
 		"Data\\MODEL\\CHARACTER\\BUTTERFLY\\body.x",
 		"Data\\MODEL\\CHARACTER\\BUTTERFLY\\Lwing.x",
-		"Data\\MODEL\\CHARACTER\\BUTTERFLY\\Rwing.x"
+		"Data\\MODEL\\CHARACTER\\BUTTERFLY\\Rwing.x",
+		"Data\\MODEL\\STATUE\\around.x",
+		"Data\\MODEL\\STATUE\\down0.x",
+		"Data\\MODEL\\STATUE\\down1.x",
+		"Data\\MODEL\\STATUE\\down2.x",
+		"Data\\MODEL\\STATUE\\down3.x",
+		"Data\\MODEL\\STATUE\\up0.x",
+		"Data\\MODEL\\STATUE\\up1.x",
+		"Data\\MODEL\\STATUE\\up2.x",
+		"Data\\MODEL\\STATUE\\up3.x",
+		"Data\\MODEL\\STATUE\\up4.x"
 	]
 }

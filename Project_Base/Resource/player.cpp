@@ -136,6 +136,9 @@ void CPlayer::Update()
 	// 当たり判定 (判定手順は、変動した目標方角・目標座標がセーフかどうか)
 	HitCheck();
 
+	// 円柱バウンディングの中心点をプレイヤーの座標に
+	m_pBndCylinder->SetCenterPos(GetPos());
+
 	// 自動で目標向きを移動方向に向ける
 	AutoSetRotTarget();
 
