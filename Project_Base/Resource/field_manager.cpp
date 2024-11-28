@@ -11,6 +11,8 @@
 #include "field_manager.h"
 #include "manager.h"
 #include "renderer.h"
+#include "scene.h"
+#include "game.h"
 #include "motion_set.h"
 #include "object_HUD.h"
 #include "player.h"
@@ -50,33 +52,36 @@ void CField_Manager::Update()
 	// 環境装飾の更新
 	UpdateEnvironment();
 
-	// ボス登場イベント
-	AppearBossEvent();
+	if (typeid(*CScene_Manager::GetInstance()->GetScene()) == typeid(CGame))
+	{
+		// ボス登場イベント
+		AppearBossEvent();
 
-	// プレイヤーの現在の方角を扇形の方角にする
-	//m_pRenderFan->SetDirection(m_pPlayer->GetDirection());
+		// プレイヤーの現在の方角を扇形の方角にする
+		m_pRenderFan->SetDirection(m_pPlayer->GetDirection());
 
-	// 扇形表示の更新処理
-	//m_pRenderFan->Update();
+		// 扇形表示の更新処理
+		m_pRenderFan->Update();
 
 #if !CHANGE_FIELRDCREATE_STYLE
 
-	// ブロックの自動生成
-	//GenerateBlock();
+		// ブロックの自動生成
+		GenerateBlock();
 
-	// ブロックの自動削除
-	//DestroyBlock();
+		// ブロックの自動削除
+		DestroyBlock();
 
 #endif	// CHANGE_FIELRDCREATE_STYLE
 
-	// 仮の全破棄メソッド
-	if (CManager::GetKeyboard()->GetTrigger(DIK_DELETE))
-	{
-		DestroyAllBlock();
-	}
+		// 仮の全破棄メソッド
+		if (CManager::GetKeyboard()->GetTrigger(DIK_DELETE))
+		{
+			DestroyAllBlock();
+		}
 
-	// HUDの更新
-	//UpdateHUD();
+		// HUDの更新
+		UpdateHUD();
+	}
 }
 
 //============================================================================

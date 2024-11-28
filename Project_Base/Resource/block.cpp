@@ -94,6 +94,7 @@ void CBlock::Uninit()
 //============================================================================
 void CBlock::Update()
 {
+#if 0
 	// すぐにけせ
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	ImGui::Begin("Block Param");
@@ -109,6 +110,7 @@ void CBlock::Update()
 	NewRot.y = fRotY;
 	SetRot(NewRot);
 	ImGui::End();
+#endif
 
 	// 箱バウンディングに中心点・サイズ・向きをセット
 	m_pBndBox->SetCenterPos(GetPos());
