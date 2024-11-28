@@ -53,15 +53,15 @@ void CField_Manager::Update()
 	UpdateEnvironment();
 
 	// プレイヤーの現在の方角を扇形の方角にする
-	m_pRenderFan->SetDirection(m_pPlayer->GetDirection());
+	//m_pRenderFan->SetDirection(m_pPlayer->GetDirection());
 
 	// 扇形表示の更新処理
-	m_pRenderFan->Update();
+	//m_pRenderFan->Update();
 
 #if !CHANGE_FIELRDCREATE_STYLE
 
 	// ブロックの自動生成
-	GenerateBlock();
+	//GenerateBlock();
 
 	// ブロックの自動削除
 	//DestroyBlock();
@@ -75,12 +75,7 @@ void CField_Manager::Update()
 	}
 
 	// HUDの更新
-	UpdateHUD();
-
-	if (m_pPlayer->GetLife() <= 0)
-	{
-		
-	}
+	//UpdateHUD();
 }
 
 //============================================================================
@@ -201,19 +196,20 @@ HRESULT CField_Manager::Init()
 	// 環境装飾の初期設定
 	InitEnvironment();
 
-	// プレイヤーを検索
-	if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
-	{ // 発見
+	//// プレイヤーを検索
+	//if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
+	//{ // 発見
 
-		// プレイヤーへのポインタを保持
-		m_pPlayer = utility::DownCast(m_pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
-	}
-	else
-	{ // 見つからない
+	//	// プレイヤーへのポインタを保持
+	//	m_pPlayer = utility::DownCast(m_pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+	//}
+	//else
+	//{ // 見つからない
 
-		// プレイヤーを生成
-		m_pPlayer = CPlayer::Create();
-	}
+	//	// プレイヤーを生成
+	//	//m_pPlayer = CPlayer::Create();
+	//	assert(false && "プレイヤーが不在");
+	//}
 
 	// マップ表示を作成
 	m_pMap = CObject_HUD::Create("Data\\JSON\\HUD\\map.json");

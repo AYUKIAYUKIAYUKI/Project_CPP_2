@@ -10,8 +10,9 @@
 //****************************************************
 #include "game.h"
 #include "manager.h"
-#include "title.h"
 #include "result.h"
+#include "player.h"
+#include "field_manager.h"
 
 //============================================================================
 // 
@@ -113,6 +114,12 @@ CGame::~CGame()
 //============================================================================
 HRESULT CGame::Init()
 {
+	// プレイヤーを生成
+	CPlayer* pPlayer = CPlayer::Create();
+
+	// プレイヤーをセット
+	CField_Manager::GetInstance()->SetPlayer(pPlayer);
+
 	return S_OK;
 }
 

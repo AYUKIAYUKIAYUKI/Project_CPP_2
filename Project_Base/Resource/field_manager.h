@@ -47,6 +47,10 @@ public:
 	void Update();	// 更新処理
 	void Draw();	// 描画処理
 
+	// <setter>
+	/* 方法を考えてください*/
+	void SetPlayer(CPlayer* p) { m_pPlayer = p; };
+
 	// <static function>
 	static HRESULT	Create();	// 生成
 	static void		Release();	// 解放
