@@ -62,7 +62,7 @@ public:
 private:
 
 	/// <summary> 最大銅像振動カウント </summary>
-	static constexpr float MAX_CNT_STATUEVIBERATION = 300;
+	static constexpr int MAX_CNT_STATUEVIBERATION = 300;
 
 	// <special function>
 	CField_Manager();	// コンストラクタ

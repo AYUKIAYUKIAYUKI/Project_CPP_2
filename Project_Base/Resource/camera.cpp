@@ -142,8 +142,19 @@ void CCamera::SetAppearBoss()
 		ImGui::End();
 	}
 
+	// プレイヤーを取得
+	CPlayer* pPlayer = nullptr;
+	pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+
+	// カメラのパラメータを自動で設定
+	m_PosTarget = pPlayer->GetPosTarget();				// カメラ目標座標はプレイヤーの座標に
+	const Vec3& NegVec = VEC3_INIT - pPlayer->GetPos();	// プレイヤーから原点への逆位置ベクトルを作成
+	m_RotTarget = VEC3_INIT;							// カメラの目標向きをリセット
+	m_RotTarget.y = atan2f(NegVec.x, NegVec.z);		// カメラの目標向きを作成した逆位置ベクトル方向に
+	utility::AdjustAngle(m_Rot.y, m_RotTarget.y);		// カメラ回転の角度の差を補正
+
 	// 距離を目標値まで補間
-	m_fDistance += ((500.0f + a) - m_fDistance) * COEF_ADJUST;
+	m_fDistance += ((550.0f + a) - m_fDistance) * COEF_ADJUST;
 
 	// 俯瞰度合いを目標値まで補間
 	m_fAdjust += ((300.0f + b) - m_fAdjust) * COEF_ADJUST;
@@ -286,9 +297,10 @@ void CCamera::BranchViewMode()
 
 		if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) == nullptr)
 		{ // プレイヤーが存在していない時
-
+#ifdef _DEBUG
 			// カメラ操作を可能に
 			Control();
+#endif // _DEBUG
 		}
 		else
 		{ // プレイヤーが存在している時
@@ -301,7 +313,7 @@ void CCamera::BranchViewMode()
 			m_PosTarget = pPlayer->GetPosTarget();				// カメラ目標座標はプレイヤーの座標に
 			const Vec3& NegVec = VEC3_INIT - pPlayer->GetPos();	// プレイヤーから原点への逆位置ベクトルを作成
 			m_RotTarget = VEC3_INIT;							// カメラの目標向きをリセット
-			m_RotTarget.y = atan2f(NegVec.z, NegVec.x);			// カメラの目標向きを作成した逆位置ベクトル方向に
+			m_RotTarget.y = atan2f(NegVec.x, NegVec.z);		// カメラの目標向きを作成した逆位置ベクトル方向に
 			utility::AdjustAngle(m_Rot.y, m_RotTarget.y);		// カメラ回転の角度の差を補正
 			m_fDistance = 150.0f;								// 間距離を固定
 			m_fAdjust = 25.0f;									// 俯瞰度合いを固定
@@ -309,9 +321,10 @@ void CCamera::BranchViewMode()
 	}
 	else
 	{ // 追従しない
-
+#ifdef _DEBUG
 		// カメラ操作
 		Control();
+#endif // _DEBUG
 	}
 }
 

@@ -15,9 +15,8 @@
 #include "object_HUD.h"
 #include "player.h"
 #include "boss.h"
-#include "sparks.h"
 #include "block.h"
-#include "collision.h"
+#include "sparks.h"
 
 // デバッグ表示用
 #include "fan.h"
@@ -301,10 +300,11 @@ void CField_Manager::UpdateEnvironment()
 //============================================================================
 void CField_Manager::AppearBossEvent()
 {
-	// 銅像振動カウントが最大ならこのメソッドを無視
-	if (m_nCntStatueVibration == MAX_CNT_STATUEVIBERATION)
+	// 銅像のモーションが終了していたらこのメソッドを無視
+	if (m_pStatue->GetStopState())
 		return;
 
+	// 再生中のモーションに応じて処理を分岐
 	if (m_pStatue->GetNowMotion() == 0)
 	{ // 銅像が振動モーション再生中
 
@@ -312,20 +312,36 @@ void CField_Manager::AppearBossEvent()
 		++m_nCntStatueVibration;
 
 		// カメラを振動させる
-		CManager::GetManager()->GetCamera()->SetVibration(0.02f);
+		CManager::GetManager()->GetCamera()->SetVibration(0.01f);
 
 		// カメラをボス登場用にセット
 		CManager::GetManager()->GetCamera()->SetAppearBoss();
+
+		// カウントが最大値に達したら
+		if (m_nCntStatueVibration >= MAX_CNT_STATUEVIBERATION)
+		{
+			// カウントをリセット
+			m_nCntStatueVibration = 0;
+
+			// 銅像が吹き飛ばされるモーションをセット
+			m_pStatue->SetNowMotion(1);
+
+			// ボスを生成する
+			CBoss::Create();
+		}
 	}
+	else if (m_pStatue->GetNowMotion() == 1)
+	{ // 銅像が吹きとばされるモーションを再生中
 
-	// カウントが最大値に達したら
-	if (m_nCntStatueVibration == MAX_CNT_STATUEVIBERATION)
-	{
-		// 銅像が吹き飛ばされるモーションをセット
-		m_pStatue->SetNowMotion(1);
+		// 銅像振動カウントをインクリメント
+		++m_nCntStatueVibration;
 
-		// ボスを生成する
-		CBoss::Create();
+		// モーション内で銅像が崩壊するあたりまでカウントされたら
+		if (m_nCntStatueVibration >= 40)
+		{
+			// カメラを振動させる
+			CManager::GetManager()->GetCamera()->SetVibration(0.05f);
+		}
 	}
 }
 
