@@ -136,9 +136,6 @@ void CPlayer::Update()
 	// 当たり判定 (判定手順は、変動した目標方角・目標座標がセーフかどうか)
 	HitCheck();
 
-	// 判定表示の中心座標を設定
-	m_pBndCylinder->SetCenterPos(GetPos());
-
 	// 自動で目標向きを移動方向に向ける
 	AutoSetRotTarget();
 
@@ -288,10 +285,10 @@ CPlayer* CPlayer::Create()
 	pNewInstance->SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\player_motion.json"));
 
 	// 半径を設定
-	pNewInstance->m_pBndCylinder->SetRadius(20.0f);
+	pNewInstance->m_pBndCylinder->SetRadius(5.0f);
 
 	// 高さを設定
-	pNewInstance->m_pBndCylinder->SetHeight(20.0f);
+	pNewInstance->m_pBndCylinder->SetHeight(9.0f);
 
 	return pNewInstance;
 }
@@ -339,9 +336,6 @@ void CPlayer::HitCheck()
 	// 衝突の有無を記録
 	bool bDetect = false;
 
-	// 当たり判定の中心点を設定 (移動予定となる目標座標を使用)
-	m_pBndCylinder->SetCenterPos(GetPosTarget());
-
 	// ミドルオブジェクトを取得
 	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
 
@@ -357,7 +351,7 @@ void CPlayer::HitCheck()
 			continue;
 		}
 
-		// バウンディングシリンダーのパラメータをコピー
+		// プレイヤーのパラメータをコピー
 		const Vec3& CylinderPosTarget = GetPosTarget();	// 目標座標
 		const Vec3& CylinderOldPos = GetPos();			// 現在座標
 		const float& CylinderRadius = GetRadius();		// 半径
