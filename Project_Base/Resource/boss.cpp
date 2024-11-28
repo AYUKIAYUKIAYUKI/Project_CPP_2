@@ -15,6 +15,7 @@
 #include "field_manager.h"
 #include "object_parts.h"
 #include "player.h"
+#include "sparks.h"
 
 //****************************************************
 // usingディレクティブ
@@ -97,6 +98,9 @@ void CBoss::Update()
 		// カメラのプレイヤー追従もこの時に戻す
 		CManager::GetManager()->GetCamera()->ChangeTrackPlayer(true);
 	}
+
+	// 火の粉を猛発生させる
+	CSparks::FuryGenerate();
 
 	// 行動キャストをインクリメント
 	++m_nCntActionCast;
