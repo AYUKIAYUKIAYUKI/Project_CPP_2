@@ -26,6 +26,7 @@ using namespace abbr;
 // コンストラクタ
 //============================================================================
 CMotion_Set::CMotion_Set() :
+	m_bStop{ false },
 	m_wNowMotion{ 0 },
 	m_wNowKey{ 0 },
 	m_wNowFrame{ 0 },
@@ -238,6 +239,7 @@ WORD CMotion_Set::GetNowMotion()
 //============================================================================
 void CMotion_Set::SetNowMotion(WORD nIdx)
 {
+	m_bStop = false;
 	m_wNowMotion = nIdx;
 	m_wNowKey = 0;
 	m_wNowFrame = 0;
@@ -274,6 +276,10 @@ void CMotion_Set::Animation()
 //============================================================================
 void CMotion_Set::CountFrame()
 {
+	// ストップ中なら処理しない
+	if (m_bStop)
+		return;
+
 	// 現在のフレーム数をインクリメント
 	m_wNowFrame++;
 
@@ -291,6 +297,10 @@ void CMotion_Set::CountFrame()
 		{
 			// 現在のキー数をリセット
 			m_wNowKey = 0;
+
+			// ループしないモーションなら
+			if (GetNowMotionPtr()->bLoop == false)
+				m_bStop = true;
 		}
 	}
 }
@@ -300,6 +310,10 @@ void CMotion_Set::CountFrame()
 //============================================================================
 void CMotion_Set::CorrectTarget()
 {
+	// ストップ中なら処理しない
+	if (m_bStop)
+		return;
+
 	// フレームの進行度合を作成 (総フレーム数 - 現在のフレーム)
 	WORD wFrameCoef = static_cast<WORD>(m_vpMotion[m_wNowMotion].vpKey[m_wNowKey].nMaxFrame - m_wNowFrame);
 

@@ -87,6 +87,7 @@ private:
 	CMotion_Set::Key* const GetNowKey();			// 現在のキーのポインタを取得
 
 	// <data>
+	bool						m_bStop;		// ストップ
 	WORD						m_wNowMotion;	// 再生中のモーション
 	WORD						m_wNowKey;		// 再生中のキー
 	WORD						m_wNowFrame;	// 再生中のフレーム

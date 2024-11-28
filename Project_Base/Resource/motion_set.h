@@ -107,6 +107,7 @@ private:
 	// <data>
 	D3DXVECTOR3					m_Rot;			// 向き
 	D3DXVECTOR3					m_Pos;			// 座標
+	bool						m_bStop;		// ストップ
 	WORD						m_wNowMotion;	// 再生中のモーション
 	WORD						m_wNowKey;		// 再生中のキー
 	WORD						m_wNowFrame;	// 再生中のフレーム
