@@ -39,7 +39,7 @@ private:
 	void	Uninit() override;	// 終了処理
 
 	// <data>
-	int m_nApeearLimitBOSS;	// ボス登場カウント 
+	int DBG_nCntAppearBoss;	// ボス登場カウント 
 };
 
 #endif // _GAME_H_

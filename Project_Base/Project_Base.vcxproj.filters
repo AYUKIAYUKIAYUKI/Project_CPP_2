@@ -186,7 +186,9 @@
     <ClCompile Include="Resource\render_box.cpp">
       <Filter>&lt;Collider&gt;\&lt;Render&gt;</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\boss.cpp" />
+    <ClCompile Include="Resource\boss.cpp">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Boss&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -377,7 +379,9 @@
     <ClInclude Include="Resource\render_box.h">
       <Filter>&lt;Collider&gt;\&lt;Render&gt;</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\boss.h" />
+    <ClInclude Include="Resource\boss.h">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Boss&gt;</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Object&gt;">

@@ -26,21 +26,27 @@
 using namespace abbr;
 
 //============================================================================
+// 
+// publicメンバ
+// 
+//============================================================================
+
+//============================================================================
 // コンストラクタ
 //============================================================================
 CCamera::CCamera() :
+	m_Rot{ VEC3_INIT },
+	m_RotTarget{ VEC3_INIT },
 	m_Pos{ VEC3_INIT },
 	m_PosTarget{ VEC3_INIT },
 	m_PosV{ VEC3_INIT },
 	m_PosTargetV{ VEC3_INIT },
 	m_PosR{ VEC3_INIT },
 	m_PosTargetR{ VEC3_INIT },
-	m_Rot{ VEC3_INIT },
-	m_RotTarget{ VEC3_INIT },
 	m_fDistance{ 0.0f },
 	m_VecU{ 0.0f, 1.0f, 0.0f },
 	m_fAdjust{ 0.0f },
-	m_bTrack{ true },
+	m_bTrackPlayer{ false },
 	m_bVertical{ false },
 	m_bHorizon{ false }
 {
@@ -62,6 +68,8 @@ CCamera::~CCamera()
 //============================================================================
 HRESULT CCamera::Init()
 {
+	/* 現在は無し */
+
 	return S_OK;
 }
 
@@ -71,32 +79,28 @@ HRESULT CCamera::Init()
 void CCamera::Update()
 {
 	// ビューモード分岐
-	BranchMode();
+	BranchViewMode();
 
-	// 回転
-	Rotation();
+	// 目標値への補間
+	CorrectToTarget();
 
-	// 移動
-	Translation();
-
-	// 視点座標を計算
-	CalcPosV();
-
-	// 注視点座標を計算
-	CalcPosR();
-
-#if 0
 #ifdef _DEBUG
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-	CRenderer::SetDebugString("カメラ座標　　 : " + to_string(m_Pos.x) + " :  " + to_string(m_Pos.y) + " : " + to_string(m_Pos.z));
-	CRenderer::SetDebugString("目標カメラ座標 : " + to_string(m_PosTarget.x) + " :  " + to_string(m_PosTarget.y) + " : " + to_string(m_PosTarget.z));
-	CRenderer::SetDebugString("カメラ向き　　 : " + to_string(m_Rot.x * (180 / D3DX_PI)) + " :  " + to_string(m_Rot.y * (180 / D3DX_PI)) + " : " + to_string(m_Rot.z * (180 / D3DX_PI)));
-	CRenderer::SetDebugString("目標カメラ向き : " + to_string(m_RotTarget.x * (180 / D3DX_PI)) + " :  " + to_string(m_RotTarget.y * (180 / D3DX_PI)) + " : " + to_string(m_RotTarget.z * (180 / D3DX_PI)));
-	CRenderer::SetDebugString("カメラ間距離 　: " + to_string(m_fDistance));
-	CRenderer::SetDebugString("カメラモード　 : " + to_string(m_bTrack));
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+	// デバッグ表示
+	PrintDebug();
 #endif // _DEBUG
-#endif
+}
+
+//============================================================================
+// カメラ振動
+//============================================================================
+void CCamera::SetVibration(float fCoef)
+{
+	// 指定された強度でカメラ座標をランダムにずらす
+	m_Pos += {
+		utility::GetRandomValue<float>() * fCoef,
+		utility::GetRandomValue<float>() * fCoef,
+		utility::GetRandomValue<float>() * fCoef,
+	};
 }
 
 //============================================================================
@@ -105,7 +109,6 @@ void CCamera::Update()
 void CCamera::SetCamera()
 {
 #if 0	// バッファのクリアはレンダラーに委ねる
-
 	// デバイスを取得
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
@@ -116,7 +119,6 @@ void CCamera::SetCamera()
 		D3DCOLOR_RGBA(0, 0, 0, 0),
 		1.0f,
 		0);
-
 #endif
 
 	// プロジェクション行列を計算
@@ -131,43 +133,20 @@ void CCamera::SetCamera()
 //============================================================================
 void CCamera::SetAppearBoss()
 {
+	static float a = 0.0f, b = 0.0f;
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Boss View"))
+	{
+		ImGui::DragFloat("a", &a);
+		ImGui::DragFloat("b", &b);
+		ImGui::End();
+	}
+
 	// 距離を目標値まで補間
-	m_fDistance += (800.0f - m_fDistance) * 0.1f;
+	m_fDistance += ((500.0f + a) - m_fDistance) * COEF_ADJUST;
 
 	// 俯瞰度合いを目標値まで補間
-	m_fAdjust += (800.0f - m_fAdjust) * 0.1f;
-}
-
-//============================================================================
-// 座標を取得
-//============================================================================
-const D3DXVECTOR3& CCamera::GetPos() const
-{
-	return m_Pos;
-}
-
-//============================================================================
-// 座標を設定
-//============================================================================
-void CCamera::SetPos(D3DXVECTOR3 Pos)
-{
-	m_Pos = Pos;
-}
-
-//============================================================================
-// 目標座標を取得
-//============================================================================
-const D3DXVECTOR3& CCamera::GetPosTarget() const
-{
-	return m_PosTarget;
-}
-
-//============================================================================
-// 目標座標を設定
-//============================================================================
-void CCamera::SetPosTarget(D3DXVECTOR3 PosTarget)
-{
-	m_PosTarget = PosTarget;
+	m_fAdjust += ((300.0f + b) - m_fAdjust) * COEF_ADJUST;
 }
 
 //============================================================================
@@ -203,6 +182,38 @@ void CCamera::SetRotTarget(D3DXVECTOR3 RotTarget)
 }
 
 //============================================================================
+// 座標を取得
+//============================================================================
+const D3DXVECTOR3& CCamera::GetPos() const
+{
+	return m_Pos;
+}
+
+//============================================================================
+// 座標を設定
+//============================================================================
+void CCamera::SetPos(D3DXVECTOR3 Pos)
+{
+	m_Pos = Pos;
+}
+
+//============================================================================
+// 目標座標を取得
+//============================================================================
+const D3DXVECTOR3& CCamera::GetPosTarget() const
+{
+	return m_PosTarget;
+}
+
+//============================================================================
+// 目標座標を設定
+//============================================================================
+void CCamera::SetPosTarget(D3DXVECTOR3 PosTarget)
+{
+	m_PosTarget = PosTarget;
+}
+
+//============================================================================
 // 間距離を取得
 //============================================================================
 const float& CCamera::GetDistance() const
@@ -235,64 +246,72 @@ void CCamera::SetUpAdjust(float fAdjust)
 }
 
 //============================================================================
+// プレイヤー追従切り替え
+//============================================================================
+void CCamera::ChangeTrackPlayer(bool bTrack)
+{
+	m_bTrackPlayer = bTrack;
+}
+
+//============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
+
+//============================================================================
 // モード分岐
 //============================================================================
-void CCamera::BranchMode()
+void CCamera::BranchViewMode()
 {
-	// モード選択用ウィンドウを表示
+#ifdef _DEBUG 
+	// ビューモード選択用ウィンドウを表示
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("VeiwMode"))
 	{
-		if (ImGui::Checkbox("Track", &m_bTrack)) {}
+		if (ImGui::Checkbox("Track", &m_bTrackPlayer)) {}
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Vertical", &m_bVertical))
-		{
 			m_bHorizon = 0;
-		}
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Horizon", &m_bHorizon))
-		{
 			m_bVertical = 0;
-		}
 		ImGui::End();
 	}
+#endif // _DEBUG 
 
-	if (m_bTrack)
-	{ // 追従カメラモード
+	// プレイヤー追従フラグに応じて処理を変更
+	if (m_bTrackPlayer)
+	{ // 追従する
 
-		if (CObject::FindSpecificObject(CObject::TYPE::PLAYER))
-		{ // プレイヤーが存在していれば
+		if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) == nullptr)
+		{ // プレイヤーが存在していない時
+
+			// カメラ操作を可能に
+			Control();
+		}
+		else
+		{ // プレイヤーが存在している時
 
 			// プレイヤーを取得
 			CPlayer* pPlayer = nullptr;
 			pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
 
-			// カメラをプレイヤーに追従
-			m_PosTarget = pPlayer->GetPosTarget();				// 目標座標を同期
+			// カメラのパラメータを自動で設定
+			m_PosTarget = pPlayer->GetPosTarget();				// カメラ目標座標はプレイヤーの座標に
 			const Vec3& NegVec = VEC3_INIT - pPlayer->GetPos();	// プレイヤーから原点への逆位置ベクトルを作成
-			m_RotTarget = VEC3_INIT;							// (カメラの目標向きをリセット)
-			m_RotTarget.y = atan2f(NegVec.x, NegVec.z);			// カメラの目標向きを逆位置ベクトル方向に
-			utility::AdjustAngle(m_Rot.y, m_RotTarget.y);		// 角度の差を補正
-			//m_fDistance = 150.0f;								// 間距離を固定
-			//m_fAdjust = 25.0f;									// 俯瞰度合い
+			m_RotTarget = VEC3_INIT;							// カメラの目標向きをリセット
+			m_RotTarget.y = atan2f(NegVec.z, NegVec.x);			// カメラの目標向きを作成した逆位置ベクトル方向に
+			utility::AdjustAngle(m_Rot.y, m_RotTarget.y);		// カメラ回転の角度の差を補正
+			m_fDistance = 150.0f;								// 間距離を固定
+			m_fAdjust = 25.0f;									// 俯瞰度合いを固定
 		}
 	}
 	else
-	{ // フリーカメラモード
+	{ // 追従しない
 
 		// カメラ操作
 		Control();
-	}
-
-	if (m_bVertical)
-	{
-		m_Rot.x = -D3DX_PI * 0.55f;
-		m_fAdjust = 0.0f;
-	}
-	else if (m_bHorizon)
-	{
-		m_Rot.x = 0.0f;
-		m_fAdjust = 0.0f;
 	}
 }
 
@@ -302,70 +321,77 @@ void CCamera::BranchMode()
 void CCamera::Control()
 {
 	// 移動上下
-	if (CManager::GetKeyboard()->GetPress(DIK_W))
 	{
-		m_PosTarget.y += 1.0f;
-	}
-	else if (CManager::GetKeyboard()->GetPress(DIK_S))
-	{
-		m_PosTarget.y -= 1.0f;
+		if (CManager::GetKeyboard()->GetPress(DIK_W))
+			m_PosTarget.y += 1.0f;
+		else if (CManager::GetKeyboard()->GetPress(DIK_S))
+			m_PosTarget.y -= 1.0f;
 	}
 
-	// 向き左右
-	if (CManager::GetKeyboard()->GetPress(DIK_RIGHT))
+	// 左右の向き変更
 	{
-		m_RotTarget.y += 0.02f;
-	}
-	else if (CManager::GetKeyboard()->GetPress(DIK_LEFT))
-	{
-		m_RotTarget.y -= 0.02f;
+		if (CManager::GetKeyboard()->GetPress(DIK_RIGHT))
+			m_RotTarget.y += 0.02f;
+		else if (CManager::GetKeyboard()->GetPress(DIK_LEFT))
+			m_RotTarget.y -= 0.02f;
 	}
 
-	// 向き上下
-	if (CManager::GetKeyboard()->GetPress(DIK_UP))
+	// 上下の向き変更
 	{
-		m_RotTarget.x += 0.02f;
-	}
-	else if (CManager::GetKeyboard()->GetPress(DIK_DOWN))
-	{
-		m_RotTarget.x -= 0.02f;
+		if (CManager::GetKeyboard()->GetPress(DIK_UP))
+			m_RotTarget.x += 0.02f;
+		else if (CManager::GetKeyboard()->GetPress(DIK_DOWN))
+			m_RotTarget.x -= 0.02f;
 	}
 
-	// ズームイン / アウト
-	if (CManager::GetKeyboard()->GetPress(DIK_AT) && m_fDistance > 10.0f)
+	// ズーム調節
 	{
-		m_fDistance -= 10.0f;
-	}
-	else if (CManager::GetKeyboard()->GetPress(DIK_COLON))
-	{
-		m_fDistance += 10.0f;
-	}
-	else if (CManager::GetKeyboard()->GetPress(DIK_BACKSLASH))
-	{
-		// 距離間リセット
-		m_fDistance = 200.0f;
+		if (CManager::GetKeyboard()->GetPress(DIK_AT) && m_fDistance > 10.0f)
+			m_fDistance -= 10.0f;
+		else if (CManager::GetKeyboard()->GetPress(DIK_COLON))
+			m_fDistance += 10.0f;
+		else if (CManager::GetKeyboard()->GetPress(DIK_BACKSLASH))
+			m_fDistance = 200.0f;
 	}
 }
 
 //============================================================================
-// 回転
+// 目標値への補間
 //============================================================================
-void CCamera::Rotation()
+void CCamera::CorrectToTarget()
+{
+	// 自動で目標向きへ補間
+	AutoSetRot();
+
+	// 自動で目標座標へ補間
+	AutoSetPos();
+
+	// 視点座標を計算
+	CalcPosV();
+
+	// 注視点座標を計算
+	CalcPosR();
+}
+
+//============================================================================
+// 自動で目標向きへ補間
+//============================================================================
+void CCamera::AutoSetRot()
 {
 	// ヨー角の範囲を制限
 	utility::AdjustDirection(m_RotTarget.y, m_Rot.y);
 
 	// ピッチ角の範囲を制限
-	RestrictPitch();
+	AutoRestrictPitch();
 
-	// 目標向きへ補正
+	// 目標向きへ補間する
 	m_Rot += (m_RotTarget - m_Rot) * COEF_ADJUST;
 }
 
 //============================================================================
 // ピッチ角の範囲を制限
 //============================================================================
-void CCamera::RestrictPitch()
+void CCamera::AutoRestrictPitch()
 {
 	// 0.0f ～ 0.5f
 	float fCoeff = 0.48f;
@@ -381,11 +407,11 @@ void CCamera::RestrictPitch()
 }
 
 //============================================================================
-// 移動
+// 自動で目標座標へ補間
 //============================================================================
-void CCamera::Translation()
+void CCamera::AutoSetPos()
 {
-	// 目標座標へ補正
+	// 目標座標へ補間する
 	m_Pos += (m_PosTarget - m_Pos) * COEF_ADJUST;
 }
 
@@ -476,4 +502,28 @@ void CCamera::CalcMtxView()
 	// ビュー行列の設定
 	pDev->SetTransform(D3DTS_VIEW,
 		&m_MtxView);
+}
+
+//============================================================================
+// デバッグ表示
+//============================================================================
+void CCamera::PrintDebug()
+{
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Camera Param"))
+	{
+		ImGui::Text("m_fDistance:%.1f", m_fDistance);
+		ImGui::Text("m_fAdjust:%.1f", m_fAdjust);
+		ImGui::End();
+	}
+#if 0
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+	CRenderer::SetDebugString("カメラ座標　　 : " + to_string(m_Pos.x) + " :  " + to_string(m_Pos.y) + " : " + to_string(m_Pos.z));
+	CRenderer::SetDebugString("目標カメラ座標 : " + to_string(m_PosTarget.x) + " :  " + to_string(m_PosTarget.y) + " : " + to_string(m_PosTarget.z));
+	CRenderer::SetDebugString("カメラ向き　　 : " + to_string(m_Rot.x * (180 / D3DX_PI)) + " :  " + to_string(m_Rot.y * (180 / D3DX_PI)) + " : " + to_string(m_Rot.z * (180 / D3DX_PI)));
+	CRenderer::SetDebugString("目標カメラ向き : " + to_string(m_RotTarget.x * (180 / D3DX_PI)) + " :  " + to_string(m_RotTarget.y * (180 / D3DX_PI)) + " : " + to_string(m_RotTarget.z * (180 / D3DX_PI)));
+	CRenderer::SetDebugString("カメラ間距離 　: " + to_string(m_fDistance));
+	CRenderer::SetDebugString("カメラモード　 : " + to_string(m_bTrackPlayer));
+	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+#endif
 }

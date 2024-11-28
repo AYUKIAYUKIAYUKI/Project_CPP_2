@@ -29,10 +29,10 @@ void CGame::Update()
 	CScene::Update();
 
 	// ボス登場カウントをインクリメント
-	++m_nApeearLimitBOSS;
+	++DBG_nCntAppearBoss;
 
 	// とりあえず30フレーム経過で
-	if (m_nApeearLimitBOSS == 30)
+	if (DBG_nCntAppearBoss == 30)
 	{
 		// ボス登場
 		CField_Manager::GetInstance()->AppearBoss();
@@ -109,7 +109,7 @@ CGame* CGame::Create()
 //============================================================================
 CGame::CGame() :
 	CScene{},
-	m_nApeearLimitBOSS{ 0 }
+	DBG_nCntAppearBoss{ 0 }
 {
 
 }

@@ -311,6 +311,9 @@ void CField_Manager::AppearBossEvent()
 		// 銅像振動カウントをインクリメント
 		++m_nCntStatueVibration;
 
+		// カメラを振動させる
+		CManager::GetManager()->GetCamera()->SetVibration(0.02f);
+
 		// カメラをボス登場用にセット
 		CManager::GetManager()->GetCamera()->SetAppearBoss();
 	}
