@@ -97,7 +97,6 @@ void CBoss::Update()
 	// キャラクタークラスの更新処理
 	CCharacter::Update();
 
-#if 1
 #ifdef _DEBUG
 	// ウィンドウを表示
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
@@ -114,7 +113,6 @@ void CBoss::Update()
 	}
 	ImGui::End();
 #endif	// _DEBUG
-#endif
 }
 
 //============================================================================

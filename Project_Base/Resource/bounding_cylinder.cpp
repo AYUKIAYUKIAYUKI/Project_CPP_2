@@ -42,12 +42,14 @@ CBounding_Cylinder::CBounding_Cylinder() :
 //============================================================================
 CBounding_Cylinder::~CBounding_Cylinder()
 {
+#ifdef _DEBUG
 	// 円柱表示を破棄予約
 	if (m_pRenderCylinder != nullptr)
 	{
 		m_pRenderCylinder->SetRelease();
 		m_pRenderCylinder = nullptr;
 	}
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -58,8 +60,10 @@ void CBounding_Cylinder::SetCenterPos(D3DXVECTOR3 Pos)
 	// バウンディング基底クラスの持つ中心点にセット
 	CBounding_Volume::SetCenterPos(Pos);
 
+#ifdef _DEBUG
 	// 円柱表示の持つシンクロ座標にセット
 	m_pRenderCylinder->SetCenterSyncPos(Pos);
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -78,8 +82,10 @@ void CBounding_Cylinder::SetRadius(float fRad)
 	// 自身の半径にセット
 	m_fRadius = fRad;
 
+#ifdef _DEBUG
 	// 円柱表示の持つシンクロ半径にセット
 	m_pRenderCylinder->SetSyncRadius(fRad);
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -98,6 +104,8 @@ void CBounding_Cylinder::SetHeight(float fHeight)
 	// 自身の高さにセット
 	m_fHeight = fHeight;
 
+#ifdef _DEBUG
 	// 円柱表示の持つシンクロ高さにセット
 	m_pRenderCylinder->SetSyncHeight(fHeight);
+#endif // _DEBUG
 }
