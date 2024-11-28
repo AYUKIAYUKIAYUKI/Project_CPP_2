@@ -132,10 +132,10 @@ void CCamera::SetCamera()
 void CCamera::SetAppearBoss()
 {
 	// 距離を目標値まで補間
-	m_fDistance += 800.0f - m_fDistance * 0.1f;
+	m_fDistance += (800.0f - m_fDistance) * 0.1f;
 
 	// 俯瞰度合いを目標値まで補間
-	m_fAdjust += 800.0f - m_fAdjust * 0.1f;
+	m_fAdjust += (800.0f - m_fAdjust) * 0.1f;
 }
 
 //============================================================================
@@ -273,8 +273,8 @@ void CCamera::BranchMode()
 			m_RotTarget = VEC3_INIT;							// (カメラの目標向きをリセット)
 			m_RotTarget.y = atan2f(NegVec.x, NegVec.z);			// カメラの目標向きを逆位置ベクトル方向に
 			utility::AdjustAngle(m_Rot.y, m_RotTarget.y);		// 角度の差を補正
-			m_fDistance = 150.0f;								// 間距離を固定
-			m_fAdjust = 25.0f;									// 俯瞰度合い
+			//m_fDistance = 150.0f;								// 間距離を固定
+			//m_fAdjust = 25.0f;									// 俯瞰度合い
 		}
 	}
 	else
