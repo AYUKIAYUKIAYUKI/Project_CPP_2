@@ -39,7 +39,16 @@ public:
 		PLAHANDR,			// 人右手
 		ONLYTREE,			// 樹のみ
 		ONLYSTONE,			// 樹の石
-		STATUE,				// 銅像
+		STAAROUND,			// 銅像周辺
+		STADOWN0,			// 銅像下0
+		STADOWN1,			// 銅像下1
+		STADOWN2,			// 銅像下2
+		STADOWN3,			// 銅像下3
+		STAUP0,				// 銅像上0
+		STAUP1,				// 銅像上1
+		STAUP2,				// 銅像上2
+		STAUP3,				// 銅像上3
+		STAUP4,				// 銅像上4
 		AROUND,				// 周辺領域
 		ENEMY,				// 敵
 		BLOCK,				// ブロック

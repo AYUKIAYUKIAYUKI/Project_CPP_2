@@ -39,12 +39,6 @@ public:
 		return static_cast<TYPE>(static_cast<WORD>(Type) + wNum);
 	}
 
-	// +=演算子のオーバーロード
-	friend TYPE operator+=(TYPE Type, WORD wNum)
-	{
-		return static_cast<TYPE>(static_cast<WORD>(Type) + wNum);
-	}
-
 	// <special function>
 	CTexture_Manager(const CTexture_Manager&) = delete;				// コピーコンストラクタ
 	CTexture_Manager& operator=(const CTexture_Manager&) = delete;	// コピー代入演算子

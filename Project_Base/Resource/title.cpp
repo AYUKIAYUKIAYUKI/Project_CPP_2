@@ -129,7 +129,10 @@ HRESULT CTitle::Init()
 	// ŠÂ‹«‘•ü‚ð¶¬
 	{
 		// “º‘œ
-		m_pStatue = CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue.json"));
+		m_pStatue = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue_motion.json"));
+		auto StatueParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue.json");
+		m_pStatue->SetRot(utility::JsonConvertToVec3(StatueParam["Rot"]));
+		m_pStatue->SetPos(utility::JsonConvertToVec3(StatueParam["Pos"]));
 
 		// Žü•Ó—Ìˆæ
 		CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\around.json"));
