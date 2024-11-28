@@ -14,6 +14,8 @@
 #include "player.h"
 #include "field_manager.h"
 
+#include "title.h"
+
 //============================================================================
 // 
 // publicメンバ
@@ -47,10 +49,12 @@ void CGame::Update()
 	else if (CManager::GetKeyboard()->GetTrigger(DIK_F7))
 	{
 		CObject::ReleaseAll();
-		CField_Manager::Release();
-		this->Uninit();
-		CField_Manager::Create();
-		this->Init();
+		CScene_Manager::ChangeScene(CTitle::Create());
+		//CField_Manager::Release();
+		//this->Uninit();
+		//CField_Manager::Create();
+		//CField_Manager::GetInstance()->InitForTitle();
+		//this->Init();
 	}
 #endif // _DEBUG
 }

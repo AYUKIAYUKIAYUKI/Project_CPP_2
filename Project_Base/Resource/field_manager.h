@@ -40,9 +40,10 @@ public:
 	CField_Manager& operator=(CField_Manager&&) = delete;		// ムーブ代入演算子
 
 	// <function>
-	void Update();		// 更新処理
-	void Draw();		// 描画処理
-	void AppearBoss();	// ボス登場
+	void InitForTitle();	// タイトルでの追加初期設定
+	void Update();			// 更新処理
+	void Draw();			// 描画処理
+	void AppearBoss();		// ボス登場
 
 	// <setter>
 	/* 方法を考えてください*/

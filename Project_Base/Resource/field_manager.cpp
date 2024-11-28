@@ -45,6 +45,15 @@ CField_Manager* CField_Manager::m_pFieldManager = nullptr;	// フィールドマネージ
 //============================================================================
 
 //============================================================================
+// タイトル向け追加初期設定
+//============================================================================
+void CField_Manager::InitForTitle()
+{
+	// 環境装飾の初期設定
+	InitEnvironment();
+}
+
+//============================================================================
 // 更新処理
 //============================================================================
 void CField_Manager::Update()
@@ -210,24 +219,6 @@ CField_Manager::~CField_Manager()
 //============================================================================
 HRESULT CField_Manager::Init()
 {
-	// 環境装飾の初期設定
-	InitEnvironment();
-
-	//// プレイヤーを検索
-	//if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
-	//{ // 発見
-
-	//	// プレイヤーへのポインタを保持
-	//	m_pPlayer = utility::DownCast(m_pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
-	//}
-	//else
-	//{ // 見つからない
-
-	//	// プレイヤーを生成
-	//	//m_pPlayer = CPlayer::Create();
-	//	assert(false && "プレイヤーが不在");
-	//}
-
 	// マップ表示を作成
 	m_pMap = CObject_HUD::Create("Data\\JSON\\HUD\\map.json");
 	m_pMap->BindTex(CTexture_Manager::TYPE::MAP);
