@@ -452,8 +452,8 @@ void CObject_Parts::SetMtxWorld()
 
 	// ‰ñ“]s—ñì¬
 	D3DXMatrixRotationYawPitchRoll(&mtxRot,
-		m_RotOffset.x + m_Rot.x + m_RotSync.x,
-		m_RotOffset.y + m_Rot.y + m_RotSync.y,
+		m_RotOffset.x + m_Rot.x + m_RotSync.y,
+		m_RotOffset.y + m_Rot.y + m_RotSync.x,
 		m_RotOffset.z + m_Rot.z + m_RotSync.z);
 
 	// ‰ñ“]s—ñ‚Æ‚ÌŠ|‚¯Z
