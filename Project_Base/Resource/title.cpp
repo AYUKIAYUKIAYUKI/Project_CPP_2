@@ -286,7 +286,7 @@ void CTitle::UpdateButterfly()
 		if (NewPos.y < m_vPath[1].y - 5.0f)
 		{
 			/*m_Path[1]のzはこの時のみRot.xの設定値として扱う、節約です*/
-			NewRot.x += (m_vPath[1].z - NewRot.x) * 0.025f;
+			NewRot.y += (m_vPath[1].z - NewRot.y) * 0.025f;
 			NewPos.x += (m_vPath[1].x - NewPos.x) * 0.025f;
 			NewPos.y += (m_vPath[1].y - NewPos.y) * 0.025f;
 		}
@@ -301,7 +301,7 @@ void CTitle::UpdateButterfly()
 			{ // 蝶がフィールドの半径より遠い場合
 
 				// 向き・座標を銅像の方向へ接近
-				NewRot.x += (D3DX_PI - NewRot.x) * 0.1f;
+				NewRot.y += (D3DX_PI - NewRot.y) * 0.1f;
 				NewPos.x += (PosTarget.x - NewPos.x) * 0.005f;
 				NewPos.y += (PosTarget.y - NewPos.y) * 0.005f;
 				NewPos.z += (PosTarget.z - NewPos.z) * 0.005f;
