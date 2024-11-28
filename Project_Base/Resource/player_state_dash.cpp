@@ -11,6 +11,7 @@
 #include "player_state_dash.h"
 #include "player_state_default.h"
 #include "player_state_damage.h"
+#include "constellation.h"
 
 // フィールドサイズ取得用
 #include "field_manager.h"
@@ -64,6 +65,10 @@ CPlayer_State_Dash::~CPlayer_State_Dash()
 //============================================================================
 void CPlayer_State_Dash::Update()
 {
+	// 星座エフェクトを発生
+	for (int nCnt = 0; nCnt < 3; ++nCnt)
+		CConstellation::GenerateSpread(m_pCharacter->GetPosTarget());
+
 	// 目標座標をダッシュ方向に増加
 	SetPosTarget_Unnamed();
 
