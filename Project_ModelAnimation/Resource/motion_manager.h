@@ -52,6 +52,7 @@ private:
 	void	Uninit();		// 終了処理
 	void	PrintDebug();	// デバッグ表示
 	void	Edit();			// 編集
+	void	Copy();			// コピー
 	void	EditParts();	// パーツ情報の編集
 	void	EditOffset();	// オフセット情報の編集
 	void	EditMotion();	// モーション情報の編集
@@ -68,13 +69,14 @@ private:
 	CMotion_Set::Key* const GetSelectKey() const;		// 選択中のキーのポインタを取得
 
 	// <data>
-	JSON			m_Json;				// ジェイソンデータ
-	CMotion_Set*	m_MotionSet;		// モーションセット
-	WORD			m_wSelectParts;		// 選択パーツ
-	WORD			m_wSelectKey;		// 選択キー
-	bool			m_bPartsAppeal;		// 選択パーツをアピール
-	bool			m_bPlay;			// 再生
-	bool			m_bShowKeyEnd;		// キーの最終的な状態を見せる
+	JSON			  m_Json;			// ジェイソンデータ
+	CMotion_Set*	  m_MotionSet;		// モーションセット
+	WORD			  m_wSelectParts;	// 選択パーツ
+	CMotion_Set::Key  m_CopyKey;		// キー情報のコピー
+	WORD			  m_wSelectKey;		// 選択キー
+	bool			  m_bPartsAppeal;	// 選択パーツをアピール
+	bool			  m_bPlay;			// 再生
+	bool			  m_bShowKeyEnd;	// キーの最終的な状態を見せる
 
 	// <static data>
 	static CMotion_Manager* m_pMotionManager;	// モーションマネージャーの本体

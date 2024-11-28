@@ -11,6 +11,7 @@
 #include "field_manager.h"
 #include "manager.h"
 #include "renderer.h"
+#include "motion_set.h"
 #include "player.h"
 #include "object_HUD.h"
 
@@ -48,8 +49,8 @@ CField_Manager* CField_Manager::m_pFieldManager = nullptr;	// フィールドマネージ
 //============================================================================
 void CField_Manager::Update()
 {
-	// 火の粉を生成
-	CSparks::AutoGenerate();
+	// 環境装飾の更新
+	UpdateEnvironment();
 
 	// プレイヤーの現在の方角を扇形の方角にする
 	m_pRenderFan->SetDirection(m_pPlayer->GetDirection());
@@ -170,6 +171,7 @@ CField_Manager* CField_Manager::GetInstance()
 // コンストラクタ
 //============================================================================
 CField_Manager::CField_Manager() :
+	m_pStatue{ nullptr },
 	m_pMap{ nullptr },
 	m_pPlayer{ nullptr },
 	m_pPlayerGauge{ nullptr },
@@ -196,6 +198,9 @@ CField_Manager::~CField_Manager()
 //============================================================================
 HRESULT CField_Manager::Init()
 {
+	// 環境装飾の初期設定
+	InitEnvironment();
+
 	// プレイヤーを検索
 	if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) != nullptr)
 	{ // 発見
@@ -244,6 +249,24 @@ HRESULT CField_Manager::Init()
 }
 
 //============================================================================
+// 環境装飾の初期設定
+//============================================================================
+void CField_Manager::InitEnvironment()
+{
+	// 銅像の生成
+	{
+		// パラメータを反映
+		m_pStatue = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue_motion.json"));
+		auto StatueParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue.json");
+		m_pStatue->SetRot(utility::JsonConvertToVec3(StatueParam["Rot"]));
+		m_pStatue->SetPos(utility::JsonConvertToVec3(StatueParam["Pos"]));
+		
+		// 初期モーションを設定
+		m_pStatue->SetNowMotion(2);
+	}
+}
+
+//============================================================================
 // 終了処理
 //============================================================================
 void CField_Manager::Uninit()
@@ -254,6 +277,15 @@ void CField_Manager::Uninit()
 		m_pRenderFan->Release();	// 解放
 		m_pRenderFan = nullptr;		// ポインタを初期化
 	}
+}
+
+//============================================================================
+// 環境装飾の更新
+//============================================================================
+void CField_Manager::UpdateEnvironment()
+{
+	// 火の粉を生成
+	CSparks::AutoGenerate();
 }
 
 //============================================================================

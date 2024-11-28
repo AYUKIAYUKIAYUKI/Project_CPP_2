@@ -103,7 +103,6 @@ CTitle::CTitle() :
 	CScene{},
 	m_pKESE{ nullptr },
 	m_bTransition{ nullptr },
-	m_pStatue{ nullptr },
 	m_pButterfly{ nullptr },
 	m_vPath{},
 	m_nNowFrame{ 0 },
@@ -129,12 +128,6 @@ HRESULT CTitle::Init()
 {
 	// 環境装飾を生成
 	{
-		// 銅像
-		m_pStatue = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue_motion.json"));
-		auto StatueParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue.json");
-		m_pStatue->SetRot(utility::JsonConvertToVec3(StatueParam["Rot"]));
-		m_pStatue->SetPos(utility::JsonConvertToVec3(StatueParam["Pos"]));
-
 		// 周辺領域
 		CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\around.json"));
 
@@ -308,7 +301,7 @@ void CTitle::UpdateButterfly()
 		{ // 画面奥へ飛行中
 
 			// 銅像の座標をコピー
-			D3DXVECTOR3 PosTarget = m_pStatue->GetPos();
+			D3DXVECTOR3 PosTarget = { 0.0f, 0.0f, 0.0f };
 
 			// 銅像への進行度で挙動を変更
 			if (PosTarget.z - NewPos.z > CField_Manager::FIELD_RADIUS * 1.5f)

@@ -54,7 +54,6 @@ private:
 
 	// <data>
 	bool					 m_bTransition;	// 遷移フラグ
-	CMotion_Set*			 m_pStatue;		// 銅像
 	CMotion_Set*			 m_pButterfly;	// 蝶
 	std::vector<D3DXVECTOR3> m_vPath;		// パス
 	int						 m_nNowFrame;	// フレーム

@@ -345,8 +345,8 @@ void CFan::Uninit()
 void CFan::SetVtx()
 {
 	// 方角に合わせて範囲分の方向ベクトルを2本作成
-	m_DirVec[0] = { cosf(m_fDirection + m_fRange), 0, sin(m_fDirection + m_fRange) };
-	m_DirVec[1] = { cosf(m_fDirection - m_fRange), 0, sin(m_fDirection - m_fRange) };
+	m_DirVec[0] = { cosf(m_fDirection + m_fRange), 0, sinf(m_fDirection + m_fRange) };
+	m_DirVec[1] = { cosf(m_fDirection - m_fRange), 0, sinf(m_fDirection - m_fRange) };
 
 	// 頂点情報へのポインタ
 	VERTEX_3D* pVtx = nullptr;

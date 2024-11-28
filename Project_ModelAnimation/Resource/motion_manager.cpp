@@ -152,6 +152,7 @@ CMotion_Manager::CMotion_Manager() :
 	m_Json{},
 	m_MotionSet{ nullptr },
 	m_wSelectParts{ 0 },
+	m_CopyKey{},
 	m_wSelectKey{ 0 },
 	m_bPartsAppeal{ false },
 	m_bPlay{ false },
@@ -270,6 +271,9 @@ void CMotion_Manager::PrintDebug()
 //============================================================================
 void CMotion_Manager::Edit()
 {
+	// コピー
+	Copy();
+
 	// 再生切り替え
 	if( ImGui::Checkbox("Playing motion", &m_bPlay))
 	{
@@ -307,6 +311,23 @@ void CMotion_Manager::Edit()
 	{
 		Export();
 	}
+}
+
+//============================================================================
+// コピー
+//============================================================================
+void CMotion_Manager::Copy()
+{
+	ImGui::Separator();
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Copy Motion"))
+	{
+		if (ImGui::Button("Cooy"))
+			m_CopyKey = GetSelectMotion()->vpKey[m_MotionSet->m_wNowKey];
+		if (ImGui::Button("Paste"))
+			GetSelectMotion()->vpKey.push_back(m_CopyKey);
+	}
+	ImGui::End();
 }
 
 //============================================================================
