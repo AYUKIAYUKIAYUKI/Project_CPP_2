@@ -83,6 +83,7 @@ public:
 	void SetNowMotion(WORD wIdx);	// 再生中のモーション番号を設定
 
 	// <getter>
+	bool GetStopState();				// ストップフラグを取得
 	CObject_Parts* GetParentParts();	// 親パーツを取得
 
 	// <static function>
@@ -107,7 +108,7 @@ private:
 	// <data>
 	D3DXVECTOR3					m_Rot;			// 向き
 	D3DXVECTOR3					m_Pos;			// 座標
-	bool						m_bStop;		// ストップ
+	bool						m_bStop;		// ストップフラグ
 	WORD						m_wNowMotion;	// 再生中のモーション
 	WORD						m_wNowKey;		// 再生中のキー
 	WORD						m_wNowFrame;	// 再生中のフレーム

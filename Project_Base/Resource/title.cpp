@@ -190,10 +190,12 @@ HRESULT CTitle::Init()
 void CTitle::Uninit()
 {
 	// 蝶を破棄
-	m_pButterfly->SetRelease();
+	if (m_pButterfly != nullptr)
+		m_pButterfly->SetRelease();
 
 	// 樹を破棄
-	m_pTree->SetRelease();
+	if (m_pTree != nullptr)
+		m_pTree->SetRelease();
 }
 
 //============================================================================
@@ -203,6 +205,10 @@ void CTitle::UpdateEnvironment()
 {
 	// 蝶の周辺に火の粉を発生
 	CSparks::AreaGenerate(m_pButterfly->GetPos());
+
+	// 樹のモーションが停止していたら高速モーションに変更
+	if (m_pTree->GetStopState())
+		m_pTree->SetNowMotion(1);
 
 	// 蝶の更新
 	UpdateButterfly();
@@ -237,9 +243,14 @@ void CTitle::UpdateEnvironment()
 				m_pKESE->SetAlpha(fAlpha);
 			}
 
-			// 次のシーンへ
 			if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
+			{
+				// 次のシーンへ移行開始
 				m_bTransition = 1;
+
+				// 樹のモーションを変更
+				m_pTree->SetNowMotion(2);
+			}
 		}
 	}
 }
@@ -281,10 +292,6 @@ void CTitle::UpdateButterfly()
 		// 羽ばたきモーションに変更
 		if (m_pButterfly->GetNowMotion() != 1)
 			m_pButterfly->SetNowMotion(1);
-
-		// 石が動きまくるモーションに変更
-		if (m_pTree->GetNowMotion() != 1)
-			m_pTree->SetNowMotion(1);
 
 		// 蝶の向き・座標をコピー
 		D3DXVECTOR3 NewRot = m_pButterfly->GetRot(), NewPos = m_pButterfly->GetPos();
