@@ -150,7 +150,7 @@ void CCamera::SetAppearBoss()
 	m_PosTarget = pPlayer->GetPosTarget();				// カメラ目標座標はプレイヤーの座標に
 	const Vec3& NegVec = VEC3_INIT - pPlayer->GetPos();	// プレイヤーから原点への逆位置ベクトルを作成
 	m_RotTarget = VEC3_INIT;							// カメラの目標向きをリセット
-	m_RotTarget.y = atan2f(NegVec.x, NegVec.z);		// カメラの目標向きを作成した逆位置ベクトル方向に
+	m_RotTarget.y = atan2f(NegVec.x, NegVec.z);			// カメラの目標向きを作成した逆位置ベクトル方向に
 	utility::AdjustAngle(m_Rot.y, m_RotTarget.y);		// カメラ回転の角度の差を補正
 
 	// 距離を目標値まで補間

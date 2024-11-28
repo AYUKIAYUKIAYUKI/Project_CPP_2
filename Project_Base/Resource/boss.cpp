@@ -10,11 +10,11 @@
 //****************************************************
 #include "boss.h"
 #include "bounding_cylinder.h"
-#include "object_parts.h"
-
-#include "field_manager.h"
 #include "manager.h"
 #include "renderer.h"
+#include "field_manager.h"
+#include "object_parts.h"
+#include "player.h"
 
 //****************************************************
 // usingディレクティブ
@@ -32,6 +32,7 @@ using namespace abbr;
 //============================================================================
 CBoss::CBoss() :
 	CCharacter{},
+	m_nCntActionCast{ 0 },
 	m_pBndCylinder{ DBG_NEW CBounding_Cylinder() }
 {
 
@@ -61,10 +62,6 @@ HRESULT CBoss::Init()
 	// 補正強度を設定
 	SetCorrectCoef(CORRECT_COEF);
 
-	// 初期方角を設定
-	SetDirection(D3DX_PI * -0.5f);
-	SetDirectionTarget(D3DX_PI * -0.5f);
-
 	// 初期体力を設定
 	SetLife(MAX_LIFE);
 
@@ -91,14 +88,38 @@ void CBoss::Uninit()
 //============================================================================
 void CBoss::Update()
 {
-	// 登場モーションが終了したら通常モーションへ
+	// 登場モーションが終了したら
 	if (GetNowMotion() == 0 && GetStopState())
 	{
+		// 通常モーションへ
 		SetNowMotion(1);
+
+		// カメラのプレイヤー追従もこの時に戻す
+		CManager::GetManager()->GetCamera()->ChangeTrackPlayer(true);
+	}
+
+	// 行動キャストをインクリメント
+	++m_nCntActionCast;
+
+	// キャストが一定値に達すると
+	if (m_nCntActionCast > 40)
+	{
+		// 行動キャストをリセット
+		m_nCntActionCast = 0;
+
+		// ランダムに行動
+		switch (1)
+		{
+
+		}
+	}
+	else
+	{ // キャスト完了まで中心で待機
+		HoldCenter();
 	}
 
 	// 円柱バウンディングの中心点をモデルの中心に
-	m_pBndCylinder->SetCenterPos(GetParentParts()->GetPos());
+	m_pBndCylinder->SetCenterPos(GetPos());
 
 	// キャラクタークラスの更新処理
 	CCharacter::Update();
@@ -183,10 +204,36 @@ CBoss* CBoss::Create()
 	pNewInstance->SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\pumpkin_motion.json"));
 
 	// 半径を設定
-	pNewInstance->m_pBndCylinder->SetRadius(50.0f);
+	pNewInstance->m_pBndCylinder->SetRadius(100.0f);
 
 	// 高さを設定
-	pNewInstance->m_pBndCylinder->SetHeight(50.0f);
+	pNewInstance->m_pBndCylinder->SetHeight(60.0f);
 
 	return pNewInstance;
+}
+
+//============================================================================
+// 
+// privateメンバ
+//  
+//============================================================================
+
+//============================================================================
+// 中心で待機
+//============================================================================
+void CBoss::HoldCenter()
+{
+	// プレイヤーを取得
+	CPlayer* pPlayer = nullptr;
+	pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+
+	// プレイヤーの方向を向く
+	Vec3 Rot = VEC3_INIT, Pos = pPlayer->GetPos();
+	Rot.y = atan2f(-Pos.x, -Pos.z);
+	SetRotTarget(Rot);	
+
+	// 中央に浮かぶ
+	Pos = VEC3_INIT;
+	Pos.y = 100.0f;
+	SetPosTarget(Pos);
 }

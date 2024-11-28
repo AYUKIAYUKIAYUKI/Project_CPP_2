@@ -53,8 +53,12 @@ public:
 
 private:
 
+	// <function>
+	void HoldCenter();	// 中心で待機
+
 	// <data>
-	CBounding_Cylinder* m_pBndCylinder;		// 円柱リンダー
+	int					m_nCntActionCast;	// 行動キャストカウント
+	CBounding_Cylinder* m_pBndCylinder;		// 円柱バウンディング
 };
 
 #endif // _PLAYER_H_
