@@ -372,22 +372,25 @@ void CBoss::DirectAttack()
 //============================================================================
 void CBoss::DamageBack()
 {
-	// 継続期間をインクリメント
-	++m_nDuration;
+	if (GetNowMotion() != 3)
+	{ // ダメージモーションを再生していなければ
 
-	// 中央に浮かぶ
-	Vec3 Pos = VEC3_INIT;
-	Pos.y = 150.0f;
-	SetPosTarget(Pos);
+		// ボスがダメージモーションに変更
+		SetNowMotion(3);
+	}
+	else if (GetStopState() == true)
+	{ // ダメージモーションが再生終了した時
 
-	// 2秒時点で
-	if (m_nDuration >= 120)
-	{
 		// 行動キャストカウントをリセット
 		m_nCntActionCast = 0;
 
-		// 継続期間をリセット
+		// 継続カウントを元に戻す
 		m_nDuration = 0;
+
+		// 目標座標を中央へ戻す
+		Vec3 Pos = VEC3_INIT;
+		Pos.y = 150.0f;
+		SetPosTarget(Pos);
 
 		// 中央待機に戻る
 		m_ActionType = ACTION::HOLDCENTER;
