@@ -150,6 +150,7 @@ HRESULT CTitle::Init()
 		pCamera->SetUpAdjust(0.0f);
 		pCamera->SetPos(utility::JsonConvertToVec3(ButterflyParam["Pos"]));
 		pCamera->SetPosTarget(utility::JsonConvertToVec3(ButterflyParam["Pos"]));
+		pCamera->ChangeTrackPlayer(false);
 
 		// Ž÷
 		m_pTree = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree_motion.json"));
