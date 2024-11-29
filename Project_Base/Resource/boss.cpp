@@ -153,7 +153,7 @@ void CBoss::Draw()
 //============================================================================
 void CBoss::SetDamage(int nDamage)
 {
-	if (m_ActionType != ACTION::DAMAGEBACK)
+	if (m_ActionType != ACTION::DAMAGEBACK && m_ActionType != ACTION::DEADEND)
 	{
 		// ダメージ量分、体力を変動
 		int nNewLife = GetLife();
@@ -162,6 +162,10 @@ void CBoss::SetDamage(int nDamage)
 
 		// ダメージ喰らい行動を強制発生
 		m_ActionType = ACTION::DAMAGEBACK;
+
+		// 体力がゼロ以下なら死亡行動を強制発生
+		if (nNewLife <= 0)
+			m_ActionType = ACTION::DEADEND;
 	}
 }
 
@@ -276,6 +280,11 @@ void CBoss::BranchAction()
 			// ダメージ喰らい
 		case ACTION::DAMAGEBACK:
 			DamageBack();
+			break;
+
+			// 死亡
+		case ACTION::DEADEND:
+			DeadEnd();
 			break;
 
 			// 例外
@@ -425,4 +434,41 @@ bool CBoss::HitCheck()
 		return true;
 
 	return false;
+}
+
+//============================================================================
+// 死亡
+//============================================================================
+void CBoss::DeadEnd()
+{
+	if (GetNowMotion() != 4)
+	{ // 死亡モーションを再生していなければ
+
+		// ボスが死亡モーションに変更
+		SetNowMotion(4);
+	}
+	else
+	{ // 死亡モーション再生中
+
+		// 火の粉を猛発生
+		for (int nCnt = 0; nCnt < 2; ++nCnt)
+			CSparks::FuryGenerate();
+
+		// カメラ距離・俯瞰度合いを強制変更
+		{
+			CCamera* pCamera = CManager::GetManager()->GetCamera();
+			float fDinstance = pCamera->GetDistance(), fUpAdjust = pCamera->GetUpAdjust();
+			fDinstance += (800.0f - fDinstance) * 0.1f;
+			fUpAdjust += (300.0f - fUpAdjust) * 0.05f;
+			pCamera->SetDistance(fDinstance);
+			pCamera->SetUpAdjust(fUpAdjust);
+
+			// カメラを振動
+			pCamera->SetVibration(0.05f);
+		}
+
+		// モーションの再生が終了したらボスを破棄予約
+		if (GetStopState())
+			SetRelease();
+	}
 }

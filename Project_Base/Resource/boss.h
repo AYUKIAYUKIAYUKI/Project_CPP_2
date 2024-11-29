@@ -34,11 +34,12 @@ public:
 		HOLDCENTER = 0,	// 中央で待機
 		DIRECTATTACK,	// 体当たり
 		DAMAGEBACK,		// ダメージ喰らい
+		DEADEND,		// 死亡
 		MAX
 	};
 	
 	/// <summary> ボスの最大体力 </summary>
-	static constexpr int MAX_LIFE = 999;
+	static constexpr int MAX_LIFE = 3;
 
 	/// <summary> 目標値への補間強度 </summary>
 	static constexpr float CORRECT_COEF = 0.1f;
@@ -70,6 +71,7 @@ private:
 	void HoldCenter();		// 中心で待機
 	void DirectAttack();	// 体当たり
 	void DamageBack();		// ダメージ喰らい
+	void DeadEnd();			// 死亡
 	bool HitCheck();		// 衝突検出
 
 	// <data>
