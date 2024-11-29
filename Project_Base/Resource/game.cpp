@@ -13,7 +13,7 @@
 #include "result.h"
 #include "player.h"
 #include "field_manager.h"
-
+#include "object_HUD.h"
 #include "title.h"
 
 //============================================================================
@@ -40,12 +40,37 @@ void CGame::Update()
 		CField_Manager::GetInstance()->AppearBoss();
 	}
 
+	// シーンの遷移フラグが立っていたら
+	if (m_bTransition)
+	{
+		// 黒いフェードを表示させる
+		if (m_pRenderFade->GetAlpha() >= 1.0f)
+		{ // 完全に真っ黒で
+
+			// 次のシーンへ遷移
+			To_Next();
+		}
+		else
+		{ // 真っ黒になってない
+
+			// 黒いフェードの透明度を下げていく
+			D3DXCOLOR Col = m_pRenderFade->GetCol();
+			Col.a += 0.01f;
+			m_pRenderFade->SetCol(Col);
+
+			// 黒いフェードの目標透明度を設定
+			D3DXCOLOR ColTarget = m_pRenderFade->GetColTarget();
+			ColTarget.a = 1.0f;
+			m_pRenderFade->SetColTarget(ColTarget);
+		}
+	}
+
+#ifdef _DEBUG	// パラメータ確認用
 	// リザルト画面へ
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
 	{
 		To_Next();
 	}
-#ifdef _DEBUG	// パラメータ確認用
 	else if (CManager::GetKeyboard()->GetTrigger(DIK_F7))
 	{
 		CObject::ReleaseAll();
@@ -66,6 +91,14 @@ void CGame::Draw()
 {
 	// 基底クラスの描画処理
 	CScene::Draw();
+}
+
+//============================================================================
+// 遷移開始
+//============================================================================
+void CGame::SetTransition()
+{
+	m_bTransition = true;
 }
 
 //============================================================================
@@ -112,6 +145,8 @@ CGame* CGame::Create()
 // コンストラクタ
 //============================================================================
 CGame::CGame() :
+	m_bTransition{ false },
+	m_pRenderFade{ nullptr },
 	CScene{},
 	DBG_nCntAppearBoss{ 0 }
 {
@@ -134,8 +169,11 @@ HRESULT CGame::Init()
 	// プレイヤーを生成
 	CPlayer* pPlayer = CPlayer::Create();
 
-	// プレイヤーをセット
+	// フィールドマネージャーにプレイヤーのポインタをセット
 	CField_Manager::GetInstance()->SetPlayer(pPlayer);
+
+	// フェード表示を生成
+	m_pRenderFade = CObject_HUD::Create("Data\\JSON\\HUD\\black.json");
 
 	return S_OK;
 }

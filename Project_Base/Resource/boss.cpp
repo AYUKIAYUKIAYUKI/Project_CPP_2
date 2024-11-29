@@ -17,6 +17,8 @@
 #include "collision.h"
 #include "player.h"
 #include "sparks.h"
+#include "scene.h"
+#include "game.h"
 
 //****************************************************
 // usingディレクティブ
@@ -467,8 +469,14 @@ void CBoss::DeadEnd()
 			pCamera->SetVibration(0.05f);
 		}
 
-		// モーションの再生が終了したらボスを破棄予約
+		// モーションの再生が終了したらゲームシーンにゲーム終了を通知する
 		if (GetStopState())
-			SetRelease();
+		{
+			// ゲームシーン取得
+			CGame* const pScene = dynamic_cast<CGame*>(CScene_Manager::GetInstance()->GetScene());
+
+			// シーン遷移開始
+			pScene->SetTransition();
+		}
 	}
 }

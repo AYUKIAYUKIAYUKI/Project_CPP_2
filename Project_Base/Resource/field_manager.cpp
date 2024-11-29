@@ -100,11 +100,14 @@ void CField_Manager::Update()
 			DestroyAllBlock();
 		}
 
-		// 体力が無くなると
+		// 体力が無くなるとゲームシーンにゲーム終了を通知する
 		if (m_pPlayer->GetLife() <= 0)
 		{
-			// リザルトシーンへ
-			CScene_Manager::GetInstance()->GetScene()->To_Next();
+			// ゲームシーン取得
+			CGame* const pScene = dynamic_cast<CGame*>(CScene_Manager::GetInstance()->GetScene());
+
+			// シーン遷移開始
+			pScene->SetTransition();
 		}
 	}
 }

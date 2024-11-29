@@ -14,6 +14,11 @@
 #include "scene.h"
 
 //****************************************************
+// 前方宣言
+//****************************************************
+class CObject_HUD;
+
+//****************************************************
 // ゲームクラス
 //****************************************************
 class CGame : public CScene
@@ -23,6 +28,7 @@ public:
 	// <function>
 	void Update() override;		// 更新処理
 	void Draw() override;		// 描画処理
+	void SetTransition();		// 遷移開始
 	void To_Next() override;	// 次のシーンへ
 
 	// <static function>
@@ -39,7 +45,9 @@ private:
 	void	Uninit() override;	// 終了処理
 
 	// <data>
-	int DBG_nCntAppearBoss;	// ボス登場カウント 
+	bool		 m_bTransition;			// 遷移フラグ
+	CObject_HUD* m_pRenderFade;			// フェード表示
+	int			 DBG_nCntAppearBoss;	// ボス登場カウント
 };
 
 #endif // _GAME_H_
