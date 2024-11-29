@@ -218,7 +218,7 @@ void CTitle::UpdateEnvironment()
 	{
 		// カメラの座標を固定、距離をコピー
 		CCamera* pCamera = CManager::GetManager()->GetCamera();
-		pCamera->SetPosTarget({ 100.0f, -50.0f, -4000.0f });
+		pCamera->SetPosTarget({ -400.0f, -50.0f, -4000.0f });
 		float fDistance = pCamera->GetDistance();
 
 		// カメラの距離に応じて挙動を変更
