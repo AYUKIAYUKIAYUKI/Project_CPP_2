@@ -133,6 +133,7 @@ void CCamera::SetCamera()
 //============================================================================
 void CCamera::SetAppearBoss()
 {
+#ifdef _DEBUG
 	static float a = 0.0f, b = 0.0f;
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Boss View"))
@@ -141,6 +142,7 @@ void CCamera::SetAppearBoss()
 		ImGui::DragFloat("b", &b);
 		ImGui::End();
 	}
+#endif // _DEBUG
 
 	// プレイヤーを取得
 	CPlayer* pPlayer = nullptr;
@@ -154,10 +156,10 @@ void CCamera::SetAppearBoss()
 	utility::AdjustAngle(m_Rot.y, m_RotTarget.y);		// カメラ回転の角度の差を補正
 
 	// 距離を目標値まで補間
-	m_fDistance += ((550.0f + a) - m_fDistance) * COEF_ADJUST;
+	m_fDistance += (550.0f - m_fDistance) * COEF_ADJUST;
 
 	// 俯瞰度合いを目標値まで補間
-	m_fAdjust += ((300.0f + b) - m_fAdjust) * COEF_ADJUST;
+	m_fAdjust += (300.0f - m_fAdjust) * COEF_ADJUST;
 }
 
 //============================================================================

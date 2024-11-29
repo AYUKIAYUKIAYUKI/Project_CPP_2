@@ -194,6 +194,7 @@ bool collision::HitCylinderToAABB(const Vec3& SelfPos, const float& fSelfRadius,
 //============================================================================
 int collision::GetCylinderToAABB(const Vec3& SelfOldPos, const Vec3& SelfNowPos, const float& fSelfRadius, const float& fSelfHeight, const Vec3& OtherPos, const Vec3& OtherSize)
 {
+#ifdef _DEBUG
 	// ウィンドウを表示
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("[GetCylinderToAABB] UpdateInfo"))
@@ -203,6 +204,7 @@ int collision::GetCylinderToAABB(const Vec3& SelfOldPos, const Vec3& SelfNowPos,
 		ImGui::Text("SWidth:L %.2f:R %.2f", SelfNowPos.x + fSelfRadius, SelfNowPos.x - fSelfRadius);
 	}
 	ImGui::End();
+#endif // _DEBUG
 
 	// 衝突自体が無ければ
 	if (!HitCylinderToAABB(SelfNowPos, fSelfRadius, fSelfHeight, OtherPos, OtherSize))

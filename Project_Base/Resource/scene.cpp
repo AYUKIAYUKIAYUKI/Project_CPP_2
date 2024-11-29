@@ -162,9 +162,9 @@ CScene_Manager::~CScene_Manager()
 HRESULT CScene_Manager::Init()
 {
 	// 最初のシーンを生成しておく
-	//m_pScene = CTitle::Create();
+	m_pScene = CTitle::Create();
 	//m_pScene = CGame::Create();
-	m_pScene = CResult::Create();
+	//m_pScene = CResult::Create();
 
 	// 生成失敗
 	if (m_pScene == nullptr)

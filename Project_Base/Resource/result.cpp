@@ -203,7 +203,7 @@ void CResult::Uninit()
 	// フェイクプレイヤーの破棄
 	if (m_pFakePlayer != nullptr)
 	{
-		m_pFakePlayer->Release();
+		m_pFakePlayer->SetRelease();
 		m_pFakePlayer = nullptr;
 	}
 
