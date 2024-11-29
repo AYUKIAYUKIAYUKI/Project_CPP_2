@@ -39,8 +39,9 @@ CPlayer_State_Slash::CPlayer_State_Slash() :
 	m_pBndSlash{ std::make_unique<CBounding_Sphere>() }
 {
 	// 斬撃のバウンディングのパラメータを設定
-	m_pBndSlash->SetCenterPos(m_pCharacter->GetPos());
-	m_pBndSlash->SetRadius(100.0f);
+	Vec3 Pos = m_pCharacter->GetPos();
+	m_pBndSlash->SetCenterPos(Pos);
+	m_pBndSlash->SetRadius(10.0f);
 }
 
 //============================================================================

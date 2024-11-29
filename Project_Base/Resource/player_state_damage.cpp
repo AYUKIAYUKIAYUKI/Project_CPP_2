@@ -11,6 +11,7 @@
 #include "player_state_damage.h"
 #include "player_state_default.h"
 #include "manager.h"
+#include "field_manager.h"
 
 //****************************************************
 // usingディレクティブ
@@ -46,6 +47,9 @@ CPlayer_State_Damage::~CPlayer_State_Damage()
 //============================================================================
 void CPlayer_State_Damage::Update()
 {
+	// 重力加速
+	m_pCharacter->SetVelY(m_pCharacter->GetVelY() + CField_Manager::FIELD_GRAVITY);
+
 	// 継続期間をカウントアップ
 	m_nDamageDuration++;
 
