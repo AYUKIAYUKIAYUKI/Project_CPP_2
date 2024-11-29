@@ -22,6 +22,7 @@ public:
 	{
 		TITLE = 0,			// タイトル
 		START,				// スタート表示
+		RESULT,				// リザルト表示
 		CONSTELLATION0,		// 星座0
 		CONSTELLATION1,		// 星座1
 		CONSTELLATION2,		// 星座2

@@ -15,6 +15,12 @@
 #include "spline_test.h"
 
 //****************************************************
+// 前方宣言
+//****************************************************
+class CObject_HUD;
+class CMotion_Set;
+
+//****************************************************
 // リザルトクラス
 //****************************************************
 class CResult : public CScene
@@ -34,13 +40,17 @@ private:
 	// <function>
 	HRESULT Init() override;	// 初期設定
 	void	Uninit() override;	// 終了処理
+	void	UpdateFakePlayer();	// フェイクプレイヤー用更新
 
 	// <special function>
-	CResult();			// コンストラクタ
+	CResult();				// コンストラクタ
 	~CResult() override;	// デストラクタ
 
 	// <Data>
-	CSpline_Test* m_pSpline;	// スプラインテスト
+	D3DXVECTOR3  m_Path;		// パス
+	CMotion_Set* m_pFakePlayer;	// フェイクプレイヤー
+	CObject_HUD* m_pText;		// 文章
+	//CSpline_Test* m_pSpline;	// スプラインテスト
 };
 
 #endif // _RESULT_H_
