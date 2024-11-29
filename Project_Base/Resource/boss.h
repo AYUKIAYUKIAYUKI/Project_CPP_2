@@ -68,6 +68,7 @@ private:
 	void BranchAction();	// 行動分岐
 	void HoldCenter();		// 中心で待機
 	void DirectAttack();	// 体当たり
+	bool HitCheck();		// 衝突検出
 
 	// <data>
 	ACTION				m_ActionType;		// 行動タイプ

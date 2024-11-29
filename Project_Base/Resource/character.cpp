@@ -29,6 +29,7 @@ CCharacter::CCharacter() :
 	CMotion_Set{},
 	m_fCorrectCoef{ 0.0f },
 	m_fDirection{ 0.0f },
+	m_fDirectionTarget{ 0.0f },
 	m_fMoveSpeed{ 0.0f },
 	m_RotTarget{ VEC3_INIT },
 	m_PosTarget{ VEC3_INIT },

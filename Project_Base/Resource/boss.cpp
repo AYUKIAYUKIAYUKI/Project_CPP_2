@@ -14,6 +14,7 @@
 #include "renderer.h"
 #include "field_manager.h"
 #include "object_parts.h"
+#include "collision.h"
 #include "player.h"
 #include "sparks.h"
 
@@ -342,4 +343,30 @@ void CBoss::DirectAttack()
 		// 待機モーションに戻す
 		SetNowMotion(1);
 	}
+
+	// 衝突判定に成功したら
+	if (HitCheck())
+	{
+		// プレイヤーに1ダメージ
+		CPlayer* pPlayer = nullptr;
+		pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+		pPlayer->SetDamage(1);
+	}
+}
+
+//============================================================================
+// 衝突検出
+//============================================================================
+bool CBoss::HitCheck()
+{
+	// プレイヤーのパラメータをコピー
+	CPlayer* pPlayer = nullptr;
+	pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+	const CBounding_Cylinder* Other = pPlayer->GetBndCylinder();
+
+	// 自分とプレイヤーの円柱バウンディングで比べる
+	if (collision::HitCylinderToCylinder(m_pBndCylinder, Other))
+		return true;
+
+	return false;
 }
