@@ -54,12 +54,24 @@ void CField_Manager::InitForTitle()
 }
 
 //============================================================================
+// HUD向け追加初期設定
+//============================================================================
+void CField_Manager::InitForHUD()
+{
+	// HUDの初期設定
+	InitHUD();
+}
+
+//============================================================================
 // 更新処理
 //============================================================================
 void CField_Manager::Update()
 {
 	// 環境装飾の更新
 	UpdateEnvironment();
+
+	// HUDの更新
+	UpdateHUD();
 
 	if (typeid(*CScene_Manager::GetInstance()->GetScene()) == typeid(CGame))
 	{
@@ -87,9 +99,6 @@ void CField_Manager::Update()
 		{
 			DestroyAllBlock();
 		}
-
-		// HUDの更新
-		UpdateHUD();
 
 		// 体力が無くなると
 		if (m_pPlayer->GetLife() <= 0)
@@ -226,34 +235,12 @@ CField_Manager::~CField_Manager()
 //============================================================================
 HRESULT CField_Manager::Init()
 {
-	// マップ表示を作成
-	m_pMap = CObject_HUD::Create("Data\\JSON\\HUD\\map.json");
-	m_pMap->BindTex(CTexture_Manager::TYPE::MAP);
-
-	// プレイヤーの体力表示を生成
-	for (WORD i = 0; i < CPlayer::MAX_LIFE; ++i)
-	{
-		std::string FilePath = "Data\\JSON\\HUD\\playerlife\\" + to_string(i) + ".json";
-		m_pPlayerLife[i] = CObject_HUD::Create(FilePath);
-		m_pPlayerLife[i]->BindTex(CTexture_Manager::TYPE::CIRCLE);
-	}
-
-	// プレイヤーのゲージを生成
-	m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergauge.json");
-	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAYERGAUGE);
-
-	// プレイヤーのゲージウィンドウを生成
-	m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergaugewindow.json");
-	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAYERGAUGEWINDOW);
-
 	// 扇形表示を生成
 	m_pRenderFan = CFan::Create();
 
 #if CHANGE_FIELRDCREATE_STYLE
-
 	// 円の生成
 	DEBUG_CIRCLE();
-
 #endif	// CHANGE_FIELRDCREATE_STYLE
 
 	return S_OK;
@@ -278,6 +265,32 @@ void CField_Manager::InitEnvironment()
 }
 
 //============================================================================
+// HUDの初期設定
+//============================================================================
+void CField_Manager::InitHUD()
+{
+	// マップ表示を作成
+	m_pMap = CObject_HUD::Create("Data\\JSON\\HUD\\map.json");
+	m_pMap->BindTex(CTexture_Manager::TYPE::MAP);
+
+	// プレイヤーの体力表示を生成
+	for (WORD i = 0; i < CPlayer::MAX_LIFE; ++i)
+	{
+		std::string FilePath = "Data\\JSON\\HUD\\playerlife\\" + to_string(i) + ".json";
+		m_pPlayerLife[i] = CObject_HUD::Create(FilePath);
+		m_pPlayerLife[i]->BindTex(CTexture_Manager::TYPE::CIRCLE);
+	}
+
+	// プレイヤーのゲージを生成
+	m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergauge.json");
+	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAYERGAUGE);
+
+	// プレイヤーのゲージウィンドウを生成
+	m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergaugewindow.json");
+	m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAYERGAUGEWINDOW);
+}
+
+//============================================================================
 // 終了処理
 //============================================================================
 void CField_Manager::Uninit()
@@ -297,6 +310,56 @@ void CField_Manager::UpdateEnvironment()
 {
 	// 火の粉を生成
 	CSparks::AutoGenerate();
+}
+
+//============================================================================
+// HUDの更新処理
+//============================================================================
+void CField_Manager::UpdateHUD()
+{
+	if (m_pPlayerLife[0] == nullptr)
+	{
+		return;
+	}
+
+	// 体力量分のHUDが表示されるように調整
+	for (WORD i = CPlayer::MAX_LIFE; i > 0; --i)
+	{
+		// 座標を取得
+		Vec3 NewPosTarget = m_pPlayerLife[i - 1]->GetPosTarget();
+
+		if (typeid(*CScene_Manager::GetInstance()->GetScene()) == typeid(CGame))
+		{
+			if (i > m_pPlayer->GetLife())
+			{
+				NewPosTarget.y = -100.0f;
+			}
+			else
+			{
+				NewPosTarget.y = 75.0f;
+			}
+		}
+		else
+		{
+			NewPosTarget.y = 75.0f;
+		}
+
+		// 座標を反映
+		m_pPlayerLife[i - 1]->SetPosTarget(NewPosTarget);
+	}
+
+#if 0	// HUD挙動の確認
+
+	if (CManager::GetKeyboard()->GetPress(DIK_Z))
+	{
+		m_pPlayerGaugeWindow->SetVibration();
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_X))
+	{
+		m_pPlayerGaugeWindow->SetWaving();
+	}
+
+#endif
 }
 
 //============================================================================
@@ -478,44 +541,6 @@ void CField_Manager::DestroyAllBlock()
 
 		pObj = pObj->GetNext();
 	}
-}
-
-//============================================================================
-// HUDの更新処理
-//============================================================================
-void CField_Manager::UpdateHUD()
-{
-	// 体力量分のHUDが表示されるように調整
-	for (WORD i = CPlayer::MAX_LIFE; i > 0; --i)
-	{
-		// 座標を取得
-		Vec3 NewPosTarget = m_pPlayerLife[i - 1]->GetPosTarget();
-
-		if (i > m_pPlayer->GetLife())
-		{
-			NewPosTarget.y = -100.0f;
-		}
-		else
-		{
-			NewPosTarget.y = 75.0f;
-		}
-
-		// 座標を反映
-		m_pPlayerLife[i - 1]->SetPosTarget(NewPosTarget);
-	}
-
-#if 0	// HUD挙動の確認
-
-	if (CManager::GetKeyboard()->GetPress(DIK_Z))
-	{
-		m_pPlayerGaugeWindow->SetVibration();
-	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_X))
-	{
-		m_pPlayerGaugeWindow->SetWaving();
-	}
-
-#endif
 }
 
 //============================================================================

@@ -241,6 +241,9 @@ void CTitle::UpdateEnvironment()
 
 			if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
 			{
+				// HUD用の初期設定
+				CField_Manager::GetInstance()->InitForHUD();
+
 				// 次のシーンへ移行開始
 				m_bTransition = 1;
 

@@ -41,6 +41,7 @@ public:
 
 	// <function>
 	void InitForTitle();	// タイトルでの追加初期設定
+	void InitForHUD();		// HUD用の追加初期設定
 	void Update();			// 更新処理
 	void Draw();			// 描画処理
 	void AppearBoss();		// ボス登場
@@ -68,14 +69,15 @@ private:
 	// <function>
 	HRESULT Init();											// 初期設定
 	void	InitEnvironment();								// 環境装飾の初期設定
+	void	InitHUD();										// HUDの初期設定
 	void	Uninit();										// 終了処理
 	void	UpdateEnvironment();							// 環境装飾の更新処理
+	void	UpdateHUD();									// HUDの更新処理
 	void	AppearBossEvent();								// ボス登場イベント
 	void	GenerateBlock();								// ブロックの自動生成
 	bool	DetectAdjacentBlock(const D3DXVECTOR3& Pos);	// 隣接し合うブロックを検出
 	void	DestroyBlock();									// ブロックの自動削除
 	void	DestroyAllBlock();								// 全ブロックの削除
-	void	UpdateHUD();									// HUDの更新処理
 
 	/* けします */
 	void DEBUG_CIRCLE();	// デバッグサークル
