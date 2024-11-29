@@ -11,6 +11,7 @@
 #include "player_state_jump.h"
 #include "player_state_default.h"
 #include "player_state_dash.h"
+#include "player_state_damage.h"
 
 // フィールド取得用
 #include "field_manager.h"
@@ -86,6 +87,17 @@ void CPlayer_State_Jump::To_Dash()
 	if (GetNextState() == nullptr)
 	{
 		SetNextState(DBG_NEW CPlayer_State_Dash());
+	}
+}
+
+//============================================================================
+// ダメージ状態へ
+//============================================================================
+void CPlayer_State_Jump::To_Damage()
+{
+	if (GetNextState() == nullptr)
+	{
+		SetNextState(DBG_NEW CPlayer_State_Damage());
 	}
 }
 

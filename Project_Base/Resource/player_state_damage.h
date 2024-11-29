@@ -31,7 +31,7 @@ public:
 private:
 
 	/// <summary> ダメージ継続期間 </summary>
-	static constexpr int MAX_DASH_DURATION = 60;
+	static constexpr int MAX_DASH_DURATION = 120;
 
 	// <data>
 	int m_nDamageDuration;	// ダメージ継続期間

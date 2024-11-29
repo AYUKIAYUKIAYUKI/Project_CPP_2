@@ -31,6 +31,7 @@ public:
 	void Update() override;		// 更新処理
 	void To_Default() override;	// 通常状態へ
 	void To_Dash() override;	// ダッシュ状態へ
+	void To_Damage() override;	// ダメージ状態へ
 
 private:
 

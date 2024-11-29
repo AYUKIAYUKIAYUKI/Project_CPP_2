@@ -90,6 +90,13 @@ void CField_Manager::Update()
 
 		// HUDの更新
 		UpdateHUD();
+
+		// 体力が無くなると
+		if (m_pPlayer->GetLife() <= 0)
+		{
+			// リザルトシーンへ
+			CScene_Manager::GetInstance()->GetScene()->To_Next();
+		}
 	}
 }
 
