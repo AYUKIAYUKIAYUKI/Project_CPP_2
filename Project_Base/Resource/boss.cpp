@@ -153,10 +153,16 @@ void CBoss::Draw()
 //============================================================================
 void CBoss::SetDamage(int nDamage)
 {
-	// ダメージ量分、体力を変動
-	int nNewLife = GetLife();
-	nNewLife += nDamage;
-	SetLife(nNewLife);
+	if (m_ActionType != ACTION::DAMAGEBACK)
+	{
+		// ダメージ量分、体力を変動
+		int nNewLife = GetLife();
+		nNewLife += nDamage;
+		SetLife(nNewLife);
+
+		// ダメージ喰らい行動を強制発生
+		m_ActionType = ACTION::DAMAGEBACK;
+	}
 }
 
 //============================================================================
@@ -260,14 +266,21 @@ void CBoss::BranchAction()
 	{ // 行動タイプを所持している時
 
 		// タイプに応じて処理を変更
-		switch (static_cast<WORD>(m_ActionType))
+		switch (m_ActionType)
 		{
-		case 1:	// 体当たり
+			// 体当たり
+		case ACTION::DIRECTATTACK:
 			DirectAttack();
 			break;
 
-		case 0:
-		default:	// 例外
+			// ダメージ喰らい
+		case ACTION::DAMAGEBACK:
+			DamageBack();
+			break;
+
+			// 例外
+		case ACTION::HOLDCENTER:
+		default:
 #ifdef _DEBUG
 			assert(false && "ボスの行動に例外発生");
 #else
@@ -351,6 +364,36 @@ void CBoss::DirectAttack()
 		CPlayer* pPlayer = nullptr;
 		pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
 		pPlayer->SetDamage(-1);
+	}
+}
+
+//============================================================================
+// ダメージ喰らい
+//============================================================================
+void CBoss::DamageBack()
+{
+	// 継続期間をインクリメント
+	++m_nDuration;
+
+	// 中央に浮かぶ
+	Vec3 Pos = VEC3_INIT;
+	Pos.y = 150.0f;
+	SetPosTarget(Pos);
+
+	// 2秒時点で
+	if (m_nDuration >= 120)
+	{
+		// 行動キャストカウントをリセット
+		m_nCntActionCast = 0;
+
+		// 継続期間をリセット
+		m_nDuration = 0;
+
+		// 中央待機に戻る
+		m_ActionType = ACTION::HOLDCENTER;
+
+		// 待機モーションに戻す
+		SetNowMotion(1);
 	}
 }
 

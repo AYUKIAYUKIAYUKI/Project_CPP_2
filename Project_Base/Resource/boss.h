@@ -3,7 +3,7 @@
 // ボス、ヘッダファイル [boss.h]
 // Author : 福田歩希
 //
-//============================================================================
+//============================================================================79
 
 #ifndef _BOSS_H_
 #define _BOSS_H_	// 二重インクルード防止
@@ -33,11 +33,12 @@ public:
 	{
 		HOLDCENTER = 0,	// 中央で待機
 		DIRECTATTACK,	// 体当たり
+		DAMAGEBACK,		// ダメージ喰らい
 		MAX
 	};
-
+	
 	/// <summary> ボスの最大体力 </summary>
-	static constexpr int MAX_LIFE = 5;
+	static constexpr int MAX_LIFE = 999;
 
 	/// <summary> 目標値への補間強度 </summary>
 	static constexpr float CORRECT_COEF = 0.1f;
@@ -68,6 +69,7 @@ private:
 	void BranchAction();	// 行動分岐
 	void HoldCenter();		// 中心で待機
 	void DirectAttack();	// 体当たり
+	void DamageBack();		// ダメージ喰らい
 	bool HitCheck();		// 衝突検出
 
 	// <data>

@@ -58,7 +58,6 @@ void CPlayer_State_Damage::Update()
 	{
 		// インプット系取得
 		CInputKeyboard* pKeyboard = CManager::GetKeyboard();	// キーボード
-		CInputMouse* pMouse = CManager::GetMouse();				// マウス
 		CInputPad* pPad = CManager::GetPad();					// パッド
 
 		// プレイヤーのパラメータを取得

@@ -49,6 +49,7 @@ private:
 
 	// <function>
 	void AdjustGravity();	// d—Í‚Ì•â³
+	bool SlashHitCheck();	// aŒ‚“–‚½‚è”»’è
 
 	// <data>
 	int									m_nSlashDuration;	// Œp‘±ŠúŠÔ

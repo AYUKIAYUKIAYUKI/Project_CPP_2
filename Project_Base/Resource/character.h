@@ -62,7 +62,8 @@ public:
 	void SetLife(int nLife);	// 体力を設定
 
 	// <virtual function>
-	virtual void AutoSetRotTarget();	// 目標向きを移動方向から自動で設定
+	virtual void AutoSetRotTarget();		// 目標向きを移動方向から自動で設定
+	virtual void SetDamage(int nDamage);	// ダメージを受ける
 
 protected:
 

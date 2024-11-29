@@ -11,12 +11,15 @@
 #include "player_state_slash.h"
 #include "player_state_default.h"
 #include "player_state_damage.h"
+#include "collision.h"
 
 // フィールドサイズ取得用
 #include "field_manager.h"
 
 // インプット取得用
 #include "manager.h"
+
+#include "boss.h"
 
 //****************************************************
 // usingディレクティブ
@@ -41,7 +44,7 @@ CPlayer_State_Slash::CPlayer_State_Slash() :
 	// 斬撃のバウンディングのパラメータを設定
 	Vec3 Pos = m_pCharacter->GetPos();
 	m_pBndSlash->SetCenterPos(Pos);
-	m_pBndSlash->SetRadius(10.0f);
+	m_pBndSlash->SetRadius(20.0f);
 }
 
 //============================================================================
@@ -63,6 +66,9 @@ void CPlayer_State_Slash::Update()
 {
 	// 継続期間をカウントアップ
 	m_nSlashDuration++;
+
+	// 衝突検出
+	SlashHitCheck();
 
 	// 継続期間が最大に到達で
 	if (m_nSlashDuration >= MAX_SLASH_DURATION)
@@ -106,4 +112,49 @@ void CPlayer_State_Slash::To_Damage()
 void CPlayer_State_Slash::AdjustGravity()
 {
 
+}
+
+//============================================================================
+// 斬撃当たり判定
+//============================================================================
+bool CPlayer_State_Slash::SlashHitCheck()
+{
+#if 0
+	// ミドルオブジェクトを取得
+	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
+
+	while (pObj != nullptr)
+	{
+		// キャラクタークラスにダウンキャスト
+		CCharacter* pCharacter = CObject::DownCast<CCharacter>(pObj);
+
+		// キャスト失敗で
+		if (!pCharacter)
+		{
+			pObj = pObj->GetNext();
+			continue;
+		}
+
+		// 攻撃と敵キャラクターの当たり判定
+
+		// ダメージを与える
+		pCharacter->SetDamage(-1);
+
+		pObj = pObj->GetNext();
+	}
+#else // 現段階のみ
+
+	// ボスの円柱バウンディングを取得
+	CBoss* pBoss = utility::DownCast<CBoss, CObject>(CObject::FindSpecificObject(CObject::TYPE::BOSS));
+
+	// 斬撃バウンディングをコピー
+	const CBounding_Sphere* pOther = m_pBndSlash.get();
+
+	// 斬撃バウンディングとボスの円柱バウンディングで当たり判定
+	if (collision::HitCylinderToSphere(pBoss->GetBndCylinder(), pOther))
+		pBoss->SetDamage(-1);
+
+#endif
+
+	return false;
 }
