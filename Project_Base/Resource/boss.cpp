@@ -330,6 +330,16 @@ void CBoss::DirectAttack()
 	// 継続期間をインクリメント
 	++m_nDuration;
 
+	// カメラ距離・俯瞰度合いを強制変更
+	{
+		CCamera* pCamera = CManager::GetManager()->GetCamera();
+		float fDinstance = pCamera->GetDistance(), fUpAdjust = pCamera->GetUpAdjust();
+		fDinstance += (450.0f - fDinstance) * 0.1f;
+		fUpAdjust += (150.0f - fUpAdjust) * 0.05f;
+		pCamera->SetDistance(fDinstance);
+		pCamera->SetUpAdjust(fUpAdjust);
+	}
+
 	// 1.5秒時点で
 	if (m_nDuration == 90)
 	{

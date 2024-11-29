@@ -144,6 +144,10 @@ bool CPlayer_State_Slash::SlashHitCheck()
 	}
 #else // 現段階のみ
 
+	// ボスが存在していなければこのメソッドを無視
+	if (!CObject::FindSpecificObject(CObject::TYPE::BOSS))
+		return false;
+
 	// ボスの円柱バウンディングを取得
 	CBoss* pBoss = utility::DownCast<CBoss, CObject>(CObject::FindSpecificObject(CObject::TYPE::BOSS));
 
