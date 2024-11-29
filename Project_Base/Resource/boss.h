@@ -26,11 +26,21 @@ class CBoss : public CCharacter
 {
 public:
 
+	//****************************************************
+	// 行動タイプを定義
+	//****************************************************
+	enum class ACTION : WORD
+	{
+		HOLDCENTER = 0,	// 中央で待機
+		DIRECTATTACK,	// 体当たり
+		MAX
+	};
+
 	/// <summary> ボスの最大体力 </summary>
 	static constexpr int MAX_LIFE = 5;
 
 	/// <summary> 目標値への補間強度 </summary>
-	static constexpr float CORRECT_COEF = 0.5f;
+	static constexpr float CORRECT_COEF = 0.1f;
 
 	// <special function>
 	CBoss();	// コンストラクタ
@@ -54,10 +64,15 @@ public:
 private:
 
 	// <function>
-	void HoldCenter();	// 中心で待機
+	void SetNextAction();	// 次の行動を決定
+	void BranchAction();	// 行動分岐
+	void HoldCenter();		// 中心で待機
+	void DirectAttack();	// 体当たり
 
 	// <data>
+	ACTION				m_ActionType;		// 行動タイプ
 	int					m_nCntActionCast;	// 行動キャストカウント
+	int					m_nDuration;		// 汎用期間
 	CBounding_Cylinder* m_pBndCylinder;		// 円柱バウンディング
 };
 

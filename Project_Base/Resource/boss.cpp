@@ -33,7 +33,9 @@ using namespace abbr;
 //============================================================================
 CBoss::CBoss() :
 	CCharacter{},
+	m_ActionType{ ACTION::HOLDCENTER },
 	m_nCntActionCast{ 0 },
+	m_nDuration{ 0 },
 	m_pBndCylinder{ DBG_NEW CBounding_Cylinder() }
 {
 
@@ -95,6 +97,9 @@ void CBoss::Update()
 		// 通常モーションへ
 		SetNowMotion(1);
 
+		// 行動キャストをリセット
+		m_nCntActionCast = 0;
+
 		// カメラのプレイヤー追従もこの時に戻す
 		CManager::GetManager()->GetCamera()->ChangeTrackPlayer(true);
 	}
@@ -102,25 +107,11 @@ void CBoss::Update()
 	// 火の粉を猛発生させる
 	CSparks::FuryGenerate();
 
-	// 行動キャストをインクリメント
-	++m_nCntActionCast;
+	// 次の行動を決定
+	SetNextAction();
 
-	// キャストが一定値に達すると
-	if (m_nCntActionCast > 40)
-	{
-		// 行動キャストをリセット
-		m_nCntActionCast = 0;
-
-		// ランダムに行動
-		switch (1)
-		{
-
-		}
-	}
-	else
-	{ // キャスト完了まで中心で待機
-		HoldCenter();
-	}
+	// 行動分岐
+	BranchAction();
 
 	// 円柱バウンディングの中心点をモデルの中心に
 	m_pBndCylinder->SetCenterPos(GetPos());
@@ -133,14 +124,15 @@ void CBoss::Update()
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Boss Param"))
 	{
-		ImGui::Text("Direction:%.3f", GetDirection() * (180 / D3DX_PI));
-		ImGui::Text("DirectionTarget:%.3f", GetDirectionTarget() * (180 / D3DX_PI));
+		ImGui::Text("ActionType:%d", m_ActionType);
+		ImGui::Text("Direction:%.1f", GetDirection() * (180 / D3DX_PI));
+		ImGui::Text("DirectionTarget:%.1f", GetDirectionTarget() * (180 / D3DX_PI));
 		ImGui::Text("Rot:X %.1f:Y %.1f:Z %.1f", GetRot().x * (180 / D3DX_PI), GetRot().y * (180 / D3DX_PI), GetRot().z * (180 / D3DX_PI));
 		ImGui::Text("RotTarget:X %.1f:Y %.1f:Z %.1f", GetRotTarget().x * (180 / D3DX_PI), GetRotTarget().y * (180 / D3DX_PI), GetRotTarget().z * (180 / D3DX_PI));
 		ImGui::Text("Pos:X %.1f:Y %.1f:Z %.1f", GetPos().x, GetPos().y, GetPos().z);
 		ImGui::Text("PosTarget:X %.1f:Y %.1f:Z %.1f", GetPosTarget().x, GetPosTarget().y, GetPosTarget().z);
 		ImGui::Text("VelY:%.1f", GetVelY());
-		ImGui::Text("Life:%df", GetLife());
+		ImGui::Text("Life:%d", GetLife());
 	}
 	ImGui::End();
 #endif	// _DEBUG
@@ -223,6 +215,69 @@ CBoss* CBoss::Create()
 //============================================================================
 
 //============================================================================
+// 次の行動を決定
+//============================================================================
+void CBoss::SetNextAction()
+{
+	// キャストが一定値に達すると
+	if (m_nCntActionCast > 240)
+	{
+		// 行動キャストをリセット
+		m_nCntActionCast = 0;
+
+		// ランダムに行動をセット
+		switch (1)
+		{
+		case 1:
+			m_ActionType = ACTION::DIRECTATTACK;
+			break;
+
+		default:	// 例外
+#ifdef _DEBUG
+			assert(false && "ボスの行動決定に例外");
+#endif // _DEBUG
+			break;
+		}
+	}
+}
+
+//============================================================================
+// 行動分岐
+//============================================================================
+void CBoss::BranchAction()
+{
+	if (m_ActionType == ACTION::HOLDCENTER)
+	{ // 行動が設定されていない時
+
+		// 行動キャストをインクリメント
+		++m_nCntActionCast;
+
+		// 中央に待機
+		HoldCenter();
+	}
+	else
+	{ // 行動タイプを所持している時
+
+		// タイプに応じて処理を変更
+		switch (static_cast<WORD>(m_ActionType))
+		{
+		case 1:	// 体当たり
+			DirectAttack();
+			break;
+
+		case 0:
+		default:	// 例外
+#ifdef _DEBUG
+			assert(false && "ボスの行動に例外発生");
+#else
+			m_ActionType = ACTION::HOLDCENTER;
+#endif // _DEBUG
+			break;
+		}
+	}
+}
+
+//============================================================================
 // 中心で待機
 //============================================================================
 void CBoss::HoldCenter()
@@ -240,4 +295,51 @@ void CBoss::HoldCenter()
 	Pos = VEC3_INIT;
 	Pos.y = 100.0f;
 	SetPosTarget(Pos);
+}
+
+//============================================================================
+// 体当たり
+//============================================================================
+void CBoss::DirectAttack()
+{
+	if (GetNowMotion() != 2)
+	{
+		// ボスがブルブルモーションに変更
+		SetNowMotion(2);
+
+		// この瞬間のプレヤーの方角をコピー
+		CPlayer* pPlayer = nullptr;
+		pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+		SetDirectionTarget(pPlayer->GetDirection());
+	}
+
+	// 継続期間をインクリメント
+	++m_nDuration;
+
+	// 1.5秒時点で
+	if (m_nDuration == 90)
+	{
+		// 突進目標の座標を作成
+		Vec3 PosTarget = {
+			cosf(GetDirection()) * CField_Manager::FIELD_RADIUS,
+			30.0f,
+			sinf(GetDirection()) * CField_Manager::FIELD_RADIUS
+		};
+
+		// 目標座標に反映
+		SetPosTarget(PosTarget);
+	}
+
+	// 3秒時点で
+	if (m_nDuration == 180)
+	{
+		// 継続期間をリセット
+		m_nDuration = 0;
+
+		// 中央待機に戻る
+		m_ActionType = ACTION::HOLDCENTER;
+
+		// 待機モーションに戻す
+		SetNowMotion(1);
+	}
 }
