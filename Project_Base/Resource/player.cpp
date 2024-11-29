@@ -13,6 +13,7 @@
 #include "player_state.h"
 #include "player_state_default.h"
 #include "player_state_dash.h"
+#include "player_state_damage.h"
 
 #include "block.h"
 #include "collision.h"
@@ -225,13 +226,16 @@ void CPlayer::Draw()
 //============================================================================
 void CPlayer::SetDamage(int nDamage)
 {
-	// ダメージ量分、体力を変動
-	 int nNewLife = GetLife();
-	 nNewLife += nDamage;
-	 SetLife(nNewLife);
+	if (typeid(*m_pState) != typeid(CPlayer_State_Damage))
+	{
+		// ダメージ量分、体力を変動
+		int nNewLife = GetLife();
+		nNewLife += nDamage;
+		SetLife(nNewLife);
 
-	// ダメージ状態へ変更するよう命令する
-	m_pState->To_Damage();
+		// ダメージ状態へ変更するよう命令する
+		m_pState->To_Damage();
+	}
 }
 
 //============================================================================

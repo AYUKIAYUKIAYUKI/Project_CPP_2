@@ -350,7 +350,7 @@ void CBoss::DirectAttack()
 		// プレイヤーに1ダメージ
 		CPlayer* pPlayer = nullptr;
 		pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
-		pPlayer->SetDamage(1);
+		pPlayer->SetDamage(-1);
 	}
 }
 
