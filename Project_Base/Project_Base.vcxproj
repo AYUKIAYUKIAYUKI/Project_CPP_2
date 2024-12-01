@@ -34,6 +34,7 @@
     <ClCompile Include="Resource\character_motion.cpp" />
     <ClCompile Include="Resource\collision.cpp" />
     <ClCompile Include="Resource\constellation.cpp" />
+    <ClCompile Include="Resource\HUD_manager.cpp" />
     <ClCompile Include="Resource\input_keyboard.cpp" />
     <ClCompile Include="Resource\input_mouse.cpp" />
     <ClCompile Include="Resource\input_pad.cpp" />
@@ -110,6 +111,7 @@
     <ClInclude Include="Resource\character_motion.h" />
     <ClInclude Include="Resource\collision.h" />
     <ClInclude Include="Resource\constellation.h" />
+    <ClInclude Include="Resource\HUD_manager.h" />
     <ClInclude Include="Resource\input_keyboard.h" />
     <ClInclude Include="Resource\input_mouse.h" />
     <ClInclude Include="Resource\input_pad.h" />

@@ -189,6 +189,7 @@
     <ClCompile Include="Resource\boss.cpp">
       <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Boss&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\HUD_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -382,6 +383,7 @@
     <ClInclude Include="Resource\boss.h">
       <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Boss&gt;</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\HUD_manager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Object&gt;">
