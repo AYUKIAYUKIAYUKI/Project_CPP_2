@@ -43,9 +43,6 @@ void CRenderer::Update()
 	// 全オブジェクト更新処理
 	CObject::UpdateAll();
 
-	// フィールドマネージャーの更新
-	CField_Manager::GetInstance()->Update();
-
 	// 全オブジェクト後更新処理
 	CObject::LateUpdateAll();
 }
@@ -88,9 +85,6 @@ void CRenderer::Draw()
 
 		// 全オブジェクトの描画
 		CObject::DrawAll();
-
-		// フィールドマネージャーの描画
-		CField_Manager::GetInstance()->Draw();
 
 		// シーンの専用描画
 		CScene_Manager::GetInstance()->GetScene()->Draw();

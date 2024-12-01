@@ -45,8 +45,7 @@ public:
 	void AppearBoss();		// ボス登場
 
 	// <setter>
-	/* 方法を考えてください*/
-	void SetPlayer(CPlayer* p) { m_pPlayer = p; };
+	void SetSyncPlayer(const CPlayer* const pPlayer);	// プレイヤーをセット
 
 	// <static function>
 	static HRESULT	Create();	// 生成
@@ -79,11 +78,11 @@ private:
 	void DEBUG_CIRCLE();	// デバッグサークル
 
 	// <data>
-	CObject_X*	 m_pDome;				// ドーム
-	CMotion_Set* m_pStatue;				// 銅像
-	int			 m_nCntStatueVibration;	// 銅像振動カウント
-	CPlayer*	 m_pPlayer;				// プレイヤー情報
-	CFan*		 m_pRenderFan;			// 扇形表示
+	const CPlayer*	m_pSyncPlayer;			// プレイヤーのポインタ
+	CObject_X*		m_pDome;				// ドーム
+	CMotion_Set*	m_pStatue;				// 銅像
+	int				m_nCntStatueVibration;	// 銅像振動カウント
+	CFan*			m_pRenderFan;			// 扇形表示
 
 	// <static data>
 	static CField_Manager* m_pFieldManager;	// フィールドマネージャーの本体 

@@ -32,6 +32,9 @@ void CGame::Update()
 	// シーンクラスの更新処理
 	CScene::Update();
 
+	// フィールドマネージャーの更新
+	CField_Manager::GetInstance()->Update();
+
 	// HUDマネージャーの更新
 	CHUD_Manager::GetInstance()->Update();
 
@@ -96,6 +99,9 @@ void CGame::Draw()
 {
 	// 基底クラスの描画処理
 	CScene::Draw();
+
+	// フィールドマネージャーの描画
+	CField_Manager::GetInstance()->Draw();
 }
 
 //============================================================================
@@ -175,7 +181,7 @@ HRESULT CGame::Init()
 	CPlayer* pPlayer = CPlayer::Create();
 
 	// フィールドマネージャーにプレイヤーをセット
-	CField_Manager::GetInstance()->SetPlayer(pPlayer);
+	CField_Manager::GetInstance()->SetSyncPlayer(pPlayer);
 
 	// HUDマネージャーにプレイヤーをセット
 	CHUD_Manager::GetInstance()->SetSyncPlayer(pPlayer);
@@ -193,4 +199,7 @@ void CGame::Uninit()
 {
 	// HUDマネージャーの破棄
 	CHUD_Manager::Release();
+
+	// フィールドマネージャーの破棄
+	CField_Manager::Release();
 }

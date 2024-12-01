@@ -127,11 +127,11 @@ CTitle::~CTitle()
 //============================================================================
 HRESULT CTitle::Init()
 {
-	//　フィールドマネージャータイトル向け初期設定
+	//　フィールドマネージャーのタイトル向け初期設定
 	CField_Manager::GetInstance()->InitForTitle();
 
-	// 環境装飾を生成
-	{
+	{ // 環境装飾を生成
+
 		// 周辺領域
 		CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\around.json"));
 

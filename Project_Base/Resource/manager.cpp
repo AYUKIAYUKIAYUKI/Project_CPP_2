@@ -224,12 +224,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 		return E_FAIL;
 	}
 
-	// フィールドマネージャーの生成 (レンダラー生成後)
-	if (FAILED(CField_Manager::Create()))
-	{
-		return E_FAIL;
-	}
-
 	// カメラの生成
 	m_pCamera = DBG_NEW CCamera();
 

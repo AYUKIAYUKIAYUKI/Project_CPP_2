@@ -67,7 +67,7 @@ void CField_Manager::Update()
 		AppearBossEvent();
 
 		// プレイヤーの現在の方角を扇形の方角にする
-		m_pRenderFan->SetDirection(m_pPlayer->GetDirection());
+		m_pRenderFan->SetDirection(m_pSyncPlayer->GetDirection());
 
 		// 扇形表示の更新処理
 		m_pRenderFan->Update();
@@ -89,7 +89,7 @@ void CField_Manager::Update()
 		}
 
 		// 体力が無くなるとゲームシーンにゲーム終了を通知する
-		if (m_pPlayer->GetLife() <= 0)
+		if (m_pSyncPlayer->GetLife() <= 0)
 		{
 			// ゲームシーン取得
 			CGame* const pScene = dynamic_cast<CGame*>(CScene_Manager::GetInstance()->GetScene());
@@ -105,10 +105,8 @@ void CField_Manager::Update()
 //============================================================================
 void CField_Manager::Draw()
 {
-#ifdef _DEBUG
 	// 扇形の描画処理
 	m_pRenderFan->Draw();
-#endif // _DEBUG
 }
 
 //============================================================================
@@ -118,6 +116,14 @@ void CField_Manager::AppearBoss()
 {
 	// 銅像が振動を始める
 	m_pStatue->SetNowMotion(0);
+}
+
+//============================================================================
+// プレイヤーをセット
+//============================================================================
+void CField_Manager::SetSyncPlayer(const CPlayer* const pPlayer)
+{
+	m_pSyncPlayer = pPlayer;
 }
 
 //============================================================================
@@ -199,10 +205,10 @@ CField_Manager* CField_Manager::GetInstance()
 // コンストラクタ
 //============================================================================
 CField_Manager::CField_Manager() :
+	m_pSyncPlayer{ nullptr },
 	m_pDome{ nullptr },
-	m_nCntStatueVibration{ 0 },
 	m_pStatue{ nullptr },
-	m_pPlayer{ nullptr },
+	m_nCntStatueVibration{ 0 },
 	m_pRenderFan{ nullptr }
 {
 
@@ -237,8 +243,8 @@ HRESULT CField_Manager::Init()
 //============================================================================
 void CField_Manager::InitEnvironment()
 {
-	// 銅像の生成
-	{
+	{ // 銅像の生成
+
 		// パラメータを反映
 		m_pStatue = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue_motion.json"));
 		auto StatueParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue.json");
@@ -338,9 +344,9 @@ void CField_Manager::GenerateBlock()
 	while (nCntBlock < MAX_BLOCK)
 	{
 		// 生成座標計算用
-		const float&	fDirection = m_pPlayer->GetDirection();	// プレイヤーの現在の方角をコピー
-		Vec3			NewPos = VEC3_INIT, NewRot = VEC3_INIT;	// ブロック用の座標・向きを作成
-		float			fRandomRange = 0.0f;					// ランダムな方角範囲
+		const float&	fDirection = m_pSyncPlayer->GetDirection();	// プレイヤーの現在の方角をコピー
+		Vec3			NewPos = VEC3_INIT, NewRot = VEC3_INIT;		// ブロック用の座標・向きを作成
+		float			fRandomRange = 0.0f;						// ランダムな方角範囲
 
 		// 破棄範囲にはみ出さず生成されるように調整
 		/* 初期座標が原点の場合、生成範囲の半径がフィールドの半径を下回ると無限ループ */
