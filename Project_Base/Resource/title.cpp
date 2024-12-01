@@ -9,13 +9,14 @@
 // インクルードファイル
 //****************************************************
 #include "title.h"
+#include "game.h"
 #include "manager.h"
 #include "renderer.h"
-#include "game.h"
 #include "motion_set.h"
 #include "object_parts.h"
 #include "object_X.h"
 #include "field_manager.h"
+#include "HUD_manager.h"
 #include "constellation.h"
 #include "sparks.h"
 
@@ -242,8 +243,8 @@ void CTitle::UpdateEnvironment()
 
 			if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
 			{
-				// HUD用の初期設定
-				CField_Manager::GetInstance()->InitForHUD();
+				// HUDマネージャーの生成
+				CHUD_Manager::Create();
 
 				// 次のシーンへ移行開始
 				m_bTransition = 1;

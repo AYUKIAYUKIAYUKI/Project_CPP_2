@@ -9,11 +9,13 @@
 // インクルードファイル
 //****************************************************
 #include "game.h"
-#include "manager.h"
 #include "result.h"
-#include "player.h"
+#include "manager.h"
 #include "field_manager.h"
+#include "HUD_manager.h"
 #include "object_HUD.h"
+#include "player.h"
+
 #include "title.h"
 
 //============================================================================
@@ -27,8 +29,11 @@
 //============================================================================
 void CGame::Update()
 {
-	// 基底クラスの更新処理
+	// シーンクラスの更新処理
 	CScene::Update();
+
+	// HUDマネージャーの更新
+	CHUD_Manager::GetInstance()->Update();
 
 	// ボス登場カウントをインクリメント
 	++DBG_nCntAppearBoss;
@@ -169,8 +174,11 @@ HRESULT CGame::Init()
 	// プレイヤーを生成
 	CPlayer* pPlayer = CPlayer::Create();
 
-	// フィールドマネージャーにプレイヤーのポインタをセット
+	// フィールドマネージャーにプレイヤーをセット
 	CField_Manager::GetInstance()->SetPlayer(pPlayer);
+
+	// HUDマネージャーにプレイヤーをセット
+	CHUD_Manager::GetInstance()->SetSyncPlayer(pPlayer);
 
 	// フェード表示を生成
 	m_pRenderFade = CObject_HUD::Create("Data\\JSON\\HUD\\black.json");
@@ -183,5 +191,6 @@ HRESULT CGame::Init()
 //============================================================================
 void CGame::Uninit()
 {
-
+	// HUDマネージャーの破棄
+	CHUD_Manager::Release();
 }

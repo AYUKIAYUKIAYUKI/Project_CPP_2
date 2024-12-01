@@ -13,6 +13,7 @@
 
 // シングルトンクラス用
 #include "field_manager.h"
+#include "HUD_manager.h"
 #include "renderer.h"
 #include "scene.h"
 #include "sound.h"
@@ -380,6 +381,9 @@ void CManager::Uninit()
 
 	// フィールドマネージャーの破棄
 	CField_Manager::Release();
+
+	// HUDマネージャーの破棄
+	CHUD_Manager::Release();
 
 	// レンダラーの破棄
 	CRenderer::Release();
