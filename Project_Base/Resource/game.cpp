@@ -61,6 +61,10 @@ void CGame::Update()
 		else
 		{ // 真っ黒になってない
 
+			// ポリゴンが画面を覆う場所に移動させる
+			m_pRenderFade->SetPos({ 0.0f, 0.0f, 0.0f });
+			m_pRenderFade->SetPosTarget({ 0.0f, 0.0f, 0.0f });
+
 			// 黒いフェードの透明度を下げていく
 			D3DXCOLOR Col = m_pRenderFade->GetCol();
 			Col.a += 0.01f;
