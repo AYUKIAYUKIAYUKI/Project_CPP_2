@@ -48,7 +48,7 @@ void CFan::Update()
 	// ワールド行列設定
 	SetMtxWorld();
 
-#if 0
+#if 1
 #ifdef _DEBUG
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 	CRenderer::SetDebugString("扇形の方角：" + to_string(m_fDirection));

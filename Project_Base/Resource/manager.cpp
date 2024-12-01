@@ -237,7 +237,9 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 
 	// シーンマネージャーの生成 (カメラ生成後)
 	if (FAILED(CScene_Manager::Create()))
+	{
 		return E_FAIL;
+	}
 
 	// サウンド初期設定
 	if (FAILED(CSound::GetInstance()->Init(hWnd)))

@@ -79,16 +79,6 @@ void CGame::Update()
 	{
 		To_Next();
 	}
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_F7))
-	{
-		CObject::ReleaseAll();
-		CScene_Manager::ChangeScene(CTitle::Create());
-		//CField_Manager::Release();
-		//this->Uninit();
-		//CField_Manager::Create();
-		//CField_Manager::GetInstance()->InitForTitle();
-		//this->Init();
-	}
 #endif // _DEBUG
 }
 

@@ -61,16 +61,19 @@ void CField_Manager::Update()
 	// 環境装飾の更新
 	UpdateEnvironment();
 
-	if (typeid(*CScene_Manager::GetInstance()->GetScene()) == typeid(CGame))
+	if (m_pSyncPlayer != nullptr)
 	{
-		// ボス登場イベント
-		AppearBossEvent();
-
 		// プレイヤーの現在の方角を扇形の方角にする
 		m_pRenderFan->SetDirection(m_pSyncPlayer->GetDirection());
 
 		// 扇形表示の更新処理
 		m_pRenderFan->Update();
+	}
+
+	if (typeid(*CScene_Manager::GetInstance()->GetScene()) == typeid(CGame))
+	{
+		// ボス登場イベント
+		AppearBossEvent();
 
 #if !CHANGE_FIELRDCREATE_STYLE
 
@@ -250,6 +253,7 @@ void CField_Manager::InitEnvironment()
 		auto StatueParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue.json");
 		m_pStatue->SetRot(utility::JsonConvertToVec3(StatueParam["Rot"]));
 		m_pStatue->SetPos(utility::JsonConvertToVec3(StatueParam["Pos"]));
+		m_pStatue->SetPos({ 0.0f, -1000.0f, 0.0f });
 		
 		// 初期モーションを設定
 		m_pStatue->SetNowMotion(2);
