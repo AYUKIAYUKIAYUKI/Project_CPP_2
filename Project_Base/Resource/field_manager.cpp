@@ -101,6 +101,9 @@ void CField_Manager::Update()
 			pScene->SetTransition();
 		}
 	}
+
+	// デバッグ表示
+	PrintDebug();
 }
 
 //============================================================================
@@ -110,6 +113,22 @@ void CField_Manager::Draw()
 {
 	// 扇形の描画処理
 	m_pRenderFan->Draw();
+}
+
+//============================================================================
+// ジャンプした回数のインクリメント
+//============================================================================
+void CField_Manager::IncrementCntJump()
+{
+	++m_ActionData.nCntJump;
+}
+
+//============================================================================
+// ダッシュした回数のインクリメント
+//============================================================================
+void CField_Manager::IncrementCntDash()
+{
+	++m_ActionData.nCntDash;
 }
 
 //============================================================================
@@ -214,7 +233,9 @@ CField_Manager::CField_Manager() :
 	m_nCntStatueVibration{ 0 },
 	m_pRenderFan{ nullptr }
 {
-
+	// アクションデータの初期化
+	m_ActionData.nCntDash = 0;
+	m_ActionData.nCntJump = 0;
 }
 
 //============================================================================
@@ -343,20 +364,33 @@ void CField_Manager::GenerateBlock()
 	CRenderer::SetDebugString("ブロック数:" + to_string(nCntBlock));
 #endif	// _DEBUG
 
+#if 1
+	// すぐにけせ
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	ImGui::Begin("Generate");
+	static float fRotY = 0.0f;
+	if (ImGui::Button("--"))
+		fRotY += D3DX_PI * -0.1f;
+	ImGui::SameLine();
+	if (ImGui::Button("++"))
+		fRotY += D3DX_PI * 0.1f;
+	ImGui::SameLine();
+	ImGui::SliderFloat("Add RotY", &fRotY, -D3DX_PI, D3DX_PI);
+	ImGui::End();
+#endif
+
 	// ブロック数が上限に満たなければ
 	while (nCntBlock < MAX_BLOCK)
 	{
 		// 生成座標計算用
 		const float&	fDirection = m_pSyncPlayer->GetDirection();	// プレイヤーの現在の方角をコピー
 		Vec3			NewPos = VEC3_INIT, NewRot = VEC3_INIT;		// ブロック用の座標・向きを作成
+		float			fRange = m_pRenderFan->GetRange();
 
 		// 破棄範囲にはみ出さず生成されるように調整
 		/* 初期座標が原点の場合、生成範囲の半径がフィールドの半径を下回ると無限ループ */
 		do
 		{
-			// 扇形範囲の幅をコピー
-			float fRange = m_pRenderFan->GetRange();
-
 			// 生成用の座標を決定
 			NewPos.x = cosf(fDirection + fRange) * FIELD_RADIUS;
 			NewPos.y = fabsf(utility::GetRandomValue<float>());
@@ -368,10 +402,10 @@ void CField_Manager::GenerateBlock()
 				NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
 			}
 
-			// 向きを決定
-			NewRot.y = (fDirection + fRange) + D3DX_PI * 0.5f;
-
 		} while (!m_pRenderFan->DetectInFanRange(NewPos));
+
+		// 向きを決定
+		NewRot.y = (fDirection + fRange) + D3DX_PI * fRotY;
 
 		// ブロックを生成
 		CBlock::Create(NewPos, NewRot);
@@ -458,6 +492,19 @@ void CField_Manager::DestroyAllBlock()
 		}
 
 		pObj = pObj->GetNext();
+	}
+}
+
+//============================================================================
+// デバッグ表示
+//============================================================================
+void CField_Manager::PrintDebug()
+{
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Action Data")) {
+		ImGui::Text("CountJump:%d", m_ActionData.nCntJump);
+		ImGui::Text("CountDash:%d", m_ActionData.nCntDash);
+		ImGui::End();
 	}
 }
 

@@ -27,7 +27,7 @@ public:
 	static constexpr float FIELD_RADIUS = 300.0f;
 
 	/// <summary> 最大ブロック数 </summary>
-	static constexpr int MAX_BLOCK = 1;
+	static constexpr int MAX_BLOCK = 15;
 
 	/// <summary> 重力 </summary>
 	static constexpr float FIELD_GRAVITY = -0.5f;
@@ -39,10 +39,12 @@ public:
 	CField_Manager& operator=(CField_Manager&&) = delete;		// ムーブ代入演算子
 
 	// <function>
-	void InitForTitle();	// タイトルでの追加初期設定
-	void Update();			// 更新処理
-	void Draw();			// 描画処理
-	void AppearBoss();		// ボス登場
+	void InitForTitle();		// タイトルでの追加初期設定
+	void Update();				// 更新処理
+	void Draw();				// 描画処理
+	void IncrementCntJump();	// ジャンプした回数のインクリメント
+	void IncrementCntDash();	// ダッシュした回数のインクリメント
+	void AppearBoss();			// ボス登場
 
 	// <setter>
 	void SetSyncPlayer(const CPlayer* const pPlayer);	// プレイヤーをセット
@@ -55,6 +57,15 @@ public:
 	static CField_Manager* GetInstance();	// フィールドマネージャーを取得
 
 private:
+
+	//****************************************************
+	// アクションデータ構造体の定義
+	//****************************************************
+	struct ActionData
+	{
+		int nCntJump;	// ジャンプした回数
+		int nCntDash;	// ダッシュした回数
+	};
 
 	/// <summary> 最大銅像振動カウント </summary>
 	static constexpr int MAX_CNT_STATUEVIBERATION = 300;
@@ -73,11 +84,13 @@ private:
 	bool	DetectAdjacentBlock(const D3DXVECTOR3& Pos);	// 隣接し合うブロックを検出
 	void	DestroyBlock();									// ブロックの自動削除
 	void	DestroyAllBlock();								// 全ブロックの削除
+	void	PrintDebug();									// デバッグ表示
 
 	/* けします */
 	void DEBUG_CIRCLE();	// デバッグサークル
 
 	// <data>
+	ActionData		m_ActionData;			// アクションデータ
 	const CPlayer*	m_pSyncPlayer;			// プレイヤーのポインタ
 	CObject_X*		m_pDome;				// ドーム
 	CMotion_Set*	m_pStatue;				// 銅像

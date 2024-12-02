@@ -38,7 +38,8 @@ CPlayer_State_Jump::CPlayer_State_Jump() :
 	m_nJumpRemainDuration{ 0 },
 	m_bEndRemain{ false }
 {
-
+	// アクションデータのジャンプした回数をインクリメント
+	CField_Manager::GetInstance()->IncrementCntJump();
 }
 
 //============================================================================

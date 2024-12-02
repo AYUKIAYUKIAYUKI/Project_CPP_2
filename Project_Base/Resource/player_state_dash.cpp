@@ -38,15 +38,14 @@ CPlayer_State_Dash::CPlayer_State_Dash() :
 	m_bDirection{ false },
 	m_nDashDuration{ 0 }
 {
-	// 左方向を入力していたら
+	// アクションデータのダッシュした回数をインクリメント
+	CField_Manager::GetInstance()->IncrementCntDash();
+
+	// 左右の入力に合わせて移動方向のフラグを変更
 	if (CManager::GetKeyboard()->GetPress(DIK_A) || CManager::GetKeyboard()->GetRelease(DIK_A))
-	{
 		m_bDirection = 0;
-	}
 	else
-	{
 		m_bDirection = 1;
-	}
 
 	// Y軸方向の加速度を無くす
 	m_pCharacter->SetVelY(0.0f);
