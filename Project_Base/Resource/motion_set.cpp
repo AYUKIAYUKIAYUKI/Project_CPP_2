@@ -160,7 +160,7 @@ void CMotion_Set::SetRotAndPosSync(D3DXVECTOR3 Rot, D3DXVECTOR3 Pos)
 //============================================================================
 // 向きを取得
 //============================================================================
-D3DXVECTOR3 CMotion_Set::GetRot()
+D3DXVECTOR3 CMotion_Set::GetRot() const
 {
 	return m_Rot;
 }
@@ -176,7 +176,7 @@ void CMotion_Set::SetRot(D3DXVECTOR3 Rot)
 //============================================================================
 // 座標を取得
 //============================================================================
-D3DXVECTOR3 CMotion_Set::GetPos()
+D3DXVECTOR3 CMotion_Set::GetPos() const
 {
 	return m_Pos;
 }
@@ -192,7 +192,7 @@ void CMotion_Set::SetPos(D3DXVECTOR3 Pos)
 //============================================================================
 // 再生中のモーション番号を取得
 //============================================================================
-WORD CMotion_Set::GetNowMotion()
+WORD CMotion_Set::GetNowMotion() const
 {
 	return m_wNowMotion;
 }
@@ -211,7 +211,7 @@ void CMotion_Set::SetNowMotion(WORD nIdx)
 //============================================================================
 // ストップフラグを取得
 //============================================================================
-bool CMotion_Set::GetStopState()
+bool CMotion_Set::GetStopState() const
 {
 	return m_bStop;
 }

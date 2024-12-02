@@ -350,8 +350,11 @@ void CField_Manager::FieldGenerator()
 	BranchFieldType();
 
 #if !CHANGE_FIELRDCREATE_STYLE
-	// プレイヤーの方角に変化が起きるならブロックを生成
-	if (m_pSyncPlayer->GetDirection() != m_pSyncPlayer->GetDirectionTarget())
+	// プレイヤーの目標座標へのベクトルを作成
+	Vec3 Norm = m_pSyncPlayer->GetPosTarget() - m_pSyncPlayer->GetPos();
+
+	// プレイヤーの移動時のノルムに応じてブロック生成
+	if (Norm.x * Norm.x + Norm.z * Norm.z > 0.1f)
 	{
 		// ブロックの自動生成
 		AutoCreateBlock(1);
@@ -392,8 +395,18 @@ void CField_Manager::AutoCreateBlock(int nAmount)
 	float fDirection = m_pSyncPlayer->GetDirection();	// プレイヤーの現在の方角をコピー
 	float fRange = m_pRenderFan->GetRange();			// 扇形範囲の幅をコピー
 	Vec3  NewPos = VEC3_INIT, NewRot = VEC3_INIT;		// ブロック用の座標・向きを作成
-	
-	//Vec3 Vec1 = m_pSyncPlayer->GetPos() - VEC3_INIT;
+
+	// 現在座標と目標座標に対し原点からの方向ベクトルを作成
+	Vec3 OldVec = m_pSyncPlayer->GetPos() - VEC3_INIT, NewVec = m_pSyncPlayer->GetPosTarget() - VEC3_INIT;
+	D3DXVec3Normalize(&OldVec, &OldVec);
+	D3DXVec3Normalize(&NewVec, &NewVec);
+
+	// 2本の方向ベクトルの外積を作成
+	float fCross = (OldVec.x * NewVec.z) - (OldVec.z * NewVec.x);
+
+	// 左に移動している場合角度を反転させる
+	if (fCross < 0.0f)
+		fRange = -fRange;
 
 	// ブロック数が上限に満たなければ
 	for (int nCntBlock = 0; nCntBlock < nAmount; nCntBlock++)
@@ -512,11 +525,22 @@ void CField_Manager::DestroyAllBlock()
 //============================================================================
 void CField_Manager::PrintDebug()
 {
+	// 外積確認用
+	Vec3 OldVec = m_pSyncPlayer->GetPos() - VEC3_INIT, NewVec = m_pSyncPlayer->GetPosTarget() - VEC3_INIT;
+	D3DXVec3Normalize(&OldVec, &OldVec);
+	D3DXVec3Normalize(&NewVec, &NewVec);
+	float fCross = (OldVec.x * NewVec.z) - (OldVec.z * NewVec.x);
+
+	// ノルム確認用
+	Vec3 Norm = m_pSyncPlayer->GetPosTarget() - m_pSyncPlayer->GetPos();
+
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Action Data")) {
 		ImGui::Text("CountJump:%d", m_ActionData.nCntJump);
 		ImGui::Text("CountDash:%d", m_ActionData.nCntDash);
 		ImGui::Text("FieldType:%d", m_FiledType);
+		ImGui::Text("Cross:%f", fCross);
+		ImGui::Text("Norm:%f", Norm.x * Norm.x + Norm.z * Norm.z);
 		ImGui::End();
 	}
 }
