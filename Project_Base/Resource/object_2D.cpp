@@ -35,6 +35,7 @@ CObject_2D::CObject_2D(LAYER Priority) :
 	m_Col{ XCOL_INIT },
 	m_fLength{ 0.0f },
 	m_fAngle{ 0.0f },
+	m_TexSize{ VEC2_INIT },
 	m_fTexWidth{ 1.0f },
 	m_fTexHeight{ 1.0f },
 	m_nNowPatternU{ 0 },
@@ -164,9 +165,9 @@ void CObject_2D::Update()
 
 	// テクスチャ座標の設定
 	pVtx[0].tex = { m_fTexWidth * m_nNowPatternU, m_fTexHeight * m_nNowPatternV };
-	pVtx[1].tex = { m_fTexWidth * (m_nNowPatternU + 1), m_fTexHeight * m_nNowPatternV };
+	pVtx[1].tex = { m_fTexWidth * (m_nNowPatternU + 1) - m_TexSize.x, m_fTexHeight * m_nNowPatternV };
 	pVtx[2].tex = { m_fTexWidth * (m_nNowPatternU), m_fTexHeight * (m_nNowPatternV + 1) };
-	pVtx[3].tex = { m_fTexWidth * (m_nNowPatternU + 1), m_fTexHeight * (m_nNowPatternV + 1) };
+	pVtx[3].tex = { m_fTexWidth * (m_nNowPatternU + 1) - m_TexSize.x, m_fTexHeight * (m_nNowPatternV + 1) };
 
 	// 頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
@@ -297,6 +298,22 @@ void CObject_2D::SetAlpha(float fAlpha)
 const float& CObject_2D::GetLength() const
 {
 	return m_fLength;
+}
+
+//============================================================================
+// テクスチャサイズを取得
+//============================================================================
+const D3DXVECTOR2& CObject_2D::GetTexSize() const
+{
+	return m_TexSize;
+}
+
+//============================================================================
+// テクスチャサイズを設定
+//============================================================================
+void CObject_2D::SetTexSize(D3DXVECTOR2 Size)
+{
+	m_TexSize = Size;
 }
 
 //============================================================================

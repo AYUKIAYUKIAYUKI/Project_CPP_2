@@ -128,6 +128,14 @@ void CField_Manager::AppearBoss()
 }
 
 //============================================================================
+// ブロックの破壊数を取得
+//============================================================================
+int CField_Manager::GetCntDestroyBlock()
+{
+	return m_nCntDestroyBlock;
+}
+
+//============================================================================
 // プレイヤーをセット
 //============================================================================
 void CField_Manager::SetSyncPlayer(const CPlayer* const pPlayer)
@@ -546,7 +554,8 @@ void CField_Manager::AutoDestroyBlock()
 				pBlock->SetRelease();
 				
 				// ブロックの破壊カウントを増加
-				++m_nCntDestroyBlock;
+				if (m_nCntDestroyBlock < CField_Manager::MAX_DESTROY_BLOCK)
+					++m_nCntDestroyBlock;
 			}
 		}
 
@@ -593,6 +602,7 @@ void CField_Manager::PrintDebug()
 		ImGui::Text("CountJump:%d", m_ActionData.nCntJump);
 		ImGui::Text("CountDash:%d", m_ActionData.nCntDash);
 		ImGui::Text("FieldType:%d", m_FiledType);
+		ImGui::Text("DestroyBlock:%d", m_nCntDestroyBlock);
 		ImGui::Text("Cross:%f", fCross);
 		ImGui::Text("Norm:%f", Norm.x * Norm.x + Norm.z * Norm.z);
 		ImGui::End();

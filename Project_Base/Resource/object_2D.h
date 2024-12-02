@@ -62,6 +62,10 @@ public:
 	const float& GetLength() const;	// 展開用対角線取得
 
 	// <getter/setter>
+	const D3DXVECTOR2& GetTexSize() const;	// テクスチャサイズを取得
+	void SetTexSize(D3DXVECTOR2 Size);		// テクスチャサイズを設定
+
+	// <setter>
 	void SetTexWidth(float fWidth);		// 横テクスチャ分割幅設定
 	void SetTexHeight(float fHeight);	// 縦テクスチャ分割幅設定
 
@@ -96,6 +100,7 @@ private:
 	D3DXCOLOR				m_Col;			// 色
 	float					m_fLength;		// 展開用対角線
 	float					m_fAngle;		// 対角線用角度
+	D3DXVECTOR2				m_TexSize;		// テクスチャサイズ
 	float					m_fTexWidth;	// 横テクスチャ分割幅
 	float					m_fTexHeight;	// 縦テクスチャ分縦幅
 	int						m_nNowPatternU;	// 現在の横テクスチャ種類

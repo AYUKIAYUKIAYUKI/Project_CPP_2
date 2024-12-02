@@ -9,6 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "HUD_manager.h"
+#include "field_manager.h"
 #include "object_HUD.h"
 #include "manager.h"
 #include "renderer.h"
@@ -66,6 +67,9 @@ void CHUD_Manager::Update()
 		// 座標を反映
 		m_pPlayerLife[wCntLife - 1]->SetPosTarget(NewPosTarget);
 	}
+
+	// ボスゲージバーの更新
+	UpdateBossGaugeBar();
 
 #if 0	// HUD挙動の確認
 	if (CManager::GetKeyboard()->GetPress(DIK_Z))
@@ -245,6 +249,39 @@ HRESULT CHUD_Manager::Init()
 void CHUD_Manager::Uninit()
 {
 	/* 現在は無し */
+}
+
+//============================================================================
+// ボスゲージバーの更新
+//============================================================================
+void CHUD_Manager::UpdateBossGaugeBar()
+{
+	// 破壊したブロック数をコピー
+	float nCntDestroyBlock = static_cast<float>(CField_Manager::GetInstance()->GetCntDestroyBlock());
+
+	{ // 目標サイズを設定
+		Vec3 SizeTarget = m_pBossGaugeBar->GetSizeTarget();
+		SizeTarget.x = nCntDestroyBlock * (570.0f / CField_Manager::MAX_DESTROY_BLOCK);
+		m_pBossGaugeBar->SetSize(SizeTarget);
+		m_pBossGaugeBar->SetSizeTarget(SizeTarget);
+	}
+
+	{ // 目標座標を設定
+
+		// ( 基礎座標 - 基礎サイズ )でベースとなるX座標を作成
+		float BasePosX = 580.0f - 570.0f;
+
+		Vec3 SizeTarget = m_pBossGaugeBar->GetSizeTarget(), PosTarget = m_pBossGaugeBar->GetPosTarget();
+		PosTarget.x = BasePosX + SizeTarget.x;
+		m_pBossGaugeBar->SetPos(PosTarget);
+		m_pBossGaugeBar->SetPosTarget(PosTarget);
+	}
+
+	{ // テクスチャサイズを設定
+		Vec2 TexSize = m_pBossGaugeBar->GetTexSize();
+		TexSize.x = 1.0f - (nCntDestroyBlock * (1.0f / CField_Manager::MAX_DESTROY_BLOCK));
+		m_pBossGaugeBar->SetTexSize(TexSize);
+	}
 }
 
 //============================================================================

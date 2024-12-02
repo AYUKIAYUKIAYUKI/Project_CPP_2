@@ -53,8 +53,9 @@ private:
 	~CHUD_Manager();	// デストラクタ
 
 	// <function>
-	void Uninit();		// 終了処理
-	bool DetectError();	// エラー検出
+	void Uninit();				// 終了処理
+	void UpdateBossGaugeBar();	// ボスゲージバーの更新
+	bool DetectError();			// エラー検出
 
 	// <data>
 	const CPlayer* m_pSyncPlayer;						// プレイヤーのポインタ

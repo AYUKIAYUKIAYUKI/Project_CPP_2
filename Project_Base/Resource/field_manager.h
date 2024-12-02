@@ -29,6 +29,9 @@ public:
 	/// <summary> 最大ブロック数 </summary>
 	static constexpr int MAX_BLOCK = 999;
 
+	/// <summary> 最大破壊ブロック数 </summary>
+	static constexpr float MAX_DESTROY_BLOCK = 100;
+
 	/// <summary> 重力 </summary>
 	static constexpr float FIELD_GRAVITY = -0.35f;
 
@@ -45,6 +48,9 @@ public:
 	void IncrementCntJump();	// ジャンプした回数のインクリメント
 	void IncrementCntDash();	// ダッシュした回数のインクリメント
 	void AppearBoss();			// ボス登場
+
+	// <getter>
+	int GetCntDestroyBlock();	// ブロックの破壊数を取得
 
 	// <setter>
 	void SetSyncPlayer(const CPlayer* const pPlayer);	// プレイヤーをセット
