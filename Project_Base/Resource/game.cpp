@@ -38,17 +38,6 @@ void CGame::Update()
 	// HUDマネージャーの更新
 	CHUD_Manager::GetInstance()->Update();
 
-	// ボス登場カウントをインクリメント
-	++DBG_nCntAppearBoss;
-
-	// とりあえず30フレーム経過で
-	/* 出現しないように-1に設定 */
-	if (DBG_nCntAppearBoss == -1)
-	{
-		// ボス登場
-		CField_Manager::GetInstance()->AppearBoss();
-	}
-
 	// シーンの遷移フラグが立っていたら
 	if (m_bTransition)
 	{
@@ -151,10 +140,9 @@ CGame* CGame::Create()
 // コンストラクタ
 //============================================================================
 CGame::CGame() :
-	m_bTransition{ false },
-	m_pRenderFade{ nullptr },
 	CScene{},
-	DBG_nCntAppearBoss{ 0 }
+	m_bTransition{ false },
+	m_pRenderFade{ nullptr }
 {
 
 }

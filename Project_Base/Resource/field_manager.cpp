@@ -87,7 +87,8 @@ void CField_Manager::Update()
 	}
 
 	// フィールドジェネレータ
-	FieldGenerator();
+	if(m_nCntDestroyBlock < MAX_DESTROY_BLOCK)
+		FieldGenerator();
 
 	// デバッグ表示
 	PrintDebug();
@@ -554,8 +555,20 @@ void CField_Manager::AutoDestroyBlock()
 				pBlock->SetRelease();
 				
 				// ブロックの破壊カウントを増加
-				if (m_nCntDestroyBlock < CField_Manager::MAX_DESTROY_BLOCK)
-					++m_nCntDestroyBlock;
+				++m_nCntDestroyBlock;
+
+				// ブロックの破壊数カウントが最大で
+				if (m_nCntDestroyBlock >= MAX_DESTROY_BLOCK)
+				{
+					// ボス出現
+					AppearBoss();
+
+					// 全ブロックを破壊
+					DestroyAllBlock();
+
+					// 処理を強制終了
+					return;
+				}
 			}
 		}
 

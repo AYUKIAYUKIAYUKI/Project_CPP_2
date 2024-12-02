@@ -45,9 +45,8 @@ private:
 	void	Uninit() override;	// 終了処理
 
 	// <data>
-	bool		 m_bTransition;			// 遷移フラグ
-	CObject_HUD* m_pRenderFade;			// フェード表示
-	int			 DBG_nCntAppearBoss;	// ボス登場カウント
+	bool		 m_bTransition;	// 遷移フラグ
+	CObject_HUD* m_pRenderFade;	// フェード表示
 };
 
 #endif // _GAME_H_

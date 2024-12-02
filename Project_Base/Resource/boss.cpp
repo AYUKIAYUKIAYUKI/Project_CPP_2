@@ -448,6 +448,11 @@ void CBoss::DeadEnd()
 
 		// ボスが死亡モーションに変更
 		SetNowMotion(4);
+
+		// 中央へ移動
+		Vec3 Pos = VEC3_INIT;
+		Pos.y = 150.0f;
+		SetPosTarget(Pos);
 	}
 	else
 	{ // 死亡モーション再生中
