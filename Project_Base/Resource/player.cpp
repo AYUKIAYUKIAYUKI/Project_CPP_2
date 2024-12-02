@@ -487,6 +487,9 @@ void CPlayer::HitCheck()
 
 				// 変更された目標座標を現在の座標に戻す
 				AutoSetPosTarget();
+
+				// 壁ずり状態へ
+				m_pState->To_Wall();
 #endif
 				break;
 			}
@@ -499,6 +502,9 @@ void CPlayer::HitCheck()
 
 				// 衝突寸前の方角から目標座標を割り出す
 				AutoSetPosTarget();
+
+				// 壁ずり状態へ
+				m_pState->To_Wall();
 
 				break;
 			}

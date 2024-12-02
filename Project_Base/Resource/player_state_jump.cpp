@@ -11,6 +11,7 @@
 #include "player_state_jump.h"
 #include "player_state_default.h"
 #include "player_state_dash.h"
+#include "player_state_wall.h"
 #include "player_state_slash.h"
 #include "player_state_damage.h"
 
@@ -100,6 +101,17 @@ void CPlayer_State_Jump::To_Dash()
 		m_nCntDashCast = CPlayer_State_Dash::MAX_DASH_CAST;
 
 		SetNextState(DBG_NEW CPlayer_State_Dash());
+	}
+}
+
+//============================================================================
+// ï«Ç∏ÇËèÛë‘Ç÷
+//============================================================================
+void CPlayer_State_Jump::To_Wall()
+{
+	if (GetNextState() == nullptr)
+	{
+		SetNextState(DBG_NEW CPlayer_State_Wall ());
 	}
 }
 
