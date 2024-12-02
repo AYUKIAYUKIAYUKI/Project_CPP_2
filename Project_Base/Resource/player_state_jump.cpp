@@ -11,6 +11,7 @@
 #include "player_state_jump.h"
 #include "player_state_default.h"
 #include "player_state_dash.h"
+#include "player_state_slash.h"
 #include "player_state_damage.h"
 
 // フィールド取得用
@@ -93,6 +94,20 @@ void CPlayer_State_Jump::To_Dash()
 }
 
 //============================================================================
+// 斬撃状態へ
+//============================================================================
+void CPlayer_State_Jump::To_Slash()
+{
+	if (GetNextState() == nullptr)
+	{
+		// 軽くふわっと浮き上がるような加速度を強制発生
+		m_pCharacter->SetVelY(0.3f);
+
+		SetNextState(DBG_NEW CPlayer_State_Slash());
+	}
+}
+
+//============================================================================
 // ダメージ状態へ
 //============================================================================
 void CPlayer_State_Jump::To_Damage()
@@ -155,6 +170,12 @@ void CPlayer_State_Jump::Control()
 			// ダッシュ状態へ
 			To_Dash();
 		}
+	}
+
+	if (pKeyboard->GetTrigger(DIK_SPACE))
+	{
+		// 斬撃状態へ
+		To_Slash();
 	}
 
 	// 方角を反映
