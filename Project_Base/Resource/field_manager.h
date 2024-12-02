@@ -27,7 +27,7 @@ public:
 	static constexpr float FIELD_RADIUS = 300.0f;
 
 	/// <summary> 最大ブロック数 </summary>
-	static constexpr int MAX_BLOCK = 15;
+	static constexpr int MAX_BLOCK = 999;
 
 	/// <summary> 重力 </summary>
 	static constexpr float FIELD_GRAVITY = -0.5f;
@@ -67,6 +67,17 @@ private:
 		int nCntDash;	// ダッシュした回数
 	};
 
+	//****************************************************
+	// フィールドタイプの定義
+	//****************************************************
+	enum class FIELD_TYPE : WORD
+	{
+		NORMAL, // 普通
+		JUMP,	// ジャンプ
+		DASH,	// ダッシュ
+		MAX
+	};
+
 	/// <summary> 最大銅像振動カウント </summary>
 	static constexpr int MAX_CNT_STATUEVIBERATION = 300;
 
@@ -75,22 +86,26 @@ private:
 	~CField_Manager();	// デストラクタ
 
 	// <function>
-	HRESULT Init();											// 初期設定
-	void	InitEnvironment();								// 環境装飾の初期設定
-	void	Uninit();										// 終了処理
-	void	UpdateEnvironment();							// 環境装飾の更新処理
-	void	AppearBossEvent();								// ボス登場イベント
-	void	GenerateBlock();								// ブロックの自動生成
-	bool	DetectAdjacentBlock(const D3DXVECTOR3& Pos);	// 隣接し合うブロックを検出
-	void	DestroyBlock();									// ブロックの自動削除
-	void	DestroyAllBlock();								// 全ブロックの削除
-	void	PrintDebug();									// デバッグ表示
+	HRESULT Init();								// 初期設定
+	void	InitEnvironment();					// 環境装飾の初期設定
+	void	Uninit();							// 終了処理
+	void	UpdateEnvironment();				// 環境装飾の更新処理
+	void	AppearBossEvent();					// ボス登場イベント
+	void	FieldGenerator();					// フィールドジェネレータ
+	void	BranchFieldType();					// フィールドタイプ分岐
+	void	AutoCreateBlock(int nAmount);		// ブロックの自動作成
+	bool	DetectNearBlock(D3DXVECTOR3 Pos);	// 隣接し合うブロックを検出
+	void	AutoDestroyBlock();					// ブロックの自動削除
+	void	DestroyAllBlock();					// 全ブロックの削除
+	void	PrintDebug();						// デバッグ表示
 
 	/* けします */
 	void DEBUG_CIRCLE();	// デバッグサークル
 
 	// <data>
 	ActionData		m_ActionData;			// アクションデータ
+	FIELD_TYPE		m_FiledType;			// フィールドタイプ
+	int				m_nCntDestroyBlock;		// ブロックの破壊数
 	const CPlayer*	m_pSyncPlayer;			// プレイヤーのポインタ
 	CObject_X*		m_pDome;				// ドーム
 	CMotion_Set*	m_pStatue;				// 銅像

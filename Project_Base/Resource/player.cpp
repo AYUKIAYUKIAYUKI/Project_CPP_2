@@ -14,6 +14,7 @@
 #include "player_state_default.h"
 #include "player_state_dash.h"
 #include "player_state_damage.h"
+#include "object_Parts.h"
 
 #include "block.h"
 #include "collision.h"

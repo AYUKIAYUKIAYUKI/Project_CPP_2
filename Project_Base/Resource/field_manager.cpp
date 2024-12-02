@@ -75,22 +75,6 @@ void CField_Manager::Update()
 		// ボス登場イベント
 		AppearBossEvent();
 
-#if !CHANGE_FIELRDCREATE_STYLE
-
-		// ブロックの自動生成
-		GenerateBlock();
-
-		// ブロックの自動削除
-		DestroyBlock();
-
-#endif	// CHANGE_FIELRDCREATE_STYLE
-
-		// 仮の全破棄メソッド
-		if (CManager::GetKeyboard()->GetTrigger(DIK_DELETE))
-		{
-			DestroyAllBlock();
-		}
-
 		// 体力が無くなるとゲームシーンにゲーム終了を通知する
 		if (m_pSyncPlayer->GetLife() <= 0)
 		{
@@ -101,6 +85,9 @@ void CField_Manager::Update()
 			pScene->SetTransition();
 		}
 	}
+
+	// フィールドジェネレータ
+	FieldGenerator();
 
 	// デバッグ表示
 	PrintDebug();
@@ -227,6 +214,8 @@ CField_Manager* CField_Manager::GetInstance()
 // コンストラクタ
 //============================================================================
 CField_Manager::CField_Manager() :
+	m_FiledType{ FIELD_TYPE::NORMAL },
+	m_nCntDestroyBlock{ 0 },
 	m_pSyncPlayer{ nullptr },
 	m_pDome{ nullptr },
 	m_pStatue{ nullptr },
@@ -353,39 +342,61 @@ void CField_Manager::AppearBossEvent()
 }
 
 //============================================================================
+// フィールドジェネレータ
+//============================================================================
+void CField_Manager::FieldGenerator()
+{
+	// フィールドタイプの分岐
+	BranchFieldType();
+
+#if !CHANGE_FIELRDCREATE_STYLE
+	// プレイヤーの方角に変化が起きるならブロックを生成
+	if (m_pSyncPlayer->GetDirection() != m_pSyncPlayer->GetDirectionTarget())
+	{
+		// ブロックの自動生成
+		AutoCreateBlock(1);
+	}
+
+	// ブロックの自動削除
+	AutoDestroyBlock();
+#endif	// CHANGE_FIELRDCREATE_STYLE
+
+#ifdef _DEBUG	// ブロックを全削除
+	if (CManager::GetKeyboard()->GetTrigger(DIK_DELETE))
+		DestroyAllBlock();
+#endif // _DEBUG
+}
+
+//============================================================================
+// フィールドタイプの分岐
+//============================================================================
+void CField_Manager::BranchFieldType()
+{
+	//if (m_ActionData.nCntJump > m_ActionData.nCntDash)
+	if (0)
+	{
+		m_FiledType = FIELD_TYPE::JUMP;
+	}
+	else
+	{
+		m_FiledType = FIELD_TYPE::DASH;
+	}
+}
+
+//============================================================================
 // ブロックの自動生成
 //============================================================================
-void CField_Manager::GenerateBlock()
+void CField_Manager::AutoCreateBlock(int nAmount)
 {
-	// ブロック数をカウント
-	int nCntBlock = CObject::CountSpecificObject(CObject::TYPE::BLOCK);
-
-#ifdef _DEBUG	// ブロック数の表示
-	CRenderer::SetDebugString("ブロック数:" + to_string(nCntBlock));
-#endif	// _DEBUG
-
-#if 1
-	// すぐにけせ
-	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	ImGui::Begin("Generate");
-	static float fRotY = 0.0f;
-	if (ImGui::Button("--"))
-		fRotY += D3DX_PI * -0.1f;
-	ImGui::SameLine();
-	if (ImGui::Button("++"))
-		fRotY += D3DX_PI * 0.1f;
-	ImGui::SameLine();
-	ImGui::SliderFloat("Add RotY", &fRotY, -D3DX_PI, D3DX_PI);
-	ImGui::End();
-#endif
-
 	// 生成座標計算用 ((方角 + 扇形幅の角度)の場所が生成ポイント)
 	float fDirection = m_pSyncPlayer->GetDirection();	// プレイヤーの現在の方角をコピー
 	float fRange = m_pRenderFan->GetRange();			// 扇形範囲の幅をコピー
 	Vec3  NewPos = VEC3_INIT, NewRot = VEC3_INIT;		// ブロック用の座標・向きを作成
+	
+	//Vec3 Vec1 = m_pSyncPlayer->GetPos() - VEC3_INIT;
 
 	// ブロック数が上限に満たなければ
-	while (nCntBlock < MAX_BLOCK)
+	for (int nCntBlock = 0; nCntBlock < nAmount; nCntBlock++)
 	{
 		// 破棄範囲にはみ出さず生成されるように調整
 		/* 初期座標が原点の場合、生成範囲の半径がフィールドの半径を下回ると無限ループ */
@@ -396,11 +407,11 @@ void CField_Manager::GenerateBlock()
 			NewPos.y = fabsf(utility::GetRandomValue<float>());
 			NewPos.z = sinf(fDirection + fRange) * FIELD_RADIUS;
 
-			// ブロック同士の幅を検出
-			if (DetectAdjacentBlock(NewPos))
-			{
-				NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
-			}
+			//// ブロック同士の幅を検出
+			//if (DetectAdjacentBlock(NewPos))
+			//{
+			//	NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
+			//}
 
 		} while (!m_pRenderFan->DetectInFanRange(NewPos));
 
@@ -409,16 +420,13 @@ void CField_Manager::GenerateBlock()
 
 		// ブロックを生成
 		CBlock::Create(NewPos, NewRot);
-
-		// ブロック数をカウントアップ
-		nCntBlock++;
 	}
 }
 
 //============================================================================
 // 隣接し合うブロックを検出
 //============================================================================
-bool CField_Manager::DetectAdjacentBlock(const D3DXVECTOR3& Pos)
+bool CField_Manager::DetectNearBlock(D3DXVECTOR3 Pos)
 {
 	// ミドルオブジェクトを取得
 	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
@@ -435,7 +443,7 @@ bool CField_Manager::DetectAdjacentBlock(const D3DXVECTOR3& Pos)
 			const Vec3& Vec = pBlock->GetPos() - Pos;
 
 			/* ある程度接近してしまっているブロックが存在する場合 */
-			if (sqrtf(Vec.x * Vec.x + Vec.y * Vec.y + Vec.z * Vec.z) <= pBlock->GetSize().x)
+			if (sqrtf(Vec.x * Vec.x + Vec.y * Vec.y + Vec.z * Vec.z) <= pBlock->GetSize().x * 5.0f)
 			{
 				// 座標の生成をやり直す
 				return 1;
@@ -451,7 +459,7 @@ bool CField_Manager::DetectAdjacentBlock(const D3DXVECTOR3& Pos)
 //============================================================================
 // ブロックの自動削除
 //============================================================================
-void CField_Manager::DestroyBlock()
+void CField_Manager::AutoDestroyBlock()
 {
 	// ミドルオブジェクトを取得
 	CObject* pObj = CObject::GetTopObject(CObject::LAYER::MIDDLE);
@@ -464,10 +472,14 @@ void CField_Manager::DestroyBlock()
 			CBlock* pBlock = nullptr;
 			pBlock = utility::DownCast(pBlock, pObj);
 
-			// 扇形表示の範囲内にブロックが無ければ破棄
 			if (!m_pRenderFan->DetectInFanRange(pBlock->GetPos()))
-			{
+			{ // 扇形の範囲内にブロックが無ければ
+
+				// ブロックを破棄
 				pBlock->SetRelease();
+				
+				// ブロックの破壊カウントを増加
+				++m_nCntDestroyBlock;
 			}
 		}
 
@@ -504,6 +516,7 @@ void CField_Manager::PrintDebug()
 	if (ImGui::Begin("Action Data")) {
 		ImGui::Text("CountJump:%d", m_ActionData.nCntJump);
 		ImGui::Text("CountDash:%d", m_ActionData.nCntDash);
+		ImGui::Text("FieldType:%d", m_FiledType);
 		ImGui::End();
 	}
 }
