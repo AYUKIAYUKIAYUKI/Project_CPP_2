@@ -169,7 +169,7 @@ HRESULT CTexture_Manager::Init()
 	for (WORD wCntTex = 0; wCntTex < static_cast<int>(TYPE::MAX); ++wCntTex)
 	{
 		// テクスチャファイルのパスを作成する
-		const std::string& TextureFilePath = Json["ModelList"][wCntTex];
+		const std::string& TextureFilePath = Json["TextureList"][wCntTex];
 
 		// テクスチャの生成
 		HRESULT hr = D3DXCreateTextureFromFileA(pDev,

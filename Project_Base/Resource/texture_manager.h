@@ -31,6 +31,9 @@ public:
 		CIRCLE,				// サークル
 		PLAYERGAUGE,		// プレイヤーのゲージ
 		PLAYERGAUGEWINDOW,	// プレイヤーのゲージウィンドウ
+		GAUBASE,			// ゲージ枠
+		GAUBAR,				// ゲージバー
+		GAUBACK,			// ゲージ背景
 		MAX,
 	};
 

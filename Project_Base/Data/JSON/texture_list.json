@@ -1,5 +1,5 @@
 {
-	"ModelList": [
+	"TextureList": [
 		"Data\\TEXTURE\\title.png",
 		"Data\\TEXTURE\\start.png",
 		"Data\\TEXTURE\\result.png",
@@ -10,6 +10,9 @@
 		"Data\\TEXTURE\\map.png",
 		"Data\\TEXTURE\\circle.png",
 		"Data\\TEXTURE\\gauge.png",
-		"Data\\TEXTURE\\gauge_window.png"
+		"Data\\TEXTURE\\gauge_window.png",
+		"Data\\TEXTURE\\HUD\\base.png",
+		"Data\\TEXTURE\\HUD\\bar.png",
+		"Data\\TEXTURE\\HUD\\back.png"
 	]
 }
