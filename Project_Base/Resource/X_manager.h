@@ -62,6 +62,12 @@ public:
 		MAX,
 	};
 
+	// +演算子のオーバーロード
+	friend TYPE operator+(TYPE Type, WORD wNum)
+	{
+		return static_cast<TYPE>(static_cast<WORD>(Type) + wNum);
+	}
+
 	//****************************************************
 	// モデル情報の構造体の定義
 	//****************************************************

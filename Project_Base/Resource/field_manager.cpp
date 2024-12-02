@@ -357,7 +357,8 @@ void CField_Manager::FieldGenerator()
 	if (Norm.x * Norm.x + Norm.z * Norm.z > 0.1f)
 	{
 		// ブロックの自動生成
-		AutoCreateBlock(1);
+		//AutoCreateBlock(1);
+		AutoCreateBlockDash();
 	}
 
 	// ブロックの自動削除
@@ -436,6 +437,54 @@ void CField_Manager::AutoCreateBlock(int nAmount)
 		// ブロックを生成
 		CBlock::Create(NewPos, NewRot);
 	}
+}
+
+//============================================================================
+// ダッシュタイプの自動生成
+//============================================================================
+void CField_Manager::AutoCreateBlockDash()
+{
+	// 生成座標計算用 ((方角 + 扇形幅の角度)の場所が生成ポイント)
+	float fDirection = m_pSyncPlayer->GetDirection();	// プレイヤーの現在の方角をコピー
+	float fRange = m_pRenderFan->GetRange();			// 扇形範囲の幅をコピー
+	Vec3  NewPos = VEC3_INIT, NewRot = VEC3_INIT;		// ブロック用の座標・向きを作成
+
+	// 現在座標と目標座標に対し原点からの方向ベクトルを作成
+	Vec3 OldVec = m_pSyncPlayer->GetPos() - VEC3_INIT, NewVec = m_pSyncPlayer->GetPosTarget() - VEC3_INIT;
+	D3DXVec3Normalize(&OldVec, &OldVec);
+	D3DXVec3Normalize(&NewVec, &NewVec);
+
+	// 2本の方向ベクトルの外積を作成
+	float fCross = (OldVec.x * NewVec.z) - (OldVec.z * NewVec.x);
+
+	// 左に移動している場合角度を反転させる
+	if (fCross < 0.0f)
+		fRange = -fRange;
+
+	// 破棄範囲にはみ出さず生成されるように調整
+	/* 初期座標が原点の場合、生成範囲の半径がフィールドの半径を下回ると無限ループ */
+	do
+	{
+		// 生成用の座標を決定
+		NewPos.x = cosf(fDirection + fRange) * FIELD_RADIUS;
+		NewPos.y = fabsf(utility::GetRandomValue<float>());
+		NewPos.z = sinf(fDirection + fRange) * FIELD_RADIUS;
+
+		// ブロック同士の幅を検出
+		if (DetectNearBlock(NewPos))
+		{
+			return;
+
+			//NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
+		}
+
+	} while (!m_pRenderFan->DetectInFanRange(NewPos));
+
+	// 向きを決定
+	NewRot.y = atan2f(-NewPos.x, -NewPos.z);
+
+	// ブロックを生成
+	CBlock::Create(NewPos, NewRot);
 }
 
 //============================================================================

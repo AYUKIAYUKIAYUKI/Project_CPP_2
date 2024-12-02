@@ -54,6 +54,16 @@ CPlayer_State_Default::~CPlayer_State_Default()
 //============================================================================
 void CPlayer_State_Default::Update()
 {
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("CntDashCast")) {
+		ImGui::Text("CntDashCast:%d", 0);
+		ImGui::End();
+	}
+
+	// ダッシュのキャストが溜まっていたらデクリメント
+	//if (m_nCntDashCast > 0)
+	//	--m_nCntDashCast;
+
 	// 操作
 	Control();
 
@@ -135,8 +145,15 @@ void CPlayer_State_Default::Control()
 //============================================================================
 void CPlayer_State_Default::To_Dash()
 {
+	// ダッシュのキャストが溜まっていれば処理を行わない
+	//if (m_nCntDashCast > 0)
+	//	return;
+
 	if (GetNextState() == nullptr)
 	{
+		// 再ダッシュまでのキャストカウントを設定
+		//m_nCntDashCast = CPlayer_State_Dash::MAX_DASH_CAST;
+
 		SetNextState(DBG_NEW CPlayer_State_Dash());
 	}
 }

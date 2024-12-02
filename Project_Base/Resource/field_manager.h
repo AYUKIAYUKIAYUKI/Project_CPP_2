@@ -30,7 +30,7 @@ public:
 	static constexpr int MAX_BLOCK = 999;
 
 	/// <summary> 重力 </summary>
-	static constexpr float FIELD_GRAVITY = -0.3f;
+	static constexpr float FIELD_GRAVITY = -0.35f;
 
 	// <special function>
 	CField_Manager(const CField_Manager&) = delete;				// コピーコンストラクタ
@@ -93,7 +93,8 @@ private:
 	void	AppearBossEvent();					// ボス登場イベント
 	void	FieldGenerator();					// フィールドジェネレータ
 	void	BranchFieldType();					// フィールドタイプ分岐
-	void	AutoCreateBlock(int nAmount);		// ブロックの自動作成
+	void	AutoCreateBlock(int nAmount);		// ブロックの自動生成
+	void	AutoCreateBlockDash();				// ダッシュタイプの自動生成
 	bool	DetectNearBlock(D3DXVECTOR3 Pos);	// 隣接し合うブロックを検出
 	void	AutoDestroyBlock();					// ブロックの自動削除
 	void	DestroyAllBlock();					// 全ブロックの削除
