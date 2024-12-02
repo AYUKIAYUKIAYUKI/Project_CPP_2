@@ -64,6 +64,10 @@ void CPlayer_State_Jump::Update()
 		To_Default();
 	}
 
+	// ダッシュのキャストが溜まっていたらデクリメント
+	if (m_nCntDashCast > 0)
+		--m_nCntDashCast;
+
 	// 重力の補正
 	AdjustGravity();
 
@@ -87,8 +91,15 @@ void CPlayer_State_Jump::To_Default()
 //============================================================================
 void CPlayer_State_Jump::To_Dash()
 {
+	// ダッシュのキャストが溜まっていれば処理を行わない
+	if (m_nCntDashCast > 0)
+		return;
+
 	if (GetNextState() == nullptr)
 	{
+		// 再ダッシュまでのキャストカウントを設定
+		m_nCntDashCast = CPlayer_State_Dash::MAX_DASH_CAST;
+
 		SetNextState(DBG_NEW CPlayer_State_Dash());
 	}
 }
@@ -101,7 +112,7 @@ void CPlayer_State_Jump::To_Slash()
 	if (GetNextState() == nullptr)
 	{
 		// 軽くふわっと浮き上がるような加速度を強制発生
-		m_pCharacter->SetVelY(0.3f);
+		m_pCharacter->SetVelY(0.2f);
 
 		SetNextState(DBG_NEW CPlayer_State_Slash());
 	}

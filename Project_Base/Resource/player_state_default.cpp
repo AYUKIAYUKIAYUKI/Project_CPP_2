@@ -54,15 +54,17 @@ CPlayer_State_Default::~CPlayer_State_Default()
 //============================================================================
 void CPlayer_State_Default::Update()
 {
+#if 1
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("CntDashCast")) {
-		ImGui::Text("CntDashCast:%d", 0);
+		ImGui::Text("CntDashCast:%d", m_nCntDashCast);
 		ImGui::End();
 	}
+#endif
 
 	// ダッシュのキャストが溜まっていたらデクリメント
-	//if (m_nCntDashCast > 0)
-	//	--m_nCntDashCast;
+	if (m_nCntDashCast > 0)
+		--m_nCntDashCast;
 
 	// 操作
 	Control();
@@ -146,13 +148,13 @@ void CPlayer_State_Default::Control()
 void CPlayer_State_Default::To_Dash()
 {
 	// ダッシュのキャストが溜まっていれば処理を行わない
-	//if (m_nCntDashCast > 0)
-	//	return;
+	if (m_nCntDashCast > 0)
+		return;
 
 	if (GetNextState() == nullptr)
 	{
 		// 再ダッシュまでのキャストカウントを設定
-		//m_nCntDashCast = CPlayer_State_Dash::MAX_DASH_CAST;
+		m_nCntDashCast = CPlayer_State_Dash::MAX_DASH_CAST;
 
 		SetNextState(DBG_NEW CPlayer_State_Dash());
 	}
@@ -163,6 +165,10 @@ void CPlayer_State_Default::To_Dash()
 //============================================================================
 void CPlayer_State_Default::To_Jump()
 {
+	// Y軸方向に加速度のかかった状態(空中)ならジャンプに変更しない
+	if (m_pCharacter->GetVelY() != 0.0f)
+		return;
+
 	if (GetNextState() == nullptr)
 	{
 		// Y軸の加速度を大幅に増加

@@ -34,6 +34,11 @@ public:
 	virtual void To_Slash();			// 斬撃状態へ変更
 	virtual void To_Damage();			// ダメージ状態へ変更
 
+protected:
+
+	// <static data>
+	static int m_nCntDashCast;	// ダッシュのキャストカウント
+
 private:
 
 	// <function>

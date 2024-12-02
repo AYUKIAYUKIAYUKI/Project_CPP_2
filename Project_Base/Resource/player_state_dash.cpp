@@ -46,9 +46,6 @@ CPlayer_State_Dash::CPlayer_State_Dash() :
 		m_bDirection = 0;
 	else
 		m_bDirection = 1;
-
-	// Y軸方向の加速度を無くす
-	m_pCharacter->SetVelY(0.0f);
 }
 
 //============================================================================
@@ -69,11 +66,14 @@ void CPlayer_State_Dash::Update()
 		CConstellation::GenerateSpread(m_pCharacter->GetPos());
 		CConstellation::GenerateSpread(m_pCharacter->GetPosTarget());
 
+	// Y軸方向の加速度を無くす
+	m_pCharacter->SetVelY(0.0f);
+
 	// 目標座標をダッシュ方向に増加
 	SetPosTarget_Unnamed();
 
 	// 継続期間をカウントアップ
-	m_nDashDuration++;
+	++m_nDashDuration;
 
 	// 継続期間が最大に到達で
 	if (m_nDashDuration >= MAX_DASH_DURATION)
