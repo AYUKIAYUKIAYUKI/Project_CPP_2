@@ -35,7 +35,8 @@ using namespace abbr;
 // コンストラクタ
 //============================================================================
 CPlayer_State_Wall::CPlayer_State_Wall() :
-	CPlayer_State{}
+	CPlayer_State{},
+	m_nWallDuration{ 0 }
 {
 
 }
@@ -58,6 +59,16 @@ void CPlayer_State_Wall::Update()
 
 	// 重力の補正
 	AdjustGravity();
+
+	// 継続期間をインクリメント
+	++m_nWallDuration;
+
+	// 継続期間が最大に到達で
+	if (m_nWallDuration >= 9999999)
+	{
+		// 通常状態へ
+		To_Default();
+	}
 }
 
 //============================================================================

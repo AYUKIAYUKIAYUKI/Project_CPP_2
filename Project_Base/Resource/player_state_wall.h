@@ -34,6 +34,9 @@ private:
 
 	// <function>
 	void AdjustGravity();	// d—Í‚Ì•â³
+
+	// <data>
+	int	m_nWallDuration;	// Œp‘±ŠúŠÔ
 };
 
 #endif	// _PLAYER_STATE_SLASH_
