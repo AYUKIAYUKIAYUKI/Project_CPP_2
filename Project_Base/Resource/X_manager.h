@@ -52,7 +52,9 @@ public:
 		AROUND,				// 周辺領域
 		PUMPKIN,			// パンプキン
 		ENEMY,				// 敵
-		BLOCK,				// ブロック
+		BLONORMAL,			// 通常ブロック
+		BLOSIDE,			// 横長ブロック
+		BLOTALL,			// 縦長ブロック
 		RUBBLE_00,			// がれき00
 		RUBBLE_01,			// がれき01
 		RUBBLE_02,			// がれき02

@@ -420,11 +420,13 @@ void CField_Manager::AutoCreateBlock(int nAmount)
 			NewPos.y = fabsf(utility::GetRandomValue<float>());
 			NewPos.z = sinf(fDirection + fRange) * FIELD_RADIUS;
 
-			//// ブロック同士の幅を検出
-			//if (DetectAdjacentBlock(NewPos))
-			//{
-			//	NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
-			//}
+			// ブロック同士の幅を検出
+			if (DetectNearBlock(NewPos))
+			{
+				return;
+
+				//NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
+			}
 
 		} while (!m_pRenderFan->DetectInFanRange(NewPos));
 
@@ -452,11 +454,14 @@ bool CField_Manager::DetectNearBlock(D3DXVECTOR3 Pos)
 			CBlock* pBlock = nullptr;
 			pBlock = utility::DownCast(pBlock, pObj);
 
-			/* 今回は試験的にお互いの距離のみを考慮する */
+			// お互いの距離を求める
 			const Vec3& Vec = pBlock->GetPos() - Pos;
 
-			/* ある程度接近してしまっているブロックが存在する場合 */
-			if (sqrtf(Vec.x * Vec.x + Vec.y * Vec.y + Vec.z * Vec.z) <= pBlock->GetSize().x * 5.0f)
+			// ブロックのサイズをコピー
+			const Vec3& Size = pBlock->GetSize();
+
+			// ブロックのサイズぐらいに近づいていたら
+			if ((Vec.x * Vec.x + Vec.y * Vec.y + Vec.z * Vec.z) <= (Size.x * Size.x + Size.y * Size.y + Size.z * Size.z) * 10.0f)
 			{
 				// 座標の生成をやり直す
 				return 1;
