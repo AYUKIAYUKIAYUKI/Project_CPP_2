@@ -55,8 +55,9 @@ CPlayer_State_Jump::~CPlayer_State_Jump()
 //============================================================================
 void CPlayer_State_Jump::Update()
 {
-	// 間違いなくプレイヤーが着地している場合
-	if (m_pCharacter->GetVelY() == 0.0f && fabsf(m_pCharacter->GetPos().y - m_pCharacter->GetPosTarget().y) <= 1.0f)
+	// Y軸方向の加速度が無く、Y方向の移動目標のノルムが小さい時
+	if (m_pCharacter->GetVelY() == 0.0f &&
+		fabsf(m_pCharacter->GetPosTarget().y - m_pCharacter->GetPos().y) <= 0.1f)
 	{
 		// 通常状態へ
 		To_Default();
