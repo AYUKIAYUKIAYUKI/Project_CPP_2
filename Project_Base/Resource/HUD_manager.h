@@ -62,6 +62,9 @@ private:
 	CObject_HUD*   m_pPlayerGauge;						// プレイヤーのゲージ表示
 	CObject_HUD*   m_pPlayerGaugeWindow;				// プレイヤーのゲージ枠表示
 	CObject_HUD*   m_pPlayerLife[CPlayer::MAX_LIFE];	// プレイヤーの体力表示
+	CObject_HUD*   m_pBossGaugeBack;					// ボスゲージ背景
+	CObject_HUD*   m_pBossGaugeBar;						// ボスゲージバー
+	CObject_HUD*   m_pBossGaugeBase;					// ボスゲージ枠
 
 	// <static data>
 	static CHUD_Manager* m_pHUDManager;	// HUDマネージャーの本体 

@@ -173,7 +173,10 @@ CHUD_Manager::CHUD_Manager() :
 	m_pSyncPlayer{ nullptr }, 
 	m_pMap{ nullptr },
 	m_pPlayerGauge{ nullptr },
-	m_pPlayerGaugeWindow{ nullptr }
+	m_pPlayerGaugeWindow{ nullptr },
+	m_pBossGaugeBack{ nullptr },
+	m_pBossGaugeBar{ nullptr },
+	m_pBossGaugeBase{ nullptr }
 {
 	// プレイヤーの体力表示を初期化
 	for (WORD wCnt = 0; wCnt < CPlayer::MAX_LIFE; ++wCnt)
@@ -218,6 +221,21 @@ HRESULT CHUD_Manager::Init()
 		m_pPlayerLife[wCntLife]->BindTex(CTexture_Manager::TYPE::CIRCLE);
 	}
 
+	{ // ボスゲージ背景を生成
+		m_pBossGaugeBack = CObject_HUD::Create("Data\\JSON\\HUD\\bossgaugeback.json");
+		m_pBossGaugeBack->BindTex(CTexture_Manager::TYPE::GAUBACK);
+	}
+
+	{ // ボスゲージバーを生成
+		m_pBossGaugeBar = CObject_HUD::Create("Data\\JSON\\HUD\\bossgaugebar.json");
+		m_pBossGaugeBar->BindTex(CTexture_Manager::TYPE::GAUBAR);
+	}
+
+	{ // ボスゲージ枠を生成
+		m_pBossGaugeBase = CObject_HUD::Create("Data\\JSON\\HUD\\bossgaugebase.json");
+		m_pBossGaugeBase->BindTex(CTexture_Manager::TYPE::GAUBASE);
+	}
+
 	return S_OK;
 }
 
@@ -258,6 +276,24 @@ bool CHUD_Manager::DetectError()
 	if (m_pPlayerLife == nullptr)
 	{
 		CRenderer::GetRenderer()->SetDebugString("プレイヤーの体力表示が出来ません");
+		bError = 1;
+	}
+
+	if (m_pBossGaugeBack == nullptr)
+	{
+		CRenderer::GetRenderer()->SetDebugString("ボスゲージ背景表示が出来ません");
+		bError = 1;
+	}
+
+	if (m_pBossGaugeBar == nullptr)
+	{
+		CRenderer::GetRenderer()->SetDebugString("ボスゲージバー表示が出来ません");
+		bError = 1;
+	}
+
+	if (m_pBossGaugeBase == nullptr)
+	{
+		CRenderer::GetRenderer()->SetDebugString("ボスゲージ枠表示が出来ません");
 		bError = 1;
 	}
 
