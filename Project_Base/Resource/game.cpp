@@ -42,7 +42,8 @@ void CGame::Update()
 	++DBG_nCntAppearBoss;
 
 	// とりあえず30フレーム経過で
-	if (DBG_nCntAppearBoss == 30)
+	/* 出現しないように-1に設定 */
+	if (DBG_nCntAppearBoss == -1)
 	{
 		// ボス登場
 		CField_Manager::GetInstance()->AppearBoss();
@@ -173,6 +174,10 @@ HRESULT CGame::Init()
 {
 	// プレイヤーを生成
 	CPlayer* pPlayer = CPlayer::Create();
+
+	// カメラ情報を変更
+	CCamera* pCamera = CManager::GetManager()->GetCamera();
+	pCamera->ChangeTrackPlayer(true);
 
 	// フィールドマネージャーにプレイヤーをセット
 	CField_Manager::GetInstance()->SetSyncPlayer(pPlayer);

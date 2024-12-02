@@ -253,7 +253,6 @@ void CField_Manager::InitEnvironment()
 		auto StatueParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue.json");
 		m_pStatue->SetRot(utility::JsonConvertToVec3(StatueParam["Rot"]));
 		m_pStatue->SetPos(utility::JsonConvertToVec3(StatueParam["Pos"]));
-		m_pStatue->SetPos({ 0.0f, -1000.0f, 0.0f });
 		
 		// 初期モーションを設定
 		m_pStatue->SetNowMotion(2);
@@ -350,19 +349,18 @@ void CField_Manager::GenerateBlock()
 		// 生成座標計算用
 		const float&	fDirection = m_pSyncPlayer->GetDirection();	// プレイヤーの現在の方角をコピー
 		Vec3			NewPos = VEC3_INIT, NewRot = VEC3_INIT;		// ブロック用の座標・向きを作成
-		float			fRandomRange = 0.0f;						// ランダムな方角範囲
 
 		// 破棄範囲にはみ出さず生成されるように調整
 		/* 初期座標が原点の場合、生成範囲の半径がフィールドの半径を下回ると無限ループ */
 		do
 		{
-			// ランダムに方角をずらす
-			//fRandomRange = utility::GetRandomValue<float>();
+			// 扇形範囲の幅をコピー
+			float fRange = m_pRenderFan->GetRange();
 
 			// 生成用の座標を決定
-			NewPos.x = cosf(fDirection + fRandomRange) * FIELD_RADIUS;
+			NewPos.x = cosf(fDirection + fRange) * FIELD_RADIUS;
 			NewPos.y = fabsf(utility::GetRandomValue<float>());
-			NewPos.z = sinf(fDirection + fRandomRange) * FIELD_RADIUS;
+			NewPos.z = sinf(fDirection + fRange) * FIELD_RADIUS;
 
 			// ブロック同士の幅を検出
 			if (DetectAdjacentBlock(NewPos))
@@ -370,10 +368,10 @@ void CField_Manager::GenerateBlock()
 				NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
 			}
 
-		} while (!m_pRenderFan->DetectInFanRange(NewPos));
+			// 向きを決定
+			NewRot.y = (fDirection + fRange) + D3DX_PI * 0.5f;
 
-		// 向きを決定
-		NewRot.y = (fDirection + fRandomRange) + D3DX_PI * 0.5f;
+		} while (!m_pRenderFan->DetectInFanRange(NewPos));
 
 		// ブロックを生成
 		CBlock::Create(NewPos, NewRot);

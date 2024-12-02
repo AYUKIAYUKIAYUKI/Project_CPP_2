@@ -48,6 +48,11 @@ void CTitle::Update()
 		CObject::ReleaseAll();
 		CScene_Manager::ChangeScene(Create());
 	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_SPACE))
+	{
+		CHUD_Manager::Create();
+		To_Next();
+	}
 #endif // _DEBUG
 }
 
@@ -312,6 +317,11 @@ void CTitle::UpdateButterfly()
 			D3DXVECTOR3 PosTarget = { 0.0f, 0.0f, 0.0f };
 
 			// 銅像への進行度で挙動を変更
+			if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) == nullptr &&
+				PosTarget.z - NewPos.z > CField_Manager::FIELD_RADIUS * 3.0f)
+			{ // プレイヤーが生成されていなくて銅像への距離が
+
+			}
 			if (PosTarget.z - NewPos.z > CField_Manager::FIELD_RADIUS * 1.5f)
 			{ // 蝶がフィールドの半径より遠い場合
 
