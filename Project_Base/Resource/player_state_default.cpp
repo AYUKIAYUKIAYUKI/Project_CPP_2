@@ -115,12 +115,12 @@ void CPlayer_State_Default::Control()
 		}
 	}
 
-	if (pKeyboard->GetTrigger(DIK_SPACE))
+	if (pMouse->GetTrigger(0))
 	{
 		// ƒWƒƒƒ“ƒvó‘Ô‚Ö
 		To_Jump();
 	}
-	else if (pMouse->GetTrigger(0))
+	else if (pKeyboard->GetTrigger(DIK_SPACE))
 	{
 		// aŒ‚ó‘Ô‚Ö
 		To_Slash();
