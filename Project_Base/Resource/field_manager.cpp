@@ -379,14 +379,14 @@ void CField_Manager::GenerateBlock()
 	ImGui::End();
 #endif
 
+	// 生成座標計算用 ((方角 + 扇形幅の角度)の場所が生成ポイント)
+	float fDirection = m_pSyncPlayer->GetDirection();	// プレイヤーの現在の方角をコピー
+	float fRange = m_pRenderFan->GetRange();			// 扇形範囲の幅をコピー
+	Vec3  NewPos = VEC3_INIT, NewRot = VEC3_INIT;		// ブロック用の座標・向きを作成
+
 	// ブロック数が上限に満たなければ
 	while (nCntBlock < MAX_BLOCK)
 	{
-		// 生成座標計算用
-		const float&	fDirection = m_pSyncPlayer->GetDirection();	// プレイヤーの現在の方角をコピー
-		Vec3			NewPos = VEC3_INIT, NewRot = VEC3_INIT;		// ブロック用の座標・向きを作成
-		float			fRange = m_pRenderFan->GetRange();
-
 		// 破棄範囲にはみ出さず生成されるように調整
 		/* 初期座標が原点の場合、生成範囲の半径がフィールドの半径を下回ると無限ループ */
 		do
@@ -405,7 +405,7 @@ void CField_Manager::GenerateBlock()
 		} while (!m_pRenderFan->DetectInFanRange(NewPos));
 
 		// 向きを決定
-		NewRot.y = (fDirection + fRange) + D3DX_PI * fRotY;
+		NewRot.y = atan2f(-NewPos.x, -NewPos.z);
 
 		// ブロックを生成
 		CBlock::Create(NewPos, NewRot);
