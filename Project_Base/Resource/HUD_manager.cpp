@@ -180,6 +180,7 @@ CHUD_Manager::CHUD_Manager() :
 	m_pPlayerGaugeWindow{ nullptr },
 	m_pBossGaugeBack{ nullptr },
 	m_pBossGaugeBar{ nullptr },
+	m_BossGaugeBarParam{},
 	m_pBossGaugeBase{ nullptr }
 {
 	// プレイヤーの体力表示を初期化
@@ -233,6 +234,14 @@ HRESULT CHUD_Manager::Init()
 	{ // ボスゲージバーを生成
 		m_pBossGaugeBar = CObject_HUD::Create("Data\\JSON\\HUD\\bossgaugebar.json");
 		m_pBossGaugeBar->BindTex(CTexture_Manager::TYPE::GAUBAR);
+
+		// X方向目標サイズを0にしておく
+		Vec3 SizeTarget = m_pBossGaugeBar->GetSizeTarget();
+		SizeTarget.x = 0.0f;
+		m_pBossGaugeBar->SetSizeTarget(SizeTarget);
+
+		// ボスゲージバー用のパラメータをコピーしておく
+		m_BossGaugeBarParam = utility::OpenJsonFile("Data\\JSON\\HUD\\bossgaugebar.json");
 	}
 
 	{ // ボスゲージ枠を生成
@@ -260,26 +269,29 @@ void CHUD_Manager::UpdateBossGaugeBar()
 	float nCntDestroyBlock = static_cast<float>(CField_Manager::GetInstance()->GetCntDestroyBlock());
 
 	{ // 目標サイズを設定
+
+		// 基礎サイズを最大カウント数で割る→1カウント当たりのサイズを出す→現在のカウント数分のサイズに設定
 		Vec3 SizeTarget = m_pBossGaugeBar->GetSizeTarget();
-		SizeTarget.x = nCntDestroyBlock * (570.0f / CField_Manager::MAX_DESTROY_BLOCK);
-		m_pBossGaugeBar->SetSize(SizeTarget);
+		SizeTarget.x = nCntDestroyBlock * (utility::JsonConvertToVec3(m_BossGaugeBarParam["SizeTarget"]).x / CField_Manager::MAX_DESTROY_BLOCK);
 		m_pBossGaugeBar->SetSizeTarget(SizeTarget);
 	}
 
 	{ // 目標座標を設定
 
-		// ( 基礎座標 - 基礎サイズ )でベースとなるX座標を作成
-		float BasePosX = 580.0f - 570.0f;
+		// ( 基礎座標 - 基礎サイズ )でポリゴンの左端となるの座標を出す
+		float BasePosX = utility::JsonConvertToVec3(m_BossGaugeBarParam["PosTarget"]).x - utility::JsonConvertToVec3(m_BossGaugeBarParam["SizeTarget"]).x;
 
+		// 横幅を足すことで、ゲージ延長→右にずらす→ゲージと枠の左端が揃う
 		Vec3 SizeTarget = m_pBossGaugeBar->GetSizeTarget(), PosTarget = m_pBossGaugeBar->GetPosTarget();
 		PosTarget.x = BasePosX + SizeTarget.x;
-		m_pBossGaugeBar->SetPos(PosTarget);
 		m_pBossGaugeBar->SetPosTarget(PosTarget);
 	}
 
 	{ // テクスチャサイズを設定
+
+		// 実値を直接変更するので、目標値への補間はここで行う
 		Vec2 TexSize = m_pBossGaugeBar->GetTexSize();
-		TexSize.x = 1.0f - (nCntDestroyBlock * (1.0f / CField_Manager::MAX_DESTROY_BLOCK));
+		TexSize.x += (1.0f - (nCntDestroyBlock * (1.0f / CField_Manager::MAX_DESTROY_BLOCK)) - TexSize.x) * static_cast<float>(m_BossGaugeBarParam["CorrectionCoef"]);
 		m_pBossGaugeBar->SetTexSize(TexSize);
 	}
 }

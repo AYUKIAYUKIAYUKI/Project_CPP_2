@@ -65,6 +65,7 @@ private:
 	CObject_HUD*   m_pPlayerLife[CPlayer::MAX_LIFE];	// プレイヤーの体力表示
 	CObject_HUD*   m_pBossGaugeBack;					// ボスゲージ背景
 	CObject_HUD*   m_pBossGaugeBar;						// ボスゲージバー
+	JSON		   m_BossGaugeBarParam;					// ボスゲージバーパラメータ
 	CObject_HUD*   m_pBossGaugeBase;					// ボスゲージ枠
 
 	// <static data>
