@@ -56,6 +56,9 @@ CPlayer_State_Jump::~CPlayer_State_Jump()
 //============================================================================
 void CPlayer_State_Jump::Update()
 {
+	// プレイヤーステートクラスの更新処理
+	CPlayer_State::Update();
+
 	// Y軸方向の加速度が無く、Y方向の移動目標のノルムが小さい時
 	if (m_pCharacter->GetVelY() == 0.0f &&
 		fabsf(m_pCharacter->GetPosTarget().y - m_pCharacter->GetPos().y) <= 0.1f)
@@ -63,10 +66,6 @@ void CPlayer_State_Jump::Update()
 		// 通常状態へ
 		To_Default();
 	}
-
-	// ダッシュのキャストが溜まっていたらデクリメント
-	if (m_nCntDashCast > 0)
-		--m_nCntDashCast;
 
 	// 重力の補正
 	AdjustGravity();
@@ -109,10 +108,17 @@ void CPlayer_State_Jump::To_Dash()
 //============================================================================
 void CPlayer_State_Jump::To_Slash()
 {
+	// 斬撃のキャストが溜まっていれば処理を行わない
+	if (m_nCntSlashCast > 0)
+		return;
+
 	if (GetNextState() == nullptr)
 	{
+		// 再攻撃までのキャストカウントを設定
+		m_nCntSlashCast = CPlayer_State_Slash::MAX_SLASH_CAST;
+
 		// 軽くふわっと浮き上がるような加速度を強制発生
-		m_pCharacter->SetVelY(0.2f);
+		m_pCharacter->SetVelY(0.35f);
 
 		SetNextState(DBG_NEW CPlayer_State_Slash());
 	}

@@ -54,17 +54,8 @@ CPlayer_State_Default::~CPlayer_State_Default()
 //============================================================================
 void CPlayer_State_Default::Update()
 {
-#if 1
-	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("CntDashCast")) {
-		ImGui::Text("CntDashCast:%d", m_nCntDashCast);
-		ImGui::End();
-	}
-#endif
-
-	// ダッシュのキャストが溜まっていたらデクリメント
-	if (m_nCntDashCast > 0)
-		--m_nCntDashCast;
+	// プレイヤーステートクラスの更新処理
+	CPlayer_State::Update();
 
 	// 操作
 	Control();
@@ -183,8 +174,15 @@ void CPlayer_State_Default::To_Jump()
 //============================================================================
 void CPlayer_State_Default::To_Slash()
 {
+	// 斬撃のキャストが溜まっていれば処理を行わない
+	if (m_nCntSlashCast > 0)
+		return;
+
 	if (GetNextState() == nullptr)
 	{
+		// 再攻撃までのキャストカウントを設定
+		m_nCntSlashCast = CPlayer_State_Slash::MAX_SLASH_CAST;
+
 		SetNextState(DBG_NEW CPlayer_State_Slash());
 	}
 }

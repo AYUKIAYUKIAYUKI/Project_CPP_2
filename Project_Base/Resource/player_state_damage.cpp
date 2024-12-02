@@ -47,11 +47,14 @@ CPlayer_State_Damage::~CPlayer_State_Damage()
 //============================================================================
 void CPlayer_State_Damage::Update()
 {
+	// プレイヤーステートクラスの更新処理
+	CPlayer_State::Update();
+
 	// 重力加速
 	m_pCharacter->SetVelY(m_pCharacter->GetVelY() + CField_Manager::FIELD_GRAVITY);
 
 	// 継続期間をカウントアップ
-	m_nDamageDuration++;
+	++m_nDamageDuration;
 
 	// 継続期間の半分まで行くと歩ける
 	if (m_nDamageDuration >= MAX_DASH_DURATION * 0.5f)

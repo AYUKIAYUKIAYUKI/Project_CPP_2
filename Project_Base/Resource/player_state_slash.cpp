@@ -64,11 +64,14 @@ CPlayer_State_Slash::~CPlayer_State_Slash()
 //============================================================================
 void CPlayer_State_Slash::Update()
 {
-	// 継続期間をカウントアップ
-	m_nSlashDuration++;
+	// プレイヤーステートクラスの更新処理
+	CPlayer_State::Update();
 
 	// 衝突検出
 	SlashHitCheck();
+
+	// 継続期間をカウントアップ
+	++m_nSlashDuration;
 
 	// 継続期間が最大に到達で
 	if (m_nSlashDuration >= MAX_SLASH_DURATION)

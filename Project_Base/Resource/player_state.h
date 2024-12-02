@@ -22,22 +22,23 @@ class CPlayer_State : public CCharacter_State
 public:
 
 	// <special function>
-	CPlayer_State();					// コンストラクタ
-	CPlayer_State(CPlayer* pPlayer);	// プレイヤー取得コンストラクタ
-	virtual ~CPlayer_State() override;	// デストラクタ
+	CPlayer_State();						// コンストラクタ
+	CPlayer_State(CPlayer* pPlayer);		// プレイヤー取得コンストラクタ
+	virtual ~CPlayer_State() override = 0;	// デストラクタ
 
-	// <function>
-	virtual void Update() override = 0;	// 更新処理
-	virtual void To_Default();			// 通常状態へ変更
-	virtual void To_Dash();				// ダッシュ状態へ変更
-	virtual void To_Jump();				// ジャンプ状態へ変更
-	virtual void To_Slash();			// 斬撃状態へ変更
-	virtual void To_Damage();			// ダメージ状態へ変更
+	// <virtual function>
+	virtual void Update() override;	// 更新処理
+	virtual void To_Default();		// 通常状態へ変更
+	virtual void To_Dash();			// ダッシュ状態へ変更
+	virtual void To_Jump();			// ジャンプ状態へ変更
+	virtual void To_Slash();		// 斬撃状態へ変更
+	virtual void To_Damage();		// ダメージ状態へ変更
 
 protected:
 
 	// <static data>
 	static int m_nCntDashCast;	// ダッシュのキャストカウント
+	static int m_nCntSlashCast;	// 斬撃のキャストカウント
 
 private:
 
