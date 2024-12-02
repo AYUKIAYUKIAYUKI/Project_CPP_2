@@ -169,7 +169,7 @@ void CPlayer_State_Jump::AdjustGravity()
 	m_nJumpRemainDuration++;
 
 	// ƒWƒƒƒ“ƒv‚Ì“ü—Í‚ð‚â‚ß‚é‚©A“ü—Í‚ÌŒp‘±ŠúŠÔ‚ªÅ‘å‰„’·—P—\‚É’B‚·‚é‚Æ‰„’·‚ðI—¹‚·‚é
-	if (CManager::GetKeyboard()->GetRelease(DIK_SPACE) || m_nJumpRemainDuration > MAX_JUMPREMAIN_DURATION)
+	if (CManager::GetMouse()->GetRelease(0) || m_nJumpRemainDuration > MAX_JUMPREMAIN_DURATION)
 	{
 		m_bEndRemain = true;
 	}

@@ -30,7 +30,7 @@ public:
 	static constexpr int MAX_BLOCK = 999;
 
 	/// <summary> 重力 </summary>
-	static constexpr float FIELD_GRAVITY = -0.5f;
+	static constexpr float FIELD_GRAVITY = -0.3f;
 
 	// <special function>
 	CField_Manager(const CField_Manager&) = delete;				// コピーコンストラクタ

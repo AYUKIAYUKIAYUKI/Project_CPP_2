@@ -21,7 +21,7 @@ class CPlayer_State_Jump : public CPlayer_State
 public:
 
 	/// <summary> ジャンプ一回当たりの増加加速度 </summary>
-	static constexpr float AMOUNT_JUMPACCEL = 5.0f;
+	static constexpr float AMOUNT_JUMPACCEL = 3.5f;
 
 	// <special function>
 	CPlayer_State_Jump();			// コンストラクタ
