@@ -349,6 +349,10 @@ void CTitle::UpdateButterfly()
 				To_Next();
 				return;
 			}
+
+			// マップシンボルの特殊挙動
+			/* 蝶がフィールドからどれくらい離れてるかを渡す */
+			CHUD_Manager::GetInstance()->SpecialMapSymbol((NewPos.z + CField_Manager::FIELD_RADIUS * 1.5f) / 30.0f);
 		}
 
 		// 蝶の向き・座標設定

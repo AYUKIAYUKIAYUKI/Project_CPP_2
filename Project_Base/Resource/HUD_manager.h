@@ -32,9 +32,10 @@ public:
 	CHUD_Manager& operator=(CHUD_Manager&&) = delete;		// ムーブ代入演算子
 
 	// <function>
-	HRESULT Init();		// 初期設定
-	void	Update();	// 更新処理
-	void	Draw();		// 描画処理
+	HRESULT Init();							// 初期設定
+	void	Update();						// 更新処理
+	void	Draw();							// 描画処理
+	void	SpecialMapSymbol(float fMove);	// マップシンボルの特殊挙動
 
 	// <setter>
 	void SetSyncPlayer(const CPlayer* const pPlayer);	// プレイヤーをセット

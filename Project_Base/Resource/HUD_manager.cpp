@@ -93,6 +93,22 @@ void CHUD_Manager::Draw()
 }
 
 //============================================================================
+// マップシンボルの特殊挙動
+//============================================================================
+void CHUD_Manager::SpecialMapSymbol(float fMove)
+{
+	// プレイヤーの方角を疑似作成
+	float fAngle = -D3DX_PI * 0.5f, fCoef = 56.0f;
+
+	// 目標座標をコピー
+	Vec3 AdjustPos = m_pMapSymbol->GetPosTarget();
+
+	// プレイヤーの方角に合わせてシンボルの座標も回転させる
+	AdjustPos += { cosf(fAngle)* fCoef, -sinf(fAngle) * fCoef - fMove, 0.0f };
+	m_pMapSymbol->SetPos(AdjustPos);
+}
+
+//============================================================================
 // プレイヤーをセット
 //============================================================================
 void CHUD_Manager::SetSyncPlayer(const CPlayer* const pPlayer)
