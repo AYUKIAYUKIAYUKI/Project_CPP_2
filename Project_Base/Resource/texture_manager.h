@@ -28,6 +28,7 @@ public:
 		CONSTELLATION2,		// 星座2
 		CONSTELLATION3,		// 星座3
 		MAPBASE,			// マップ枠
+		MAPRING,			// マップ輪
 		CIRCLE,				// サークル
 		PLAYERGAUGE,		// プレイヤーのゲージ
 		PLAYERGAUGEWINDOW,	// プレイヤーのゲージウィンドウ

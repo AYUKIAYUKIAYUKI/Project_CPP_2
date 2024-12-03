@@ -54,13 +54,15 @@ private:
 
 	// <function>
 	void Uninit();				// 終了処理
+	//void UpdateMapSymbol();		// マップシンボルの更新
 	void UpdateBossGaugeBack();	// ボスゲージ背景の更新
 	void UpdateBossGaugeBar();	// ボスゲージバーの更新
 	bool DetectError();			// エラー検出
 
 	// <data>
 	const CPlayer* m_pSyncPlayer;						// プレイヤーのポインタ
-	CObject_HUD*   m_pMap;								// マップ表示
+	CObject_HUD*   m_pMapBase;							// マップ枠
+	CObject_HUD*   m_pMapRing;							// マップ輪
 	CObject_HUD*   m_pPlayerGauge;						// プレイヤーのゲージ表示
 	CObject_HUD*   m_pPlayerGaugeWindow;				// プレイヤーのゲージ枠表示
 	CObject_HUD*   m_pPlayerLife[CPlayer::MAX_LIFE];	// プレイヤーの体力表示

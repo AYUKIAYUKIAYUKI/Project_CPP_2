@@ -179,7 +179,8 @@ CHUD_Manager* CHUD_Manager::GetInstance()
 //============================================================================
 CHUD_Manager::CHUD_Manager() :
 	m_pSyncPlayer{ nullptr }, 
-	m_pMap{ nullptr },
+	m_pMapBase{ nullptr },
+	m_pMapRing{ nullptr },
 	m_pPlayerGauge{ nullptr },
 	m_pPlayerGaugeWindow{ nullptr },
 	m_pBossGaugeBack{ nullptr },
@@ -208,9 +209,14 @@ CHUD_Manager::~CHUD_Manager()
 //============================================================================
 HRESULT CHUD_Manager::Init()
 {
-	{ // マップ表示を作成
-		m_pMap = CObject_HUD::Create("Data\\JSON\\HUD\\map.json");
-		m_pMap->BindTex(CTexture_Manager::TYPE::MAPBASE);
+	{ // マップ枠を作成
+		m_pMapBase = CObject_HUD::Create("Data\\JSON\\HUD\\mapbase.json");
+		m_pMapBase->BindTex(CTexture_Manager::TYPE::MAPBASE);
+	}
+
+	{ // マップ輪を作成
+		m_pMapRing = CObject_HUD::Create("Data\\JSON\\HUD\\mapring.json");
+		m_pMapRing->BindTex(CTexture_Manager::TYPE::MAPRING);
 	}
 
 	{ // プレイヤーのゲージを生成
@@ -376,9 +382,15 @@ bool CHUD_Manager::DetectError()
 	// エラー検出用
 	bool bError = 0;
 
-	if (!m_pMap)
+	if (!m_pMapBase)
 	{
-		CRenderer::GetRenderer()->SetDebugString("マップ表示が出来ません");
+		CRenderer::GetRenderer()->SetDebugString("マップ枠表示が出来ません");
+		bError = 1;
+	}
+
+	if (!m_pMapRing)
+	{
+		CRenderer::GetRenderer()->SetDebugString("マップ輪表示が出来ません");
 		bError = 1;
 	}
 
