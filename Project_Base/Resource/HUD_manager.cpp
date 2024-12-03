@@ -69,18 +69,19 @@ void CHUD_Manager::Update()
 		m_pPlayerLife[wCntLife - 1]->SetPosTarget(NewPosTarget);
 	}
 
+#ifdef _DEBUG
+	// 調整
+	ParamControl();
+#endif // _DEBUG
+
+	// マップシンボルの更新
+	UpdateMapSymbol();
+
 	// ボスゲージ背景の更新
 	UpdateBossGaugeBack();
 
 	// ボスゲージバーの更新
 	UpdateBossGaugeBar();
-
-#if 0	// HUD挙動の確認
-	if (CManager::GetKeyboard()->GetPress(DIK_Z))
-		m_pPlayerGaugeWindow->SetVibration();
-	else if (CManager::GetKeyboard()->GetTrigger(DIK_X))
-		m_pPlayerGaugeWindow->SetWaving();
-#endif
 }
 
 //============================================================================
@@ -219,6 +220,11 @@ HRESULT CHUD_Manager::Init()
 		m_pMapRing->BindTex(CTexture_Manager::TYPE::MAPRING);
 	}
 
+	{ // マップシンボルを作成
+		m_pMapSymbol = CObject_HUD::Create("Data\\JSON\\HUD\\mapsymbol.json");
+		m_pMapSymbol->BindTex(CTexture_Manager::TYPE::MAPSYMBOL);
+	}
+
 	{ // プレイヤーのゲージを生成
 		m_pPlayerGauge = CObject_HUD::Create("Data\\JSON\\HUD\\playergauge.json");
 		m_pPlayerGauge->BindTex(CTexture_Manager::TYPE::PLAYERGAUGE);
@@ -272,7 +278,58 @@ void CHUD_Manager::Uninit()
 }
 
 //============================================================================
-// ボスゲージ背景
+// 調整
+//============================================================================
+void CHUD_Manager::ParamControl()
+{
+#if 0 // 座標確認
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Pos Edit")) {
+		Vec3 Pos = m_pMapSymbol->GetPos();
+		ImGui::DragFloat("Pos:X", &Pos.x);
+		ImGui::DragFloat("Pos:Y", &Pos.y);
+		ImGui::DragFloat("Pos:Z", &Pos.z);
+		m_pMapSymbol->SetPos(Pos);
+		ImGui::End();
+	}
+#endif
+
+#if 0 // カラー確認
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Color Edit")) {
+		XCol ColTarget = m_pMapSymbol->GetColTarget();
+		ImGui::ColorEdit4("ColTarget", &ColTarget.r);
+		m_pMapSymbol->SetColTarget(ColTarget);
+		ImGui::End();
+	}
+#endif
+
+#if 0 // HUD挙動の確認
+	if (CManager::GetKeyboard()->GetPress(DIK_Z))
+		m_pPlayerGaugeWindow->SetVibration();
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_X))
+		m_pPlayerGaugeWindow->SetWaving();
+#endif
+}
+
+//============================================================================
+// マップシンボルの更新
+//============================================================================
+void CHUD_Manager::UpdateMapSymbol()
+{
+	// プレイヤーの方角をコピー
+	float fAngle = m_pSyncPlayer->GetDirection(), fCoef = 56.0f;
+
+	// 目標座標をコピー
+	Vec3 AdjustPos = m_pMapSymbol->GetPosTarget();
+
+	// プレイヤーの方角に合わせてシンボルの座標も回転させる
+	AdjustPos += { cosf(fAngle)* fCoef, -sinf(fAngle) * fCoef, 0.0f };
+	m_pMapSymbol->SetPos(AdjustPos);
+}
+
+//============================================================================
+// ボスゲージ背景の更新
 //============================================================================
 void CHUD_Manager::UpdateBossGaugeBack()
 {
@@ -284,16 +341,6 @@ void CHUD_Manager::UpdateBossGaugeBack()
 //============================================================================
 void CHUD_Manager::UpdateBossGaugeBar()
 {
-#if 0 // カラー確認用
-	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("BossGauge")) {
-		XCol ColTarget = m_pBossGaugeBar->GetColTarget();
-		ImGui::ColorEdit4("Col", &ColTarget.r);
-		m_pBossGaugeBar->SetColTarget(ColTarget);
-		ImGui::End();
-	}
-#endif
-
 	// ボスタイプのオブジェクトを取得
 	CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::BOSS);
 
@@ -391,6 +438,12 @@ bool CHUD_Manager::DetectError()
 	if (!m_pMapRing)
 	{
 		CRenderer::GetRenderer()->SetDebugString("マップ輪表示が出来ません");
+		bError = 1;
+	}
+
+	if (!m_pMapSymbol)
+	{
+		CRenderer::GetRenderer()->SetDebugString("マップシンボル表示が出来ません");
 		bError = 1;
 	}
 
