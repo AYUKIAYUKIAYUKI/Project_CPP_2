@@ -1,6 +1,6 @@
 {
 	"Priority": 3,
-	"TextureType": 8,
+	"TextureType": 3,
 	"CorrectionCoef": 0.025,
 	"SizeTarget": [ 3.0, 3.0, 3.0 ],
 	"ColTarget": [ 1.0, 0.5, 0.25, 0.35 ],

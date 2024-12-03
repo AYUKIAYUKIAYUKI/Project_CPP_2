@@ -23,6 +23,7 @@ public:
 		TITLE = 0,			// タイトル
 		START,				// スタート表示
 		RESULT,				// リザルト表示
+		SHINE,				// 輝き
 		CONSTELLATION0,		// 星座0
 		CONSTELLATION1,		// 星座1
 		CONSTELLATION2,		// 星座2
@@ -30,12 +31,12 @@ public:
 		MAPBASE,			// マップ枠
 		MAPRING,			// マップ輪
 		MAPSYMBOL,			// マップシンボル
-		CIRCLE,				// サークル
-		PLAYERGAUGE,		// プレイヤーのゲージ
-		PLAYERGAUGEWINDOW,	// プレイヤーのゲージウィンドウ
-		BOSSGAUBASE,		// ゲージ枠
-		BOSSGAUBAR,			// ゲージバー
-		BOSSGAUBACK,		// ゲージ背景
+		PLALIFE,			// プレイヤーライフ
+		PLAGAUBAR,			// プレイヤーゲージバー
+		PLAGAUBASE,			// プレイヤーゲージ枠
+		BOSSGAUBASE,		// ボスゲージ枠
+		BOSSGAUBAR,			// ボスゲージバー
+		BOSSGAUBACK,		// ボスゲージ背景
 		MAX,
 	};
 

@@ -241,14 +241,14 @@ HRESULT CHUD_Manager::Init()
 		m_pMapSymbol->BindTex(CTexture_Manager::TYPE::MAPSYMBOL);
 	}
 
-	{ // プレイヤーのゲージを生成
+	{ // プレイヤーゲージバーを生成
 		m_pPlayerGauge = CObject_HUD::Create("Data\\JSON\\HUD\\playergauge.json");
-		m_pPlayerGauge->BindTex(CTexture_Manager::TYPE::PLAYERGAUGE);
+		m_pPlayerGauge->BindTex(CTexture_Manager::TYPE::PLAGAUBAR);
 	}
 
-	{ // プレイヤーのゲージウィンドウを生成
+	{ // プレイヤーゲージ枠を生成
 		m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergaugewindow.json");
-		m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAYERGAUGEWINDOW);
+		m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAGAUBASE);
 	}
 
 	// プレイヤーの体力表示を生成
@@ -256,7 +256,7 @@ HRESULT CHUD_Manager::Init()
 	{
 		std::string FilePath = "Data\\JSON\\HUD\\playerlife\\" + to_string(wCntLife) + ".json";
 		m_pPlayerLife[wCntLife] = CObject_HUD::Create(FilePath);
-		m_pPlayerLife[wCntLife]->BindTex(CTexture_Manager::TYPE::CIRCLE);
+		m_pPlayerLife[wCntLife]->BindTex(CTexture_Manager::TYPE::PLALIFE);
 	}
 
 	{ // ボスゲージ背景を生成
