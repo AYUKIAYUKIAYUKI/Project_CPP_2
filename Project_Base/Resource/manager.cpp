@@ -260,7 +260,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 	}
 
 	// 四角形マスクの生成
-	m_pMask_Rectangle = CMask_Rectangle::Create(CTexture_Manager::TYPE::MAP);
+	m_pMask_Rectangle = CMask_Rectangle::Create(CTexture_Manager::TYPE::MAPBASE);
 
 	// ライトの生成
 	m_pLight = DBG_NEW CLight();

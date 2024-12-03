@@ -7,12 +7,12 @@
 		"Data\\TEXTURE\\constellation1.png",
 		"Data\\TEXTURE\\constellation2.png",
 		"Data\\TEXTURE\\constellation3.png",
-		"Data\\TEXTURE\\map.png",
+		"Data\\TEXTURE\\HUD\\map\\base.png",
 		"Data\\TEXTURE\\circle.png",
 		"Data\\TEXTURE\\gauge.png",
 		"Data\\TEXTURE\\gauge_window.png",
-		"Data\\TEXTURE\\HUD\\base.png",
-		"Data\\TEXTURE\\HUD\\bar.png",
-		"Data\\TEXTURE\\HUD\\back.png"
+		"Data\\TEXTURE\\HUD\\bossgauge\\base.png",
+		"Data\\TEXTURE\\HUD\\bossgauge\\bar.png",
+		"Data\\TEXTURE\\HUD\\bossgauge\\back.png"
 	]
 }

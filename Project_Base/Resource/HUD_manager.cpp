@@ -210,7 +210,7 @@ HRESULT CHUD_Manager::Init()
 {
 	{ // マップ表示を作成
 		m_pMap = CObject_HUD::Create("Data\\JSON\\HUD\\map.json");
-		m_pMap->BindTex(CTexture_Manager::TYPE::MAP);
+		m_pMap->BindTex(CTexture_Manager::TYPE::MAPBASE);
 	}
 
 	{ // プレイヤーのゲージを生成
@@ -233,12 +233,12 @@ HRESULT CHUD_Manager::Init()
 
 	{ // ボスゲージ背景を生成
 		m_pBossGaugeBack = CObject_HUD::Create("Data\\JSON\\HUD\\bossgaugeback.json");
-		m_pBossGaugeBack->BindTex(CTexture_Manager::TYPE::GAUBACK);
+		m_pBossGaugeBack->BindTex(CTexture_Manager::TYPE::BOSSGAUBACK);
 	}
 
 	{ // ボスゲージバーを生成
 		m_pBossGaugeBar = CObject_HUD::Create("Data\\JSON\\HUD\\bossgaugebar.json");
-		m_pBossGaugeBar->BindTex(CTexture_Manager::TYPE::GAUBAR);
+		m_pBossGaugeBar->BindTex(CTexture_Manager::TYPE::BOSSGAUBAR);
 
 		// X方向目標サイズを0にしておく
 		Vec3 SizeTarget = m_pBossGaugeBar->GetSizeTarget();
@@ -251,7 +251,7 @@ HRESULT CHUD_Manager::Init()
 
 	{ // ボスゲージ枠を生成
 		m_pBossGaugeBase = CObject_HUD::Create("Data\\JSON\\HUD\\bossgaugebase.json");
-		m_pBossGaugeBase->BindTex(CTexture_Manager::TYPE::GAUBASE);
+		m_pBossGaugeBase->BindTex(CTexture_Manager::TYPE::BOSSGAUBASE);
 	}
 
 	return S_OK;
@@ -278,6 +278,17 @@ void CHUD_Manager::UpdateBossGaugeBack()
 //============================================================================
 void CHUD_Manager::UpdateBossGaugeBar()
 {
+#if 0 // カラー確認用
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("BossGauge")) {
+		XCol ColTarget = m_pBossGaugeBar->GetColTarget();
+		ImGui::ColorEdit4("Col", &ColTarget.r);
+		m_pBossGaugeBar->SetColTarget(ColTarget);
+		ImGui::End();
+	}
+#endif
+
+	// ボスタイプのオブジェクトを取得
 	CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::BOSS);
 
 	// ボス登場でゲージの役割を変更

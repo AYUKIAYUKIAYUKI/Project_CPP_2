@@ -27,13 +27,13 @@ public:
 		CONSTELLATION1,		// 星座1
 		CONSTELLATION2,		// 星座2
 		CONSTELLATION3,		// 星座3
-		MAP,				// 仮マップ
+		MAPBASE,			// マップ枠
 		CIRCLE,				// サークル
 		PLAYERGAUGE,		// プレイヤーのゲージ
 		PLAYERGAUGEWINDOW,	// プレイヤーのゲージウィンドウ
-		GAUBASE,			// ゲージ枠
-		GAUBAR,				// ゲージバー
-		GAUBACK,			// ゲージ背景
+		BOSSGAUBASE,		// ゲージ枠
+		BOSSGAUBAR,			// ゲージバー
+		BOSSGAUBACK,		// ゲージ背景
 		MAX,
 	};
 
