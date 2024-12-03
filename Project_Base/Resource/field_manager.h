@@ -114,7 +114,6 @@ private:
 	FIELD_TYPE		m_FiledType;			// フィールドタイプ
 	int				m_nCntDestroyBlock;		// ブロックの破壊数
 	const CPlayer*	m_pSyncPlayer;			// プレイヤーのポインタ
-	CObject_X*		m_pDome;				// ドーム
 	CMotion_Set*	m_pStatue;				// 銅像
 	int				m_nCntStatueVibration;	// 銅像振動カウント
 	CFan*			m_pRenderFan;			// 扇形表示

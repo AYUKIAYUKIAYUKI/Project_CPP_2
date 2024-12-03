@@ -226,7 +226,6 @@ CField_Manager::CField_Manager() :
 	m_FiledType{ FIELD_TYPE::NORMAL },
 	m_nCntDestroyBlock{ 0 },
 	m_pSyncPlayer{ nullptr },
-	m_pDome{ nullptr },
 	m_pStatue{ nullptr },
 	m_nCntStatueVibration{ 0 },
 	m_pRenderFan{ nullptr }
