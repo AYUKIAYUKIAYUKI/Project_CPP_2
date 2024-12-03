@@ -15,6 +15,7 @@
 #include "renderer.h"
 #include "scene.h"
 #include "game.h"
+#include "boss.h"
 
 //****************************************************
 // usingディレクティブ
@@ -67,6 +68,9 @@ void CHUD_Manager::Update()
 		// 座標を反映
 		m_pPlayerLife[wCntLife - 1]->SetPosTarget(NewPosTarget);
 	}
+
+	// ボスゲージ背景の更新
+	UpdateBossGaugeBack();
 
 	// ボスゲージバーの更新
 	UpdateBossGaugeBar();
@@ -181,6 +185,7 @@ CHUD_Manager::CHUD_Manager() :
 	m_pBossGaugeBack{ nullptr },
 	m_pBossGaugeBar{ nullptr },
 	m_BossGaugeBarParam{},
+	m_bSwitchBar{ false },
 	m_pBossGaugeBase{ nullptr }
 {
 	// プレイヤーの体力表示を初期化
@@ -261,10 +266,66 @@ void CHUD_Manager::Uninit()
 }
 
 //============================================================================
+// ボスゲージ背景
+//============================================================================
+void CHUD_Manager::UpdateBossGaugeBack()
+{
+
+}
+
+//============================================================================
 // ボスゲージバーの更新
 //============================================================================
 void CHUD_Manager::UpdateBossGaugeBar()
 {
+	CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::BOSS);
+
+	// ボス登場でゲージの役割を変更
+	if (!m_bSwitchBar && pObj)
+	{
+		m_bSwitchBar = true;
+
+		// バーの色を赤く染める
+		m_pBossGaugeBar->SetColTarget({ 0.75f, 0.0, 0.0f, 0.75f });
+	}
+
+	// 役割変更後のゲージバーの更新
+	if (m_bSwitchBar)
+	{
+		// ボスのライフ数をコピー
+		CBoss* pBoss = utility::DownCast<CBoss, CObject>(pObj);
+		int nLife = pBoss->GetLife();
+
+		{ // 目標サイズを設定
+
+			// 基礎サイズを最大カウント数で割る→1カウント当たりのサイズを出す→現在のカウント数分のサイズに設定
+			Vec3 SizeTarget = m_pBossGaugeBar->GetSizeTarget();
+			SizeTarget.x = nLife * (utility::JsonConvertToVec3(m_BossGaugeBarParam["SizeTarget"]).x / CBoss::MAX_LIFE);
+			m_pBossGaugeBar->SetSizeTarget(SizeTarget);
+		}
+
+		{ // 目標座標を設定
+
+			// ( 基礎座標 - 基礎サイズ )でポリゴンの左端となるの座標を出す
+			float BasePosX = utility::JsonConvertToVec3(m_BossGaugeBarParam["PosTarget"]).x - utility::JsonConvertToVec3(m_BossGaugeBarParam["SizeTarget"]).x;
+
+			// 横幅を足すことで、ゲージ延長→右にずらす→ゲージと枠の左端が揃う
+			Vec3 SizeTarget = m_pBossGaugeBar->GetSizeTarget(), PosTarget = m_pBossGaugeBar->GetPosTarget();
+			PosTarget.x = BasePosX + SizeTarget.x;
+			m_pBossGaugeBar->SetPosTarget(PosTarget);
+		}
+
+		{ // テクスチャサイズを設定
+
+			// 実値を直接変更するので、目標値への補間はここで行う
+			Vec2 TexSize = m_pBossGaugeBar->GetTexSize();
+			TexSize.x += (1.0f - (nLife * (1.0f / CBoss::MAX_LIFE)) - TexSize.x) * static_cast<float>(m_BossGaugeBarParam["CorrectionCoef"]);
+			m_pBossGaugeBar->SetTexSize(TexSize);
+		}
+
+		return;
+	}
+
 	// 破壊したブロック数をコピー
 	float nCntDestroyBlock = static_cast<float>(CField_Manager::GetInstance()->GetCntDestroyBlock());
 

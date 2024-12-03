@@ -54,6 +54,7 @@ private:
 
 	// <function>
 	void Uninit();				// 終了処理
+	void UpdateBossGaugeBack();	// ボスゲージ背景の更新
 	void UpdateBossGaugeBar();	// ボスゲージバーの更新
 	bool DetectError();			// エラー検出
 
@@ -66,6 +67,7 @@ private:
 	CObject_HUD*   m_pBossGaugeBack;					// ボスゲージ背景
 	CObject_HUD*   m_pBossGaugeBar;						// ボスゲージバー
 	JSON		   m_BossGaugeBarParam;					// ボスゲージバーパラメータ
+	bool		   m_bSwitchBar;						// バー切り替え
 	CObject_HUD*   m_pBossGaugeBase;					// ボスゲージ枠
 
 	// <static data>
