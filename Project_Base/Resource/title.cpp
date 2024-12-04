@@ -113,6 +113,7 @@ CTitle::CTitle() :
 	m_vPath{},
 	m_nNowFrame{ 0 },
 	m_nMaxFrame{ 0 },
+	m_pFakePlayer{ nullptr },
 	m_pTree{ nullptr },
 	m_pHole{ nullptr }
 {
@@ -195,6 +196,10 @@ void CTitle::Uninit()
 	// 蝶を破棄
 	if (m_pButterfly != nullptr)
 		m_pButterfly->SetRelease();
+
+	// フェイクプレイヤーを破棄
+	if (m_pFakePlayer != nullptr)
+		m_pFakePlayer->SetRelease();
 
 	// 樹を破棄
 	if (m_pTree != nullptr)
@@ -317,13 +322,15 @@ void CTitle::UpdateButterfly()
 			D3DXVECTOR3 PosTarget = { 0.0f, 0.0f, 0.0f };
 
 			// 銅像への進行度で挙動を変更
-			if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) == nullptr &&
-				PosTarget.z - NewPos.z > CField_Manager::FIELD_RADIUS * 3.0f)
-			{ // プレイヤーが生成されていなくて銅像への距離が
-
-			}
 			if (PosTarget.z - NewPos.z > CField_Manager::FIELD_RADIUS * 1.5f)
 			{ // 蝶がフィールドの半径より遠い場合
+
+				// フェイクプレイヤーの生成
+				if (!m_pFakePlayer)
+				{ 
+					m_pFakePlayer = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\player_motion.json"));
+					m_pFakePlayer->SetNowMotion(2);
+				}
 
 				// 向き・座標を銅像の方向へ接近
 				NewRot.y += (D3DX_PI - NewRot.y) * 0.1f;
@@ -348,6 +355,18 @@ void CTitle::UpdateButterfly()
 				// ゲームシーンへ
 				To_Next();
 				return;
+			}
+
+			// フェイクプレイヤーが生成されていたら
+			if (m_pFakePlayer)
+			{
+				// 向きを合わせる
+				m_pFakePlayer->SetRot(m_pButterfly->GetRot());
+				
+				// 座標を合わせる
+				D3DXVECTOR3 Pos = m_pButterfly->GetPos();
+				Pos.z += 10.0f;
+				m_pFakePlayer->SetPos(Pos);
 			}
 
 			// マップシンボルの特殊挙動

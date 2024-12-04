@@ -51,10 +51,6 @@ public:
 	float GetHeight() const;								// 高さを取得
 	const CBounding_Cylinder* const GetBndCylinder() const;	// バウンディングシリンダーを取得
 	const CPlayer_State* const GetNowState() const;			// 現在のステートを取得
-	//int GetCntDashCast() const;								// ダッシュのキャストカウントを取得
-
-	// <setter>
-	//void SetCntDashCast(int nCast);	// ダッシュのキャストカウントをセット
 
 	// <static function>
 	static CPlayer* Create();	// 生成

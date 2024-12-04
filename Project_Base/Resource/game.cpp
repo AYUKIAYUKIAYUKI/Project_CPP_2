@@ -163,15 +163,15 @@ HRESULT CGame::Init()
 	// プレイヤーを生成
 	CPlayer* pPlayer = CPlayer::Create();
 
-	// カメラ情報を変更
-	CCamera* pCamera = CManager::GetManager()->GetCamera();
-	pCamera->ChangeTrackPlayer(true);
-
 	// フィールドマネージャーにプレイヤーをセット
 	CField_Manager::GetInstance()->SetSyncPlayer(pPlayer);
 
 	// HUDマネージャーにプレイヤーをセット
 	CHUD_Manager::GetInstance()->SetSyncPlayer(pPlayer);
+
+	// カメラ情報を変更
+	CCamera* pCamera = CManager::GetManager()->GetCamera();
+	pCamera->ChangeTrackPlayer(true);
 
 	// フェード表示を生成
 	m_pRenderFade = CObject_HUD::Create("Data\\JSON\\HUD\\black.json");

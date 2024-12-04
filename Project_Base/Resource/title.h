@@ -58,6 +58,7 @@ private:
 	std::vector<D3DXVECTOR3> m_vPath;		// パス
 	int						 m_nNowFrame;	// フレーム
 	int						 m_nMaxFrame;	// 最大フレーム
+	CMotion_Set*			 m_pFakePlayer;	// フェイクプレイヤー
 	CMotion_Set*			 m_pTree;		// 樹
 	CObject_X*				 m_pHole;		// 穴
 };
