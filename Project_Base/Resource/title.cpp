@@ -276,16 +276,12 @@ void CTitle::UpdateEnvironment()
 //============================================================================
 void CTitle::UpdateButterfly()
 {
-	// 羽ばたきモーションの時
-	if (m_pButterfly->GetNowMotion() == 1)
-	{
-		// 星座エフェクトを拡散発生
-		CConstellation::GenerateSpread(m_pButterfly->GetPos());
-	}
-
 	// タイトルの進行に合わせて蝶の挙動を変化
 	if (m_bTransition)
 	{ // ゲームシーンへ遷移を開始したら
+
+		// 星座エフェクトを拡散発生
+		CConstellation::GenerateSpread(m_pButterfly->GetPos());
 
 		// 蝶の向き・座標をコピー
 		D3DXVECTOR3 NewRot = m_pButterfly->GetRot(), NewPos = m_pButterfly->GetPos();
@@ -309,22 +305,27 @@ void CTitle::UpdateButterfly()
 			{ // 蝶がフィールドの半径より遠い場合
 
 				// 多少蝶が銅像の方に寄って行ったら
-				if (PosTarget.z - NewPos.z < CField_Manager::FIELD_RADIUS * 3.0f)
+				if (PosTarget.z - NewPos.z < CField_Manager::FIELD_RADIUS * 4.0f)
 				{
 					// 蝶のモーションを変身モーションに変更
 					if (m_pButterfly->GetNowMotion() != 2)
 						m_pButterfly->SetNowMotion(2);
 
-					// フェイクプレイヤーの生成
-					if (!m_pFakePlayer)
-					{
+					// フェイクプレイヤーの挙動
+					if (m_pButterfly->GetStopState() && !m_pFakePlayer)
+					{ // 蝶が消えて、フェイクプレイヤーが未生成なら
+
+						// フェイクプレイヤーの生成
 						m_pFakePlayer = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\player_motion.json"));
 						m_pFakePlayer->SetNowMotion(2);
 					}
+					else if (m_pFakePlayer)
+					{ // フェイクプレイヤー生成後
 
-					// フェイクプレイヤーが登場モーションを終了したら飛行モーションに変更
-					if (m_pFakePlayer->GetStopState())
-						m_pFakePlayer->SetNowMotion(3);
+						// フェイクプレイヤーが登場モーションを終了したら飛行モーションに変更
+						if (m_pFakePlayer->GetStopState())
+							m_pFakePlayer->SetNowMotion(3);
+					}
 				}
 
 				// 蝶の向き・座標を銅像の方向へ接近
@@ -364,7 +365,7 @@ void CTitle::UpdateButterfly()
 
 		// カメラ距離をズームイン
 		float fDistance = pCamera->GetDistance();
-		fDistance += (40.0f - fDistance) * 0.05f;
+		fDistance += (50.0f - fDistance) * 0.05f;
 		pCamera->SetDistance(fDistance);
 
 		// カメラを振動させる
