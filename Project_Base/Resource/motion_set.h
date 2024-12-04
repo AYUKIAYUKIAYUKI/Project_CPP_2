@@ -71,7 +71,7 @@ public:
 	void SetRotAndPosSync(D3DXVECTOR3 Rot, D3DXVECTOR3 Pos);	// シンクロ向き・座標を設定
 
 	// <getter/setter>
-	D3DXVECTOR3 GetRot() const;			// 向きを取得
+	D3DXVECTOR3 GetRot() const;		// 向きを取得
 	void SetRot(D3DXVECTOR3 Rot);	// 向きを設定
 	
 	// <getter/setter>
@@ -79,11 +79,11 @@ public:
 	void SetPos(D3DXVECTOR3 Pos);	// 座標を設定
 
 	// <getter/setter>
-	WORD GetNowMotion() const;			// 再生中のモーション番号を取得
+	WORD GetNowMotion() const;		// 再生中のモーション番号を取得
 	void SetNowMotion(WORD wIdx);	// 再生中のモーション番号を設定
 
 	// <getter>
-	bool GetStopState() const;				// ストップフラグを取得
+	bool GetStopState() const;			// ストップフラグを取得
 	CObject_Parts* GetParentParts();	// 親パーツを取得
 
 	// <static function>

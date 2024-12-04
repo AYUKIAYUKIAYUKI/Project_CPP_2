@@ -259,8 +259,13 @@ void CTitle::UpdateEnvironment()
 				// 次のシーンへ移行開始
 				m_bTransition = 1;
 
+				// 羽ばたきモーションに変更
+				if (m_pButterfly->GetNowMotion() != 1)
+					m_pButterfly->SetNowMotion(1);
+
 				// 樹のモーションを変更
-				m_pTree->SetNowMotion(2);
+				if(m_pTree->GetNowMotion() != 2)
+					m_pTree->SetNowMotion(2);
 			}
 		}
 	}
@@ -300,10 +305,6 @@ void CTitle::UpdateButterfly()
 			}
 		}
 
-		// 羽ばたきモーションに変更
-		if (m_pButterfly->GetNowMotion() != 1)
-			m_pButterfly->SetNowMotion(1);
-
 		// 蝶の向き・座標をコピー
 		D3DXVECTOR3 NewRot = m_pButterfly->GetRot(), NewPos = m_pButterfly->GetPos();
 
@@ -325,29 +326,41 @@ void CTitle::UpdateButterfly()
 			if (PosTarget.z - NewPos.z > CField_Manager::FIELD_RADIUS * 1.5f)
 			{ // 蝶がフィールドの半径より遠い場合
 
-				// フェイクプレイヤーの生成
-				if (!m_pFakePlayer)
-				{ 
-					m_pFakePlayer = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\player_motion.json"));
-					m_pFakePlayer->SetNowMotion(2);
+				if (PosTarget.z - NewPos.z < CField_Manager::FIELD_RADIUS * 3.0f)
+				{
+					// 蝶のモーションを変身モーションに変更
+					if (m_pButterfly->GetNowMotion() != 2)
+						m_pButterfly->SetNowMotion(2);
+
+					// フェイクプレイヤーの生成
+					if (!m_pFakePlayer)
+					{
+						m_pFakePlayer = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\player_motion.json"));
+						m_pFakePlayer->SetNowMotion(2);
+					}
+
+					// フェイクプレイヤーが登場モーションを終了したら飛行モーションに変更
+					if (m_pFakePlayer->GetStopState())
+						m_pFakePlayer->SetNowMotion(3);
 				}
 
-				// 向き・座標を銅像の方向へ接近
+				// 蝶の向き・座標を銅像の方向へ接近
 				NewRot.y += (D3DX_PI - NewRot.y) * 0.1f;
 				NewPos.x += (PosTarget.x - NewPos.x) * 0.005f;
 				NewPos.y += (PosTarget.y - NewPos.y) * 0.005f;
 				NewPos.z += (PosTarget.z - NewPos.z) * 0.005f;
 
-				// カメラ追従
+				// カメラを追従させる
 				CCamera* pCamera = CManager::GetManager()->GetCamera();
 				pCamera->SetPosTarget(NewPos);
 
-				// カメラ距離をコピー
-				float fDistance = pCamera->GetDistance();
+				// カメラを振動させる
+				pCamera->SetVibration(0.001f);
 
-				// 距離が遠いはズームインで迫っていく
-				if (fDistance > 75.0f)
-					pCamera->SetDistance(fDistance += -5.0f);
+				// カメラ距離をズームイン
+				float fDistance = pCamera->GetDistance();
+				fDistance += (50.0f - fDistance) * 0.1f;
+				pCamera->SetDistance(fDistance);
 			}
 			else
 			{ // 蝶がフィールドの範囲ほどに近づいたら
@@ -365,7 +378,7 @@ void CTitle::UpdateButterfly()
 				
 				// 座標を合わせる
 				D3DXVECTOR3 Pos = m_pButterfly->GetPos();
-				Pos.z += 10.0f;
+				Pos.z += 5.0f;
 				m_pFakePlayer->SetPos(Pos);
 			}
 

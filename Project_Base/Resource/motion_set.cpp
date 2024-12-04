@@ -27,9 +27,9 @@ using namespace abbr;
 //============================================================================
 CMotion_Set::CMotion_Set() :
 	CObject{ CObject::LAYER::MIDDLE },
+	m_Rot{ VEC3_INIT },
+	m_Pos{ VEC3_INIT },
 	m_bStop{ false },
-	m_Rot{ 0.0f, 0.0f, 0.0f },
-	m_Pos{ 0.0f, 0.0f, 0.0f },
 	m_wNowMotion{ 0 },
 	m_wNowKey{ 0 },
 	m_wNowFrame{ 0 },
