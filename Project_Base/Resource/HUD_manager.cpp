@@ -63,7 +63,7 @@ void CHUD_Manager::Update()
 		if (wCntLife > wSyncPlayerLife)
 			NewPosTarget.y = -100.0f;
 		else
-			NewPosTarget.y = 75.0f;
+			NewPosTarget.y = 100.0f;
 
 		// À•W‚ð”½‰f
 		m_pPlayerLife[wCntLife - 1]->SetPosTarget(NewPosTarget);
