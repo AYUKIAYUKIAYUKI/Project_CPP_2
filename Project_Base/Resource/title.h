@@ -39,6 +39,9 @@ public:
 
 private:
 
+	/// <summary> タイトルの表示時のカメラのズームアウト </summary>
+	static constexpr float DISTANCE_SHOW_TITLE = 300.0f;
+
 	// <function>
 	HRESULT Init() override;		// 初期設定
 	void	Uninit() override;		// 終了処理

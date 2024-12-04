@@ -234,11 +234,11 @@ void CTitle::UpdateEnvironment()
 		float fDistance = pCamera->GetDistance();
 
 		// カメラの距離に応じて挙動を変更
-		if (fDistance < 300.0f)
+		if (fDistance < DISTANCE_SHOW_TITLE - 10.0f)
 		{ // 距離が近いうちはズームアウトで引いていく
 
-			// 距離反映
-			pCamera->SetDistance(fDistance += 5.0f);
+			fDistance += (DISTANCE_SHOW_TITLE - fDistance) * 0.05f;
+			pCamera->SetDistance(fDistance);
 		}
 		else	
 		{ // カメラの引きが完了したら
@@ -320,10 +320,10 @@ void CTitle::UpdateButterfly()
 		{ // 画面奥へ飛行中
 
 			// 銅像の座標をコピー
-			D3DXVECTOR3 PosTarget = { 0.0f, 0.0f, 0.0f };
+			D3DXVECTOR3 PosTarget = { 0.0f, 15.0f, 0.0f };
 
 			// 銅像への進行度で挙動を変更
-			if (PosTarget.z - NewPos.z > CField_Manager::FIELD_RADIUS * 1.5f)
+			if (PosTarget.z - NewPos.z > CField_Manager::FIELD_RADIUS * 1.1f)
 			{ // 蝶がフィールドの半径より遠い場合
 
 				if (PosTarget.z - NewPos.z < CField_Manager::FIELD_RADIUS * 3.0f)
@@ -384,7 +384,7 @@ void CTitle::UpdateButterfly()
 
 			// マップシンボルの特殊挙動
 			/* 蝶がフィールドからどれくらい離れてるかを渡す */
-			CHUD_Manager::GetInstance()->SpecialMapSymbol((NewPos.z + CField_Manager::FIELD_RADIUS * 1.5f) / 30.0f);
+			CHUD_Manager::GetInstance()->SpecialMapSymbol((NewPos.z + CField_Manager::FIELD_RADIUS * 1.1f) / 30.0f);
 		}
 
 		// 蝶の向き・座標設定
