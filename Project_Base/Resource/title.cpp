@@ -359,7 +359,7 @@ void CTitle::UpdateButterfly()
 
 				// カメラ距離をズームイン
 				float fDistance = pCamera->GetDistance();
-				fDistance += (50.0f - fDistance) * 0.1f;
+				fDistance += (40.0f - fDistance) * 0.25f;
 				pCamera->SetDistance(fDistance);
 			}
 			else
@@ -378,7 +378,7 @@ void CTitle::UpdateButterfly()
 				
 				// 座標を合わせる
 				D3DXVECTOR3 Pos = m_pButterfly->GetPos();
-				Pos.z += 5.0f;
+				Pos.z += 3.0f;
 				m_pFakePlayer->SetPos(Pos);
 			}
 
