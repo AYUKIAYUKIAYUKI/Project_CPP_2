@@ -339,10 +339,14 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 	}
 
 	// レンダーステートの初期設定
-	m_pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-	m_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	m_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	m_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	m_pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);				// カリングモードの設定
+	m_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// アルファブレンドの有効化
+	m_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);		// ソースブレンドの設定
+	m_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	// ターゲットブレンドの設定
+	m_pD3DDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);				// アルファテストの有効化
+	m_pD3DDevice->SetRenderState(D3DRS_ALPHAREF, 0x24);						// アルファ参照値
+	m_pD3DDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);			// アルファテスト合格基準
+	m_pD3DDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);				// アルファテストの無効化
 
 	// テクスチャステージステートの初期設定
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);

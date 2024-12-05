@@ -101,6 +101,13 @@ void CObject_Parts::Draw()
 	// 頂点法線の自動正規化を有効に
 	pDev->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
 
+	// アルファテストを有効にする
+	pDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+
+	// アルファブレンドの設定を変更
+	//pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+	pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+
 #if CHANGE_DRAW_ZBUFFER
 
 	// 深度テストの比較方法の変更
@@ -156,6 +163,13 @@ void CObject_Parts::Draw()
 	pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
 #endif	// CHANGE_DRAW_ZBUFFER
+
+	// アルファブレンドの設定を基本に戻す
+	//pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+	// アルファテストを無効にする
+	pDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
 //============================================================================
