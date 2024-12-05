@@ -18,6 +18,7 @@
 #include "player.h"
 #include "boss.h"
 #include "block.h"
+#include "life.h"
 #include "sparks.h"
 
 // デバッグ表示用
@@ -357,6 +358,25 @@ void CField_Manager::FieldGenerator()
 	// フィールドタイプの分岐
 	BranchFieldType();
 
+	// アイテム生成
+	{
+		// 既にアイテムが1つ以上存在していれば処理をしない
+		if (CObject::FindSpecificObject(CObject::TYPE::ITEM))
+			return;
+
+		// アイテム用ポインタ
+		CItem* pItem = nullptr;
+
+		// アイテムを生成
+		pItem = CLife::Create();
+
+		// 方角を設定
+		pItem->SetDirection(D3DX_PI);
+	
+		// Y座標を設定
+		pItem->SetPosY(40.0f);
+	}
+
 #if !CHANGE_FIELRDCREATE_STYLE
 	// プレイヤーの目標座標へのベクトルを作成
 	Vec3 Norm = m_pSyncPlayer->GetPosTarget() - m_pSyncPlayer->GetPos();
@@ -365,7 +385,6 @@ void CField_Manager::FieldGenerator()
 	if (Norm.x * Norm.x + Norm.z * Norm.z > 0.1f)
 	{
 		// ブロックの自動生成
-		//AutoCreateBlock(1);
 		AutoCreateBlockDash();
 	}
 

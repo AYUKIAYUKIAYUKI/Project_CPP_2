@@ -28,6 +28,7 @@ public:
 		BOSS,		// ボス
 		ENEMY,		// エネミー
 		BLOCK,		// ブロック
+		ITEM,		// アイテム
 		MAX,
 	};
 

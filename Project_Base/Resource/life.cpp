@@ -53,8 +53,11 @@ HRESULT CLife::Init()
 	// 補間強度を設定
 	SetCorrectCoef(0.1f);
 
+	// モデルを設定
+	BindModel(CX_Manager::TYPE::LIFE);
+
 	// 半径を設定
-	SetRadius(5.0f);
+	SetRadius(GetModel()->Size.x);
 
 	return S_OK;
 }
@@ -100,7 +103,7 @@ CLife* CLife::Create()
 	}
 
 	// タイプを設定
-	pNewInstance->SetType(CObject::TYPE::NONE);
+	pNewInstance->SetType(CObject::TYPE::ITEM);
 
 	// 初期設定
 	pNewInstance->Init();

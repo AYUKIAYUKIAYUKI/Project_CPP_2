@@ -10,7 +10,7 @@
 //****************************************************
 #include "item.h"
 #include "bounding_sphere.h"
-#include "renderer.h"
+#include "field_manager.h"
 
 //****************************************************
 // usingディレクティブ
@@ -81,16 +81,22 @@ void CItem::Uninit()
 //============================================================================
 void CItem::Update()
 {
+	// くるくる回る
+	AppealRotate();
+
+	// 目標値への補間
+	CorrectToTarget();
+
 	// 球バウンディングに中心点セット
 	m_pBndSphere->SetCenterPos(GetPos());
 
 	// Xオブジェクトクラスの更新処理
 	CObject_X::Update();
 
-#if 0
+#if 1
 #ifdef _DEBUG
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	ImGui::Begin("Block Param");
+	ImGui::Begin("Item Param");
 	ImGui::Text("Size::X %.2f:Y %.2f:Z %.2f", GetSize().x, GetSize().y, GetSize().z);
 	ImGui::Text("Rot:X %.2f:Y %.2f:Z %.2f", GetRot().x * (180 / D3DX_PI), GetRot().y * (180 / D3DX_PI), GetRot().z * (180 / D3DX_PI));
 	ImGui::Text("Pos:X %.2f:Y %.2f:Z %.2f", GetPos().x, GetPos().y, GetPos().z);
@@ -146,6 +152,15 @@ const float& CItem::GetDirection() const
 void CItem::SetDirection(float fDirection)
 {
 	m_fDirection = fDirection;
+
+	// 方角から座標を設定し
+	Vec3 NewPos = GetPos();
+	NewPos.x = cosf(fDirection) * CField_Manager::FIELD_RADIUS;
+	NewPos.z = sinf(fDirection) * CField_Manager::FIELD_RADIUS;
+	SetPos(NewPos);
+
+	// 目標座標も同時に設定
+	m_PosTarget = NewPos;
 }
 
 //============================================================================
@@ -178,4 +193,59 @@ const D3DXVECTOR3& CItem::GetPosTarget() const
 void CItem::SetPosTarget(D3DXVECTOR3 PosTarget)
 {
 	m_PosTarget = PosTarget;
+}
+
+//============================================================================
+// Y座標を設定
+//============================================================================
+void CItem::SetPosY(float fPosY)
+{
+	// 座標を設定し
+	Vec3 NewPos = GetPos();
+	NewPos.y = fPosY;
+	SetPos(NewPos);
+
+	// 目標座標も同時に設定
+	m_PosTarget.y = fPosY;
+}
+
+//============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
+
+//============================================================================
+// くるくる回る
+//============================================================================
+void CItem::AppealRotate()
+{
+	// 向きをY軸回転
+	m_RotTarget.y += 0.05f;
+
+	// 簡易的な向き制限
+	if (m_RotTarget.y > D3DX_PI * 2.0f)
+		m_RotTarget.y += D3DX_PI * -2.0f;
+
+	// 若干上下に揺れて浮遊感を出す
+	Vec3 NewPos = GetPos();
+	NewPos.y += cosf(m_RotTarget.y) * 0.5f;
+	SetPos(NewPos);
+}
+
+//============================================================================
+// 目標値への補間
+//============================================================================
+void CItem::CorrectToTarget()
+{
+	// 目標向きへ向ける
+	Vec3 NewRot = GetRot();
+	utility::AdjustAngle(NewRot.y, m_RotTarget.y);	// 角度の差を補正
+	NewRot += (m_RotTarget - NewRot) * 0.1f;
+	SetRot(NewRot);
+
+	// 目標座標へ移動
+	Vec3 NewPos = GetPos();
+	NewPos += (m_PosTarget - NewPos) * m_fCorrectCoef;
+	SetPos(NewPos);
 }

@@ -54,7 +54,14 @@ public:
 	const D3DXVECTOR3& GetPosTarget() const;	// 目標座標を取得
 	void SetPosTarget(D3DXVECTOR3 PosTarget);	// 目標座標を設定
 
+	// <setter>
+	void SetPosY(float fPosY);	// Y座標を設定
+
 private:
+
+	// <function>
+	void AppealRotate();	// くるくる回る
+	void CorrectToTarget();	// 目標値への補間
 
 	// <data>
 	CBounding_Sphere* m_pBndSphere;		// 球バウンディング
