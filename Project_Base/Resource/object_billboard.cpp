@@ -5,6 +5,9 @@
 // 
 //============================================================================
 
+/* 削除予定 */
+int op = D3DBLENDOP_ADD, src = D3DBLEND_BOTHSRCALPHA, dest = D3DBLEND_INVSRCALPHA;
+
 //****************************************************
 // インクルードファイル
 //****************************************************
@@ -142,6 +145,16 @@ void CObject_Billboard::Update()
 
 	// ワールド行列の設定
 	SetMtxWorld();
+
+#if 0	/* 削除予定 */
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Alpha Blend")) {
+		ImGui::InputInt("op", &op);
+		ImGui::InputInt("src", &src);
+		ImGui::InputInt("dest", &dest);
+		ImGui::End();
+	}
+#endif
 }
 
 //============================================================================
@@ -156,8 +169,9 @@ void CObject_Billboard::Draw()
 	pDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 
 	// アルファブレンドの設定を変更
-	pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
-	//pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+	pDev->SetRenderState(D3DRS_BLENDOPALPHA, op);
+	pDev->SetRenderState(D3DRS_SRCBLEND, src);
+	pDev->SetRenderState(D3DRS_DESTBLEND, dest);
 
 	// ライト反映を無効にする
 	pDev->SetRenderState(D3DRS_LIGHTING, FALSE);
@@ -183,8 +197,9 @@ void CObject_Billboard::Draw()
 	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 
 	// アルファブレンドの設定を基本に戻す
+	pDev->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
 	pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	//pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 	// アルファテストを無効にする
 	pDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);

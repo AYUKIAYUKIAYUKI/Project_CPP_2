@@ -396,6 +396,9 @@ void CTitle::UpdateButterfly()
 	else if (m_nNowFrame < m_nMaxFrame)
 	{ // 初回の羽ばたき期間中
 
+		// 星座エフェクトを拡散発生
+		CConstellation::GenerateSpread(m_pButterfly->GetPos());
+
 		// 蝶が目標地点へ飛行
 		D3DXVECTOR3 NewPos = m_pButterfly->GetPos();
 		float fFrameCoef = static_cast<float>(m_nMaxFrame - m_nNowFrame);
