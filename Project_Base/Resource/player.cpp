@@ -290,10 +290,10 @@ CPlayer* CPlayer::Create()
 	pNewInstance->SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\player_motion.json"));
 
 	// ”¼Œa‚ðÝ’è
-	pNewInstance->m_pBndCylinder->SetRadius(5.0f);
+	pNewInstance->m_pBndCylinder->SetRadius(3.0f);
 
 	// ‚‚³‚ðÝ’è
-	pNewInstance->m_pBndCylinder->SetHeight(9.0f);
+	pNewInstance->m_pBndCylinder->SetHeight(8.0f);
 
 	return pNewInstance;
 }
