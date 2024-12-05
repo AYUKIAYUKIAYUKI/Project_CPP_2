@@ -35,6 +35,10 @@ public:
 	void	Update() override;	// 更新処理
 	void	Draw() override;	// 描画処理
 
+	// <getter/setter>
+	float GetRadius() const override;	// 半径を取得
+	void SetRadius(float fRadius);		// 半径を設定
+
 	// <setter>
 	void SetCorrectCoef(float fCoef);	// 補正強度を設定
 
@@ -50,17 +54,14 @@ public:
 	const D3DXVECTOR3& GetPosTarget() const;	// 目標座標を取得
 	void SetPosTarget(D3DXVECTOR3 PosTarget);	// 目標座標を設定
 
-	// <getter>
-	float GetRadius() const override;	// 半径を取得
-
 private:
 
 	// <data>
+	CBounding_Sphere* m_pBndSphere;		// 球バウンディング
 	float			  m_fCorrectCoef;	// 補間強度
 	float			  m_fDirection;		// 方角
 	D3DXVECTOR3		  m_RotTarget;		// 目標向き
 	D3DXVECTOR3		  m_PosTarget;		// 目標座標
-	CBounding_Sphere* m_pBndSphere;		// 球バウンディング
 };
 
 #endif // _ITEM_H_
