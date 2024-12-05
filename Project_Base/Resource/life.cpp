@@ -56,8 +56,11 @@ HRESULT CLife::Init()
 	// ƒ‚ƒfƒ‹‚ðÝ’è
 	BindModel(CX_Manager::TYPE::LIFE);
 
+	// kŽÚ‚ðÝ’è
+	SetScale(GetScale() * 0.75f);
+
 	// ”¼Œa‚ðÝ’è
-	SetRadius(GetModel()->Size.x);
+	SetRadius(5.0f);
 
 	return S_OK;
 }
