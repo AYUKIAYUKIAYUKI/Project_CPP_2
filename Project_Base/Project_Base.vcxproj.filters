@@ -190,6 +190,9 @@
       <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Boss&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\HUD_manager.cpp" />
+    <ClCompile Include="Resource\item.cpp">
+      <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -384,6 +387,9 @@
       <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Boss&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\HUD_manager.h" />
+    <ClInclude Include="Resource\item.h">
+      <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Object&gt;">

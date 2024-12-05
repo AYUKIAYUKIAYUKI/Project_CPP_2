@@ -26,8 +26,8 @@ class CBlock : public CObject_X
 public:
 
 	// <special function>
-	CBlock();	// コンストラクタ
-	~CBlock();	// デストラクタ
+	CBlock();			// コンストラクタ
+	~CBlock() override;	// デストラクタ
 
 	// <function>
 	HRESULT Init() override;	// 初期設定
