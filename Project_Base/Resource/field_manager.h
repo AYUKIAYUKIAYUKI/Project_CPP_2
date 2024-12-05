@@ -99,6 +99,7 @@ private:
 	void	AppearBossEvent();					// ボス登場イベント
 	void	FieldGenerator();					// フィールドジェネレータ
 	void	BranchFieldType();					// フィールドタイプ分岐
+	void	AutoCreateItem();					// アイテムの自動生成			
 	void	AutoCreateBlock(int nAmount);		// ブロックの自動生成
 	void	AutoCreateBlockDash();				// ダッシュタイプの自動生成
 	bool	DetectNearBlock(D3DXVECTOR3 Pos);	// 隣接し合うブロックを検出

@@ -154,8 +154,10 @@ void CObject_Billboard::Draw()
 
 	// アルファテストを有効にする
 	pDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	pDev->SetRenderState(D3DRS_ALPHAREF, 0);
-	pDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+	// アルファブレンドの設定を変更
+	pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+	//pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 
 	// ライト反映を無効にする
 	pDev->SetRenderState(D3DRS_LIGHTING, FALSE);
@@ -179,6 +181,10 @@ void CObject_Billboard::Draw()
 
 	// ライト反映を有効にする
 	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
+
+	// アルファブレンドの設定を基本に戻す
+	pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	//pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 	// アルファテストを無効にする
 	pDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);

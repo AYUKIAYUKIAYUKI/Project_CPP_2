@@ -27,6 +27,9 @@
 		"Data\\MODEL\\STATUE\\up2.x",
 		"Data\\MODEL\\STATUE\\up3.x",
 		"Data\\MODEL\\STATUE\\up4.x",
-		"Data\\MODEL\\CHARACTER\\PUMPKIN\\pumpkin.x"
+		"Data\\MODEL\\CHARACTER\\PUMPKIN\\pumpkin.x",
+		"Data\\MODEL\\side0.x",
+		"Data\\MODEL\\side1.x",
+		"Data\\MODEL\\floor.x"
 	]
 }

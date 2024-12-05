@@ -358,24 +358,8 @@ void CField_Manager::FieldGenerator()
 	// フィールドタイプの分岐
 	BranchFieldType();
 
-	// アイテム生成
-	{
-		// 既にアイテムが1つ以上存在していれば処理をしない
-		if (CObject::FindSpecificObject(CObject::TYPE::ITEM))
-			return;
-
-		// アイテム用ポインタ
-		CItem* pItem = nullptr;
-
-		// アイテムを生成
-		pItem = CLife::Create();
-
-		// 方角を設定
-		pItem->SetDirection(D3DX_PI);
-	
-		// Y座標を設定
-		pItem->SetPosY(40.0f);
-	}
+	// アイテムの自動生成
+	AutoCreateItem();
 
 #if !CHANGE_FIELRDCREATE_STYLE
 	// プレイヤーの目標座標へのベクトルを作成
@@ -412,6 +396,28 @@ void CField_Manager::BranchFieldType()
 	{
 		m_FiledType = FIELD_TYPE::DASH;
 	}
+}
+
+//============================================================================
+// アイテムの自動生成
+//============================================================================
+void CField_Manager::AutoCreateItem()
+{
+	// 既にアイテムが1つ以上存在していれば処理をしない
+	if (CObject::FindSpecificObject(CObject::TYPE::ITEM))
+		return;
+
+	// アイテム用ポインタ
+	CItem* pItem = nullptr;
+
+	// アイテムを生成
+	pItem = CLife::Create();
+
+	// 方角を設定
+	pItem->SetDirection(D3DX_PI);
+
+	// Y座標を設定
+	pItem->SetPosY(40.0f);
 }
 
 //============================================================================
