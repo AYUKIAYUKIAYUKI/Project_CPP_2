@@ -55,11 +55,8 @@ public:
 		BLONORMAL,			// 通常ブロック
 		BLOSIDE,			// 横長ブロック
 		BLOTALL,			// 縦長ブロック
-		RUBBLE_00,			// がれき00
-		RUBBLE_01,			// がれき01
-		RUBBLE_02,			// がれき02
-		DOME,				// ドーム
-		MAX,
+		LIFE,				// ライフ
+		MAX
 	};
 
 	// +演算子のオーバーロード
