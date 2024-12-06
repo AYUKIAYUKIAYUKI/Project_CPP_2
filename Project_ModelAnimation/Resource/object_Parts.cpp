@@ -106,7 +106,7 @@ void CObject_Parts::Draw()
 
 	// アルファブレンドの設定を変更
 	//pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
-	pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+	//pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 
 #if CHANGE_DRAW_ZBUFFER
 
@@ -166,7 +166,7 @@ void CObject_Parts::Draw()
 
 	// アルファブレンドの設定を基本に戻す
 	//pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	//pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 	// アルファテストを無効にする
 	pDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);

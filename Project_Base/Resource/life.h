@@ -32,6 +32,11 @@ public:
 
 	// <static function>
 	static CLife* Create();	// ¶¬
+
+private:
+
+	// <function>
+	void GainEffect() override;	// æ“¾‚ÌŒø‰Ê
 };
 
 #endif // _LIFE_H_

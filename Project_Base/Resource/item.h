@@ -60,8 +60,12 @@ public:
 private:
 
 	// <function>
+	void HitChecklPlayer();	// プレイヤーとの接触を検出
 	void AppealRotate();	// くるくる回る
 	void CorrectToTarget();	// 目標値への補間
+
+	// <virtual function>
+	virtual void GainEffect() = 0;	// 取得時の効果
 
 	// <data>
 	CBounding_Sphere* m_pBndSphere;		// 球バウンディング

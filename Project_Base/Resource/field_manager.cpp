@@ -414,10 +414,10 @@ void CField_Manager::AutoCreateItem()
 	pItem = CLife::Create();
 
 	// •ûŠp‚ðÝ’è
-	pItem->SetDirection(D3DX_PI);
+	pItem->SetDirection(fabsf(utility::GetRandomValue<float>()));
 
 	// YÀ•W‚ðÝ’è
-	pItem->SetPosY(40.0f);
+	pItem->SetPosY(fabsf(utility::GetRandomValue<float>()));
 }
 
 //============================================================================

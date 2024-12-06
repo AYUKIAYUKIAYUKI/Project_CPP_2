@@ -90,6 +90,9 @@ void CItem::Update()
 	// 球バウンディングに中心点セット
 	m_pBndSphere->SetCenterPos(GetPos());
 
+	// プレイヤーとの接触を検出
+	HitChecklPlayer();
+
 	// Xオブジェクトクラスの更新処理
 	CObject_X::Update();
 
@@ -97,7 +100,8 @@ void CItem::Update()
 #ifdef _DEBUG
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	ImGui::Begin("Item Param");
-	ImGui::Text("Size::X %.2f:Y %.2f:Z %.2f", GetSize().x, GetSize().y, GetSize().z);
+	ImGui::Text("Direction:%.1f", GetDirection());
+	ImGui::Text("Size:X %.2f:Y %.2f:Z %.2f", GetSize().x, GetSize().y, GetSize().z);
 	ImGui::Text("Rot:X %.2f:Y %.2f:Z %.2f", GetRot().x * (180 / D3DX_PI), GetRot().y * (180 / D3DX_PI), GetRot().z * (180 / D3DX_PI));
 	ImGui::Text("Pos:X %.2f:Y %.2f:Z %.2f", GetPos().x, GetPos().y, GetPos().z);
 	ImGui::End();
@@ -214,6 +218,14 @@ void CItem::SetPosY(float fPosY)
 // privateメンバ
 // 
 //============================================================================
+
+//============================================================================
+// プレイヤーとの接触を検出
+//============================================================================
+void CItem::HitChecklPlayer()
+{
+	
+}
 
 //============================================================================
 // くるくる回る
