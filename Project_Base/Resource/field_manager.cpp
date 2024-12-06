@@ -64,22 +64,14 @@ void CField_Manager::Update()
 	// 扇形の更新
 	UpdateFan();
 
+	// フィールド更新
+	UpdateField();
+
 	// ボス登場イベント
 	AppearBossEvent();
 
-	// 体力が無くなるとゲームシーンにゲーム終了を通知する
-	if (m_pSyncPlayer->GetLife() <= 0)
-	{
-		// ゲームシーン取得
-		CGame* const pScene = dynamic_cast<CGame*>(CScene_Manager::GetInstance()->GetScene());
-
-		// シーン遷移開始
-		pScene->SetTransition();
-	}
-
-	// フィールド更新
-	if (m_nCntDestroyBlock < MAX_DESTROY_BLOCK)
-		UpdateField();
+	// 遷移を通知する
+	NotifyTransition();
 
 	// デバッグ表示
 	PrintDebug();
@@ -293,64 +285,14 @@ void CField_Manager::UpdateFan()
 }
 
 //============================================================================
-// ボス登場イベント
-//============================================================================
-void CField_Manager::AppearBossEvent()
-{
-	// 銅像のモーション再生が終了していたらこのメソッドを無視
-	if (m_pStatue->GetStopState())
-		return;
-
-	// 銅像が待機モーションならこのメソッドを無視
-	if (m_pStatue->GetNowMotion() == 2)
-		return;
-
-	// 再生中のモーションに応じて処理を分岐
-	if (m_pStatue->GetNowMotion() == 0)
-	{ // 銅像が振動モーション再生中
-
-		// 銅像振動カウントをインクリメント
-		++m_nCntStatueVibration;
-
-		// カメラを振動させる
-		CManager::GetManager()->GetCamera()->SetVibration(0.01f);
-
-		// カメラをボス登場用にセット
-		CManager::GetManager()->GetCamera()->SetAppearBoss();
-
-		// カウントが最大値に達したら
-		if (m_nCntStatueVibration >= MAX_CNT_STATUEVIBERATION)
-		{
-			// カウントをリセット
-			m_nCntStatueVibration = 0;
-
-			// 銅像が吹き飛ばされるモーションをセット
-			m_pStatue->SetNowMotion(1);
-
-			// ボスを生成する
-			CBoss::Create();
-		}
-	}
-	else if (m_pStatue->GetNowMotion() == 1)
-	{ // 銅像が吹きとばされるモーションを再生中
-
-		// 銅像振動カウントをインクリメント
-		++m_nCntStatueVibration;
-
-		// モーション内で銅像が崩壊するあたりまでカウントされたら
-		if (m_nCntStatueVibration >= 40)
-		{
-			// カメラを振動させる
-			CManager::GetManager()->GetCamera()->SetVibration(0.05f);
-		}
-	}
-}
-
-//============================================================================
 // フィールド更新
 //============================================================================
 void CField_Manager::UpdateField()
 {
+	// ブロックの破壊カウントが上限に達していたら処理を行わない
+	if (m_nCntDestroyBlock >= MAX_DESTROY_BLOCK)
+		return;
+
 	// フィールドタイプの分岐
 	BranchFieldType();
 
@@ -605,6 +547,80 @@ void CField_Manager::DestroyAllBlock()
 		}
 
 		pObj = pObj->GetNext();
+	}
+}
+
+//============================================================================
+// ボス登場イベント
+//============================================================================
+void CField_Manager::AppearBossEvent()
+{
+	// 銅像のモーション再生が終了していたらこのメソッドを無視
+	if (m_pStatue->GetStopState())
+		return;
+
+	// 銅像が待機モーションならこのメソッドを無視
+	if (m_pStatue->GetNowMotion() == 2)
+		return;
+
+	// 再生中のモーションに応じて処理を分岐
+	if (m_pStatue->GetNowMotion() == 0)
+	{ // 銅像が振動モーション再生中
+
+		// 銅像振動カウントをインクリメント
+		++m_nCntStatueVibration;
+
+		// カメラを振動させる
+		CManager::GetManager()->GetCamera()->SetVibration(0.01f);
+
+		// カメラをボス登場用にセット
+		CManager::GetManager()->GetCamera()->SetAppearBoss();
+
+		// カウントが最大値に達したら
+		if (m_nCntStatueVibration >= MAX_CNT_STATUEVIBERATION)
+		{
+			// カウントをリセット
+			m_nCntStatueVibration = 0;
+
+			// 銅像が吹き飛ばされるモーションをセット
+			m_pStatue->SetNowMotion(1);
+
+			// ボスを生成する
+			CBoss::Create();
+		}
+	}
+	else if (m_pStatue->GetNowMotion() == 1)
+	{ // 銅像が吹きとばされるモーションを再生中
+
+		// 銅像振動カウントをインクリメント
+		++m_nCntStatueVibration;
+
+		// モーション内で銅像が崩壊するあたりまでカウントされたら
+		if (m_nCntStatueVibration >= 40)
+		{
+			// カメラを振動させる
+			CManager::GetManager()->GetCamera()->SetVibration(0.05f);
+		}
+	}
+}
+
+//============================================================================
+// 遷移を通知する
+//============================================================================
+void CField_Manager::NotifyTransition()
+{
+	// プレイヤー情報がセットされていなければ処理を行わない
+	if (m_pSyncPlayer == nullptr)
+		return;
+
+	// 体力が無くなるとゲームシーンにゲーム終了を通知する
+	if (m_pSyncPlayer->GetLife() <= 0)
+	{
+		// ゲームシーン取得
+		CGame* const pScene = dynamic_cast<CGame*>(CScene_Manager::GetInstance()->GetScene());
+
+		// シーン遷移開始
+		pScene->SetTransition();
 	}
 }
 

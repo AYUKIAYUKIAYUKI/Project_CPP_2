@@ -30,7 +30,7 @@ public:
 	static constexpr float FIELD_GRAVITY = -0.35f;
 
 	/// <summary> 最大破壊ブロック数 </summary>
-	static constexpr float MAX_DESTROY_BLOCK = 200;
+	static constexpr float MAX_DESTROY_BLOCK = 20;
 
 	// <special function>
 	CField_Manager(const CField_Manager&) = delete;				// コピーコンストラクタ
@@ -93,7 +93,6 @@ private:
 	void	Uninit();							// 終了処理
 	void	UpdateEnvironment();				// 環境装飾の更新処理
 	void	UpdateFan();						// 扇形の更新
-	void	AppearBossEvent();					// ボス登場イベント
 	void	UpdateField();						// フィールド更新
 	void	BranchFieldType();					// フィールドタイプ分岐
 	void	AutoCreateItem();					// アイテムの自動生成			
@@ -102,6 +101,8 @@ private:
 	bool	DetectNearBlock(D3DXVECTOR3 Pos);	// 隣接し合うブロックを検出
 	void	AutoDestroyBlock();					// ブロックの自動削除
 	void	DestroyAllBlock();					// 全ブロックの削除
+	void	AppearBossEvent();					// ボス登場イベント
+	void	NotifyTransition();					// 遷移を通知する
 	void	PrintDebug();						// デバッグ表示
 
 	// <data>
