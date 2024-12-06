@@ -57,6 +57,7 @@ private:
 	void Uninit();				// 終了処理
 	void ParamControl();		// 調整
 	void UpdateMapSymbol();		// マップシンボルの更新
+	void UpdatePlayerLife();	// プレイヤーライフの更新
 	void UpdateBossGaugeBack();	// ボスゲージ背景の更新
 	void UpdateBossGaugeBar();	// ボスゲージバーの更新
 	bool DetectError();			// エラー検出
@@ -66,9 +67,9 @@ private:
 	CObject_HUD*   m_pMapBase;							// マップ枠
 	CObject_HUD*   m_pMapRing;							// マップ輪
 	CObject_HUD*   m_pMapSymbol;						// マップシンボル
-	CObject_HUD*   m_pPlayerGauge;						// プレイヤーのゲージ表示
-	CObject_HUD*   m_pPlayerGaugeWindow;				// プレイヤーのゲージ枠表示
-	CObject_HUD*   m_pPlayerLife[CPlayer::MAX_LIFE];	// プレイヤーの体力表示
+	CObject_HUD*   m_pPlayerGauge;						// プレイヤーゲージ
+	CObject_HUD*   m_pPlayerGaugeWindow;				// プレイヤーゲージ枠
+	CObject_HUD*   m_pPlayerLife[CPlayer::MAX_LIFE];	// プレイヤーライフ
 	CObject_HUD*   m_pBossGaugeBack;					// ボスゲージ背景
 	CObject_HUD*   m_pBossGaugeBar;						// ボスゲージバー
 	JSON		   m_BossGaugeBarParam;					// ボスゲージバーパラメータ

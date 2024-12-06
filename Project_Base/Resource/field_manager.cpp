@@ -343,12 +343,11 @@ void CField_Manager::AutoCreateItem()
 	/* ここは何らかの分岐を設定予定です*/
 	pItem = CLife::Create();
 
-	do
-	{
+	do { // この方角における座標が、扇形範囲内であれば方角を再抽選する
+
 		// 方角をランダムに設定
 		pItem->SetDirection(fabsf(utility::GetRandomValue<float>()));
 
-		// この方角における座標が、扇形範囲内であれば方角を再抽選する
 	} while (m_pRenderFan->DetectInFanRange(pItem->GetPos()));
 
 	// Y座標をランダムに設定
@@ -598,5 +597,14 @@ void CField_Manager::PrintDebug()
 		ImGui::Text("Cross:%f", fCross);
 		ImGui::Text("Norm:%f", Norm.x * Norm.x + Norm.z * Norm.z);
 		ImGui::End();
+	}
+
+	// ボスを呼び出すデバッグコマンド
+	if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT) &&
+		CManager::GetKeyboard()->GetTrigger(DIK_SPACE))
+	{
+		m_nCntDestroyBlock = MAX_DESTROY_BLOCK;
+		m_pStatue->SetNowMotion(0);
+		DestroyAllBlock();
 	}
 }

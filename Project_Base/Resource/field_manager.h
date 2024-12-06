@@ -30,7 +30,7 @@ public:
 	static constexpr float FIELD_GRAVITY = -0.35f;
 
 	/// <summary> 最大破壊ブロック数 </summary>
-	static constexpr float MAX_DESTROY_BLOCK = 200;
+	static constexpr int MAX_DESTROY_BLOCK = 200;
 
 	// <special function>
 	CField_Manager(const CField_Manager&) = delete;				// コピーコンストラクタ

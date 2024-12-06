@@ -50,25 +50,6 @@ void CHUD_Manager::Update()
 	if (!m_pSyncPlayer)
 		return;
 
-	// プレイヤーの体力量をコピー
-	WORD wSyncPlayerLife = static_cast<WORD>(m_pSyncPlayer->GetLife());
-
-	// 体力量分が描画されるように座標を調整
-	for (WORD wCntLife = CPlayer::MAX_LIFE; wCntLife > 0; --wCntLife)
-	{
-		// 目標座標をコピー
-		Vec3 NewPosTarget = m_pPlayerLife[wCntLife - 1]->GetPosTarget();
-
-		// プレイヤーの体力に一致する量でなければ画面外へ移動
-		if (wCntLife > wSyncPlayerLife)
-			NewPosTarget.y = -100.0f;
-		else
-			NewPosTarget.y = 100.0f;
-
-		// 座標を反映
-		m_pPlayerLife[wCntLife - 1]->SetPosTarget(NewPosTarget);
-	}
-
 #ifdef _DEBUG
 	// 調整
 	ParamControl();
@@ -76,6 +57,9 @@ void CHUD_Manager::Update()
 
 	// マップシンボルの更新
 	UpdateMapSymbol();
+
+	// プレイヤーライフの更新
+	UpdatePlayerLife();
 
 	// ボスゲージ背景の更新
 	UpdateBossGaugeBack();
@@ -345,11 +329,36 @@ void CHUD_Manager::UpdateMapSymbol()
 }
 
 //============================================================================
+// プレイヤーライフの更新
+//============================================================================
+void CHUD_Manager::UpdatePlayerLife()
+{
+	// プレイヤーの体力量をコピー
+	WORD wSyncPlayerLife = static_cast<WORD>(m_pSyncPlayer->GetLife());
+
+	// 体力量分が描画されるように座標を調整
+	for (WORD wCntLife = CPlayer::MAX_LIFE; wCntLife > 0; --wCntLife)
+	{
+		// 目標座標をコピー
+		Vec3 NewPosTarget = m_pPlayerLife[wCntLife - 1]->GetPosTarget();
+
+		// プレイヤーの体力に一致する量でなければ画面外へ移動
+		if (wCntLife > wSyncPlayerLife)
+			NewPosTarget.y = -100.0f;
+		else
+			NewPosTarget.y = 100.0f;
+
+		// 座標を反映
+		m_pPlayerLife[wCntLife - 1]->SetPosTarget(NewPosTarget);
+	}
+}
+
+//============================================================================
 // ボスゲージ背景の更新
 //============================================================================
 void CHUD_Manager::UpdateBossGaugeBack()
 {
-
+	/* 現在は無し */
 }
 
 //============================================================================
