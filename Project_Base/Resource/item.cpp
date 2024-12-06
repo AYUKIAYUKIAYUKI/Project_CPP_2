@@ -11,6 +11,8 @@
 #include "item.h"
 #include "bounding_sphere.h"
 #include "field_manager.h"
+#include "player.h"
+#include "collision.h"
 
 //****************************************************
 // usingディレクティブ
@@ -224,7 +226,26 @@ void CItem::SetPosY(float fPosY)
 //============================================================================
 void CItem::HitChecklPlayer()
 {
-	
+	// プレイヤータイプのオブジェクトを探す
+	CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::PLAYER);
+
+	// 見つからなければ処理を行わない
+	if (!pObj)
+		return;
+
+	// オブジェクトをプレイヤークラスにキャスト
+	CPlayer* pPlayer = utility::DownCast<CPlayer, CObject>(pObj);
+
+	// プレイヤーの円柱バウンディングとの当たり判定
+	if (collision::HitCylinderToSphere(pPlayer->GetBndCylinder(), m_pBndSphere))
+	{ // 接触していたら
+
+		// 取得時の効果を発動
+		GainEffect();
+
+		// 自身を破棄予約
+		SetRelease();
+	}
 }
 
 //============================================================================
