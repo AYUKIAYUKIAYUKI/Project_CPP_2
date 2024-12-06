@@ -26,14 +26,11 @@ public:
 	/// <summary> フィールド半径 </summary>
 	static constexpr float FIELD_RADIUS = 300.0f;
 
-	/// <summary> 最大ブロック数 </summary>
-	static constexpr int MAX_BLOCK = 999;
+	/// <summary> フィールド重力 </summary>
+	static constexpr float FIELD_GRAVITY = -0.35f;
 
 	/// <summary> 最大破壊ブロック数 </summary>
-	static constexpr float MAX_DESTROY_BLOCK = 100;
-
-	/// <summary> 重力 </summary>
-	static constexpr float FIELD_GRAVITY = -0.35f;
+	static constexpr float MAX_DESTROY_BLOCK = 200;
 
 	// <special function>
 	CField_Manager(const CField_Manager&) = delete;				// コピーコンストラクタ
@@ -96,8 +93,9 @@ private:
 	void	InitEnvironment();					// 環境装飾の初期設定
 	void	Uninit();							// 終了処理
 	void	UpdateEnvironment();				// 環境装飾の更新処理
+	void	UpdateFan();						// 扇形の更新
 	void	AppearBossEvent();					// ボス登場イベント
-	void	FieldGenerator();					// フィールドジェネレータ
+	void	UpdateField();						// フィールド更新
 	void	BranchFieldType();					// フィールドタイプ分岐
 	void	AutoCreateItem();					// アイテムの自動生成			
 	void	AutoCreateBlock(int nAmount);		// ブロックの自動生成
@@ -106,9 +104,6 @@ private:
 	void	AutoDestroyBlock();					// ブロックの自動削除
 	void	DestroyAllBlock();					// 全ブロックの削除
 	void	PrintDebug();						// デバッグ表示
-
-	/* けします */
-	void DEBUG_CIRCLE();	// デバッグサークル
 
 	// <data>
 	ActionData		m_ActionData;			// アクションデータ

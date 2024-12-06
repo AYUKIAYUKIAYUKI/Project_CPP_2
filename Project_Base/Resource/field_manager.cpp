@@ -25,11 +25,6 @@
 #include "fan.h"
 
 //****************************************************
-// プリプロセッサディレクティブ
-//****************************************************
-#define CHANGE_FIELRDCREATE_STYLE 0	// ブロックの生成方法切り替え
-
-//****************************************************
 // usingディレクティブ
 //****************************************************
 using namespace abbr;
@@ -62,14 +57,8 @@ void CField_Manager::Update()
 	// 環境装飾の更新
 	UpdateEnvironment();
 
-	if (m_pSyncPlayer != nullptr)
-	{
-		// プレイヤーの現在の方角を扇形の方角にする
-		m_pRenderFan->SetDirection(m_pSyncPlayer->GetDirection());
-
-		// 扇形表示の更新処理
-		m_pRenderFan->Update();
-	}
+	// 扇形の更新
+	UpdateFan();
 
 	if (typeid(*CScene_Manager::GetInstance()->GetScene()) == typeid(CGame))
 	{
@@ -87,9 +76,9 @@ void CField_Manager::Update()
 		}
 	}
 
-	// フィールドジェネレータ
+	// フィールド更新
 	if(m_nCntDestroyBlock < MAX_DESTROY_BLOCK)
-		FieldGenerator();
+		UpdateField();
 
 	// デバッグ表示
 	PrintDebug();
@@ -252,11 +241,6 @@ HRESULT CField_Manager::Init()
 	// 扇形表示を生成
 	m_pRenderFan = CFan::Create();
 
-#if CHANGE_FIELRDCREATE_STYLE
-	// 円の生成
-	DEBUG_CIRCLE();
-#endif	// CHANGE_FIELRDCREATE_STYLE
-
 	return S_OK;
 }
 
@@ -298,6 +282,22 @@ void CField_Manager::UpdateEnvironment()
 {
 	// 火の粉を生成
 	CSparks::AutoGenerate();
+}
+
+//============================================================================
+// 扇形の更新
+//============================================================================
+void CField_Manager::UpdateFan()
+{
+	// プレイヤー情報がセットされていなければ処理を行わない
+	if (m_pSyncPlayer == nullptr)
+		return;
+
+	// プレイヤーの現在の方角を扇形の方角にする
+	m_pRenderFan->SetDirection(m_pSyncPlayer->GetDirection());
+
+	// 扇形表示の更新処理
+	m_pRenderFan->Update();
 }
 
 //============================================================================
@@ -351,9 +351,9 @@ void CField_Manager::AppearBossEvent()
 }
 
 //============================================================================
-// フィールドジェネレータ
+// フィールド更新
 //============================================================================
-void CField_Manager::FieldGenerator()
+void CField_Manager::UpdateField()
 {
 	// フィールドタイプの分岐
 	BranchFieldType();
@@ -361,7 +361,6 @@ void CField_Manager::FieldGenerator()
 	// アイテムの自動生成
 	AutoCreateItem();
 
-#if !CHANGE_FIELRDCREATE_STYLE
 	// プレイヤーの目標座標へのベクトルを作成
 	Vec3 Norm = m_pSyncPlayer->GetPosTarget() - m_pSyncPlayer->GetPos();
 
@@ -374,7 +373,6 @@ void CField_Manager::FieldGenerator()
 
 	// ブロックの自動削除
 	AutoDestroyBlock();
-#endif	// CHANGE_FIELRDCREATE_STYLE
 
 #ifdef _DEBUG	// ブロックを全削除
 	if (CManager::GetKeyboard()->GetTrigger(DIK_DELETE))
@@ -387,15 +385,8 @@ void CField_Manager::FieldGenerator()
 //============================================================================
 void CField_Manager::BranchFieldType()
 {
-	//if (m_ActionData.nCntJump > m_ActionData.nCntDash)
-	if (0)
-	{
-		m_FiledType = FIELD_TYPE::JUMP;
-	}
-	else
-	{
-		m_FiledType = FIELD_TYPE::DASH;
-	}
+	/* ここは何らかの分岐を設定予定です */
+	m_FiledType = FIELD_TYPE::JUMP;
 }
 
 //============================================================================
@@ -411,6 +402,7 @@ void CField_Manager::AutoCreateItem()
 	CItem* pItem = nullptr;
 
 	// アイテムを生成
+	/* ここは何らかの分岐を設定予定です*/
 	pItem = CLife::Create();
 
 	// 方角を設定
@@ -643,34 +635,5 @@ void CField_Manager::PrintDebug()
 		ImGui::Text("Cross:%f", fCross);
 		ImGui::Text("Norm:%f", Norm.x * Norm.x + Norm.z * Norm.z);
 		ImGui::End();
-	}
-}
-
-//============================================================================
-// デバッグサークル
-//============================================================================
-void CField_Manager::DEBUG_CIRCLE()
-{
-	float fDirection = 0.0f;						// 方角
-	float fAdder = (D3DX_PI * 2.0f) / MAX_BLOCK;	// 増加量
-
-	for (WORD i = 0; i < MAX_BLOCK; ++i)
-	{
-		// 生成用の座標を決定
-		Vec3 NewPos = VEC3_INIT;
-		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
-		NewPos.y = 40.0f - utility::GetRandomValue<float>() * 0.15f;
-		NewPos.z = -sinf(fDirection) * FIELD_RADIUS;
-
-		// 生成用の向きを決定
-		Vec3 NewRot = VEC3_INIT;
-		//NewRot.y = utility::GetRandomValue<float>();
-		NewRot.y = fDirection + D3DX_PI * 0.5f;
-
-		// ブロックを生成
-		CBlock::Create(NewPos, NewRot);
-
-		// 方角を増加
-		fDirection += fAdder;
 	}
 }
