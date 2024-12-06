@@ -54,30 +54,31 @@ void CField_Manager::InitForTitle()
 //============================================================================
 void CField_Manager::Update()
 {
+	// この更新処理がゲームシーン以外で呼ばれても処理を行わない
+	if (typeid(*CScene_Manager::GetInstance()->GetScene()) != typeid(CGame))
+		return;
+
 	// 環境装飾の更新
 	UpdateEnvironment();
 
 	// 扇形の更新
 	UpdateFan();
 
-	if (typeid(*CScene_Manager::GetInstance()->GetScene()) == typeid(CGame))
+	// ボス登場イベント
+	AppearBossEvent();
+
+	// 体力が無くなるとゲームシーンにゲーム終了を通知する
+	if (m_pSyncPlayer->GetLife() <= 0)
 	{
-		// ボス登場イベント
-		AppearBossEvent();
+		// ゲームシーン取得
+		CGame* const pScene = dynamic_cast<CGame*>(CScene_Manager::GetInstance()->GetScene());
 
-		// 体力が無くなるとゲームシーンにゲーム終了を通知する
-		if (m_pSyncPlayer->GetLife() <= 0)
-		{
-			// ゲームシーン取得
-			CGame* const pScene = dynamic_cast<CGame*>(CScene_Manager::GetInstance()->GetScene());
-
-			// シーン遷移開始
-			pScene->SetTransition();
-		}
+		// シーン遷移開始
+		pScene->SetTransition();
 	}
 
 	// フィールド更新
-	if(m_nCntDestroyBlock < MAX_DESTROY_BLOCK)
+	if (m_nCntDestroyBlock < MAX_DESTROY_BLOCK)
 		UpdateField();
 
 	// デバッグ表示
