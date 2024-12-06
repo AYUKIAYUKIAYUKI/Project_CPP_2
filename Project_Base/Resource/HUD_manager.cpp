@@ -16,6 +16,7 @@
 #include "scene.h"
 #include "game.h"
 #include "boss.h"
+#include "item.h"
 
 //****************************************************
 // usingディレクティブ
@@ -330,10 +331,10 @@ void CHUD_Manager::UpdateMapSymbolPlayer()
 	// プレイヤーの方角をコピー
 	float fAngle = m_pSyncPlayer->GetDirection(), fCoef = 56.0f;
 
-	// 目標座標をコピー
+	// プレイヤーシンボルの目標座標をコピー
 	Vec3 AdjustPos = m_pMapSymbolPlayer->GetPosTarget();
 
-	// プレイヤーの方角に合わせてシンボルの座標も回転させる
+	// プレイヤーの方角に合わせてプレイヤーシンボルの座標も回転させる
 	AdjustPos += { cosf(fAngle)* fCoef, -sinf(fAngle) * fCoef, 0.0f };
 	m_pMapSymbolPlayer->SetPos(AdjustPos);
 }
@@ -343,7 +344,39 @@ void CHUD_Manager::UpdateMapSymbolPlayer()
 //============================================================================
 void CHUD_Manager::UpdateMapSymbolItem()
 {
+	// アイテムタイプのオブジェクトを探す
+	CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
 
+	// 上記のオブジェクトの有無に応じて処理分岐
+	if (pObj)
+	{ // アイテムが存在している
+
+		// オブジェクトをアイテムクラスにキャスト
+		CItem* pItem = utility::DownCast<CItem, CObject>(pObj);
+
+		// アイテムの方角をコピー
+		float fAngle = pItem->GetDirection(), fCoef = 56.0f;
+
+		// アイテムシンボルの目標座標をコピー
+		Vec3 AdjustPos = m_pMapSymbolItem->GetPosTarget();
+
+		// アイテムの方角に合わせてアイテムシンボルの座標も回転させる
+		AdjustPos += { cosf(fAngle)* fCoef, -sinf(fAngle) * fCoef, 0.0f };
+		m_pMapSymbolItem->SetPos(AdjustPos);
+
+		// アイテムシンボルを表示
+		XCol NewColTarget = m_pMapSymbolItem->GetColTarget();
+		NewColTarget.a = 1.0f;
+		m_pMapSymbolItem->SetColTarget(NewColTarget);
+	}
+	else
+	{ // アイテムが存在しない
+		
+		// アイテムシンボルを透明に
+		XCol NewColTarget = m_pMapSymbolItem->GetColTarget();
+		NewColTarget.a = 0.0f;
+		m_pMapSymbolItem->SetColTarget(NewColTarget);
+	}
 }
 
 //============================================================================
