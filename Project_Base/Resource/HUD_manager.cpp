@@ -55,8 +55,11 @@ void CHUD_Manager::Update()
 	ParamControl();
 #endif // _DEBUG
 
-	// マップシンボルの更新
-	UpdateMapSymbol();
+	// プレイヤーマップシンボルの更新
+	UpdateMapSymbolPlayer();
+
+	// アイテムマップシンボルの更新
+	UpdateMapSymbolItem();
 
 	// プレイヤーライフの更新
 	UpdatePlayerLife();
@@ -85,11 +88,11 @@ void CHUD_Manager::SpecialMapSymbol(float fMove)
 	float fAngle = -D3DX_PI * 0.5f, fCoef = 56.0f;
 
 	// 目標座標をコピー
-	Vec3 AdjustPos = m_pMapSymbol->GetPosTarget();
+	Vec3 AdjustPos = m_pMapSymbolPlayer->GetPosTarget();
 
 	// プレイヤーの方角に合わせてシンボルの座標も回転させる
 	AdjustPos += { cosf(fAngle)* fCoef, -sinf(fAngle) * fCoef - fMove, 0.0f };
-	m_pMapSymbol->SetPos(AdjustPos);
+	m_pMapSymbolPlayer->SetPos(AdjustPos);
 }
 
 //============================================================================
@@ -182,6 +185,8 @@ CHUD_Manager::CHUD_Manager() :
 	m_pSyncPlayer{ nullptr }, 
 	m_pMapBase{ nullptr },
 	m_pMapRing{ nullptr },
+	m_pMapSymbolPlayer{ nullptr },
+	m_pMapSymbolItem{ nullptr },
 	m_pPlayerGauge{ nullptr },
 	m_pPlayerGaugeWindow{ nullptr },
 	m_pBossGaugeBack{ nullptr },
@@ -220,9 +225,14 @@ HRESULT CHUD_Manager::Init()
 		m_pMapRing->BindTex(CTexture_Manager::TYPE::MAPRING);
 	}
 
-	{ // マップシンボルを作成
-		m_pMapSymbol = CObject_HUD::Create("Data\\JSON\\HUD\\mapsymbol.json");
-		m_pMapSymbol->BindTex(CTexture_Manager::TYPE::MAPSYMBOL);
+	{ // プレイヤーマップシンボルを作成
+		m_pMapSymbolPlayer = CObject_HUD::Create("Data\\JSON\\HUD\\mapsymbolplayer.json");
+		m_pMapSymbolPlayer->BindTex(CTexture_Manager::TYPE::MAPSYMBOLPLA);
+	}
+
+	{ // アイテムマップシンボルを作成
+		m_pMapSymbolItem = CObject_HUD::Create("Data\\JSON\\HUD\\mapsymbolitem.json");
+		m_pMapSymbolItem->BindTex(CTexture_Manager::TYPE::MAPSYMBOLITE);
 	}
 
 	{ // プレイヤーゲージバーを生成
@@ -313,19 +323,27 @@ void CHUD_Manager::ParamControl()
 }
 
 //============================================================================
-// マップシンボルの更新
+// プレイヤーマップシンボルの更新
 //============================================================================
-void CHUD_Manager::UpdateMapSymbol()
+void CHUD_Manager::UpdateMapSymbolPlayer()
 {
 	// プレイヤーの方角をコピー
 	float fAngle = m_pSyncPlayer->GetDirection(), fCoef = 56.0f;
 
 	// 目標座標をコピー
-	Vec3 AdjustPos = m_pMapSymbol->GetPosTarget();
+	Vec3 AdjustPos = m_pMapSymbolPlayer->GetPosTarget();
 
 	// プレイヤーの方角に合わせてシンボルの座標も回転させる
 	AdjustPos += { cosf(fAngle)* fCoef, -sinf(fAngle) * fCoef, 0.0f };
-	m_pMapSymbol->SetPos(AdjustPos);
+	m_pMapSymbolPlayer->SetPos(AdjustPos);
+}
+
+//============================================================================
+// アイテムマップシンボルの更新
+//============================================================================
+void CHUD_Manager::UpdateMapSymbolItem()
+{
+
 }
 
 //============================================================================
@@ -466,9 +484,15 @@ bool CHUD_Manager::DetectError()
 		bError = 1;
 	}
 
-	if (!m_pMapSymbol)
+	if (!m_pMapSymbolPlayer)
 	{
-		CRenderer::GetRenderer()->SetDebugString("マップシンボル表示が出来ません");
+		CRenderer::GetRenderer()->SetDebugString("プレイヤーマップシンボル表示が出来ません");
+		bError = 1;
+	}
+
+	if (!m_pMapSymbolItem)
+	{
+		CRenderer::GetRenderer()->SetDebugString("アイテムマップシンボル表示が出来ません");
 		bError = 1;
 	}
 

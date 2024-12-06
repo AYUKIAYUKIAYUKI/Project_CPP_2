@@ -30,7 +30,8 @@ public:
 		CONSTELLATION3,		// 星座3
 		MAPBASE,			// マップ枠
 		MAPRING,			// マップ輪
-		MAPSYMBOL,			// マップシンボル
+		MAPSYMBOLPLA,		// プレイヤーマップシンボル
+		MAPSYMBOLITE,		// アイテムマップシンボル
 		PLALIFE,			// プレイヤーライフ
 		PLAGAUBAR,			// プレイヤーゲージバー
 		PLAGAUBASE,			// プレイヤーゲージ枠

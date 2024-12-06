@@ -54,19 +54,21 @@ private:
 	~CHUD_Manager();	// デストラクタ
 
 	// <function>
-	void Uninit();				// 終了処理
-	void ParamControl();		// 調整
-	void UpdateMapSymbol();		// マップシンボルの更新
-	void UpdatePlayerLife();	// プレイヤーライフの更新
-	void UpdateBossGaugeBack();	// ボスゲージ背景の更新
-	void UpdateBossGaugeBar();	// ボスゲージバーの更新
-	bool DetectError();			// エラー検出
+	void Uninit();					// 終了処理
+	void ParamControl();			// 調整
+	void UpdateMapSymbolPlayer();	// プレイヤーマップシンボルの更新
+	void UpdateMapSymbolItem();		// アイテムマップシンボルの更新
+	void UpdatePlayerLife();		// プレイヤーライフの更新
+	void UpdateBossGaugeBack();		// ボスゲージ背景の更新
+	void UpdateBossGaugeBar();		// ボスゲージバーの更新
+	bool DetectError();				// エラー検出
 
 	// <data>
 	const CPlayer* m_pSyncPlayer;						// プレイヤーのポインタ
 	CObject_HUD*   m_pMapBase;							// マップ枠
 	CObject_HUD*   m_pMapRing;							// マップ輪
-	CObject_HUD*   m_pMapSymbol;						// マップシンボル
+	CObject_HUD*   m_pMapSymbolPlayer;					// プレイヤーマップシンボル
+	CObject_HUD*   m_pMapSymbolItem;					// アイテムマップシンボル
 	CObject_HUD*   m_pPlayerGauge;						// プレイヤーゲージ
 	CObject_HUD*   m_pPlayerGaugeWindow;				// プレイヤーゲージ枠
 	CObject_HUD*   m_pPlayerLife[CPlayer::MAX_LIFE];	// プレイヤーライフ
