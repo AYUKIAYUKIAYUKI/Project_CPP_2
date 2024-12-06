@@ -343,63 +343,16 @@ void CField_Manager::AutoCreateItem()
 	/* ここは何らかの分岐を設定予定です*/
 	pItem = CLife::Create();
 
-	// 方角を設定
-	pItem->SetDirection(fabsf(utility::GetRandomValue<float>()));
-
-	// Y座標を設定
-	pItem->SetPosY(fabsf(utility::GetRandomValue<float>()));
-}
-
-//============================================================================
-// ブロックの自動生成
-//============================================================================
-void CField_Manager::AutoCreateBlock(int nAmount)
-{
-	// 生成座標計算用 ((方角 + 扇形幅の角度)の場所が生成ポイント)
-	float fDirection = m_pSyncPlayer->GetDirection();	// プレイヤーの現在の方角をコピー
-	float fRange = m_pRenderFan->GetRange();			// 扇形範囲の幅をコピー
-	Vec3  NewPos = VEC3_INIT, NewRot = VEC3_INIT;		// ブロック用の座標・向きを作成
-
-	// 現在座標と目標座標に対し原点からの方向ベクトルを作成
-	Vec3 OldVec = m_pSyncPlayer->GetPos() - VEC3_INIT, NewVec = m_pSyncPlayer->GetPosTarget() - VEC3_INIT;
-	D3DXVec3Normalize(&OldVec, &OldVec);
-	D3DXVec3Normalize(&NewVec, &NewVec);
-
-	// 2本の方向ベクトルの外積を作成
-	float fCross = (OldVec.x * NewVec.z) - (OldVec.z * NewVec.x);
-
-	// 左に移動している場合角度を反転させる
-	if (fCross < 0.0f)
-		fRange = -fRange;
-
-	// ブロック数が上限に満たなければ
-	for (int nCntBlock = 0; nCntBlock < nAmount; nCntBlock++)
+	do
 	{
-		// 破棄範囲にはみ出さず生成されるように調整
-		/* 初期座標が原点の場合、生成範囲の半径がフィールドの半径を下回ると無限ループ */
-		do
-		{
-			// 生成用の座標を決定
-			NewPos.x = cosf(fDirection + fRange) * FIELD_RADIUS;
-			NewPos.y = fabsf(utility::GetRandomValue<float>());
-			NewPos.z = sinf(fDirection + fRange) * FIELD_RADIUS;
+		// 方角をランダムに設定
+		pItem->SetDirection(fabsf(utility::GetRandomValue<float>()));
 
-			// ブロック同士の幅を検出
-			if (DetectNearBlock(NewPos))
-			{
-				return;
+		// この方角における座標が、扇形範囲内であれば方角を再抽選する
+	} while (m_pRenderFan->DetectInFanRange(pItem->GetPos()));
 
-				//NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
-			}
-
-		} while (!m_pRenderFan->DetectInFanRange(NewPos));
-
-		// 向きを決定
-		NewRot.y = atan2f(-NewPos.x, -NewPos.z);
-
-		// ブロックを生成
-		CBlock::Create(NewPos, NewRot);
-	}
+	// Y座標をランダムに設定
+	pItem->SetPosY(fabsf(utility::GetRandomValue<float>()));
 }
 
 //============================================================================
@@ -437,8 +390,6 @@ void CField_Manager::AutoCreateBlockDash()
 		if (DetectNearBlock(NewPos))
 		{
 			return;
-
-			//NewPos = { FLT_MAX, FLT_MAX, FLT_MAX };
 		}
 
 	} while (!m_pRenderFan->DetectInFanRange(NewPos));

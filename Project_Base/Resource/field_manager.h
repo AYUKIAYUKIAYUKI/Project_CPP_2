@@ -30,7 +30,7 @@ public:
 	static constexpr float FIELD_GRAVITY = -0.35f;
 
 	/// <summary> 最大破壊ブロック数 </summary>
-	static constexpr float MAX_DESTROY_BLOCK = 20;
+	static constexpr float MAX_DESTROY_BLOCK = 200;
 
 	// <special function>
 	CField_Manager(const CField_Manager&) = delete;				// コピーコンストラクタ
@@ -95,9 +95,8 @@ private:
 	void	UpdateFan();						// 扇形の更新
 	void	UpdateField();						// フィールド更新
 	void	BranchFieldType();					// フィールドタイプ分岐
-	void	AutoCreateItem();					// アイテムの自動生成			
-	void	AutoCreateBlock(int nAmount);		// ブロックの自動生成
-	void	AutoCreateBlockDash();				// ダッシュタイプの自動生成
+	void	AutoCreateItem();					// アイテムの自動生成
+	void	AutoCreateBlockDash();				// ダッシュタイプのブロック自動生成
 	bool	DetectNearBlock(D3DXVECTOR3 Pos);	// 隣接し合うブロックを検出
 	void	AutoDestroyBlock();					// ブロックの自動削除
 	void	DestroyAllBlock();					// 全ブロックの削除
