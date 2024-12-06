@@ -111,15 +111,6 @@ void CField_Manager::IncrementCntDash()
 }
 
 //============================================================================
-// ボス出現
-//============================================================================
-void CField_Manager::AppearBoss()
-{
-	// 銅像が振動を始める
-	m_pStatue->SetNowMotion(0);
-}
-
-//============================================================================
 // ブロックの破壊数を取得
 //============================================================================
 int CField_Manager::GetCntDestroyBlock()
@@ -306,8 +297,12 @@ void CField_Manager::UpdateFan()
 //============================================================================
 void CField_Manager::AppearBossEvent()
 {
-	// 銅像のモーションが終了していたらこのメソッドを無視
+	// 銅像のモーション再生が終了していたらこのメソッドを無視
 	if (m_pStatue->GetStopState())
+		return;
+
+	// 銅像が待機モーションならこのメソッドを無視
+	if (m_pStatue->GetNowMotion() == 2)
 		return;
 
 	// 再生中のモーションに応じて処理を分岐
@@ -577,8 +572,8 @@ void CField_Manager::AutoDestroyBlock()
 				// ブロックの破壊数カウントが最大で
 				if (m_nCntDestroyBlock >= MAX_DESTROY_BLOCK)
 				{
-					// ボス出現
-					AppearBoss();
+					// 銅像を振動モーションに変更
+					m_pStatue->SetNowMotion(0);
 
 					// 全ブロックを破壊
 					DestroyAllBlock();

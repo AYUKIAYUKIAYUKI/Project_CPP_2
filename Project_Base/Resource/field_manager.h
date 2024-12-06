@@ -44,7 +44,6 @@ public:
 	void Draw();				// 描画処理
 	void IncrementCntJump();	// ジャンプした回数のインクリメント
 	void IncrementCntDash();	// ダッシュした回数のインクリメント
-	void AppearBoss();			// ボス登場
 
 	// <getter>
 	int GetCntDestroyBlock();	// ブロックの破壊数を取得
