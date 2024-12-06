@@ -305,12 +305,12 @@ void CHUD_Manager::ParamControl()
 	}
 #endif
 
-#if 0 // カラー確認
+#if 1 // カラー確認
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Color Edit")) {
-		XCol ColTarget = m_pMapSymbol->GetColTarget();
+		XCol ColTarget = m_pMapSymbolItem->GetColTarget();
 		ImGui::ColorEdit4("ColTarget", &ColTarget.r);
-		m_pMapSymbol->SetColTarget(ColTarget);
+		m_pMapSymbolItem->SetColTarget(ColTarget);
 		ImGui::End();
 	}
 #endif
@@ -366,7 +366,7 @@ void CHUD_Manager::UpdateMapSymbolItem()
 
 		// アイテムシンボルを表示
 		XCol NewColTarget = m_pMapSymbolItem->GetColTarget();
-		NewColTarget.a = 1.0f;
+		NewColTarget.a = 0.75f;
 		m_pMapSymbolItem->SetColTarget(NewColTarget);
 	}
 	else
