@@ -42,7 +42,7 @@ using namespace abbr;
 // コンストラクタ
 //============================================================================
 CItem::CItem() :
-	CObject_X{ LAYER::MIDDLE },
+	CObject_X{ LAYER::FRONT },
 	m_fCorrectCoef{ 0.0f },
 	m_fDirection{ 0.0f },
 	m_RotTarget{ VEC3_INIT },

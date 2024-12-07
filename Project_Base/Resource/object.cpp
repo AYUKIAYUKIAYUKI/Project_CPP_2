@@ -22,6 +22,7 @@ namespace
 #include "object.h"
 #include "renderer.h"
 
+// ステンシルテスト用
 #include "manager.h"
 #include "mask_rectangle.h"
 
@@ -353,7 +354,7 @@ void CObject::DrawAll()
 			pObj = pNext;
 		}
 	}
-
+	
 #if 1	// 画面を覆うポリゴンの描画
 
 	// ステンシル参照値を設定

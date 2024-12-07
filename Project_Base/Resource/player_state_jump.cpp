@@ -201,7 +201,7 @@ void CPlayer_State_Jump::Control()
 		}
 	}
 
-	if (pKeyboard->GetTrigger(DIK_SPACE))
+	if (pKeyboard->GetTrigger(DIK_W) || pKeyboard->GetTrigger(DIK_S))
 	{
 		// aŒ‚ó‘Ô‚Ö
 		To_Slash();

@@ -19,9 +19,6 @@
 #include "block.h"
 #include "collision.h"
 #include "field_manager.h"
-#include "manager.h"
-#include "mask_rectangle.h"
-#include "renderer.h"
 
 //****************************************************
 // プリプロセッサディレクティブ
