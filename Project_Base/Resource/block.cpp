@@ -29,7 +29,7 @@ using namespace abbr;
 // コンストラクタ
 //============================================================================
 CBlock::CBlock() :
-	CObject_X{ LAYER::MIDDLE },
+	CObject_X{ LAYER::DEFAULT },
 	m_pBndBox{ DBG_NEW CBounding_Box() }
 {
 

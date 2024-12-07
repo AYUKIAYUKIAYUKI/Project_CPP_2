@@ -291,8 +291,8 @@ void CPlayer::HitCheck()
 	// 衝突の有無を記録
 	bool bDetect = false;
 
-	// ミドルオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
+	// 通常優先度のオブジェクトを取得
+	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
 
 	while (pObj != nullptr)
 	{

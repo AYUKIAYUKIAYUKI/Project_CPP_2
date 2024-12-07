@@ -19,9 +19,22 @@ public:
 	static constexpr int MAX_OBJECT = 2048;
 
 	//****************************************************
+	// オブジェクトのレイヤー識別
+	//****************************************************
+	enum class LAYER : WORD
+	{
+		BG = 0,		// 背景
+		DEFAULT,	// 通常
+		FRONT,		// 前面
+		STENCIL,	// ステンシル
+		UI,			// UI
+		MAX
+	};
+
+	//****************************************************
 	// オブジェクトの種類識別
 	//****************************************************
-	enum class TYPE
+	enum class TYPE : WORD
 	{
 		NONE = 0,	// 無し
 		PLAYER,		// プレイヤー
@@ -29,26 +42,13 @@ public:
 		ENEMY,		// エネミー
 		BLOCK,		// ブロック
 		ITEM,		// アイテム
-		MAX,
-	};
-
-	//****************************************************
-	// オブジェクトのレイヤー識別
-	//****************************************************
-	enum class LAYER
-	{
-		BG = 0,		// 背景
-		BACK,		// 後方
-		MIDDLE,		// 中央
-		FRONT,		// 前方
-		UI,			// UI
-		MAX,
+		MAX
 	};
 
 	// <special function>
-	CObject();								// コンストラクタ
-	CObject(LAYER Priority = LAYER::BG);	// 描画優先度指定コンストラクタ
-	virtual ~CObject() = 0;					// デストラクタ
+	CObject();									// コンストラクタ
+	CObject(LAYER Priority = LAYER::DEFAULT);	// 描画優先度指定コンストラクタ
+	virtual ~CObject() = 0;						// デストラクタ
 
 	// <function>
 	void SetRelease();	// 解放予約設定

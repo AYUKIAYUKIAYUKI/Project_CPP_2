@@ -26,7 +26,7 @@ using namespace abbr;
 // コンストラクタ
 //============================================================================
 CMotion_Set::CMotion_Set() :
-	CObject{ CObject::LAYER::MIDDLE },
+	CObject{ CObject::LAYER::DEFAULT },
 	m_Rot{ VEC3_INIT },
 	m_Pos{ VEC3_INIT },
 	m_bStop{ false },

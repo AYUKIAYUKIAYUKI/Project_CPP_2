@@ -405,8 +405,8 @@ void CField_Manager::AutoCreateBlockDash()
 //============================================================================
 bool CField_Manager::DetectNearBlock(D3DXVECTOR3 Pos)
 {
-	// ミドルオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
+	// 通常優先度のオブジェクトを取得
+	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
 
 	while (pObj != nullptr)
 	{
@@ -441,8 +441,8 @@ bool CField_Manager::DetectNearBlock(D3DXVECTOR3 Pos)
 //============================================================================
 void CField_Manager::AutoDestroyBlock()
 {
-	// ミドルオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(CObject::LAYER::MIDDLE);
+	// 通常優先度のオブジェクトを取得
+	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
 
 	while (pObj != nullptr)
 	{
@@ -485,8 +485,8 @@ void CField_Manager::AutoDestroyBlock()
 //============================================================================
 void CField_Manager::DestroyAllBlock()
 {
-	// ミドルオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(CObject::LAYER::MIDDLE);
+	// 通常優先度のオブジェクトを取得
+	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
 
 	while (pObj != nullptr)
 	{

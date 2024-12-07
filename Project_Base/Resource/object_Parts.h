@@ -24,7 +24,7 @@ class CObject_Parts : public CObject
 public:
 
 	// <special function>
-	CObject_Parts(LAYER Priority = LAYER::MIDDLE);	// 描画優先度指定コンストラクタ
+	CObject_Parts(LAYER Priority = LAYER::DEFAULT);	// 描画優先度指定コンストラクタ
 	~CObject_Parts() override;						// デストラクタ
 
 	// <function>
