@@ -339,9 +339,6 @@ void CObject::DrawAll()
 			// ステンシル参照値を設定
 			pDev->SetRenderState(D3DRS_STENCILREF, StencilRefValue);
 
-			// ステンシルマスクを設定
-			pDev->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);
-
 			// ステンシルバッファの比較方法を変更
 			pDev->SetRenderState(D3DRS_STENCILFUNC, StencilCmp);
 
@@ -366,16 +363,12 @@ void CObject::DrawAll()
 	// ステンシル参照値を設定
 	pDev->SetRenderState(D3DRS_STENCILREF, 1);
 
-	// ステンシルマスクを設定
-	pDev->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);
-
 	// ステンシルバッファの比較方法を変更
 	pDev->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_EQUAL);
 
-	// ステンシルテストの結果に対してのふるまいを設定する (Zテストをしない)
-	pDev->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);		// (Zテスト・)ステンシルテストに成功
-	//pDev->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);	// Zテストのみ失敗
-	pDev->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// (Zテスト・)ステンシルテストに失敗
+	// ステンシルテストの結果に対してのふるまいを設定する (Zテストはしない)
+	pDev->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);	// (Zテスト・)ステンシルテストに成功
+	pDev->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);	// (Zテスト・)ステンシルテストに失敗
 
 	// マスクポリゴンの描画
 	CManager::GetManager()->GetMask_Rectangle()->Draw();

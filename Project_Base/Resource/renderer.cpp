@@ -333,6 +333,7 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 	m_pD3DDevice->SetRenderState(D3DRS_ALPHAREF, 0x24);						// アルファ参照値
 	m_pD3DDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);			// アルファテスト合格基準
 	m_pD3DDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);				// アルファテストの無効化
+	m_pD3DDevice->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);			// ステンシルマスクを設定
 
 	// テクスチャステージステートの初期設定
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);

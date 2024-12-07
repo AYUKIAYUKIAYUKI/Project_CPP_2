@@ -148,9 +148,6 @@ void CItem::Draw()
 	// ステンシル参照値を設定
 	pDev->SetRenderState(D3DRS_STENCILREF, StencilRefValue);
 
-	// ステンシルマスクを設定
-	pDev->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);
-
 	// ステンシルバッファの比較方法を変更
 	pDev->SetRenderState(D3DRS_STENCILFUNC, StencilCmp);
 
