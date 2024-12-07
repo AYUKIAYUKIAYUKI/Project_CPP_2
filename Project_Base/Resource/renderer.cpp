@@ -45,6 +45,18 @@ void CRenderer::Update()
 
 	// 全オブジェクト後更新処理
 	CObject::LateUpdateAll();
+
+#if 1 // フォグの調整
+	static float fStart = START_FOG, fEnd = END_FOG;
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Fog Edit")) {
+		ImGui::InputFloat("fStart", &fStart);
+		ImGui::InputFloat("fEnd", &fEnd);
+		ImGui::End();
+	}
+	m_pD3DDevice->SetRenderState(D3DRS_FOGSTART, *(DWORD*)(&fStart));	// 始点を設定
+	m_pD3DDevice->SetRenderState(D3DRS_FOGEND, *(DWORD*)(&fEnd));		// 終点を設定
+#endif
 }
 
 //============================================================================
@@ -325,15 +337,22 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 	}
 
 	// レンダーステートの初期設定
-	m_pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);				// カリングモードの設定
-	m_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// アルファブレンドの有効化
-	m_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);		// ソースブレンドの設定
-	m_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	// ターゲットブレンドの設定
-	m_pD3DDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);				// アルファテストの有効化
-	m_pD3DDevice->SetRenderState(D3DRS_ALPHAREF, 0x24);						// アルファ参照値
-	m_pD3DDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);			// アルファテスト合格基準
-	m_pD3DDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);				// アルファテストの無効化
-	m_pD3DDevice->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);			// ステンシルマスクを設定
+	m_pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);							// カリングモードの設定
+	m_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);							// アルファブレンドの有効化
+	m_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);					// ソースブレンドの設定
+	m_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);				// ターゲットブレンドの設定
+	m_pD3DDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);							// アルファテストの有効化
+	m_pD3DDevice->SetRenderState(D3DRS_ALPHAREF, 0x24);									// アルファ参照値
+	m_pD3DDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);						// アルファテスト合格基準
+	m_pD3DDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);							// アルファテストの無効化
+	m_pD3DDevice->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);						// ステンシルマスクを設定
+	m_pD3DDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);								// フォグの有効化
+	m_pD3DDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_LINEAR);					// フォグモードの設定
+	m_pD3DDevice->SetRenderState(D3DRS_FOGCOLOR, D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));	// フォグカラーの設定
+
+	// フォグの範囲設定
+	m_pD3DDevice->SetRenderState(D3DRS_FOGSTART, *(DWORD*)(&START_FOG));	// 始点を設定
+	m_pD3DDevice->SetRenderState(D3DRS_FOGEND, *(DWORD*)(&END_FOG));		// 終点を設定
 
 	// テクスチャステージステートの初期設定
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
@@ -352,7 +371,6 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 
 	// ImGuiの表示スタイルを設定
 	ImGui::StyleColorsDark();
-	//ImGui::StyleColorsLight();
 
 	// バックエンドの初期設定
 	ImGui_ImplWin32_Init(hWnd);

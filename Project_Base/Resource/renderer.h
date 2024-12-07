@@ -40,6 +40,12 @@ public:
 
 private:
 
+	/// <summary> フォグの始点 </summary>
+	static constexpr float START_FOG = 300.0f;
+
+	/// <summary> フォグの終点 </summary>
+	static constexpr float END_FOG = 4000.0f;
+
 	// <special function>
 	CRenderer();	// コンストラクタ
 	~CRenderer();	// デストラクタ

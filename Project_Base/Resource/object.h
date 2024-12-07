@@ -15,7 +15,7 @@ class CObject
 {
 public:
 
-	/// <summary> 常識的なオブジェクトの最大数 </summary>
+	/// <summary> 許容するオブジェクトの最大数 </summary>
 	static constexpr int MAX_OBJECT = 2048;
 
 	//****************************************************

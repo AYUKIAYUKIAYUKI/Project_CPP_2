@@ -165,8 +165,7 @@ void CObject_X::Draw()
 
 #ifdef _DEBUG	// 判定表示系のモデルは深度バッファに書き込まない
 	if (bDetectRenderCollision)
-		pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-		//pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+		pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 #endif // _DEBUG
 
 #if CHANGE_DRAW_ZBUFFER
