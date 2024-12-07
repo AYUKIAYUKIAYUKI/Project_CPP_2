@@ -114,14 +114,21 @@ void CObject_X::Draw()
 	pDev->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
 
 #if CHANGE_DRAW_ZBUFFER
-
-		// 深度テストの比較方法の変更
-		pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
-
 		// 深度バッファに描画しない
 		pDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-
 #endif	// CHANGE_DRAW_ZBUFFER
+
+#ifdef _DEBUG	// 判定表示系のモデルは深度バッファに書き込まない
+	bool bDetectRenderCollision = false;
+	CX_Manager::MODEL* pModel = this->GetModel();
+	if (pModel == CX_Manager::GetInstance()->GetModel(CX_Manager::TYPE::RENDER_BOX) ||
+		pModel == CX_Manager::GetInstance()->GetModel(CX_Manager::TYPE::RENDER_CYLINDER) ||
+		pModel == CX_Manager::GetInstance()->GetModel(CX_Manager::TYPE::RENDER_SPHERE))
+	{
+		bDetectRenderCollision = true;	// 判定簡略用
+		pDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	}
+#endif // _DEBUG
 
 	// ワールドマトリックスの設定
 	pDev->SetTransform(D3DTS_WORLD, &m_MtxWorld);
@@ -156,14 +163,15 @@ void CObject_X::Draw()
 	// 頂点法線の自動正規化を無効に
 	pDev->SetRenderState(D3DRS_NORMALIZENORMALS, FALSE);
 
-#if CHANGE_DRAW_ZBUFFER
-
-		// 深度テストの比較方法の変更
+#ifdef _DEBUG	// 判定表示系のモデルは深度バッファに書き込まない
+	if (bDetectRenderCollision)
 		pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+		//pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+#endif // _DEBUG
 
+#if CHANGE_DRAW_ZBUFFER
 		// 深度バッファに書き込む
 		pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-
 #endif	// CHANGE_DRAW_ZBUFFER
 }
 
