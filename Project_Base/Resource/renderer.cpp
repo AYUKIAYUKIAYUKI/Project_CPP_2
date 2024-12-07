@@ -47,15 +47,14 @@ void CRenderer::Update()
 	CObject::LateUpdateAll();
 
 #if 1 // フォグの調整
-	static float fStart = START_FOG, fEnd = END_FOG;
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Fog Edit")) {
-		ImGui::InputFloat("fStart", &fStart);
-		ImGui::InputFloat("fEnd", &fEnd);
+		ImGui::InputFloat("fStart", &m_fFogStart);
+		ImGui::InputFloat("fEnd", &m_fFogEnd);
 		ImGui::End();
 	}
-	m_pD3DDevice->SetRenderState(D3DRS_FOGSTART, *(DWORD*)(&fStart));	// 始点を設定
-	m_pD3DDevice->SetRenderState(D3DRS_FOGEND, *(DWORD*)(&fEnd));		// 終点を設定
+	m_pD3DDevice->SetRenderState(D3DRS_FOGSTART, *(DWORD*)(&m_fFogStart));	// 始点を設定
+	m_pD3DDevice->SetRenderState(D3DRS_FOGEND, *(DWORD*)(&m_fFogEnd));		// 終点を設定
 #endif
 }
 
@@ -65,7 +64,6 @@ void CRenderer::Update()
 void CRenderer::Draw()
 {
 #if ENABLE_STENCIL_BUFFER
-
 	// 画面バッファクリア
 	m_pD3DDevice->Clear(0,											// クリアしたい四角形の数を設定 (ビューポート全体の場合は0)
 		nullptr,													// 四角形構造体のポインタを設定 (nullptrを渡すことでビューポート全体の範囲)
@@ -73,9 +71,7 @@ void CRenderer::Draw()
 		D3DCOLOR_RGBA(0, 0, 0, 0),									// このカラーでターゲットをクリア
 		1.0f,														// この値に大してデプスバッファをクリア
 		0);															// この値でステンシルバッファをクリア
-
 #else
-
 	// 画面バッファクリア
 	m_pD3DDevice->Clear(0,
 		nullptr,
@@ -83,7 +79,6 @@ void CRenderer::Draw()
 		D3DCOLOR_RGBA(0, 0, 0, 0),
 		1.0f,
 		0);
-
 #endif
 
 	// 疑似スクリーンのテクスチャ内へ描画開始
@@ -206,6 +201,28 @@ void CRenderer::Release()
 }
 
 //============================================================================
+// フォグの始点を補間
+//============================================================================
+void CRenderer::CorrectFogStart(float fStart)
+{
+	m_pRenderer->m_fFogStart += (fStart - m_pRenderer->m_fFogStart) * 0.025f;
+
+	// フォグの始点を設定
+	m_pRenderer->m_pD3DDevice->SetRenderState(D3DRS_FOGSTART, *(DWORD*)(&m_pRenderer->m_fFogStart));
+}
+
+//============================================================================
+// フォグの終点を補間
+//============================================================================
+void CRenderer::CorrectFogEnd(float fEnd)
+{
+	m_pRenderer->m_fFogEnd += (fEnd - m_pRenderer->m_fFogEnd) * 0.025f;
+
+	// フォグの終点を設定
+	m_pRenderer->m_pD3DDevice->SetRenderState(D3DRS_FOGEND, *(DWORD*)(&m_pRenderer->m_fFogEnd));
+}
+
+//============================================================================
 // レンダラーの取得
 //============================================================================
 CRenderer* CRenderer::GetRenderer()
@@ -249,6 +266,8 @@ void CRenderer::SetTimeString(std::string Str, int nCnt)
 CRenderer::CRenderer() :
 	m_pD3D{ nullptr },
 	m_pD3DDevice{ nullptr },
+	m_fFogStart{ FOG_SRART },
+	m_fFogEnd{ FOG_END },
 	m_pFont{ nullptr },
 	m_DebugStr{},
 	m_TimeStr{}
@@ -351,8 +370,8 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 	m_pD3DDevice->SetRenderState(D3DRS_FOGCOLOR, D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));	// フォグカラーの設定
 
 	// フォグの範囲設定
-	m_pD3DDevice->SetRenderState(D3DRS_FOGSTART, *(DWORD*)(&START_FOG));	// 始点を設定
-	m_pD3DDevice->SetRenderState(D3DRS_FOGEND, *(DWORD*)(&END_FOG));		// 終点を設定
+	m_pD3DDevice->SetRenderState(D3DRS_FOGSTART, *(DWORD*)(&m_fFogStart));	// 始点を設定
+	m_pD3DDevice->SetRenderState(D3DRS_FOGEND, *(DWORD*)(&m_fFogEnd));		// 終点を設定
 
 	// テクスチャステージステートの初期設定
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);

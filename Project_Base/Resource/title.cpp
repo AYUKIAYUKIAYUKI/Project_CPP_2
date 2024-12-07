@@ -305,7 +305,7 @@ void CTitle::UpdateButterfly()
 			{ // 蝶がフィールドの半径より遠い場合
 
 				// 多少蝶が銅像の方に寄って行ったら
-				if (PosTarget.z - NewPos.z < CField_Manager::FIELD_RADIUS * 4.0f)
+				if (PosTarget.z - NewPos.z < CField_Manager::FIELD_RADIUS * 5.0f)
 				{
 					// 蝶のモーションを変身モーションに変更
 					if (m_pButterfly->GetNowMotion() != 2)
@@ -325,7 +325,15 @@ void CTitle::UpdateButterfly()
 						// フェイクプレイヤーが登場モーションを終了したら飛行モーションに変更
 						if (m_pFakePlayer->GetStopState())
 							m_pFakePlayer->SetNowMotion(3);
+
+						// フォグの範囲を変更
+						CRenderer::CorrectFogEnd(600.0f);
 					}
+				}
+				else
+				{
+					// フォグの範囲を変更
+					CRenderer::CorrectFogEnd(1500.0f);
 				}
 
 				// 蝶の向き・座標を銅像の方向へ接近

@@ -29,6 +29,8 @@ public:
 	// <static function>
 	static HRESULT	Create(HWND hWnd, BOOL bWindiw);	// 生成
 	static void		Release();							// 破棄
+	static void		CorrectFogStart(float fStart);		// フォグの始点を補間
+	static void		CorrectFogEnd(float fEnd);			// フォグの終点を補間
 
 	// <static getter>
 	static CRenderer*			GetRenderer();	// レンダラーを取得
@@ -40,11 +42,11 @@ public:
 
 private:
 
-	/// <summary> フォグの始点 </summary>
-	static constexpr float START_FOG = 300.0f;
+	/// <summary> フォグの初期始点 </summary>
+	static constexpr float FOG_SRART = 300.0f;
 
-	/// <summary> フォグの終点 </summary>
-	static constexpr float END_FOG = 4000.0f;
+	/// <summary> フォグの初期終点 </summary>
+	static constexpr float FOG_END = 4750.0f;
 
 	// <special function>
 	CRenderer();	// コンストラクタ
@@ -57,6 +59,8 @@ private:
 	// <data>
 	LPDIRECT3D9									m_pD3D;			// Direct3D
 	LPDIRECT3DDEVICE9							m_pD3DDevice;	// デバイス
+	float										m_fFogStart;	// フォグの始点
+	float										m_fFogEnd;		// フォグの終点
 	LPD3DXFONT									m_pFont;		// フォント
 	std::string									m_DebugStr;		// 表示用文字列
 	std::vector<std::pair<std::string, int>>	m_TimeStr;		// 時限式文字列

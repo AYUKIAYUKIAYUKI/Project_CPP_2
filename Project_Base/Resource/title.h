@@ -47,6 +47,7 @@ private:
 	void	Uninit() override;		// 終了処理
 	void	UpdateEnvironment();	// 環境装飾の更新
 	void	UpdateButterfly();		// 蝶の更新
+	void	AdjustFog();			// フォグの調整
 
 	// <special function>
 	CTitle();			// コンストラクタ
