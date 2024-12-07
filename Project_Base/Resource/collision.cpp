@@ -202,8 +202,8 @@ int collision::GetCylinderToAABB(const Vec3& SelfOldPos, const Vec3& SelfNowPos,
 		ImGui::Text("OldPos:X %.2f:Y %.2f:Z %.2f", SelfOldPos.x, SelfOldPos.y, SelfOldPos.z);
 		ImGui::Text("NowPos:X %.2f:Y %.2f:Z %.2f", SelfNowPos.x, SelfNowPos.y, SelfNowPos.z);
 		ImGui::Text("SWidth:L %.2f:R %.2f", SelfNowPos.x + fSelfRadius, SelfNowPos.x - fSelfRadius);
+		ImGui::End();
 	}
-	ImGui::End();
 #endif // _DEBUG
 
 	// è’ìÀé©ëÃÇ™ñ≥ÇØÇÍÇŒ

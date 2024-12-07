@@ -9,6 +9,7 @@
 namespace
 {
 	int
+	ZFuncCmp = D3DCMP_LESSEQUAL,	// デプスステンシル値の比較方法
 	StencilRefValue = 0,			// ステンシル参照値
 	StencilCmp = D3DCMP_EQUAL,		// ステンシル値の比較方法
 	Pass = D3DSTENCILOP_KEEP,		// Zテスト・ステンシルテストに成功
@@ -114,12 +115,14 @@ void CItem::Update()
 #if 1
 #ifdef _DEBUG
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	ImGui::Begin("Item Param");
-	ImGui::Text("Direction:%.1f", GetDirection());
-	ImGui::Text("Size:X %.2f:Y %.2f:Z %.2f", GetSize().x, GetSize().y, GetSize().z);
-	ImGui::Text("Rot:X %.2f:Y %.2f:Z %.2f", GetRot().x * (180 / D3DX_PI), GetRot().y * (180 / D3DX_PI), GetRot().z * (180 / D3DX_PI));
-	ImGui::Text("Pos:X %.2f:Y %.2f:Z %.2f", GetPos().x, GetPos().y, GetPos().z);
-	ImGui::End();
+	if (ImGui::Begin("Item Param"))
+	{
+		ImGui::Text("Direction:%.1f", GetDirection());
+		ImGui::Text("Size:X %.2f:Y %.2f:Z %.2f", GetSize().x, GetSize().y, GetSize().z);
+		ImGui::Text("Rot:X %.2f:Y %.2f:Z %.2f", GetRot().x * (180 / D3DX_PI), GetRot().y * (180 / D3DX_PI), GetRot().z * (180 / D3DX_PI));
+		ImGui::Text("Pos:X %.2f:Y %.2f:Z %.2f", GetPos().x, GetPos().y, GetPos().z);
+		ImGui::End();
+	}
 #endif // _DEBUG
 #endif
 
@@ -127,7 +130,7 @@ void CItem::Update()
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Sstencil - Only Item"))
 	{
-		D3DCMP_GREATEREQUAL;
+		ImGui::InputInt("ZFuncCmp", &ZFuncCmp);
 		ImGui::InputInt("StencilRefValue", &StencilRefValue);
 		ImGui::InputInt("StencilCmp", &StencilCmp);
 		ImGui::InputInt("Pass", &Pass);
@@ -143,7 +146,11 @@ void CItem::Update()
 //============================================================================
 void CItem::Draw()
 {
+	// デバイスを取得
 	auto pDev = CRenderer::GetDeviece();
+
+	// 深度バッファへの書き込みを有効化
+	pDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
 	// ステンシル参照値を設定
 	pDev->SetRenderState(D3DRS_STENCILREF, StencilRefValue);
@@ -158,6 +165,9 @@ void CItem::Draw()
 
 	// Xオブジェクトクラスの描画処理
 	CObject_X::Draw();
+
+	// 深度バッファへの書き込みを有効化
+	pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 }
 
 //============================================================================

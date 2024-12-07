@@ -95,21 +95,22 @@ void CBlock::Uninit()
 void CBlock::Update()
 {
 #if 0
-	// すぐにけせ
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	ImGui::Begin("Block Param");
-	static float fRotY = 0.0f;
-	if (ImGui::Button("--"))
-		fRotY += D3DX_PI * -0.1f;
-	ImGui::SameLine();
-	if (ImGui::Button("++"))
-		fRotY += D3DX_PI * 0.1f;
-	ImGui::SameLine();
-	ImGui::SliderFloat("Add RotY", &fRotY, -D3DX_PI, D3DX_PI);
-	Vec3 NewRot = GetRot();
-	NewRot.y = fRotY;
-	SetRot(NewRot);
-	ImGui::End();
+	if (ImGui::Begin("Block Param"))
+	{
+		static float fRotY = 0.0f;
+		if (ImGui::Button("--"))
+			fRotY += D3DX_PI * -0.1f;
+		ImGui::SameLine();
+		if (ImGui::Button("++"))
+			fRotY += D3DX_PI * 0.1f;
+		ImGui::SameLine();
+		ImGui::SliderFloat("Add RotY", &fRotY, -D3DX_PI, D3DX_PI);
+		Vec3 NewRot = GetRot();
+		NewRot.y = fRotY;
+		SetRot(NewRot);
+		ImGui::End();
+	}
 #endif
 
 	// 箱バウンディングに中心点・サイズ・向きをセット
@@ -123,11 +124,13 @@ void CBlock::Update()
 #if 0
 #ifdef _DEBUG
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	ImGui::Begin("Block Param");
-	ImGui::Text("Size::X %.2f:Y %.2f:Z %.2f", GetSize().x, GetSize().y, GetSize().z);
-	ImGui::Text("Rot:X %.2f:Y %.2f:Z %.2f", GetRot().x * (180 / D3DX_PI), GetRot().y * (180 / D3DX_PI), GetRot().z * (180 / D3DX_PI));
-	ImGui::Text("Pos:X %.2f:Y %.2f:Z %.2f", GetPos().x, GetPos().y, GetPos().z);
-	ImGui::End();
+	if (ImGui::Begin("Block Param"))
+	{
+		ImGui::Text("Size::X %.2f:Y %.2f:Z %.2f", GetSize().x, GetSize().y, GetSize().z);
+		ImGui::Text("Rot:X %.2f:Y %.2f:Z %.2f", GetRot().x * (180 / D3DX_PI), GetRot().y * (180 / D3DX_PI), GetRot().z * (180 / D3DX_PI));
+		ImGui::Text("Pos:X %.2f:Y %.2f:Z %.2f", GetPos().x, GetPos().y, GetPos().z);
+		ImGui::End();
+	}
 #endif // _DEBUG
 #endif
 }

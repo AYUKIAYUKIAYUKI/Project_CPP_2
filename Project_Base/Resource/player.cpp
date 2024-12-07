@@ -157,8 +157,8 @@ void CPlayer::Update()
 		ImGui::Text("PosTarget:X %.1f:Y %.1f:Z %.1f", GetPosTarget().x, GetPosTarget().y, GetPosTarget().z);
 		ImGui::Text("VelY:%.1f", GetVelY());
 		ImGui::Text("Life:%df", GetLife());
+		ImGui::End();
 	}
-	ImGui::End();
 #endif	// _DEBUG
 #endif
 }
