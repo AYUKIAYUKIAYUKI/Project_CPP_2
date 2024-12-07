@@ -5,11 +5,16 @@
 // 
 //============================================================================
 
+static int rEf = 0, fIrst = D3DCMP_ALWAYS;
+
 //****************************************************
 // インクルードファイル
 //****************************************************
 #include "object.h"
 #include "renderer.h"
+
+#include "manager.h"
+#include "mask_rectangle.h"
 
 //****************************************************
 // 静的メンバの初期化
@@ -283,6 +288,15 @@ void CObject::LateUpdateAll()
 			pObj = pNext;
 		}
 	}
+
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("stencil all"))
+	{
+		D3DCMP_GREATEREQUAL;
+		ImGui::InputInt("ref", &rEf);
+		ImGui::InputInt("first", &fIrst);
+		ImGui::End();
+	}
 }
 
 //============================================================================
@@ -301,24 +315,24 @@ void CObject::DrawAll()
 			// 次のオブジェクトのポインタをコピー
 			CObject* pNext = pObj->m_pNext;
 
-#if 1	// あああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+#if 1	// ステンシルバッファへの書き込み
 
 			// デバイスを取得
 			auto pDev = CRenderer::GetDeviece();
 
+			// ステンシル参照値を設定
+			pDev->SetRenderState(D3DRS_STENCILREF, rEf);
+
 			// ステンシルマスクを設定
 			pDev->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);
 
-			// ステンシル参照値を設定
-			pDev->SetRenderState(D3DRS_STENCILREF, 0x01);
-
 			// ステンシルバッファの比較方法を変更
-			pDev->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);
+			pDev->SetRenderState(D3DRS_STENCILFUNC, fIrst);
 
 			// ステンシルテストの結果に対してのふるまいを設定する
-			pDev->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILCAPS_KEEP);	// Zテスト・ステンシルテストに成功
-			pDev->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILCAPS_KEEP);	// Zテストのみ失敗
-			pDev->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILCAPS_KEEP);	// Zテスト・ステンシルテストに失敗
+			pDev->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテストに成功
+			pDev->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);	// Zテストのみ失敗
+			pDev->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテストに失敗
 
 #endif
 			// 描画処理
@@ -328,6 +342,33 @@ void CObject::DrawAll()
 			pObj = pNext;
 		}
 	}
+
+#if 1	// 画面を覆う描画
+	auto pDev = CRenderer::GetDeviece();
+
+	// ステンシル参照値を設定
+	pDev->SetRenderState(D3DRS_STENCILREF, 1);
+
+	// ステンシルマスクを設定
+	pDev->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);
+
+	// ステンシルバッファの比較方法を変更
+	pDev->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_EQUAL);
+
+	// Zバッファに書き込まない
+	pDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+
+	// ステンシルテストの結果に対してのふるまいを設定する (Zテストをしない)
+	pDev->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);		// (Zテスト・)ステンシルテストに成功
+	//pDev->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);	// Zテストのみ失敗
+	pDev->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// (Zテスト・)ステンシルテストに失敗
+
+	// マスクポリゴンの描画
+	CManager::GetManager()->GetMask_Rectangle()->Draw();
+
+	// Zバッファの書き込みを元に戻す
+	pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+#endif
 }
 
 //============================================================================

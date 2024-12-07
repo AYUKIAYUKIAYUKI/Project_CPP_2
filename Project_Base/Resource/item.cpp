@@ -5,6 +5,14 @@
 // 
 //============================================================================
 
+/* これはステンシルバッファの描画テスト用 */
+static int
+StencilRefValue = 0,			// ステンシル参照値
+StencilCmp = D3DCMP_EQUAL,		// ステンシル値の比較方法
+Pass = D3DSTENCILOP_KEEP,		// Zテスト・ステンシルテストに成功
+ZFail = D3DSTENCILOP_INCRSAT,	// Zテストのみ失敗
+Fail = D3DSTENCILOP_KEEP;		// Zテスト・ステンシルテストに失敗
+
 //****************************************************
 // インクルードファイル
 //****************************************************
@@ -13,6 +21,8 @@
 #include "field_manager.h"
 #include "player.h"
 #include "collision.h"
+
+#include "renderer.h"
 
 //****************************************************
 // usingディレクティブ
@@ -109,6 +119,20 @@ void CItem::Update()
 	ImGui::End();
 #endif // _DEBUG
 #endif
+
+#if 1
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("stencil"))
+	{
+		D3DCMP_GREATEREQUAL;
+		ImGui::InputInt("StencilRefValue", &StencilRefValue);
+		ImGui::InputInt("StencilCmp", &StencilCmp);
+		ImGui::InputInt("Pass", &Pass);
+		ImGui::InputInt("ZFail", &ZFail);
+		ImGui::InputInt("Fail", &Fail);
+		ImGui::End();
+	}
+#endif
 }
 
 //============================================================================
@@ -116,6 +140,22 @@ void CItem::Update()
 //============================================================================
 void CItem::Draw()
 {
+	auto pDev = CRenderer::GetDeviece();
+
+	// ステンシル参照値を設定
+	pDev->SetRenderState(D3DRS_STENCILREF, StencilRefValue);
+
+	// ステンシルマスクを設定
+	pDev->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);
+
+	// ステンシルバッファの比較方法を変更
+	pDev->SetRenderState(D3DRS_STENCILFUNC, StencilCmp);
+
+	// ステンシルテストの結果に対してのふるまいを設定する
+	pDev->SetRenderState(D3DRS_STENCILPASS, Pass);		// Zテスト・ステンシルテストに成功
+	pDev->SetRenderState(D3DRS_STENCILZFAIL, ZFail);	// Zテストのみ失敗
+	pDev->SetRenderState(D3DRS_STENCILFAIL, Fail);		// Zテスト・ステンシルテストに失敗
+
 	// Xオブジェクトクラスの描画処理
 	CObject_X::Draw();
 }

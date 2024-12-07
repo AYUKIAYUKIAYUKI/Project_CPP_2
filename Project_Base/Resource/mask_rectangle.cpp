@@ -156,7 +156,7 @@ void CMask_Rectangle::Draw()
 	pDev->SetFVF(FVF_VERTEX_2D);
 
 	// テクスチャの設定
-	pDev->SetTexture(0, m_pTex);
+	pDev->SetTexture(0, nullptr);
 
 	// ポリゴンの描画
 	pDev->DrawPrimitive(D3DPT_TRIANGLESTRIP,	// プリミティブの種類

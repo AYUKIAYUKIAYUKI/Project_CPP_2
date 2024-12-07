@@ -172,54 +172,7 @@ void CPlayer::Update()
 void CPlayer::Draw()
 {
 	// キャラクタークラスの描画処理
-	//CCharacter::Draw();
-
-#if 1	// ステンシルバッファにプレイヤーのシルエットを描画する
-
-	// デバイスを取得
-	auto pDev = CRenderer::GetDeviece();
-
-	// ステンシルマスクを設定
-	pDev->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);
-
-	// ステンシル参照値を設定
-	pDev->SetRenderState(D3DRS_STENCILREF, 0x01);
-
-	// ステンシルバッファの比較方法を変更
-	pDev->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_GREATEREQUAL);
-
-	// ステンシルテストの結果に対してのふるまいを設定する
-	pDev->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILCAPS_REPLACE);	// Zテスト・ステンシルテストに成功
-	pDev->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILCAPS_KEEP);		// Zテストのみ失敗
-	pDev->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILCAPS_KEEP);		// Zテスト・ステンシルテストに失敗
-
-	// キャラクタークラスの描画処理 (ステンシルバッファ)
 	CCharacter::Draw();
-
-	// ステンシルマスクを設定
-	pDev->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);
-
-	// ステンシル参照値を設定
-	pDev->SetRenderState(D3DRS_STENCILREF, 0x02);
-
-	// ステンシルバッファの比較方法を変更
-	pDev->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_LESSEQUAL);
-
-	// 四角形マスクの描画
-	CManager::GetManager()->GetMask_Rectangle()->Draw();
-
-#endif
-
-#if 0
-	for (DWORD i = 0; i < 10; ++i)
-	{
-		// ステートマネージャーの更新
-		CCharacter::Update();
-
-		// キャラクタークラスのクラスの描画処理
-		CCharacter::Draw();
-	}
-#endif
 }
 
 //============================================================================
