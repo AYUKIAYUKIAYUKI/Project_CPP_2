@@ -5,7 +5,16 @@
 // 
 //============================================================================
 
-static int rEf = 0, fIrst = D3DCMP_ALWAYS;
+/* これはステンシルバッファの描画テスト用 */
+namespace
+{
+	int
+	StencilRefValue = 0,			// ステンシル参照値
+	StencilCmp = D3DCMP_ALWAYS,		// ステンシル値の比較方法
+	Pass = D3DSTENCILOP_KEEP,		// Zテスト・ステンシルテストに成功
+	ZFail = D3DSTENCILOP_KEEP,		// Zテストのみ失敗
+	Fail = D3DSTENCILOP_KEEP;		// Zテスト・ステンシルテストに失敗
+}
 
 //****************************************************
 // インクルードファイル
@@ -289,14 +298,19 @@ void CObject::LateUpdateAll()
 		}
 	}
 
+#if 1	/* ステンシルテストの設定変更 */
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("stencil all"))
+	if (ImGui::Begin("Stencil - All Obect"))
 	{
 		D3DCMP_GREATEREQUAL;
-		ImGui::InputInt("ref", &rEf);
-		ImGui::InputInt("first", &fIrst);
+		ImGui::InputInt("StencilRefValue", &StencilRefValue);
+		ImGui::InputInt("StencilCmp", &StencilCmp);
+		ImGui::InputInt("Pass", &Pass);
+		ImGui::InputInt("ZFail", &ZFail);
+		ImGui::InputInt("Fail", &Fail);
 		ImGui::End();
 	}
+#endif
 }
 
 //============================================================================
@@ -304,6 +318,9 @@ void CObject::LateUpdateAll()
 //============================================================================
 void CObject::DrawAll()
 {
+	// デバイスを取得
+	auto pDev = CRenderer::GetDeviece();
+
 	for (int nCntPriority = 0; nCntPriority < static_cast<int>(LAYER::MAX); nCntPriority++)
 	{
 		// 先頭オブジェクトのポインタをコピー
@@ -315,26 +332,20 @@ void CObject::DrawAll()
 			// 次のオブジェクトのポインタをコピー
 			CObject* pNext = pObj->m_pNext;
 
-#if 1	// ステンシルバッファへの書き込み
-
-			// デバイスを取得
-			auto pDev = CRenderer::GetDeviece();
-
 			// ステンシル参照値を設定
-			pDev->SetRenderState(D3DRS_STENCILREF, rEf);
+			pDev->SetRenderState(D3DRS_STENCILREF, StencilRefValue);
 
 			// ステンシルマスクを設定
 			pDev->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);
 
 			// ステンシルバッファの比較方法を変更
-			pDev->SetRenderState(D3DRS_STENCILFUNC, fIrst);
+			pDev->SetRenderState(D3DRS_STENCILFUNC, StencilCmp);
 
 			// ステンシルテストの結果に対してのふるまいを設定する
-			pDev->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテストに成功
-			pDev->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);	// Zテストのみ失敗
-			pDev->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテストに失敗
+			pDev->SetRenderState(D3DRS_STENCILPASS, Pass);		// Zテスト・ステンシルテストに成功
+			pDev->SetRenderState(D3DRS_STENCILZFAIL, ZFail);	// Zテストのみ失敗
+			pDev->SetRenderState(D3DRS_STENCILFAIL, Fail);		// Zテスト・ステンシルテストに失敗
 
-#endif
 			// 描画処理
 			pObj->Draw();
 
@@ -343,8 +354,7 @@ void CObject::DrawAll()
 		}
 	}
 
-#if 1	// 画面を覆う描画
-	auto pDev = CRenderer::GetDeviece();
+#if 1	// 画面を覆うポリゴンの描画
 
 	// ステンシル参照値を設定
 	pDev->SetRenderState(D3DRS_STENCILREF, 1);

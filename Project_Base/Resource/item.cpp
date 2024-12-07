@@ -6,12 +6,15 @@
 //============================================================================
 
 /* これはステンシルバッファの描画テスト用 */
-static int
-StencilRefValue = 0,			// ステンシル参照値
-StencilCmp = D3DCMP_EQUAL,		// ステンシル値の比較方法
-Pass = D3DSTENCILOP_KEEP,		// Zテスト・ステンシルテストに成功
-ZFail = D3DSTENCILOP_INCRSAT,	// Zテストのみ失敗
-Fail = D3DSTENCILOP_KEEP;		// Zテスト・ステンシルテストに失敗
+namespace
+{
+	int
+	StencilRefValue = 0,			// ステンシル参照値
+	StencilCmp = D3DCMP_EQUAL,		// ステンシル値の比較方法
+	Pass = D3DSTENCILOP_KEEP,		// Zテスト・ステンシルテストに成功
+	ZFail = D3DSTENCILOP_INCRSAT,	// Zテストのみ失敗
+	Fail = D3DSTENCILOP_KEEP;		// Zテスト・ステンシルテストに失敗
+}
 
 //****************************************************
 // インクルードファイル
@@ -120,9 +123,9 @@ void CItem::Update()
 #endif // _DEBUG
 #endif
 
-#if 1
+#if 1	/* ステンシルテストの設定変更 */
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("stencil"))
+	if (ImGui::Begin("Sstencil - Only Item"))
 	{
 		D3DCMP_GREATEREQUAL;
 		ImGui::InputInt("StencilRefValue", &StencilRefValue);
