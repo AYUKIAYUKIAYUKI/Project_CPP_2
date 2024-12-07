@@ -30,8 +30,8 @@ namespace
 // 静的メンバの初期化
 //****************************************************
 int		 CObject::m_nNumAll = 0;								// オブジェクト総数
-CObject* CObject::m_pTop[static_cast<int>(LAYER::MAX)] = {};	// 先頭オブジェクトのポインタ
-CObject* CObject::m_pCur[static_cast<int>(LAYER::MAX)] = {};	// 終端オブジェクトのポインタ
+CObject* CObject::m_pTop[static_cast<WORD>(LAYER::MAX)] = {};	// 先頭オブジェクトのポインタ
+CObject* CObject::m_pCur[static_cast<WORD>(LAYER::MAX)] = {};	// 終端オブジェクトのポインタ
 
 //============================================================================
 // 
@@ -220,7 +220,7 @@ CObject* CObject::GetNext()
 //============================================================================
 void CObject::ReleaseAll()
 {
-	for (int nCntPriority = 0; nCntPriority < static_cast<int>(LAYER::MAX); nCntPriority++)
+	for (int nCntPriority = 0; nCntPriority < static_cast<WORD>(LAYER::MAX); nCntPriority++)
 	{
 		// 先頭オブジェクトのポインタをコピー
 		CObject* pObj = m_pTop[nCntPriority];
@@ -251,7 +251,7 @@ void CObject::UpdateAll()
 
 #endif	// _DEBUG
 
-	for (int nCntPriority = 0; nCntPriority < static_cast<int>(LAYER::MAX); nCntPriority++)
+	for (int nCntPriority = 0; nCntPriority < static_cast<WORD>(LAYER::MAX); nCntPriority++)
 	{
 		// 先頭オブジェクトのポインタをコピー
 		CObject* pObj = m_pTop[nCntPriority];
@@ -276,7 +276,7 @@ void CObject::UpdateAll()
 //============================================================================
 void CObject::LateUpdateAll()
 {
-	for (int nCntPriority = 0; nCntPriority < static_cast<int>(LAYER::MAX); nCntPriority++)
+	for (int nCntPriority = 0; nCntPriority < static_cast<WORD>(LAYER::MAX); nCntPriority++)
 	{
 		// 先頭オブジェクトのポインタをコピー
 		CObject* pObj = m_pTop[nCntPriority];
@@ -322,7 +322,10 @@ void CObject::DrawAll()
 	// デバイスを取得
 	auto pDev = CRenderer::GetDeviece();
 
-	for (int nCntPriority = 0; nCntPriority < static_cast<int>(LAYER::MAX); nCntPriority++)
+	// ステンシルバッファへの書き込みを有効化
+	pDev->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+
+	for (int nCntPriority = 0; nCntPriority < static_cast<WORD>(LAYER::MAX); nCntPriority++)
 	{
 		// 先頭オブジェクトのポインタをコピー
 		CObject* pObj = m_pTop[nCntPriority];
@@ -357,6 +360,9 @@ void CObject::DrawAll()
 	
 #if 1	// 画面を覆うポリゴンの描画
 
+	// Zバッファに書き込まない
+	pDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+
 	// ステンシル参照値を設定
 	pDev->SetRenderState(D3DRS_STENCILREF, 1);
 
@@ -366,9 +372,6 @@ void CObject::DrawAll()
 	// ステンシルバッファの比較方法を変更
 	pDev->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_EQUAL);
 
-	// Zバッファに書き込まない
-	pDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-
 	// ステンシルテストの結果に対してのふるまいを設定する (Zテストをしない)
 	pDev->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);		// (Zテスト・)ステンシルテストに成功
 	//pDev->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);	// Zテストのみ失敗
@@ -377,8 +380,11 @@ void CObject::DrawAll()
 	// マスクポリゴンの描画
 	CManager::GetManager()->GetMask_Rectangle()->Draw();
 
-	// Zバッファの書き込みを元に戻す
+	// Zバッファの書き込みを有効化
 	pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+
+	// ステンシルバッファへの書き込みを無効化
+	pDev->SetRenderState(D3DRS_STENCILENABLE, FALSE);
 #endif
 }
 
@@ -393,9 +399,9 @@ CObject* CObject::GetTopObject()
 //============================================================================
 // 先頭オブジェクトのポインタ取得
 //============================================================================
-CObject* CObject::GetTopObject(int nPriority)
+CObject* CObject::GetTopObject(WORD wPriority)
 {
-	return m_pTop[nPriority];
+	return m_pTop[wPriority];
 }
 
 //============================================================================
@@ -411,7 +417,7 @@ CObject* CObject::GetTopObject(LAYER Priority)
 //============================================================================
 CObject* CObject::FindSpecificObject(TYPE Type)
 {
-	for (int nCntPriority = 0; nCntPriority < static_cast<int>(LAYER::MAX); nCntPriority++)
+	for (int nCntPriority = 0; nCntPriority < static_cast<WORD>(LAYER::MAX); nCntPriority++)
 	{
 		// 先頭オブジェクトのポインタをコピー
 		CObject* pObj = m_pTop[nCntPriority];
@@ -441,7 +447,7 @@ int CObject::CountSpecificObject(TYPE Type)
 	// 数カウント用
 	int nCount = 0;
 
-	for (int nCntPriority = 0; nCntPriority < static_cast<int>(LAYER::MAX); nCntPriority++)
+	for (int nCntPriority = 0; nCntPriority < static_cast<WORD>(LAYER::MAX); nCntPriority++)
 	{
 		// 先頭オブジェクトのポインタをコピー
 		CObject* pObj = m_pTop[nCntPriority];

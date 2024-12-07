@@ -76,7 +76,7 @@ public:
 
 	// <static getter>
 	static CObject* GetTopObject();					// 先頭オブジェクトのポインタ取得
-	static CObject* GetTopObject(int nPriority);	// 先頭オブジェクトのポインタ取得
+	static CObject* GetTopObject(WORD wPriority);	// 先頭オブジェクトのポインタ取得
 	static CObject* GetTopObject(LAYER Priority);	// 先頭オブジェクトのポインタ取得
 	static CObject* FindSpecificObject(TYPE Type);	// 特定タイプのオブジェクト探す
 	static int		CountSpecificObject(TYPE Type);	// 特定タイプのオブジェクト数を取得
@@ -95,8 +95,8 @@ private:
 
 	// <static data>
 	static int		m_nNumAll;								// オブジェクト総数
-	static CObject* m_pTop[static_cast<int>(LAYER::MAX)];	// 先頭オブジェクトのポインタ
-	static CObject* m_pCur[static_cast<int>(LAYER::MAX)];	// 終端オブジェクトのポインタ
+	static CObject* m_pTop[static_cast<WORD>(LAYER::MAX)];	// 先頭オブジェクトのポインタ
+	static CObject* m_pCur[static_cast<WORD>(LAYER::MAX)];	// 終端オブジェクトのポインタ
 };
 
 //============================================================================

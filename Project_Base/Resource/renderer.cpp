@@ -62,9 +62,6 @@ void CRenderer::Draw()
 		1.0f,														// この値に大してデプスバッファをクリア
 		0);															// この値でステンシルバッファをクリア
 
-	// ステンシルバッファへの書き込みを有効化
-	m_pD3DDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-
 #else
 
 	// 画面バッファクリア
