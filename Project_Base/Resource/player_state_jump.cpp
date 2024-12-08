@@ -130,7 +130,7 @@ void CPlayer_State_Jump::To_Slash()
 		m_nCntSlashCast = CPlayer_State_Slash::MAX_SLASH_CAST;
 
 		// Œy‚­‚Ó‚í‚Á‚Æ•‚‚«ã‚ª‚é‚æ‚¤‚È‰Á‘¬“x‚ð‹­§”­¶
-		m_pCharacter->SetVelY(0.35f);
+		m_pCharacter->SetVelY(1.0f);
 
 		SetNextState(DBG_NEW CPlayer_State_Slash());
 	}

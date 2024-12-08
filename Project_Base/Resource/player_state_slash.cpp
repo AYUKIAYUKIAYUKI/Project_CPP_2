@@ -9,9 +9,11 @@
 // インクルードファイル
 //****************************************************
 #include "player_state_slash.h"
+#include "object_X.h"
 #include "player_state_default.h"
 #include "player_state_damage.h"
 #include "collision.h"
+#include "constellation.h"
 
 // フィールドサイズ取得用
 #include "field_manager.h"
@@ -37,10 +39,13 @@ using namespace abbr;
 //============================================================================
 CPlayer_State_Slash::CPlayer_State_Slash() :
 	CPlayer_State{},
-	m_nSlashDuration{ 0 },
 	m_SlashType{ SLASH_TYPE::LEFT },
+	m_pSlashModel{ CObject_X::Create(CX_Manager::TYPE::PLAHEAD) },
 	m_pBndSlash{ std::make_unique<CBounding_Sphere>() }
 {
+	// 斬撃モデルの座標を設定 (生成直後の座標で1f描画されてしまうため)
+	m_pSlashModel->SetPos({ 0.0f, -1000.0f, 0.0f });
+
 	// 斬撃のバウンディングのサイズを設定
 	m_pBndSlash->SetRadius(8.0f);
 
@@ -58,6 +63,9 @@ CPlayer_State_Slash::~CPlayer_State_Slash()
 	{
 		m_pBndSlash.reset();
 	}
+
+	// 斬撃モデルを破棄
+	m_pSlashModel->SetRelease();
 }
 
 //============================================================================
@@ -71,16 +79,30 @@ void CPlayer_State_Slash::Update()
 	// プレイヤーの向いている方向のベクトルを作成
 	Vec3 PlayerFacing =
 	{
-		-sinf(m_pCharacter->GetRot().y) * 15.0f,
-		0.0f,
-		-cosf(m_pCharacter->GetRot().y) * 15.0f
+		m_pCharacter->GetPos().x + -sinf(m_pCharacter->GetRot().y) * 15.0f,
+		m_pCharacter->GetPos().y,
+		m_pCharacter->GetPos().z + -cosf(m_pCharacter->GetRot().y) * 15.0f
 	};
 
+	// 斬撃モデルを回転
+	Vec3 NewRot = m_pSlashModel->GetRot();
+	NewRot.y += 1.0f;
+	m_pSlashModel->SetRot(NewRot);
+
+	// 斬撃モデルの座標を設定
+	m_pSlashModel->SetPos(PlayerFacing);
+
 	// 斬撃バウンディングの中心点を設定
-	m_pBndSlash->SetCenterPos(m_pCharacter->GetPos() + PlayerFacing);
+	m_pBndSlash->SetCenterPos(PlayerFacing);
+
+	// 星座エフェクトを発生
+	CConstellation::GenerateSpread(PlayerFacing);
 
 	// 衝突検出
 	SlashHitCheck();
+
+	// 重力加速
+	m_pCharacter->SetVelY(m_pCharacter->GetVelY() + CField_Manager::FIELD_GRAVITY * 0.25f);
 
 	// 斬撃モーションが停止したら
 	if (m_pCharacter->GetStopState())

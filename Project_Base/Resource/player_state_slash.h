@@ -15,6 +15,11 @@
 #include "bounding_sphere.h"
 
 //****************************************************
+// 前方宣言
+//****************************************************
+class CObject_X;
+
+//****************************************************
 // プレイヤー斬撃ステートクラス
 //****************************************************
 class CPlayer_State_Slash : public CPlayer_State
@@ -52,9 +57,9 @@ private:
 	bool SlashHitCheck();	// 斬撃当たり判定
 
 	// <data>
-	int									m_nSlashDuration;	// 継続期間
-	SLASH_TYPE							m_SlashType;		// 斬撃方向のタイプ
-	std::unique_ptr<CBounding_Sphere>	m_pBndSlash;		// 斬撃のバウンディング
+	SLASH_TYPE							m_SlashType;	// 斬撃方向のタイプ
+	CObject_X*							m_pSlashModel;	// 斬撃のモデル
+	std::unique_ptr<CBounding_Sphere>	m_pBndSlash;	// 斬撃のバウンディング
 	
 };
 
