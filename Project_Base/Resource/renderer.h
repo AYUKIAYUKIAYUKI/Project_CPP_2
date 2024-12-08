@@ -46,7 +46,7 @@ private:
 	static constexpr float FOG_SRART = 300.0f;
 
 	/// <summary> フォグの初期終点 </summary>
-	static constexpr float FOG_END = 4750.0f;
+	static constexpr float FOG_END = 2500.0f;
 
 	// <special function>
 	CRenderer();	// コンストラクタ

@@ -46,6 +46,7 @@ void CRenderer::Update()
 	// 全オブジェクト後更新処理
 	CObject::LateUpdateAll();
 
+#ifdef _DEBUG
 #if 1 // フォグの調整
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Fog Edit")) {
@@ -56,6 +57,7 @@ void CRenderer::Update()
 	m_pD3DDevice->SetRenderState(D3DRS_FOGSTART, *(DWORD*)(&m_fFogStart));	// 始点を設定
 	m_pD3DDevice->SetRenderState(D3DRS_FOGEND, *(DWORD*)(&m_fFogEnd));		// 終点を設定
 #endif
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -367,7 +369,7 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 	m_pD3DDevice->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);						// ステンシルマスクを設定
 	m_pD3DDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);								// フォグの有効化
 	m_pD3DDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_LINEAR);					// フォグモードの設定
-	m_pD3DDevice->SetRenderState(D3DRS_FOGCOLOR, D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));	// フォグカラーの設定
+	m_pD3DDevice->SetRenderState(D3DRS_FOGCOLOR, D3DXCOLOR(0.05f, 0.05f, 0.05f, 0.0f));	// フォグカラーの設定
 
 	// フォグの範囲設定
 	m_pD3DDevice->SetRenderState(D3DRS_FOGSTART, *(DWORD*)(&m_fFogStart));	// 始点を設定

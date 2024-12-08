@@ -327,7 +327,7 @@ void CTitle::UpdateButterfly()
 							m_pFakePlayer->SetNowMotion(3);
 
 						// フォグの範囲を変更
-						CRenderer::CorrectFogEnd(650.0f);
+						CRenderer::CorrectFogEnd(550.0f);
 					}
 				}
 				else

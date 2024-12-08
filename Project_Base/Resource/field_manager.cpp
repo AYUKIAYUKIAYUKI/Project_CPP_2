@@ -73,8 +73,10 @@ void CField_Manager::Update()
 	// 遷移を通知する
 	NotifyTransition();
 
+#ifdef _DEBUG
 	// デバッグ表示
 	PrintDebug();
+#endif // _DEBUG
 }
 
 //============================================================================
