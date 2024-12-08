@@ -243,7 +243,7 @@ CPlayer* CPlayer::Create()
 	pNewInstance->m_pBndCylinder->SetRadius(3.0f);
 
 	// ‚‚³‚ðÝ’è
-	pNewInstance->m_pBndCylinder->SetHeight(8.0f);
+	pNewInstance->m_pBndCylinder->SetHeight(8.5f);
 
 	return pNewInstance;
 }

@@ -27,10 +27,11 @@ using namespace abbr;
 //============================================================================
 CBounding_Box::CBounding_Box() :
 	CBounding_Volume{},
-	m_Size{ VEC3_INIT }
 #ifdef _DEBUG
 	m_Size{ VEC3_INIT },
 	m_pRenderBox{ nullptr }
+#else
+	m_Size{ VEC3_INIT }
 #endif // _DEBUG
 {
 #ifdef _DEBUG

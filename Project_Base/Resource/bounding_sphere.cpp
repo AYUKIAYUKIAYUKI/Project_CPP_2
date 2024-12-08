@@ -26,10 +26,11 @@ using namespace abbr;
 //============================================================================
 CBounding_Sphere::CBounding_Sphere() :
 	CBounding_Volume{},
-	m_fRadius{ 0.0f }
 #ifdef _DEBUG
 	m_fRadius{ 0.0f },
 	m_pRenderSphere{ nullptr }
+#else
+	m_fRadius{ 0.0f }
 #endif // _DEBUG
 {
 #ifdef _DEBUG
