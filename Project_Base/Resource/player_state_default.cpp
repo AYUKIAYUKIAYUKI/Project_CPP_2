@@ -58,79 +58,14 @@ void CPlayer_State_Default::Update()
 	CPlayer_State::Update();
 
 	// 操作
-	Control();
+	if (Control())
+		return;	// ステート変更があればここで終了
+
+	// モーションを変更
+	ChangeMotion();
 
 	// 重力加速
 	m_pCharacter->SetVelY(m_pCharacter->GetVelY() + CField_Manager::FIELD_GRAVITY);
-}
-
-//============================================================================
-// 
-// privateメンバ
-// 
-//============================================================================
-
-//============================================================================
-// 操作
-//============================================================================
-void CPlayer_State_Default::Control()
-{
-	// インプット系取得
-	CInputKeyboard* pKeyboard = CManager::GetKeyboard();	// キーボード
-	CInputMouse* pMouse = CManager::GetMouse();				// マウス
-	CInputPad* pPad = CManager::GetPad();					// パッド
-
-	// プレイヤーのパラメータを取得
-	float fDirectionTarget = m_pCharacter->GetDirectionTarget();	// 目標方角を取得
-	const float& fMoveSpeed = m_pCharacter->GetMoveSpeed();			// 移動速度を取得
-
-	// X軸の入力
-	if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::LEFT) || pPad->GetJoyStickL().X < 0)
-	{ // カメラから見て左へ
-
-		// 方角を変動
-		fDirectionTarget += -fMoveSpeed;
-
-		// 自動で目標座標を変動した方角に合わせる
-		m_pCharacter->AutoSetRotTarget();
-
-		// 移動入力時にのみ
-		if (pMouse->GetTrigger(1))
-		{
-			// ダッシュ状態へ
-			To_Dash();
-		}
-	}
-	else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT) || pPad->GetJoyStickL().X > 0)
-	{ // カメラから見て右へ
-		
-		 // 方角を変動
-		fDirectionTarget += fMoveSpeed;
-
-		// 自動で目標座標を変動した方角に合わせる
-		m_pCharacter->AutoSetRotTarget();
-
-		// 移動入力時にのみ
-		if (pMouse->GetTrigger(1))
-		{
-			// ダッシュ状態へ
-			To_Dash();
-		}
-	}
-
-	if (pMouse->GetTrigger(0))
-	{
-		// ジャンプ状態へ
-		To_Jump();
-	}
-	else if (pKeyboard->GetTrigger(DIK_W) || pKeyboard->GetTrigger(DIK_S))
-	{
-		// 斬撃状態へ
-		To_Slash();
-	}
-
-	// 目標方角を反映
-	m_pCharacter->SetDirectionTarget(fDirectionTarget);
 }
 
 //============================================================================
@@ -195,5 +130,109 @@ void CPlayer_State_Default::To_Damage()
 	if (GetNextState() == nullptr)
 	{
 		SetNextState(DBG_NEW CPlayer_State_Damage());
+	}
+}
+
+//============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
+
+//============================================================================
+// 操作
+//============================================================================
+bool CPlayer_State_Default::Control()
+{
+	// インプット系取得
+	CInputKeyboard* pKeyboard = CManager::GetKeyboard();	// キーボード
+	CInputMouse* pMouse = CManager::GetMouse();				// マウス
+	CInputPad* pPad = CManager::GetPad();					// パッド
+
+	// プレイヤーのパラメータを取得
+	float fDirectionTarget = m_pCharacter->GetDirectionTarget();	// 目標方角を取得
+	const float& fMoveSpeed = m_pCharacter->GetMoveSpeed();			// 移動速度を取得
+
+	// X軸の入力
+	if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::LEFT) || pPad->GetJoyStickL().X < 0)
+	{ // カメラから見て左へ
+
+		// 方角を変動
+		fDirectionTarget += -fMoveSpeed;
+
+		// 自動で目標座標を変動した方角に合わせる
+		m_pCharacter->AutoSetRotTarget();
+
+		// 移動入力時にのみ
+		if (pMouse->GetTrigger(1))
+		{
+			// ダッシュ状態へ
+			To_Dash();
+			return true;
+		}
+	}
+	else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::RIGHT) || pPad->GetJoyStickL().X > 0)
+	{ // カメラから見て右へ
+		
+		 // 方角を変動
+		fDirectionTarget += fMoveSpeed;
+
+		// 自動で目標座標を変動した方角に合わせる
+		m_pCharacter->AutoSetRotTarget();
+
+		// 移動入力時にのみ
+		if (pMouse->GetTrigger(1))
+		{
+			// ダッシュ状態へ
+			To_Dash();
+			return true;
+		}
+	}
+
+	if (pMouse->GetTrigger(0))
+	{
+		// ジャンプ状態へ
+		To_Jump();
+		return true;
+	}
+	else if (pKeyboard->GetTrigger(DIK_W) || pKeyboard->GetTrigger(DIK_S))
+	{
+		// 斬撃状態へ
+		To_Slash();
+		return true;
+	}
+
+	// 目標方角を反映
+	m_pCharacter->SetDirectionTarget(fDirectionTarget);
+
+	return false;
+}
+
+//============================================================================
+// モーションを変更
+//============================================================================
+void CPlayer_State_Default::ChangeMotion()
+{
+	// プレイヤーの目標座標へのベクトルを作成
+	Vec3 Norm = m_pCharacter->GetPosTarget() - m_pCharacter->GetPos();
+
+	// プレイヤーの移動時のノルムに応じてモーション分岐
+	if (Norm.x * Norm.x + Norm.z * Norm.z > 0.1f)
+	{
+		if (m_pCharacter->GetNowMotion() != 4)
+		{ // 移動モーションを再生していなければ
+
+			// 移動モーションを再生
+			m_pCharacter->SetNowMotion(4);
+		}
+	}
+	else
+	{
+		if (m_pCharacter->GetNowMotion() != 0)
+		{ // 通常モーションを再生していなければ
+
+			// 通常モーション
+			m_pCharacter->SetNowMotion(0);
+		}
 	}
 }

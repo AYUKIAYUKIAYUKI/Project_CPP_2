@@ -41,10 +41,16 @@ CPlayer_State_Slash::CPlayer_State_Slash() :
 	m_SlashType{ SLASH_TYPE::LEFT },
 	m_pBndSlash{ std::make_unique<CBounding_Sphere>() }
 {
-	// 斬撃のバウンディングのパラメータを設定
-	Vec3 Pos = m_pCharacter->GetPos();
-	m_pBndSlash->SetCenterPos(Pos);
-	m_pBndSlash->SetRadius(20.0f);
+	{ // 斬撃のバウンディングのパラメータを設定
+
+		// 中心点を設定
+		Vec3 Pos = m_pCharacter->GetPos();
+		m_pBndSlash->SetCenterPos(Pos);
+		m_pBndSlash->SetRadius(5.0f);
+	}
+
+	// 斬撃モーションを再生
+	m_pCharacter->SetNowMotion(5);
 }
 
 //============================================================================
@@ -70,13 +76,10 @@ void CPlayer_State_Slash::Update()
 	// 衝突検出
 	SlashHitCheck();
 
-	// 継続期間をカウントアップ
-	++m_nSlashDuration;
-
-	// 継続期間が最大に到達で
-	if (m_nSlashDuration >= MAX_SLASH_DURATION)
+	// 斬撃モーションが停止したら
+	if (m_pCharacter->GetStopState())
 	{
-		// 通常状態へ
+		// 通常モーションへ
 		To_Default();
 	}
 }

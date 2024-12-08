@@ -34,7 +34,8 @@ public:
 private:
 
 	// <function>
-	void Control();	// ‘€ì
+	bool Control();			// ‘€ì
+	void ChangeMotion();	// ƒ‚[ƒVƒ‡ƒ“‚ğ•ÏX
 };
 
 #endif	// _PLAYER_STATE_DEFAULT_

@@ -318,7 +318,7 @@ void CCamera::BranchViewMode()
 			m_RotTarget.y = atan2f(NegVec.x, NegVec.z);				// カメラの目標向きを作成した逆位置ベクトル方向に
 			utility::AdjustAngle(m_Rot.y, m_RotTarget.y);			// カメラ回転の角度の差を補正
 			m_fDistance += (200.0f - m_fDistance) * COEF_ADJUST;	// 間距離を固定
-			m_fAdjust += (25.0f - m_fAdjust) * COEF_ADJUST;			// 俯瞰度合いを固定
+			m_fAdjust += (15.0f - m_fAdjust) * COEF_ADJUST;			// 俯瞰度合いを固定
 		}
 	}
 	else

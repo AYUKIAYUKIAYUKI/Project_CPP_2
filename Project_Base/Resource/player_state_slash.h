@@ -47,9 +47,6 @@ public:
 
 private:
 
-	/// <summary> aŒ‚Œp‘±ŠúŠÔ </summary>
-	static constexpr int MAX_SLASH_DURATION = 10;
-
 	// <function>
 	void AdjustGravity();	// d—Í‚Ì•â³
 	bool SlashHitCheck();	// aŒ‚“–‚½‚è”»’è
