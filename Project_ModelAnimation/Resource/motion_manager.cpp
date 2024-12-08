@@ -501,29 +501,40 @@ void CMotion_Manager::EditOffset()
 void CMotion_Manager::EditMotion()
 {
 	// 選択モーション切り替え
+	bool bChange = false;
 	ImGui::Separator();
 	ImGui::BulletText("Select Motion");
 	if (ImGui::Button("FirstMotion"))
 	{
 		m_MotionSet->m_wNowMotion = 0;
+		bChange = true;
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("PrevMotion"))
 	{
 		m_MotionSet->m_wNowMotion > 0 ? m_MotionSet->m_wNowMotion-- : m_MotionSet->m_wNowMotion = m_MotionSet->m_wMaxMotion - 1;
+		bChange = true;
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("NextMotion"))
 	{
 		m_MotionSet->m_wNowMotion < m_MotionSet->m_wMaxMotion - 1 ? m_MotionSet->m_wNowMotion++ : m_MotionSet->m_wNowMotion = 0;
+		bChange = true;
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("LastMotion"))
 	{
 		m_MotionSet->m_wNowMotion = m_MotionSet->m_wMaxMotion - 1;
+		bChange = true;
 	}
 	ImGui::SameLine();
 	ImGui::Text("Select:%d", m_MotionSet->m_wNowMotion);
+
+	if (bChange)
+	{
+		m_MotionSet->m_wNowKey = 0;
+		m_MotionSet->m_wNowFrame = 0;
+	}
 
 	// 現在の再生キーが総キー数を超えないよう制限
 	if (m_MotionSet->m_wNowKey >= GetSelectMotion()->wMaxKey)
