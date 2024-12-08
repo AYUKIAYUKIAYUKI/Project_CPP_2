@@ -41,7 +41,9 @@ private:
 	// <data>
 	D3DXVECTOR3		m_Size;			// サイズ
 	D3DXVECTOR3		m_Rot;			// 向き
+#ifdef _DEBUG
 	CRender_Box*	m_pRenderBox;	// 箱表示
+#endif
 };
 
 #endif	// _BOUNDING_BOX_H_

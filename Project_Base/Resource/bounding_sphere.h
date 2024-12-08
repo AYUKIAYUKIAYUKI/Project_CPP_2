@@ -36,7 +36,9 @@ private:
 
 	// <data>
 	float			m_fRadius;			// ”¼Œa
+#ifdef _DEBUG
 	CRender_Sphere* m_pRenderSphere;	// ‹…•\Ž¦
+#endif
 };
 
 #endif	// _BOUNDING_SPHERE_H_

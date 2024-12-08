@@ -26,11 +26,16 @@ using namespace abbr;
 //============================================================================
 CBounding_Sphere::CBounding_Sphere() :
 	CBounding_Volume{},
+	m_fRadius{ 0.0f }
+#ifdef _DEBUG
 	m_fRadius{ 0.0f },
 	m_pRenderSphere{ nullptr }
+#endif // _DEBUG
 {
+#ifdef _DEBUG
 	// 球表示の生成
 	m_pRenderSphere = CRender_Sphere::Create();
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -38,12 +43,14 @@ CBounding_Sphere::CBounding_Sphere() :
 //============================================================================
 CBounding_Sphere::~CBounding_Sphere()
 {
+#ifdef _DEBUG
 	// 球表示を破棄予約
 	if (m_pRenderSphere != nullptr)
 	{
 		m_pRenderSphere->SetRelease();
 		m_pRenderSphere = nullptr;
 	}
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -54,8 +61,10 @@ void CBounding_Sphere::SetCenterPos(D3DXVECTOR3 Pos)
 	// バウンディング基底クラスの持つ中心点にセット
 	CBounding_Volume::SetCenterPos(Pos);
 
+#ifdef _DEBUG
 	// 球表示の持つシンクロ座標にセット
 	m_pRenderSphere->SetCenterSyncPos(Pos);
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -74,6 +83,8 @@ void CBounding_Sphere::SetRadius(float fRad)
 	// 自身の半径にセット
 	m_fRadius = fRad;
 
+#ifdef _DEBUG
 	// 球表示の持つシンクロ半径にセット
 	m_pRenderSphere->SetSyncRadius(fRad);
+#endif // _DEBUG
 }

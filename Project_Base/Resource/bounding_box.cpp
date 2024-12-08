@@ -27,11 +27,16 @@ using namespace abbr;
 //============================================================================
 CBounding_Box::CBounding_Box() :
 	CBounding_Volume{},
+	m_Size{ VEC3_INIT }
+#ifdef _DEBUG
 	m_Size{ VEC3_INIT },
 	m_pRenderBox{ nullptr }
+#endif // _DEBUG
 {
+#ifdef _DEBUG
 	// 箱表示を生成
 	m_pRenderBox = CRender_Box::Create();
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -39,12 +44,14 @@ CBounding_Box::CBounding_Box() :
 //============================================================================
 CBounding_Box::~CBounding_Box()
 {
+#ifdef _DEBUG
 	// 箱表示の破棄予約
 	if (m_pRenderBox != nullptr)
 	{
 		m_pRenderBox->SetRelease();
 		m_pRenderBox = nullptr;
 	}
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -55,8 +62,10 @@ void CBounding_Box::SetCenterPos(D3DXVECTOR3 Pos)
 	// バウンディング基底クラスの持つ中心点にセット
 	CBounding_Volume::SetCenterPos(Pos);
 
+#ifdef _DEBUG
 	// 箱表示の持つシンクロ座標にセット
 	m_pRenderBox->SetCenterSyncPos(Pos);
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -75,8 +84,10 @@ void CBounding_Box::SetSize(D3DXVECTOR3 Size)
 	// 自身のサイズにセット
 	m_Size = Size;
 
+#ifdef _DEBUG
 	// 箱表示の持つシンクロサイズにセット
 	m_pRenderBox->SetSyncSize(Size);
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -95,6 +106,8 @@ void CBounding_Box::SetRot(D3DXVECTOR3 Rot)
 	// 自身のサイズにセット
 	m_Rot = Rot;
 
+#ifdef _DEBUG
 	// 箱表示の持つシンクろ向きにセット
 	m_pRenderBox->SetSyncRot(Rot);
+#endif // _DEBUG
 }
