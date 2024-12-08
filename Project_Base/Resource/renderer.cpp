@@ -369,7 +369,7 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 	m_pD3DDevice->SetRenderState(D3DRS_STENCILMASK, 0x000000ff);						// ステンシルマスクを設定
 	m_pD3DDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);								// フォグの有効化
 	m_pD3DDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_LINEAR);					// フォグモードの設定
-	m_pD3DDevice->SetRenderState(D3DRS_FOGCOLOR, D3DXCOLOR(0.05f, 0.05f, 0.05f, 0.0f));	// フォグカラーの設定
+	m_pD3DDevice->SetRenderState(D3DRS_FOGCOLOR, D3DXCOLOR(0.02f, 0.02f, 0.02f, 0.0f));	// フォグカラーの設定
 
 	// フォグの範囲設定
 	m_pD3DDevice->SetRenderState(D3DRS_FOGSTART, *(DWORD*)(&m_fFogStart));	// 始点を設定
