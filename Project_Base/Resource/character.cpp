@@ -75,6 +75,8 @@ void CCharacter::Uninit()
 //============================================================================
 void CCharacter::Update()
 {
+	CheckFacingSide();
+
 	// 目標値への補正
 	CorrectToTarget();
 
@@ -95,6 +97,45 @@ void CCharacter::Draw()
 {
 	// モーションセットの描画処理
 	CMotion_Set::Draw();
+}
+
+//============================================================================
+// 左右どちらを向いているか判定
+//============================================================================
+bool CCharacter::CheckFacingSide()
+{
+	// キャラクターの向いている方向のベクトルを作成
+	Vec3 CharacterFacing =
+	{
+		-sinf(GetRot().y),
+		0.0f,
+		-cosf(GetRot().y)
+	};
+
+	// 原点からキャラクターのいる場所への方向ベクトルを作成
+	Vec3 CharacterPosVec = GetPos() - VEC3_INIT;
+	D3DXVec3Normalize(&CharacterPosVec, &CharacterPosVec);
+
+	// 原点からキャラクター向きへの方向ベクトルを作成
+	Vec3 FacingVec = CharacterFacing - VEC3_INIT;
+	D3DXVec3Normalize(&FacingVec, &FacingVec);
+
+	// 2本の方向ベクトルの外積を作成
+	float fCross = (CharacterPosVec.x * FacingVec.z) - (CharacterPosVec.z * FacingVec.x);
+
+#if 0 // 値確認用
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Test")) {
+		ImGui::Text("cross:%f", fCross);
+		ImGui::End();
+	}
+#endif
+
+	// 正負に応じて向いている方向の判定のみを返す
+	if (fCross < 0.0f)
+		return false;	// 左ならfalseを
+	else
+		return true;	// 右ならtrueを
 }
 
 //============================================================================
