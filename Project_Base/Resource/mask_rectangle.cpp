@@ -241,7 +241,7 @@ HRESULT CMask_Rectangle::CreateVtxBuff()
 		pVtx[wNumVtx].rhw = 1.0f;
 
 		// 頂点色の設定
-		pVtx[wNumVtx].col = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
+		pVtx[wNumVtx].col = D3DXCOLOR(0.9f, 0.8f, 0.4f, 0.4f);
 
 		// テクスチャ座標の設定
 		pVtx[wNumVtx].tex = VEC2_INIT;
