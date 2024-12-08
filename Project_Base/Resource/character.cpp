@@ -131,7 +131,7 @@ bool CCharacter::CheckFacingSide()
 	}
 #endif
 
-	// ³•‰‚É‰‚¶‚ÄŒü‚¢‚Ä‚¢‚é•ûŒü‚Ì”»’è‚Ì‚İ‚ğ•Ô‚·
+	// ŠOÏ‚Ì³•‰‚É‰‚¶‚ÄŒü‚¢‚Ä‚¢‚é•ûŒü‚Ì”»’è‚Ì‚İ‚ğ•Ô‚·
 	if (fCross < 0.0f)
 		return false;	// ¶‚È‚çfalse‚ğ
 	else
