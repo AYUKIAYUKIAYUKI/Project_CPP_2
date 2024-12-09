@@ -201,6 +201,7 @@ CEnemy* CEnemy::Create()
 //============================================================================
 void CEnemy::SetNextAction()
 {
+#ifdef _DEBUG
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Enemy")) {
 		Vec3 Scale = GetParentParts()->GetScale();
@@ -212,6 +213,7 @@ void CEnemy::SetNextAction()
 			SetDamage(-999);
 		ImGui::End();
 	}
+#endif // _DEBUG
 }
 
 //============================================================================
