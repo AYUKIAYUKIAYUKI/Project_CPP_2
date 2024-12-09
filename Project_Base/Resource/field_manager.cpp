@@ -16,6 +16,7 @@
 #include "motion_set.h"
 #include "object_HUD.h"
 #include "player.h"
+#include "enemy.h"
 #include "boss.h"
 #include "block.h"
 #include "life.h"
@@ -226,6 +227,10 @@ HRESULT CField_Manager::Init()
 {
 	// 扇形表示を生成
 	m_pRenderFan = CFan::Create();
+
+	// エネミーを生成
+	CEnemy* pEnemy = CEnemy::Create();
+	pEnemy->SetDirection(-D3DX_PI);
 
 	return S_OK;
 }

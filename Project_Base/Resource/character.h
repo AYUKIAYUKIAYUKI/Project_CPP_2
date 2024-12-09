@@ -73,7 +73,8 @@ protected:
 	void AdjustLife();		// 体力の調整
 
 	// <virtual function>
-	virtual void AutoSetPosTarget();	// 目標座標を方角から自動で設定
+	virtual void AdjustHeight();		// 高さを補正
+	virtual void AutoSetPosTarget();	// 座標を方角から自動で設定
 
 	// <setter>
 	void SetMotion(JSON Json);	// モーションをセット

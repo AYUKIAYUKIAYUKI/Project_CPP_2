@@ -49,7 +49,7 @@ public:
 	// <getter>
 	float GetRadius() const;								// 半径を取得
 	float GetHeight() const;								// 高さを取得
-	const CBounding_Cylinder* const GetBndCylinder() const;	// バウンディングシリンダーを取得
+	const CBounding_Cylinder* const GetBndCylinder() const;	// 円柱バウンディングを取得
 	const CPlayer_State* const GetNowState() const;			// 現在のステートを取得
 
 	// <static function>
@@ -58,11 +58,11 @@ public:
 private:
 
 	// <function>
-	void HitCheck();		// 当たり判定
-	void AdjustHeight();	// 高さを補正
+	void AdjustHeight() override;	// 高さを補正
+	void HitCheck();				// 当たり判定
 
 	// <data>
-	CBounding_Cylinder*	m_pBndCylinder;	// バウンディングシリンダー
+	CBounding_Cylinder*	m_pBndCylinder;	// 円柱バウンディング
 	CPlayer_State*		m_pState;		// ステート
 };
 

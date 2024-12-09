@@ -75,8 +75,6 @@ void CCharacter::Uninit()
 //============================================================================
 void CCharacter::Update()
 {
-	CheckFacingSide();
-
 	// 目標値への補正
 	CorrectToTarget();
 
@@ -284,6 +282,28 @@ void CCharacter::CorrectToTarget()
 	Vec3 NewPos = GetPos();
 	NewPos += (m_PosTarget - NewPos) * m_fCorrectCoef;
 	SetPos(NewPos);
+}
+
+//============================================================================
+// 高さを補正
+//============================================================================
+void CCharacter::AdjustHeight()
+{
+	// 目標座標をY軸の加速度分変動する
+	Vec3 NewPosTarget = GetPosTarget();
+	NewPosTarget.y += GetVelY();
+	SetPosTarget(NewPosTarget);
+
+	// 高さの目標に下限を設定
+	if (GetPosTarget().y < 0.0f)
+	{
+		// 目標座標を下限に固定
+		NewPosTarget.y = 0.0f;
+		SetPosTarget(NewPosTarget);
+
+		// Y軸方向の加速度を初期化
+		SetVelY(0.0f);
+	}
 }
 
 //============================================================================
