@@ -42,7 +42,7 @@ public:
 	static constexpr int MAX_SLASH_CAST = 25;
 
 	// <special function>
-	CPlayer_State_Slash();			// コンストラクタ
+	CPlayer_State_Slash();				// コンストラクタ
 	~CPlayer_State_Slash() override;	// デストラクタ
 
 	// <function>

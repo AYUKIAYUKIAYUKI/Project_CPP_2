@@ -12,15 +12,12 @@
 #include "object_X.h"
 #include "player_state_default.h"
 #include "player_state_damage.h"
+#include "manager.h"
 #include "collision.h"
-#include "constellation.h"
-
-// フィールドサイズ取得用
 #include "field_manager.h"
 
-// インプット取得用
-#include "manager.h"
-
+#include "constellation.h"
+#include "enemy.h"
 #include "boss.h"
 
 //****************************************************
@@ -153,46 +150,43 @@ void CPlayer_State_Slash::AdjustGravity()
 //============================================================================
 bool CPlayer_State_Slash::SlashHitCheck()
 {
-#if 0
-	// ミドルオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(static_cast<int>(CObject::LAYER::MIDDLE));
+	// デフォルトオブジェクトを取得
+	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
 
+	// オブジェクトリスト検索
 	while (pObj != nullptr)
 	{
-		// キャラクタークラスにダウンキャスト
-		CCharacter* pCharacter = CObject::DownCast<CCharacter>(pObj);
+		// オブジェクトのタイプに応じて処理分岐
+		if (pObj->GetType() == CObject::TYPE::ENEMY)
+		{ // エネミータイプなら
 
-		// キャスト失敗で
-		if (!pCharacter)
-		{
-			pObj = pObj->GetNext();
-			continue;
+			// エネミークラスにキャスト
+			CEnemy* pEnemy = CObject::DownCast<CEnemy>(pObj);
+
+			// 斬撃バウンディングをコピー
+			const CBounding_Sphere* pSlash = m_pBndSlash.get();
+
+			// 攻撃とエネミーでの当たり判定
+			if (collision::HitCylinderToSphere(pEnemy->GetBndCylinder(), pSlash))
+				pEnemy->SetDamage(-1);	// 衝突でダメージ
+		}
+		else if (pObj->GetType() == CObject::TYPE::BOSS)
+		{ // ボスタイプなら
+
+			// ボスクラスにキャスト
+			CBoss* pBoss = CObject::DownCast<CBoss>(pObj);
+
+			// 斬撃バウンディングをコピー
+			const CBounding_Sphere* pSlash = m_pBndSlash.get();
+
+			// 攻撃とボスでの当たり判定
+			if (collision::HitCylinderToSphere(pBoss->GetBndCylinder(), pSlash))
+				pBoss->SetDamage(-1);	// 衝突でダメージ
 		}
 
-		// 攻撃と敵キャラクターの当たり判定
-
-		// ダメージを与える
-		pCharacter->SetDamage(-1);
-
+		// 次のオブジェクトへ
 		pObj = pObj->GetNext();
 	}
-#else // 現段階のみ
-
-	// ボスが存在していなければこのメソッドを無視
-	if (!CObject::FindSpecificObject(CObject::TYPE::BOSS))
-		return false;
-
-	// ボスの円柱バウンディングを取得
-	CBoss* pBoss = utility::DownCast<CBoss, CObject>(CObject::FindSpecificObject(CObject::TYPE::BOSS));
-
-	// 斬撃バウンディングをコピー
-	const CBounding_Sphere* pOther = m_pBndSlash.get();
-
-	// 斬撃バウンディングとボスの円柱バウンディングで当たり判定
-	if (collision::HitCylinderToSphere(pBoss->GetBndCylinder(), pOther))
-		pBoss->SetDamage(-1);
-
-#endif
 
 	return false;
 }

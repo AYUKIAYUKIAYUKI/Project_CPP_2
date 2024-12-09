@@ -401,6 +401,7 @@ void CEnemy::GoBack()
 //============================================================================
 void CEnemy::DeadEnd()
 {
+#if 0
 	// èkè¨
 	Vec3 Scale = GetParentParts()->GetScale();
 	Scale.y += -0.1f;
@@ -418,6 +419,27 @@ void CEnemy::DeadEnd()
 
 	// èkè¨ÇµÇŸÇ∆ÇÒÇ«è¡Ç¶ÇΩÇÁ
 	if (Scale.x * Scale.x + Scale.y * Scale.y + Scale.z * Scale.z < 1.0f)
+	{
+		// îjä¸ó\ñÒ
+		SetRelease();
+	}
+#endif
+
+	// âÒì]
+	Vec3 Rot = GetRot();
+	Rot.y += 2.0f;
+	SetRot(Rot);
+
+	// è„è∏
+	Vec3 Pos = GetPos();
+	Pos.y += 2.0f;
+	SetPos(Pos);
+
+	// çsìÆÉLÉÉÉXÉgÉJÉEÉìÉgÇÉCÉìÉNÉäÉÅÉìÉg
+	++m_nCntActionCast;
+
+	// 1ïbåoâﬂÇ≈
+	if (m_nCntActionCast > 60)
 	{
 		// îjä¸ó\ñÒ
 		SetRelease();
