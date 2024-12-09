@@ -308,9 +308,9 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 
 	// デバイスのプレゼンテーションパラメータの設定
 	ZeroMemory(&d3dpp, sizeof(d3dpp));			// パラメータのゼロクリア
-#if 0
-	d3dpp.BackBufferWidth = SCREEN_WIDTH;		// ゲームサイズ(幅)
-	d3dpp.BackBufferHeight = SCREEN_HEIGHT;		// ゲームサイズ(高さ)
+#if 1
+	d3dpp.BackBufferWidth = 1536;	// ゲームサイズ(幅)
+	d3dpp.BackBufferHeight = 864;	// ゲームサイズ(高さ)
 #else
 	d3dpp.BackBufferWidth = GetSystemMetrics(SM_CXSCREEN);	// ゲームサイズ(幅)
 	d3dpp.BackBufferHeight = GetSystemMetrics(SM_CYSCREEN);	// ゲームサイズ(高さ)
