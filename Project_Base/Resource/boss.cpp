@@ -213,7 +213,7 @@ CBoss* CBoss::Create()
 	pNewInstance->SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\pumpkin_motion.json"));
 
 	// ”¼Œa‚ðÝ’è
-	pNewInstance->m_pBndCylinder->SetRadius(100.0f);
+	pNewInstance->m_pBndCylinder->SetRadius(115.0f);
 
 	// ‚‚³‚ðÝ’è
 	pNewInstance->m_pBndCylinder->SetHeight(60.0f);
