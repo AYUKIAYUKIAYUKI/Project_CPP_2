@@ -34,8 +34,8 @@ public:
 	void	Draw() override;	// 描画処理
 
 	// <setter>
-	void SetRotSync(D3DXVECTOR3 Rot);	// シンクロ向きの設定
-	void SetPosSync(D3DXVECTOR3 Pos);	// シンクロ座標の設定
+	void SetSyncRot(D3DXVECTOR3 Rot);	// シンクロ向きの設定
+	void SetSyncPos(D3DXVECTOR3 Pos);	// シンクロ座標の設定
 	
 	// <getter/setter>
 	const CObject_Parts *const GetParent() const;	// 親パーツのポインタ取得

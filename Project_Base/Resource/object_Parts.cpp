@@ -163,7 +163,7 @@ void CObject_Parts::Draw()
 //============================================================================
 // シンクロ向きの設定
 //============================================================================
-void CObject_Parts::SetRotSync(D3DXVECTOR3 Rot)
+void CObject_Parts::SetSyncRot(D3DXVECTOR3 Rot)
 {
 	m_RotSync = Rot;
 }
@@ -171,7 +171,7 @@ void CObject_Parts::SetRotSync(D3DXVECTOR3 Rot)
 //============================================================================
 // シンクロ座標の設定
 //============================================================================
-void CObject_Parts::SetPosSync(D3DXVECTOR3 Pos)
+void CObject_Parts::SetSyncPos(D3DXVECTOR3 Pos)
 {
 	m_PosSync = Pos;
 }

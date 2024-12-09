@@ -12,6 +12,7 @@
 #include "bounding_cylinder.h"
 
 #include "collision.h"
+#include "object_parts.h"
 #include "player.h"
 #include "player_state_damage.h"
 #include "block.h"
@@ -202,7 +203,13 @@ void CEnemy::SetNextAction()
 {
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Enemy")) {
+		Vec3 Scale = GetParentParts()->GetScale();
+		ImGui::Text("x:%.1f", Scale.x);
+		ImGui::Text("y:%.1f", Scale.y);
+		ImGui::Text("z:%.1f", Scale.z);
 		ImGui::Text("%d", m_ActionType);
+		if (ImGui::Button("KILL"))
+			SetDamage(-999);
 		ImGui::End();
 	}
 }
@@ -394,7 +401,27 @@ void CEnemy::GoBack()
 //============================================================================
 void CEnemy::DeadEnd()
 {
+	// èkè¨
+	Vec3 Scale = GetParentParts()->GetScale();
+	Scale.y += -0.1f;
+	GetParentParts()->SetScale(Scale);
 
+	// âÒì]
+	Vec3 Rot = GetRot();
+	Rot.y += 2.0f;
+	SetRot(Rot);
+
+	// è„è∏
+	Vec3 Pos = GetPos();
+	Pos.y += 1.0f;
+	SetPos(Pos);
+
+	// èkè¨ÇµÇŸÇ∆ÇÒÇ«è¡Ç¶ÇΩÇÁ
+	if (Scale.x * Scale.x + Scale.y * Scale.y + Scale.z * Scale.z < 1.0f)
+	{
+		// îjä¸ó\ñÒ
+		SetRelease();
+	}
 }
 
 //============================================================================

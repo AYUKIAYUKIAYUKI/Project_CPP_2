@@ -81,8 +81,9 @@ void CCharacter::Update()
 	// 体力の調整
 	AdjustLife();
 
-	// シンクロ向き・座標を設定
-	SetRotAndPosSync(GetRot(), GetPos());
+	// シンクロパラメータを設定
+	SetSyncRot(GetRot());
+	SetSyncPos(GetPos());
 
 	// モーションセットの更新処理
 	CMotion_Set::Update();
@@ -175,7 +176,6 @@ void CCharacter::SetDirectionTarget(float fDirection)
 {
 	m_fDirectionTarget = fDirection;
 }
-
 
 //============================================================================
 // 移動速度を取得

@@ -117,8 +117,8 @@ void CMotion_Set::Update()
 	Animation();
 
 	// 向き・座標の情報をパーツにシンクロさせる
-	SetRotSync(m_Rot);
-	SetPosSync(m_Pos);
+	SetSyncRot(m_Rot);
+	SetSyncPos(m_Pos);
 }
 
 //============================================================================
@@ -132,29 +132,19 @@ void CMotion_Set::Draw()
 //============================================================================
 // シンクロ向きを反映
 //============================================================================
-void CMotion_Set::SetRotSync(D3DXVECTOR3 Rot)
+void CMotion_Set::SetSyncRot(D3DXVECTOR3 Rot)
 {
 	// シンクロ向きを親パーツに反映
-	m_pMostParent->SetRotSync(Rot);
+	m_pMostParent->SetSyncRot(Rot);
 }
 
 //============================================================================
 // シンクロ座標を反映
 //============================================================================
-void CMotion_Set::SetPosSync(D3DXVECTOR3 Pos)
+void CMotion_Set::SetSyncPos(D3DXVECTOR3 Pos)
 {
 	// シンクロ座標を親パーツに反映
-	m_pMostParent->SetPosSync(Pos);
-}
-
-//============================================================================
-// シンクロ向き・座標を反映
-//============================================================================
-void CMotion_Set::SetRotAndPosSync(D3DXVECTOR3 Rot, D3DXVECTOR3 Pos)
-{
-	// シンクロ向き・座標を親パーツに反映
-	m_pMostParent->SetRotSync(Rot);
-	m_pMostParent->SetPosSync(Pos);
+	m_pMostParent->SetSyncPos(Pos);
 }
 
 //============================================================================

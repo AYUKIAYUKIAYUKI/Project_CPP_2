@@ -66,9 +66,8 @@ public:
 	void	Draw() override;	// 描画処理
 
 	// <setter>
-	void SetRotSync(D3DXVECTOR3 Rot);							// シンクロ向きを設定
-	void SetPosSync(D3DXVECTOR3 Pos);							// シンクロ座標を設定
-	void SetRotAndPosSync(D3DXVECTOR3 Rot, D3DXVECTOR3 Pos);	// シンクロ向き・座標を設定
+	void SetSyncRot(D3DXVECTOR3 Rot);	// シンクロ向きを設定
+	void SetSyncPos(D3DXVECTOR3 Pos);	// シンクロ座標を設定
 
 	// <getter/setter>
 	D3DXVECTOR3 GetRot() const;		// 向きを取得
