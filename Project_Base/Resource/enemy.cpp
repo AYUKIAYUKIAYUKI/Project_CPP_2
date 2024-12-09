@@ -340,11 +340,13 @@ bool CEnemy::StopBlockSide()
 			// ブロックと座標の距離を出す
 			Vec3 Norm = pBlock->GetPos() - GetPos();
 
+#ifdef _DEBUG
 			ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 			if (ImGui::Begin("Test")) {
 				ImGui::Text("Y:%f", Norm.y * Norm.y);
 				ImGui::End();
 			}
+#endif // _DEBUG
 
 			// 高さが同じくらい、かつある程度隣接しているブロックがあれば引き下がる
 			if (Norm.y * Norm.y < 200.0f &&
