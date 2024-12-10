@@ -237,7 +237,7 @@ CPlayer* CPlayer::Create()
 	pNewInstance->Init();
 
 	// モーションをセット
-	pNewInstance->SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\player_motion.json"));
+	pNewInstance->SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\PLAYER\\player_motion.json"));
 
 	// 半径を設定
 	pNewInstance->m_pBndCylinder->SetRadius(3.0f);
@@ -281,13 +281,6 @@ void CPlayer::AdjustHeight()
 //============================================================================
 void CPlayer::HitCheck()
 {
-	{
-#if SHOW_NORMALIZED_POSITION_HITCHECK
-		static CObject_X* TESTTEST = CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\testtest.json"));
-		static CObject_X* ててて = CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ててて.json"));
-#endif	// _SHOW_NORMALIZED_POSITION_HITCHECK_
-	}
-
 	// 衝突の有無を記録
 	bool bDetect = false;
 

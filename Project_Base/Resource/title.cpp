@@ -142,8 +142,8 @@ HRESULT CTitle::Init()
 		CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\around.json"));
 
 		// 蝶
-		m_pButterfly = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\butterfly_motion.json"));
-		auto ButterflyParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\butterfly.json");
+		m_pButterfly = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BUTTERFLY\\butterfly_motion.json"));
+		auto ButterflyParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BUTTERFLY\\butterfly.json");
 		m_pButterfly->SetRot(utility::JsonConvertToVec3(ButterflyParam["Rot"]));
 		m_pButterfly->SetPos(utility::JsonConvertToVec3(ButterflyParam["Pos"]));
 		m_pButterfly->SetNowMotion(1);
@@ -316,7 +316,7 @@ void CTitle::UpdateButterfly()
 					{ // 蝶が消えて、フェイクプレイヤーが未生成なら
 
 						// フェイクプレイヤーの生成
-						m_pFakePlayer = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\player_motion.json"));
+						m_pFakePlayer = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\PLAYER\\player_motion.json"));
 						m_pFakePlayer->SetNowMotion(2);
 					}
 					else if (m_pFakePlayer)

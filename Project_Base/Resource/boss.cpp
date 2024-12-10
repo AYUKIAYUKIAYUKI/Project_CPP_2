@@ -210,7 +210,7 @@ CBoss* CBoss::Create()
 	pNewInstance->Init();
 
 	// モーションをセット
-	pNewInstance->SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\pumpkin_motion.json"));
+	pNewInstance->SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BOSS\\pumpkin_motion.json"));
 
 	// 半径を設定
 	pNewInstance->m_pBndCylinder->SetRadius(115.0f);
