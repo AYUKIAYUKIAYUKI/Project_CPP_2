@@ -39,9 +39,18 @@ CMotion_Manager* CMotion_Manager::m_pMotionManager = nullptr;	// ƒ‚[ƒVƒ‡ƒ“ƒ}ƒl
 //============================================================================
 void CMotion_Manager::Update()
 {
+	// ‰‰ñƒCƒ“ƒ|[ƒg
+	if (!m_bImport)
+	{
+		if (Import())
+			m_bImport = true;
+
+		return;
+	}
+
 	// ƒCƒ“ƒ|[ƒg
 	if (Import())
-		return;	// ƒCƒ“ƒ|[ƒg’†XV‚µ‚È‚¢
+		return;	// ƒCƒ“ƒ|[ƒgXV‚µ‚È‚¢
 
 	// ƒEƒBƒ“ƒhƒE‚ğ•\¦
 	ImVec2 Rect = { 600, 975 };
@@ -179,11 +188,13 @@ CMotion_Manager::~CMotion_Manager()
 //============================================================================
 HRESULT CMotion_Manager::Init()
 {
+#if 0
 	// ƒWƒFƒCƒ\ƒ“ƒf[ƒ^‚ğæ“¾
 	m_Json = utility::OpenJsonFile("Data\\JSON\\motion_export.json");
 
 	// ƒ‚[ƒVƒ‡ƒ“ƒZƒbƒg‚ğ¶¬
 	m_MotionSet = CMotion_Set::Create(m_Json);
+#endif
 
 	// ‘I‘ğƒp[ƒc‚ğƒAƒs[ƒ‹
 	m_bPartsAppeal = true;
@@ -248,7 +259,7 @@ void CMotion_Manager::PrintDebug()
 	// ƒEƒBƒ“ƒhƒE‚ğ•\¦
 	ImVec2 Rect = { 500, 400 };
 	ImGui::SetNextWindowSize(Rect);
-	ImGui::SetNextWindowPos({ 50, 550 });
+	ImGui::SetNextWindowPos({ 50, 610 });
 	ImGui::Begin("MotionManager Infomation");
 	ImGui::Text("MaxParts:%d", m_MotionSet->m_wMaxParts);
 	ImGui::SameLine();
@@ -277,13 +288,14 @@ void CMotion_Manager::PrintDebug()
 bool CMotion_Manager::Import()
 {
 	// ƒEƒBƒ“ƒhƒE‚ğ•\¦
-	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("Change Set"))
-	{
+	ImVec2 Rect = { 600, 80 };
+	ImGui::SetNextWindowSize(Rect);
+	ImGui::SetNextWindowPos({ 50, 50 });
+	if (ImGui::Begin("Import Motion Set"))
+	{		
 		static char FilePath[256] = "";
-		ImGui::InputText("a", FilePath, 256);
-		
-		if (ImGui::Button("Import"))
+
+		if (ImGui::Button("Done"))
 		{
 			// Œ»İ‚Ìƒ‚[ƒVƒ‡ƒ“ƒZƒbƒg‚ğ”jŠü
 			Uninit();
@@ -299,6 +311,9 @@ bool CMotion_Manager::Import()
 			return true;
 		}
 		
+		ImGui::SameLine();
+		ImGui::InputText("##", FilePath, 256);
+
 		ImGui::End();
 	}
 
@@ -443,7 +458,7 @@ void CMotion_Manager::EditOffset()
 	// ƒEƒBƒ“ƒhƒE‚ğ¶¬
 	ImVec2 Rect = { 600, 450 };
 	ImGui::SetNextWindowSize(Rect);
-	ImGui::SetNextWindowPos({ 50, 50 });
+	ImGui::SetNextWindowPos({ 50, 145 });
 	if (ImGui::Begin("Parts Offset"))
 	{
 		// kÚƒIƒtƒZƒbƒg‚ğ•Ï“®

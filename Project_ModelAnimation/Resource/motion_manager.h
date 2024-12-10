@@ -84,4 +84,4 @@ private:
 	static CMotion_Manager* m_pMotionManager;	// モーションマネージャーの本体
 };
 
-#endif // _X_MANAGER_H_
+#endif // _MOTION_MANAGER_H_
