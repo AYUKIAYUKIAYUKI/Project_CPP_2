@@ -81,6 +81,9 @@ void CMonster::Update()
 	// 行動分岐
 	BranchAction();
 
+	// 方角に座標を合わせる
+	AutoSetPosTarget();
+
 	// エネミークラスの更新処理
 	CEnemy::Update();
 }

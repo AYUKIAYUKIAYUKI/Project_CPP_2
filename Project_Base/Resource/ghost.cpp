@@ -240,7 +240,7 @@ void CGhost::Fly()
 	Vec3 Norm = pPlayer->GetPos() - GetPos();
 
 	// プレイヤーから遠ければ
-	if (Norm.x * Norm.x + Norm.y * Norm.y + Norm.z * Norm.z > 6000.0f)
+	if (Norm.x * Norm.x + Norm.y * Norm.y + Norm.z * Norm.z > 8000.0f)
 	{
 		// アクションタイプを漂うに変更
 		m_ActionType = ACTION::HOLD;
@@ -256,7 +256,7 @@ void CGhost::Fly()
 	Vec3 fDifference = pPlayer->GetPos() - Pos;
 
 	// 差を埋めていく
-	Pos += fDifference * 0.9f;
+	Pos += fDifference * 0.5f;
 
 	// 目標座標を設定
 	SetPosTarget(Pos);

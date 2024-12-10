@@ -1,7 +1,7 @@
 {
-  "Coef": 0.01,
+  "Coef": 0.025,
   "Speed": 0.002,
   "Life": 1,
-  "Radius": 3.0,
-  "Height": 3.0
+  "Radius": 5.0,
+  "Height": 6.0
 }

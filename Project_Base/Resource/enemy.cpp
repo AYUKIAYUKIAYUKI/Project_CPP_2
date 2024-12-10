@@ -85,9 +85,6 @@ void CEnemy::Update()
 	// ‚‚³‚Ì•â³
 	AdjustHeight();
 
-	// •ûŠp‚ÉÀ•W‚ð‡‚í‚¹‚é
-	AutoSetPosTarget();
-
 	// “–‚½‚è”»’è‚Ì’†S“_‚ðÝ’è
 	m_pBndCylinder->SetCenterPos(GetPos());
 

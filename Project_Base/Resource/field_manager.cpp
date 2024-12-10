@@ -231,6 +231,13 @@ HRESULT CField_Manager::Init()
 	// エネミーを生成
 	CEnemy* pEnemy = CGhost::Create();
 	pEnemy->SetDirection(-D3DX_PI);
+	Vec3 PosTarget = {
+		cosf(-D3DX_PI) * 300.0f,
+		0.0f,
+		sinf(D3DX_PI) * 300.0f,
+	};
+	pEnemy->SetPos(PosTarget);
+	pEnemy->SetPosTarget(PosTarget);
 
 	return S_OK;
 }
