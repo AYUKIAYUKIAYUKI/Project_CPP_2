@@ -30,6 +30,7 @@
 		"Data\\MODEL\\CHARACTER\\PUMPKIN\\pumpkin.x",
 		"Data\\MODEL\\side0.x",
 		"Data\\MODEL\\side1.x",
-		"Data\\MODEL\\floor.x"
+		"Data\\MODEL\\floor.x",
+		"Data\\MODEL\\CHARACTER\\ENEMY\\ghost.x"
 	]
 }

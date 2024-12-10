@@ -51,6 +51,7 @@ public:
 		SIDE0,
 		SIDE1,
 		FLOOR,
+		GHOST,		// ‚¨‚Î‚¯
 		MAX
 	};
 
