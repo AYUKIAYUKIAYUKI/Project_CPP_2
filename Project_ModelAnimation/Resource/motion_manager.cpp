@@ -40,10 +40,10 @@ CMotion_Manager* CMotion_Manager::m_pMotionManager = nullptr;	// ÉÇÅ[ÉVÉáÉìÉ}ÉlÅ
 void CMotion_Manager::Update()
 {
 	// èââÒÉCÉìÉ|Å[Ég
-	if (!m_bImport)
+	if (!m_bInitImport)
 	{
 		if (Import())
-			m_bImport = true;
+			m_bInitImport = true;
 
 		return;
 	}
@@ -162,7 +162,8 @@ CMotion_Manager* CMotion_Manager::GetInstance()
 // ÉRÉìÉXÉgÉâÉNÉ^
 //============================================================================
 CMotion_Manager::CMotion_Manager() :
-	m_bImport{ false },
+	m_bInitImport{ false },
+	m_NowSetFileName{},
 	m_Json{},
 	m_MotionSet{ nullptr },
 	m_wSelectParts{ 0 },
@@ -303,6 +304,9 @@ bool CMotion_Manager::Import()
 			// ÉWÉFÉCÉ\ÉìÉfÅ[É^ÇéÊìæ
 			std::string Copy = FilePath;
 			m_Json = utility::OpenJsonFile("Data\\JSON\\EXPORT\\" + Copy + ".json");
+
+			// ÉtÉ@ÉCÉãñºÇÉRÉsÅ[
+			m_NowSetFileName = Copy;
 
 			// ÉÇÅ[ÉVÉáÉìÉZÉbÉgÇê∂ê¨
 			m_MotionSet = CMotion_Set::Create(m_Json);
@@ -1068,7 +1072,7 @@ void CMotion_Manager::Reset()
 		m_MotionSet->Release();
 
 		// ë¶çƒê∂ê¨
-		m_MotionSet = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\motion_export.json"));
+		m_MotionSet = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\EXPORT\\" + m_NowSetFileName + ".json"));
 	}
 }
 

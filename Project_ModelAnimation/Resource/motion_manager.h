@@ -70,7 +70,8 @@ private:
 	CMotion_Set::Key* const GetSelectKey() const;		// 選択中のキーのポインタを取得
 
 	// <data>
-	bool			  m_bImport;		// インポート
+	bool			  m_bInitImport;	// 初回インポート
+	std::string		  m_NowSetFileName;	// 展開中のファイル
 	JSON			  m_Json;			// ジェイソンデータ
 	CMotion_Set*	  m_MotionSet;		// モーションセット
 	WORD			  m_wSelectParts;	// 選択パーツ
