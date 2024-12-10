@@ -243,8 +243,8 @@ void CField_Manager::InitEnvironment()
 	{ // “º‘œ‚Ì¶¬
 
 		// ƒpƒ‰ƒ[ƒ^‚ð”½‰f
-		m_pStatue = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue_motion.json"));
-		auto StatueParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\statue.json");
+		m_pStatue = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\STATUE\\statue_motion.json"));
+		auto StatueParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\STATUE\\statue_param.json");
 		m_pStatue->SetRot(utility::JsonConvertToVec3(StatueParam["Rot"]));
 		m_pStatue->SetPos(utility::JsonConvertToVec3(StatueParam["Pos"]));
 		

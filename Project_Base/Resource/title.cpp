@@ -143,7 +143,7 @@ HRESULT CTitle::Init()
 
 		// 蝶
 		m_pButterfly = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BUTTERFLY\\butterfly_motion.json"));
-		auto ButterflyParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BUTTERFLY\\butterfly.json");
+		auto ButterflyParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BUTTERFLY\\butterfly_param.json");
 		m_pButterfly->SetRot(utility::JsonConvertToVec3(ButterflyParam["Rot"]));
 		m_pButterfly->SetPos(utility::JsonConvertToVec3(ButterflyParam["Pos"]));
 		m_pButterfly->SetNowMotion(1);
@@ -160,8 +160,8 @@ HRESULT CTitle::Init()
 		pCamera->ChangeTrackPlayer(false);
 
 		// 樹
-		m_pTree = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree_motion.json"));
-		auto TreeParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\tree.json");
+		m_pTree = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\TREE\\tree_motion.json"));
+		auto TreeParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\TREE\\tree_param.json");
 		m_pTree->SetRot(utility::JsonConvertToVec3(TreeParam["Rot"]));
 		m_pTree->SetPos(utility::JsonConvertToVec3(TreeParam["Pos"]));
 
@@ -174,15 +174,11 @@ HRESULT CTitle::Init()
 
 		/*最低すぎるスタート表示*/
 		m_pKESE = CObject_3D::Create();
-		//JSON Json = utility::OpenJsonFile("Data\\JSON\\debug_param.json");
 		m_pKESE->BindTex(CTexture_Manager::TYPE::START);
 		m_pKESE->SetPos(utility::JsonConvertToVec3(Json["Pos"]));
 		m_pKESE->SetPos({ m_pKESE->GetPos().x, m_pKESE->GetPos().y + -100.0f, m_pKESE->GetPos().z });
 		m_pKESE->SetSize(utility::JsonConvertToVec3(Json["Size"]));
 		m_pKESE->SetAlpha(0.0f);
-
-		// 穴
-		//m_pHole = CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\hole.json"));
 	}
 
 	return S_OK;
@@ -195,15 +191,21 @@ void CTitle::Uninit()
 {
 	// 蝶を破棄
 	if (m_pButterfly != nullptr)
+	{
 		m_pButterfly->SetRelease();
+	}
 
 	// フェイクプレイヤーを破棄
 	if (m_pFakePlayer != nullptr)
+	{
 		m_pFakePlayer->SetRelease();
+	}
 
 	// 樹を破棄
 	if (m_pTree != nullptr)
+	{
 		m_pTree->SetRelease();
+	}
 }
 
 //============================================================================
@@ -216,7 +218,9 @@ void CTitle::UpdateEnvironment()
 
 	// 樹のモーションが停止していたら高速モーションに変更
 	if (m_pTree->GetStopState())
+	{
 		m_pTree->SetNowMotion(1);
+	}
 
 	// 蝶の更新
 	UpdateButterfly();
