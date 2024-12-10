@@ -53,7 +53,7 @@ void CMotion_Manager::Update()
 		return;	// インポート時更新しない
 
 	// ウィンドウを表示
-	ImVec2 Rect = { 600, 975 };
+	ImVec2 Rect = { 600, 980 };
 	ImGui::SetNextWindowSize(Rect);
 	ImGui::SetNextWindowPos({ SCREEN_WIDTH - (Rect.x + 100), 50 });
 	ImGui::Begin("Edit MotionList");
@@ -361,9 +361,13 @@ void CMotion_Manager::Edit()
 
 	// エクスポート
 	ImGui::Separator();
-	if (ImGui::Button("Export edit data"))
+	static char FilePath[256] = "";
+	std::string Copy = FilePath;
+	ImGui::InputText("##", FilePath, 256);
+	ImGui::SameLine();
+	if (ImGui::Button("Export"))
 	{
-		Export();
+		Export(Copy);
 	}
 }
 
@@ -966,10 +970,10 @@ void CMotion_Manager::ShowKeyEnd()
 //============================================================================
 // エクスポート
 //============================================================================
-void CMotion_Manager::Export()
+void CMotion_Manager::Export(std::string Copy)
 {
 	// ファイル名を作成
-	std::string FileName = "Data\\JSON\\motion_export.json";
+	std::string FileName = "Data\\JSON\\EXPORT\\" + Copy + ".json";
 
 	// ファイルを書き出し展開
 	std::ofstream Ofs(FileName, std::ios::out);
@@ -1054,7 +1058,7 @@ void CMotion_Manager::Reset()
 	// エクスポートボタンの横
 	ImGui::SameLine();
 
-	if (ImGui::Button("Reset edit data"))
+	if (ImGui::Button("Reset"))
 	{
 		// 選択番号情報を初期化
 		m_wSelectParts = 0;
