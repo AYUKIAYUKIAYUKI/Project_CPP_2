@@ -16,7 +16,7 @@
 #include "motion_set.h"
 #include "object_HUD.h"
 #include "player.h"
-#include "monster.h"
+#include "ghost.h"
 #include "boss.h"
 #include "block.h"
 #include "life.h"
@@ -229,7 +229,7 @@ HRESULT CField_Manager::Init()
 	m_pRenderFan = CFan::Create();
 
 	// エネミーを生成
-	CEnemy* pEnemy = CMonster::Create();
+	CEnemy* pEnemy = CGhost::Create();
 	pEnemy->SetDirection(-D3DX_PI);
 
 	return S_OK;
