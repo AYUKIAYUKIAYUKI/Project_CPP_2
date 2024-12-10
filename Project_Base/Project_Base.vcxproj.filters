@@ -194,6 +194,12 @@
       <Filter>&lt;Object&gt;\&lt;Stage&gt;\&lt;Item&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\life.cpp" />
+    <ClCompile Include="Resource\monster.cpp">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Enemy&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\ghost.cpp">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Enemy&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -392,6 +398,12 @@
       <Filter>&lt;Object&gt;\&lt;Stage&gt;\&lt;Item&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\life.h" />
+    <ClInclude Include="Resource\monster.h">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Enemy&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\ghost.h">
+      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Enemy&gt;</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Object&gt;">

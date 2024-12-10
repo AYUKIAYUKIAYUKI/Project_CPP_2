@@ -34,6 +34,7 @@
     <ClCompile Include="Resource\character_motion.cpp" />
     <ClCompile Include="Resource\collision.cpp" />
     <ClCompile Include="Resource\constellation.cpp" />
+    <ClCompile Include="Resource\ghost.cpp" />
     <ClCompile Include="Resource\HUD_manager.cpp" />
     <ClCompile Include="Resource\input_keyboard.cpp" />
     <ClCompile Include="Resource\input_mouse.cpp" />
@@ -57,6 +58,7 @@
     <ClCompile Include="resource\light.cpp" />
     <ClCompile Include="resource\main.cpp" />
     <ClCompile Include="resource\manager.cpp" />
+    <ClCompile Include="Resource\monster.cpp" />
     <ClCompile Include="Resource\motion_set.cpp" />
     <ClCompile Include="resource\object.cpp" />
     <ClCompile Include="resource\object_2D.cpp" />
@@ -113,6 +115,7 @@
     <ClInclude Include="Resource\character_motion.h" />
     <ClInclude Include="Resource\collision.h" />
     <ClInclude Include="Resource\constellation.h" />
+    <ClInclude Include="Resource\ghost.h" />
     <ClInclude Include="Resource\HUD_manager.h" />
     <ClInclude Include="Resource\input_keyboard.h" />
     <ClInclude Include="Resource\input_mouse.h" />
@@ -136,6 +139,7 @@
     <ClInclude Include="resource\light.h" />
     <ClInclude Include="resource\main.h" />
     <ClInclude Include="resource\manager.h" />
+    <ClInclude Include="Resource\monster.h" />
     <ClInclude Include="Resource\motion_set.h" />
     <ClInclude Include="resource\object.h" />
     <ClInclude Include="resource\object_2D.h" />

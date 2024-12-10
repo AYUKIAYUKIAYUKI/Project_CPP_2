@@ -33,9 +33,6 @@ using namespace abbr;
 // コンストラクタ
 //============================================================================
 CEnemy::CEnemy() :
-	CCharacter{},
-	m_ActionType{ ACTION::HOLD },
-	m_nCntActionCast{ 0 },
 	m_pBndCylinder{ DBG_NEW CBounding_Cylinder() }
 {
 
@@ -62,15 +59,6 @@ CEnemy::~CEnemy()
 //============================================================================
 HRESULT CEnemy::Init()
 {
-	// 補正強度を設定
-	SetCorrectCoef(CORRECT_COEF);
-
-	// 初期移動速度を設定
-	SetMoveSpeed(DEFAULT_MOVE_SPEED);
-
-	// 初期体力を設定
-	SetLife(MAX_LIFE);
-
 	// キャラクタークラスの初期設定
 	if (FAILED(CCharacter::Init()))
 	{
@@ -94,12 +82,6 @@ void CEnemy::Uninit()
 //============================================================================
 void CEnemy::Update()
 {
-	// 次の行動を決定
-	SetNextAction();
-
-	// 行動分岐
-	BranchAction();
-
 	// 高さの補正
 	AdjustHeight();
 
@@ -155,39 +137,30 @@ void CEnemy::SetDamage(int nDamage)
 	int nNewLife = GetLife();
 	nNewLife += nDamage;
 	SetLife(nNewLife);
-
-	// ライフが無くなったら
-	if (nNewLife < 0)
-	{
-		// アクションタイプを死亡に変更
-		m_ActionType = ACTION::DEADEND;
-	}
 }
 
 //============================================================================
-// 生成
+// 
+// prtectedメンバ
+// 
 //============================================================================
-CEnemy* CEnemy::Create()
+
+//============================================================================
+// プレイヤーを検索
+//============================================================================
+CPlayer* const CEnemy::FindPlayer() const
 {
-	// インスタンスを生成
-	CEnemy* pNewInstance = DBG_NEW CEnemy();
+	// プレイヤータイプのオブジェクトを検索
+	CObject* const pObj = CObject::FindSpecificObject(CObject::TYPE::PLAYER);
 
-	// タイプを設定
-	pNewInstance->SetType(TYPE::ENEMY);
+	// オブジェクトが見つからければ終了
+	if (pObj == nullptr)
+		return nullptr;
 
-	// 初期設定
-	pNewInstance->Init();
+	// プレイヤークラスにダウンキャスト
+	CPlayer* const pPlayer = utility::DownCast<CPlayer, CObject>(pObj);
 
-	// モーションをセット
-	pNewInstance->SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\enemy_motion.json"));
-
-	// 半径を設定
-	pNewInstance->m_pBndCylinder->SetRadius(3.0f);
-
-	// 高さを設定
-	pNewInstance->m_pBndCylinder->SetHeight(3.0f);
-
-	return pNewInstance;
+	return pPlayer;
 }
 
 //============================================================================
@@ -195,260 +168,6 @@ CEnemy* CEnemy::Create()
 // privateメンバ
 // 
 //============================================================================
-
-//============================================================================
-// 次の行動を決定
-//============================================================================
-void CEnemy::SetNextAction()
-{
-#ifdef _DEBUG
-	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("Enemy")) {
-		Vec3 Scale = GetParentParts()->GetScale();
-		ImGui::Text("x:%.1f", Scale.x);
-		ImGui::Text("y:%.1f", Scale.y);
-		ImGui::Text("z:%.1f", Scale.z);
-		ImGui::Text("%d", m_ActionType);
-		if (ImGui::Button("KILL"))
-			SetDamage(-999);
-		ImGui::End();
-	}
-#endif // _DEBUG
-}
-
-//============================================================================
-// 行動分岐
-//============================================================================
-void CEnemy::BranchAction()
-{
-	// タイプに応じて処理を変更
-	switch (m_ActionType)
-	{
-		// 立ち止まる
-	case ACTION::HOLD:
-		Hold();
-		break;
-
-		// 歩いてくる
-	case ACTION::COMING:
-		Coming();
-		break;
-
-		// 引き下がる
-	case ACTION::GOBACK:
-		GoBack();
-		break;
-
-		// 死亡
-	case ACTION::DEADEND:
-		DeadEnd();
-		break;
-
-		// 例外
-	default:
-#ifdef _DEBUG
-		assert(false && "エネミーの行動に例外発生");
-#else
-		m_ActionType = ACTION::HOLD;
-#endif // _DEBUG
-		break;
-	}
-}
-
-//============================================================================
-// 立ち止まる
-//============================================================================
-void CEnemy::Hold()
-{
-	// プレイヤータイプのオブジェクトを検索
-	CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::PLAYER);
-
-	// オブジェクトが見つからければ終了
-	if (pObj == nullptr)
-		return;
-
-	// プレイヤークラスにダウンキャスト
-	CPlayer* pPlayer = utility::DownCast<CPlayer, CObject>(pObj);
-
-	// プレイヤーへの距離を出す
-	Vec3 Norm = pPlayer->GetPos() - GetPos();
-
-	// プレイヤーに近ければ歩いてくる
-	if (Norm.x * Norm.x + Norm.y * Norm.y + Norm.z * Norm.z < 2000.0f)
-	{
-		m_ActionType = ACTION::COMING;
-	}
-
-	// 衝突検出
-	HitCheck();
-}
-
-//============================================================================
-// 歩いてくる
-//============================================================================
-void CEnemy::Coming()
-{
-	// 衝突検出
-	HitCheck();
-
-	// ブロックに接近していたら終了
-	if (StopBlockSide())
-		return;
-
-	// プレイヤータイプのオブジェクトを検索
-	CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::PLAYER);
-
-	// オブジェクトが見つからければ終了
-	if (pObj == nullptr)
-		return;
-
-	// プレイヤークラスにダウンキャスト
-	CPlayer* pPlayer = utility::DownCast<CPlayer, CObject>(pObj);
-
-	// 自身の目標方角をコピー
-	float fDirectionTarget = GetDirectionTarget();
-
-	// 方角の差を出す
-	float fDifference = pPlayer->GetDirection() - fDirectionTarget;
-
-	// 差を埋めるように目標方角を変動
-	if (fDifference > 0.0f)
-		SetDirectionTarget(fDirectionTarget + DEFAULT_MOVE_SPEED);
-	else
-		SetDirectionTarget(fDirectionTarget + -DEFAULT_MOVE_SPEED);
-
-	// 移動方向に向きを合わせる
-	AutoSetRotTarget();
-}
-
-//============================================================================
-// ブロックの近くで止まる
-//============================================================================
-bool CEnemy::StopBlockSide()
-{
-	// 通常優先度のオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
-
-	while (pObj != nullptr)
-	{
-		// ブロックタイプのオブジェクトを取得
-		if (pObj->GetType() == CObject::TYPE::BLOCK)
-		{
-			// オブジェクトをブロックタグにダウンキャスト
-			CBlock* pBlock = utility::DownCast<CBlock, CObject>(pObj);
-
-			// ブロックと座標の距離を出す
-			Vec3 Norm = pBlock->GetPos() - GetPos();
-
-#ifdef _DEBUG
-			ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-			if (ImGui::Begin("Test")) {
-				ImGui::Text("Y:%f", Norm.y * Norm.y);
-				ImGui::End();
-			}
-#endif // _DEBUG
-
-			// 高さが同じくらい、かつある程度隣接しているブロックがあれば引き下がる
-			if (Norm.y * Norm.y < 200.0f &&
-				Norm.x * Norm.x + Norm.z * Norm.z < 1000.0f)
-			{
-				// アクションタイプを変更
-				m_ActionType = ACTION::GOBACK;
-
-				return true;
-			}
-		}
-
-		pObj = pObj->GetNext();
-	}
-
-	return false;
-}
-
-//============================================================================
-// 引き下がる
-//============================================================================
-void CEnemy::GoBack()
-{
-	// 自身の目標方角をコピー
-	float fDirectionTarget = GetDirectionTarget();
-
-	// 向きに応じて引き下がる方向を設定
-	if (!CheckFacingSide())
-	{
-		fDirectionTarget += DEFAULT_MOVE_SPEED * 0.5f;
-	}
-	else
-	{
-		fDirectionTarget += -DEFAULT_MOVE_SPEED * 0.5f;
-	}
-
-	// 目標方角を反映
-	SetDirectionTarget(fDirectionTarget);
-
-	// 行動キャストカウントをインクリメント
-	++m_nCntActionCast;
-
-	// 0.5秒経過したら
-	if (m_nCntActionCast > 30)
-	{
-		// カウントリセット
-		m_nCntActionCast = 0;
-
-		// アクションタイプを立ち止まるに変更
-		m_ActionType = ACTION::HOLD;
-	}
-}
-
-//============================================================================
-// 死亡
-//============================================================================
-void CEnemy::DeadEnd()
-{
-#if 0
-	// 縮小
-	Vec3 Scale = GetParentParts()->GetScale();
-	Scale.y += -0.1f;
-	GetParentParts()->SetScale(Scale);
-
-	// 回転
-	Vec3 Rot = GetRot();
-	Rot.y += 2.0f;
-	SetRot(Rot);
-
-	// 上昇
-	Vec3 Pos = GetPos();
-	Pos.y += 1.0f;
-	SetPos(Pos);
-
-	// 縮小しほとんど消えたら
-	if (Scale.x * Scale.x + Scale.y * Scale.y + Scale.z * Scale.z < 1.0f)
-	{
-		// 破棄予約
-		SetRelease();
-	}
-#endif
-
-	// 回転
-	Vec3 Rot = GetRot();
-	Rot.y += 2.0f;
-	SetRot(Rot);
-
-	// 上昇
-	Vec3 Pos = GetPos();
-	Pos.y += 2.0f;
-	SetPos(Pos);
-
-	// 行動キャストカウントをインクリメント
-	++m_nCntActionCast;
-
-	// 1秒経過で
-	if (m_nCntActionCast > 60)
-	{
-		// 破棄予約
-		SetRelease();
-	}
-}
 
 //============================================================================
 // 高さを補正
@@ -473,19 +192,24 @@ void CEnemy::AdjustHeight()
 }
 
 //============================================================================
+// バウンディングサイズの設定
+//============================================================================
+void CEnemy::SetBndSize(float fRadius, float fHeight)
+{
+	// 半径の設定
+	m_pBndCylinder->SetRadius(fRadius);
+
+	// 高さの設定
+	m_pBndCylinder->SetHeight(fHeight);
+}
+
+//============================================================================
 // 衝突検出
 //============================================================================
 bool CEnemy::HitCheck()
 {
-	// プレイヤータイプのオブジェクトを検索
-	CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::PLAYER);
-
-	// オブジェクトが見つからければ終了
-	if (pObj == nullptr)
-		return false;
-
-	// プレイヤークラスにダウンキャスト
-	CPlayer* pPlayer = utility::DownCast<CPlayer, CObject>(pObj);
+	// プレイヤーを取得
+	CPlayer* const pPlayer = FindPlayer();
 
 	// プレイヤーの持つ円柱範囲内に侵入していたら衝突
 	if (collision::HitCylinderToCylinder(m_pBndCylinder, pPlayer->GetBndCylinder()))
@@ -493,8 +217,10 @@ bool CEnemy::HitCheck()
 		// 1ダメージを与える
 		pPlayer->SetDamage(-1);
 
+		// 衝突した
 		return true;
 	}
 
+	// 衝突していない
 	return false;
 }

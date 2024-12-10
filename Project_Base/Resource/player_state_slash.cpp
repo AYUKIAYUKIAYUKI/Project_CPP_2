@@ -18,6 +18,7 @@
 
 #include "constellation.h"
 #include "enemy.h"
+#include "monster.h"
 #include "boss.h"
 
 //****************************************************
@@ -167,8 +168,11 @@ bool CPlayer_State_Slash::SlashHitCheck()
 			const CBounding_Sphere* pSlash = m_pBndSlash.get();
 
 			// 攻撃とエネミーでの当たり判定
-			if (collision::HitCylinderToSphere(pEnemy->GetBndCylinder(), pSlash))
-				pEnemy->SetDamage(-1);	// 衝突でダメージ
+			if (collision::HitCylinderToSphere(pEnemy->CEnemy::GetBndCylinder(), pSlash))
+			{
+				// ダメージを与える
+				pEnemy->SetDamage(-1);
+			}
 		}
 		else if (pObj->GetType() == CObject::TYPE::BOSS)
 		{ // ボスタイプなら
@@ -181,7 +185,10 @@ bool CPlayer_State_Slash::SlashHitCheck()
 
 			// 攻撃とボスでの当たり判定
 			if (collision::HitCylinderToSphere(pBoss->GetBndCylinder(), pSlash))
-				pBoss->SetDamage(-1);	// 衝突でダメージ
+			{
+				// ダメージを与える
+				pBoss->SetDamage(-1);
+			}
 		}
 
 		// 次のオブジェクトへ

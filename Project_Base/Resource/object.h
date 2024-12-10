@@ -104,12 +104,6 @@ private:
 //============================================================================
 template <typename T> T* CObject::DownCast(CObject* pBase)
 {
-	// 渡されたオブジェクトをチェック
-	if (typeid(*pBase) != typeid(T))
-	{
-		return nullptr;
-	}
-
 	// 指定されたクラスにダウンキャスト
 	T* pNew = dynamic_cast<T*>(pBase);
 
