@@ -18,6 +18,13 @@
 //****************************************************
 using namespace abbr;
 
+//****************************************************
+// 静的メンバ変数の初期化
+//****************************************************
+
+// 基礎パラメータの展開
+const JSON CMonster::m_InitParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\ENEMY\\monster_param.json");
+
 //============================================================================
 // 
 // publicメンバ
@@ -48,15 +55,6 @@ CMonster::~CMonster()
 //============================================================================
 HRESULT CMonster::Init()
 {
-	// 補正強度を設定
-	SetCorrectCoef(CORRECT_COEF);
-
-	// 初期移動速度を設定
-	SetMoveSpeed(DEFAULT_MOVE_SPEED);
-
-	// 初期体力を設定
-	SetLife(MAX_LIFE);
-
 	// エネミークラスの初期設定
 	if (FAILED(CEnemy::Init()))
 	{
@@ -123,16 +121,31 @@ CMonster* CMonster::Create()
 	CMonster* pNewInstance = DBG_NEW CMonster();
 
 	// タイプを設定
-	pNewInstance->SetType(TYPE::ENEMY);
+	pNewInstance->CObject::SetType(TYPE::ENEMY);
 
 	// 初期設定
 	pNewInstance->Init();
 
 	// モーションをセット
-	pNewInstance->SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\enemy_motion.json"));
+	pNewInstance->CCharacter::SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\ENEMY\\enemy_motion.json"));
 
-	// バウンディングサイズを設定
-	pNewInstance->SetBndSize(3.0f, 3.0f);
+	{ // パラメータ設定
+
+		// データをキャスト
+		int
+			nLife = static_cast<int>(m_InitParam["Life"]);
+		float
+			fCoef = static_cast<float>(m_InitParam["Coef"]),
+			fSpeed = static_cast<float>(m_InitParam["Speed"]),
+			fRadius = static_cast<float>(m_InitParam["Radius"]),
+			fHeight = static_cast<float>(m_InitParam["Height"]);
+
+		// データをセット
+		pNewInstance->CCharacter::SetCorrectCoef(fCoef);	// 補間強度
+		pNewInstance->CCharacter::SetMoveSpeed(fSpeed);		// 移動速度
+		pNewInstance->CCharacter::SetLife(nLife);			// 体力
+		pNewInstance->CEnemy::SetBndSize(fRadius, fHeight);	// バウンディングサイズ
+	}
 
 	return pNewInstance;
 }
@@ -241,11 +254,11 @@ void CMonster::Coming()
 	// 差を埋めるように目標方角を変動
 	if (fDifference > 0.0f)
 	{
-		SetDirectionTarget(fDirectionTarget + DEFAULT_MOVE_SPEED);
+		SetDirectionTarget(fDirectionTarget + static_cast<float>(m_InitParam["Speed"]));
 	}
 	else
 	{
-		SetDirectionTarget(fDirectionTarget + -DEFAULT_MOVE_SPEED);
+		SetDirectionTarget(fDirectionTarget + -static_cast<float>(m_InitParam["Speed"]));
 	}
 
 	// 移動方向に向きを合わせる
@@ -307,11 +320,11 @@ void CMonster::GoBack()
 	// 向きに応じて引き下がる方向を設定
 	if (!CheckFacingSide())
 	{
-		fDirectionTarget += DEFAULT_MOVE_SPEED * 0.5f;
+		fDirectionTarget += static_cast<float>(m_InitParam["Speed"]) * 0.5f;
 	}
 	else
 	{
-		fDirectionTarget += -DEFAULT_MOVE_SPEED * 0.5f;
+		fDirectionTarget += -static_cast<float>(m_InitParam["Speed"]) * 0.5f;
 	}
 
 	// 目標方角を反映

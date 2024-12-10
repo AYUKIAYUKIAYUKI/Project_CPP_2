@@ -37,15 +37,6 @@ public:
 		MAX
 	};
 
-	/// <summary> エネミー最大体力 </summary>
-	static constexpr int MAX_LIFE = 1;
-
-	/// <summary> エネミーのデフォルト移動速度 </summary>
-	static constexpr float DEFAULT_MOVE_SPEED = 0.002f;
-
-	/// <summary> 目標値への補間強度 </summary>
-	static constexpr float CORRECT_COEF = 0.1f;
-
 	// <special function>
 	CMonster();				// コンストラクタ
 	~CMonster() override;	// デストラクタ
@@ -73,6 +64,9 @@ private:
 	// <data>
 	ACTION m_ActionType;		// 行動タイプ
 	int	   m_nCntActionCast;	// 行動キャストカウント
+
+	// <static data>
+	static const JSON m_InitParam;	// 基礎パラメータ
 };
 
 #endif // _MONSTER_H_
