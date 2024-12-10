@@ -520,6 +520,8 @@ void CField_Manager::AppearBossEvent()
 	if (m_pStatue->GetNowMotion() == 2)
 		return;
 
+	CRenderer::CorrectFogEnd(1350.0f);
+
 	// 再生中のモーションに応じて処理を分岐
 	if (m_pStatue->GetNowMotion() == 0)
 	{ // 銅像が振動モーション再生中
