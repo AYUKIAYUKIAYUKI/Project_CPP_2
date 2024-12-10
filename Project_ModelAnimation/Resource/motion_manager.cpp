@@ -39,6 +39,10 @@ CMotion_Manager* CMotion_Manager::m_pMotionManager = nullptr;	// ƒ‚[ƒVƒ‡ƒ“ƒ}ƒl
 //============================================================================
 void CMotion_Manager::Update()
 {
+	// ƒCƒ“ƒ|[ƒg
+	if (Import())
+		return;	// ƒCƒ“ƒ|[ƒg’†XV‚µ‚È‚¢
+
 	// ƒEƒBƒ“ƒhƒE‚ğ•\¦
 	ImVec2 Rect = { 600, 975 };
 	ImGui::SetNextWindowSize(Rect);
@@ -149,6 +153,7 @@ CMotion_Manager* CMotion_Manager::GetInstance()
 // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 //============================================================================
 CMotion_Manager::CMotion_Manager() :
+	m_bImport{ false },
 	m_Json{},
 	m_MotionSet{ nullptr },
 	m_wSelectParts{ 0 },
@@ -264,6 +269,40 @@ void CMotion_Manager::PrintDebug()
 	}
 	ImGui::End();
 #endif
+}
+
+//============================================================================
+// ƒCƒ“ƒ|[ƒg
+//============================================================================
+bool CMotion_Manager::Import()
+{
+	// ƒEƒBƒ“ƒhƒE‚ğ•\¦
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Change Set"))
+	{
+		static char FilePath[256] = "";
+		ImGui::InputText("a", FilePath, 256);
+		
+		if (ImGui::Button("Import"))
+		{
+			// Œ»İ‚Ìƒ‚[ƒVƒ‡ƒ“ƒZƒbƒg‚ğ”jŠü
+			Uninit();
+
+			// ƒWƒFƒCƒ\ƒ“ƒf[ƒ^‚ğæ“¾
+			std::string Copy = FilePath;
+			m_Json = utility::OpenJsonFile("Data\\JSON\\EXPORT\\" + Copy + ".json");
+
+			// ƒ‚[ƒVƒ‡ƒ“ƒZƒbƒg‚ğ¶¬
+			m_MotionSet = CMotion_Set::Create(m_Json);
+
+			ImGui::End();
+			return true;
+		}
+		
+		ImGui::End();
+	}
+
+	return false;
 }
 
 //============================================================================

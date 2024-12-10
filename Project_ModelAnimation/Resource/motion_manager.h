@@ -51,6 +51,7 @@ private:
 	HRESULT	Init();			// 初期設定
 	void	Uninit();		// 終了処理
 	void	PrintDebug();	// デバッグ表示
+	bool	Import();		// インポート
 	void	Edit();			// 編集
 	void	Copy();			// コピー
 	void	EditParts();	// パーツ情報の編集
@@ -69,6 +70,7 @@ private:
 	CMotion_Set::Key* const GetSelectKey() const;		// 選択中のキーのポインタを取得
 
 	// <data>
+	bool			  m_bImport;		// インポート
 	JSON			  m_Json;			// ジェイソンデータ
 	CMotion_Set*	  m_MotionSet;		// モーションセット
 	WORD			  m_wSelectParts;	// 選択パーツ
