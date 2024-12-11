@@ -31,6 +31,8 @@
 		"Data\\MODEL\\side0.x",
 		"Data\\MODEL\\side1.x",
 		"Data\\MODEL\\floor.x",
-		"Data\\MODEL\\CHARACTER\\ENEMY\\ghost.x"
+		"Data\\MODEL\\CHARACTER\\GHOST\\ghost.x",
+		"Data\\MODEL\\CHARACTER\\MONSTER\\up.x",
+		"Data\\MODEL\\CHARACTER\\MONSTER\\down.x"
 	]
 }

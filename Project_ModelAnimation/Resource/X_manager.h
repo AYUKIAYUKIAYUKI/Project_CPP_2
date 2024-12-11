@@ -51,7 +51,9 @@ public:
 		SIDE0,
 		SIDE1,
 		FLOOR,
-		GHOST,		// おばけ
+		GHOST,		// ゴースト
+		MONUP,		// モンスター上
+		MONDOWN,	// モンスター下
 		MAX
 	};
 
