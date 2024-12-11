@@ -439,7 +439,7 @@ void CMotion_Manager::EditParts()
 	ImGui::Text("Select:%d", m_wSelectParts);
 
 	// –¾–Å
-	static float fMin = 0.3f, fMax = 0.5f, fCoef = 0.02f;
+	static float fMin = 0.45f, fMax = 0.6f, fCoef = 0.03f;
 	static XCol Col = { 1.0f, 1.0f, 1.0f, fMin };
 	static bool bAdder = false;
 	bAdder ?
