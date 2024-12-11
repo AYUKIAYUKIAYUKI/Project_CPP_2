@@ -136,7 +136,15 @@ void CObject_Parts::Draw()
 	for (WORD wCntMat = 0; wCntMat < static_cast<WORD>(m_pModel->dwNumMat); wCntMat++)
 	{
 		// マテリアル色の設定
-		m_bUseCol ? pMat[wCntMat].MatD3D.Diffuse = m_Col : pMat[wCntMat].MatD3D.Diffuse = m_pModel->apColMat[wCntMat];
+		if (m_bUseCol)
+		{
+			pMat[wCntMat].MatD3D.Diffuse = m_Col;
+			pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+		}
+		else
+		{
+			pMat[wCntMat].MatD3D.Diffuse = m_pModel->apColMat[wCntMat];
+		}
 
 		// マテリアルの設定
 		pDev->SetMaterial(&pMat[wCntMat].MatD3D);
@@ -165,8 +173,8 @@ void CObject_Parts::Draw()
 #endif	// CHANGE_DRAW_ZBUFFER
 
 	// アルファブレンドの設定を基本に戻す
-	//pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	//pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 	// アルファテストを無効にする
 	pDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);

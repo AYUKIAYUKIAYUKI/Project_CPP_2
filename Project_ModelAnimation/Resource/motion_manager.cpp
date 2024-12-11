@@ -299,6 +299,9 @@ bool CMotion_Manager::Import()
 
 		if (ImGui::Button("Done"))
 		{
+			// 現状リセット
+			Reset();
+
 			// 現在のモーションセットを破棄
 			Uninit();
 
@@ -435,12 +438,24 @@ void CMotion_Manager::EditParts()
 	ImGui::SameLine();
 	ImGui::Text("Select:%d", m_wSelectParts);
 
+	// 明滅
+	static float fMin = 0.3f, fMax = 0.5f, fCoef = 0.02f;
+	static XCol Col = { 1.0f, 1.0f, 1.0f, fMin };
+	static bool bAdder = false;
+	bAdder ?
+		Col.a += (fMax - Col.a) * fCoef :
+		Col.a += (fMin - Col.a) * fCoef;
+	if (Col.a > fMax - fCoef)
+		bAdder = false;
+	else if (Col.a < fMin + fCoef)
+		bAdder = true;
+
 	// 選択パーツを透過
 	for (WORD wCntParts = 0; wCntParts < m_MotionSet->m_vpModelParts.size(); ++wCntParts)
 	{
 		if (m_wSelectParts == wCntParts && m_bPartsAppeal)
 		{
-			m_MotionSet->m_vpModelParts[wCntParts]->SetCol({ 1.0f, 1.0f, 1.0f, 0.75f });
+			m_MotionSet->m_vpModelParts[wCntParts]->SetCol(Col);
 			m_MotionSet->m_vpModelParts[wCntParts]->SetUseCol(true);
 		}
 		else
