@@ -234,6 +234,39 @@ void CCamera::Control()
 		m_RotTarget.x += CManager::GetMouse()->GetMouseMove().y * -0.01f;
 		m_RotTarget.y += CManager::GetMouse()->GetMouseMove().x * 0.01f;
 	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_F1))
+	{
+		// カメラ向きを正面に
+		m_Rot.x = 0.0f;
+		m_Rot.y = 0.0f;
+		m_RotTarget.x = 0.0f;
+		m_RotTarget.y = 0.0f;
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_F2))
+	{
+		// カメラ向きを真横に
+		m_Rot.x = 0.0f;
+		m_Rot.y = D3DX_PI * -0.5f;
+		m_RotTarget.x = 0.0f;
+		m_RotTarget.y = D3DX_PI * -0.5f;
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_F3))
+	{
+		// 0.0f ～ 0.5f
+		float fCoeff = 0.48f;
+
+		// カメラ向きを真上に
+		m_Rot.x = D3DX_PI * -fCoeff;
+		m_Rot.y = 0.0f;
+		m_RotTarget.x = D3DX_PI * -fCoeff;
+		m_RotTarget.y = 0.0f;
+	}
+	else if (CManager::GetKeyboard()->GetTrigger(DIK_F4))
+	{
+		// カメラ高さをリセット
+		m_Pos.y = 0.0f;
+		m_PosTarget.y = 0.0f;
+	}
 
 	// 距離感リセット
 	if (CManager::GetMouse()->GetTrigger(2))

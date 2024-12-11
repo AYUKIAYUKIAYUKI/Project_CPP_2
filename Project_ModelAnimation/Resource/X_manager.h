@@ -54,6 +54,7 @@ public:
 		GHOST,		// ゴースト
 		MONUP,		// モンスター上
 		MONDOWN,	// モンスター下
+		GRID,
 		MAX
 	};
 

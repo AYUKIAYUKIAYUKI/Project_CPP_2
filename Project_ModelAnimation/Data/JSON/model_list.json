@@ -33,6 +33,7 @@
 		"Data\\MODEL\\floor.x",
 		"Data\\MODEL\\CHARACTER\\GHOST\\ghost.x",
 		"Data\\MODEL\\CHARACTER\\MONSTER\\up.x",
-		"Data\\MODEL\\CHARACTER\\MONSTER\\down.x"
+		"Data\\MODEL\\CHARACTER\\MONSTER\\down.x",
+		"Data\\MODEL\\grid.x"
 	]
 }

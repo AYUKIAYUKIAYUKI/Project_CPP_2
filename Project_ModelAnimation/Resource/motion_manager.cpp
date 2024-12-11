@@ -10,6 +10,7 @@
 //****************************************************
 #include "motion_manager.h"
 #include "object_Parts.h"
+#include "object_X.h"
 #include "manager.h"
 #include "renderer.h"
 
@@ -439,7 +440,7 @@ void CMotion_Manager::EditParts()
 	{
 		if (m_wSelectParts == wCntParts && m_bPartsAppeal)
 		{
-			m_MotionSet->m_vpModelParts[wCntParts]->SetCol({ 1.0f, 1.0f, 1.0f, 0.5f });
+			m_MotionSet->m_vpModelParts[wCntParts]->SetCol({ 1.0f, 1.0f, 1.0f, 0.75f });
 			m_MotionSet->m_vpModelParts[wCntParts]->SetUseCol(true);
 		}
 		else
@@ -719,12 +720,12 @@ void CMotion_Manager::EditKey()
 		m_wSelectKey = 0;
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("PrevKey"))
+	if (ImGui::Button("PrevKey") || CManager::GetMouse()->GetTrigger(3))
 	{
 		m_wSelectKey > 0 ? m_wSelectKey-- : m_wSelectKey = GetSelectMotion()->wMaxKey - 1;
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("NextKey"))
+	if (ImGui::Button("NextKey") || CManager::GetMouse()->GetTrigger(4))
 	{
 		m_wSelectKey < GetSelectMotion()->wMaxKey - 1 ? m_wSelectKey++ : m_wSelectKey = 0;
 	}
