@@ -55,6 +55,9 @@ public:
 		MONUP,		// モンスター上
 		MONDOWN,	// モンスター下
 		GRID,
+		FLYBODY,	// フライヤー体
+		FLYLEFT,	// フライヤー左羽
+		FLYRIGHT,	// フライヤー右羽
 		MAX
 	};
 
