@@ -40,7 +40,7 @@ using namespace abbr;
 // コンストラクタ
 //============================================================================
 CPlayer::CPlayer() :
-	CCharacter{},
+	CCharacter{ LAYER::DEFAULT },
 	m_pBndCylinder{ DBG_NEW CBounding_Cylinder() },
 	m_pState{ nullptr }
 {
@@ -168,8 +168,7 @@ void CPlayer::Update()
 //============================================================================
 void CPlayer::Draw()
 {
-	// キャラクタークラスの描画処理
-	CCharacter::Draw();
+
 }
 
 //============================================================================
@@ -237,7 +236,7 @@ CPlayer* CPlayer::Create()
 	pNewInstance->Init();
 
 	// モーションをセット
-	pNewInstance->SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\PLAYER\\player_motion.json"));
+	pNewInstance->SetMotion(LAYER::DEFAULT, utility::OpenJsonFile("Data\\JSON\\CHARACTER\\PLAYER\\player_motion.json"));
 
 	// 半径を設定
 	pNewInstance->m_pBndCylinder->SetRadius(3.0f);

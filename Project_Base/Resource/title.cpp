@@ -142,7 +142,7 @@ HRESULT CTitle::Init()
 		CObject_X::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\around.json"));
 
 		// 蝶
-		m_pButterfly = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BUTTERFLY\\butterfly_motion.json"));
+		m_pButterfly = CMotion_Set::Create(CObject::LAYER::DEFAULT, utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BUTTERFLY\\butterfly_motion.json"));
 		auto ButterflyParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BUTTERFLY\\butterfly_param.json");
 		m_pButterfly->SetRot(utility::JsonConvertToVec3(ButterflyParam["Rot"]));
 		m_pButterfly->SetPos(utility::JsonConvertToVec3(ButterflyParam["Pos"]));
@@ -160,7 +160,7 @@ HRESULT CTitle::Init()
 		pCamera->ChangeTrackPlayer(false);
 
 		// 樹
-		m_pTree = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\TREE\\tree_motion.json"));
+		m_pTree = CMotion_Set::Create(CObject::LAYER::DEFAULT, utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\TREE\\tree_motion.json"));
 		auto TreeParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\TREE\\tree_param.json");
 		m_pTree->SetRot(utility::JsonConvertToVec3(TreeParam["Rot"]));
 		m_pTree->SetPos(utility::JsonConvertToVec3(TreeParam["Pos"]));
@@ -320,7 +320,7 @@ void CTitle::UpdateButterfly()
 					{ // 蝶が消えて、フェイクプレイヤーが未生成なら
 
 						// フェイクプレイヤーの生成
-						m_pFakePlayer = CMotion_Set::Create(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\PLAYER\\player_motion.json"));
+						m_pFakePlayer = CMotion_Set::Create(CObject::LAYER::DEFAULT, utility::OpenJsonFile("Data\\JSON\\CHARACTER\\PLAYER\\player_motion.json"));
 						m_pFakePlayer->SetNowMotion(2);
 					}
 					else if (m_pFakePlayer)

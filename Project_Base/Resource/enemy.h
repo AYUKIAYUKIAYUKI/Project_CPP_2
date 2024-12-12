@@ -27,8 +27,8 @@ class CEnemy : public CCharacter
 public:
 
 	// <special function>
-	CEnemy();			// コンストラクタ
-	~CEnemy() override;	// デストラクタ
+	CEnemy(LAYER Layer);	// コンストラクタ
+	~CEnemy() override;		// デストラクタ
 
 	// <function>
 	HRESULT Init() override;					// 初期設定

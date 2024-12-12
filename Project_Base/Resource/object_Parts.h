@@ -24,8 +24,8 @@ class CObject_Parts : public CObject
 public:
 
 	// <special function>
-	CObject_Parts(LAYER Priority = LAYER::DEFAULT);	// 描画優先度指定コンストラクタ
-	~CObject_Parts() override;						// デストラクタ
+	CObject_Parts(LAYER Priority);	// 描画優先度指定コンストラクタ
+	~CObject_Parts() override;		// デストラクタ
 
 	// <function>
 	HRESULT	Init() override;	// 初期設定
@@ -88,7 +88,7 @@ public:
 	virtual float GetHeight() const;		// 高さを取得
 
 	// <static function>
-	static CObject_Parts* Create(CX_Manager::TYPE Type, CObject_Parts* pParent);	// 生成
+	static CObject_Parts* Create(CObject::LAYER Layer, CX_Manager::TYPE Type, CObject_Parts* pParent);	// 生成
 
 private:
 

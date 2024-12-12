@@ -34,7 +34,7 @@ const JSON CGhost::m_InitParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\E
 // コンストラクタ
 //============================================================================
 CGhost::CGhost() :
-	CEnemy{},
+	CEnemy{ LAYER::DEFAULT },
 	m_ActionType{ ACTION::HOLD }
 {
 
@@ -88,8 +88,7 @@ void CGhost::Update()
 //============================================================================
 void CGhost::Draw()
 {
-	// エネミークラスの描画処理
-	CEnemy::Draw();
+
 }
 
 //============================================================================
@@ -125,7 +124,7 @@ CGhost* CGhost::Create()
 	pNewInstance->Init();
 
 	// モーションをセット
-	pNewInstance->CCharacter::SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\ENEMY\\ghost_motion.json"));
+	pNewInstance->CCharacter::SetMotion(LAYER::STENCIL, utility::OpenJsonFile("Data\\JSON\\CHARACTER\\ENEMY\\ghost_motion.json"));
 
 	{ // パラメータ設定
 

@@ -35,7 +35,7 @@ const JSON CMonster::m_InitParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\
 // コンストラクタ
 //============================================================================
 CMonster::CMonster() :
-	CEnemy{},
+	CEnemy{ LAYER::DEFAULT },
 	m_ActionType{ ACTION::HOLD },
 	m_nCntActionCast{ 0 }
 {
@@ -93,8 +93,7 @@ void CMonster::Update()
 //============================================================================
 void CMonster::Draw()
 {
-	// エネミークラスの描画処理
-	CEnemy::Draw();
+
 }
 
 //============================================================================
@@ -130,7 +129,7 @@ CMonster* CMonster::Create()
 	pNewInstance->Init();
 
 	// モーションをセット
-	pNewInstance->CCharacter::SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\ENEMY\\monster_motion.json"));
+	pNewInstance->CCharacter::SetMotion(LAYER::DEFAULT, utility::OpenJsonFile("Data\\JSON\\CHARACTER\\ENEMY\\monster_motion.json"));
 
 	{ // パラメータ設定
 

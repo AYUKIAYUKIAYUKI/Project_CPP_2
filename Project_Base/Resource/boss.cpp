@@ -35,7 +35,7 @@ using namespace abbr;
 // コンストラクタ
 //============================================================================
 CBoss::CBoss() :
-	CCharacter{},
+	CCharacter{ LAYER::DEFAULT },
 	m_ActionType{ ACTION::HOLDCENTER },
 	m_nCntActionCast{ 0 },
 	m_nDuration{ 0 },
@@ -146,8 +146,7 @@ void CBoss::Update()
 //============================================================================
 void CBoss::Draw()
 {
-	// キャラクタークラスの描画処理
-	CCharacter::Draw();
+
 }
 
 //============================================================================
@@ -210,7 +209,7 @@ CBoss* CBoss::Create()
 	pNewInstance->Init();
 
 	// モーションをセット
-	pNewInstance->SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BOSS\\pumpkin_motion.json"));
+	pNewInstance->SetMotion(LAYER::DEFAULT, utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BOSS\\pumpkin_motion.json"));
 
 	// 半径を設定
 	pNewInstance->m_pBndCylinder->SetRadius(115.0f);

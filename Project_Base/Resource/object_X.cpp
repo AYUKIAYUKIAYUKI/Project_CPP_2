@@ -13,13 +13,6 @@
 #include "manager.h"
 
 //****************************************************
-// プリプロセッサディレクティブ
-//****************************************************
-
-/// <summary> Zバッファでの描画切り替え </summary>
-#define CHANGE_DRAW_ZBUFFER 0
-
-//****************************************************
 // usingディレクティブ
 //****************************************************
 using namespace abbr;
@@ -113,11 +106,6 @@ void CObject_X::Draw()
 	// 頂点法線の自動正規化を有効に
 	pDev->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
 
-#if CHANGE_DRAW_ZBUFFER
-		// 深度バッファに描画しない
-		pDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-#endif	// CHANGE_DRAW_ZBUFFER
-
 #ifdef _DEBUG	// 判定表示系のモデルは深度バッファに書き込まない
 	bool bDetectRenderCollision = false;
 	CX_Manager::MODEL* pModel = this->GetModel();
@@ -167,11 +155,6 @@ void CObject_X::Draw()
 	if (bDetectRenderCollision)
 		pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 #endif // _DEBUG
-
-#if CHANGE_DRAW_ZBUFFER
-		// 深度バッファに書き込む
-		pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-#endif	// CHANGE_DRAW_ZBUFFER
 }
 
 //============================================================================

@@ -25,8 +25,8 @@ using namespace abbr;
 //============================================================================
 // コンストラクタ
 //============================================================================
-CCharacter::CCharacter() :
-	CMotion_Set{},
+CCharacter::CCharacter(LAYER Layer) :
+	CMotion_Set{ Layer },
 	m_fCorrectCoef{ 0.0f },
 	m_fDirection{ 0.0f },
 	m_fDirectionTarget{ 0.0f },
@@ -348,8 +348,8 @@ void CCharacter::AutoSetPosTarget()
 //============================================================================
 // モーションをセット
 //============================================================================
-void CCharacter::SetMotion(JSON Json)
+void CCharacter::SetMotion(LAYER Layer, JSON Json)
 {
 	// モーションセットクラスにモーション情報を渡す
-	CMotion_Set::SetMotion(Json);
+	CMotion_Set::SetMotion(Layer, Json);
 }

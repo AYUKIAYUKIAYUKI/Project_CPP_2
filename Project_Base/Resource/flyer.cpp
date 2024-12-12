@@ -34,7 +34,7 @@ JSON CFlyer::m_InitParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\ENEMY\\
 // コンストラクタ
 //============================================================================
 CFlyer::CFlyer() :
-	CEnemy{},
+	CEnemy{ LAYER::DEFAULT },
 	m_ActionType{ ACTION::UPDOWN },
 	m_bAdder{ false },
 	m_fDiffFromInitY{ 0.0f },
@@ -108,8 +108,7 @@ void CFlyer::Update()
 //============================================================================
 void CFlyer::Draw()
 {
-	// エネミークラスの描画処理
-	CEnemy::Draw();
+
 }
 
 //============================================================================
@@ -145,7 +144,7 @@ CFlyer* CFlyer::Create()
 	pNewInstance->Init();
 
 	// モーションをセット
-	pNewInstance->CCharacter::SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\ENEMY\\flyer_motion.json"));
+	pNewInstance->CCharacter::SetMotion(LAYER::DEFAULT, utility::OpenJsonFile("Data\\JSON\\CHARACTER\\ENEMY\\flyer_motion.json"));
 
 	{ // パラメータ設定
 

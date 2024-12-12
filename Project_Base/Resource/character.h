@@ -21,7 +21,7 @@ class CCharacter : public CMotion_Set
 public:
 
 	// <special function>
-	CCharacter();					// コンストラクタ
+	CCharacter(LAYER Layer);		// コンストラクタ
 	virtual ~CCharacter() override;	// デストラクタ
 
 	// <function>
@@ -77,7 +77,7 @@ protected:
 	virtual void AutoSetPosTarget();	// 座標を方角から自動で設定
 
 	// <setter>
-	void SetMotion(JSON Json);	// モーションをセット
+	void SetMotion(LAYER Layer, JSON Json);	// モーションをセット
 
 private:
 

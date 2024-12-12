@@ -193,7 +193,6 @@
     <ClCompile Include="Resource\item.cpp">
       <Filter>&lt;Stage&gt;\&lt;Item&gt;</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\life.cpp" />
     <ClCompile Include="Resource\monster.cpp">
       <Filter>&lt;Character&gt;\&lt;Enemy&gt;</Filter>
     </ClCompile>
@@ -202,6 +201,9 @@
     </ClCompile>
     <ClCompile Include="Resource\flyer.cpp">
       <Filter>&lt;Character&gt;\&lt;Enemy&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\life.cpp">
+      <Filter>&lt;Stage&gt;\&lt;Item&gt;</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -400,7 +402,6 @@
     <ClInclude Include="Resource\item.h">
       <Filter>&lt;Stage&gt;\&lt;Item&gt;</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\life.h" />
     <ClInclude Include="Resource\monster.h">
       <Filter>&lt;Character&gt;\&lt;Enemy&gt;</Filter>
     </ClInclude>
@@ -409,6 +410,9 @@
     </ClInclude>
     <ClInclude Include="Resource\flyer.h">
       <Filter>&lt;Character&gt;\&lt;Enemy&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\life.h">
+      <Filter>&lt;Stage&gt;\&lt;Item&gt;</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -103,16 +103,6 @@ void CObject_Parts::Draw()
 	// 頂点法線の自動正規化を有効に
 	pDev->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
 
-#if CHANGE_DRAW_ZBUFFER
-
-	// 深度テストの比較方法の変更
-	pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
-
-	// 深度バッファに描画しない
-	pDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-
-#endif	// CHANGE_DRAW_ZBUFFER
-
 	// 現在のマテリアル保存用
 	D3DMATERIAL9 matDef;
 
@@ -148,16 +138,6 @@ void CObject_Parts::Draw()
 
 	// 頂点法線の自動正規化を無効に
 	pDev->SetRenderState(D3DRS_NORMALIZENORMALS, FALSE);
-
-#if CHANGE_DRAW_ZBUFFER
-
-	// 深度テストの比較方法の変更
-	pDev->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-
-	// 深度バッファに書き込む
-	pDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-
-#endif	// CHANGE_DRAW_ZBUFFER
 }
 
 //============================================================================
@@ -388,10 +368,10 @@ float CObject_Parts::GetHeight() const
 //============================================================================
 // 生成
 //============================================================================
-CObject_Parts* CObject_Parts::Create(CX_Manager::TYPE Type, CObject_Parts* pParent)
+CObject_Parts* CObject_Parts::Create(CObject::LAYER Layer, CX_Manager::TYPE Type, CObject_Parts* pParent)
 {
 	// インスタンスを生成
-	CObject_Parts* pNewInstance = DBG_NEW CObject_Parts();
+	CObject_Parts* pNewInstance = DBG_NEW CObject_Parts(Layer);
 
 	// 生成失敗
 	if (pNewInstance == nullptr)

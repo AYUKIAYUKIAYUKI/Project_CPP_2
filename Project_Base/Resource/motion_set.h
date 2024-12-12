@@ -56,7 +56,7 @@ public:
 	};
 
 	// <special function>
-	CMotion_Set();				// コンストラクタ
+	CMotion_Set(LAYER Layer);	// コンストラクタ
 	~CMotion_Set() override;	// デストラクタ
 
 	// <function>
@@ -86,12 +86,12 @@ public:
 	CObject_Parts* GetParentParts();	// 親パーツを取得
 
 	// <static function>
-	static CMotion_Set* Create(JSON Json);	// 生成
+	static CMotion_Set* Create(LAYER Layer, JSON Json);	// 生成
 
 protected:
 
 	// <function>
-	void SetMotion(JSON Json);	// モーション情報をセット
+	void SetMotion(LAYER Layer, JSON Json);	// モーション情報をセット
 
 private:
 

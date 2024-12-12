@@ -25,8 +25,8 @@ using namespace abbr;
 //============================================================================
 // コンストラクタ
 //============================================================================
-CMotion_Set::CMotion_Set() :
-	CObject{ CObject::LAYER::DEFAULT },
+CMotion_Set::CMotion_Set(LAYER Layer) :
+	CObject{ Layer },
 	m_Rot{ VEC3_INIT },
 	m_Pos{ VEC3_INIT },
 	m_bStop{ false },
@@ -217,10 +217,10 @@ CObject_Parts* CMotion_Set::GetParentParts()
 //============================================================================
 // 生成
 //============================================================================
-CMotion_Set* CMotion_Set::Create(JSON Json)
+CMotion_Set* CMotion_Set::Create(LAYER Layer, JSON Json)
 {
-	// モーションセットインスタンスを生成
-	CMotion_Set* pNew = DBG_NEW CMotion_Set();
+	// モーションセットを生成
+	CMotion_Set* pNew = DBG_NEW CMotion_Set(Layer);
 
 	// 生成失敗
 	if (!pNew)
@@ -234,7 +234,7 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 	// パーツ数分のパーツオブジェクトを先行して生成
 	for (WORD wCntParts = 0; wCntParts < pNew->m_wMaxParts; ++wCntParts)
 	{
-		pNew->m_vpModelParts.push_back(CObject_Parts::Create(static_cast<CX_Manager::TYPE>(Json["ModelType"][wCntParts]), nullptr));
+		pNew->m_vpModelParts.push_back(CObject_Parts::Create(Layer, static_cast<CX_Manager::TYPE>(Json["ModelType"][wCntParts]), nullptr));
 	}
 
 	// 生成されたパーツに対し、各種設定を行う
@@ -325,7 +325,7 @@ CMotion_Set* CMotion_Set::Create(JSON Json)
 //============================================================================
 // モーションを設定
 //============================================================================
-void CMotion_Set::SetMotion(JSON Json)
+void CMotion_Set::SetMotion(LAYER Layer, JSON Json)
 {
 	// 総パーツ数を取得
 	m_wMaxParts = static_cast<WORD>(Json["MaxParts"]);
@@ -333,7 +333,7 @@ void CMotion_Set::SetMotion(JSON Json)
 	// パーツ数分のパーツオブジェクトを先行して生成
 	for (WORD wCntParts = 0; wCntParts < m_wMaxParts; ++wCntParts)
 	{
-		m_vpModelParts.push_back(CObject_Parts::Create(static_cast<CX_Manager::TYPE>(Json["ModelType"][wCntParts]), nullptr));
+		m_vpModelParts.push_back(CObject_Parts::Create(Layer, static_cast<CX_Manager::TYPE>(Json["ModelType"][wCntParts]), nullptr));
 	}
 
 	// 生成されたパーツに対し、各種設定を行う
