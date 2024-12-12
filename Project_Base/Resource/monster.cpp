@@ -299,6 +299,11 @@ bool CMonster::StopBlockSide()
 			// ブロックと座標の距離を出す
 			Vec3 Norm = pBlock->GetPos() - GetPos();
 
+			// ブロックの半幅と自分の半径・高さで引き下がる長さを出す
+			float
+				fWidth = pBlock->GetModel()->Size.x + GetRadius(),
+				fHeight = pBlock->GetModel()->Size.y + GetHeight();
+
 #ifdef _DEBUG
 			ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 			if (ImGui::Begin("Test")) {
@@ -308,8 +313,8 @@ bool CMonster::StopBlockSide()
 #endif // _DEBUG
 
 			// 高さが同じくらい、かつある程度隣接しているブロックがあれば引き下がる
-			if (Norm.y * Norm.y < 200.0f &&
-				Norm.x * Norm.x + Norm.z * Norm.z < 1000.0f)
+			if (Norm.y * Norm.y < fHeight * fHeight &&
+				Norm.x * Norm.x + Norm.z * Norm.z < fWidth * fWidth)
 			{
 				// アクションタイプを変更
 				m_ActionType = ACTION::GOBACK;

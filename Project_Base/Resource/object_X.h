@@ -40,6 +40,7 @@ public:
 
 	// <getter/setter>
 	CX_Manager::MODEL* GetModel();				// モデル取得
+	CX_Manager::TYPE GetModelType();			// モデルタイプ取得
 	void BindModel(CX_Manager::MODEL* pModel);	// モデル割当
 	void BindModel(CX_Manager::TYPE Type);		// もっとモデル割当
 
