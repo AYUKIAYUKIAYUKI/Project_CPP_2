@@ -200,6 +200,9 @@
     <ClCompile Include="Resource\ghost.cpp">
       <Filter>&lt;Character&gt;\&lt;Enemy&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\flyer.cpp">
+      <Filter>&lt;Character&gt;\&lt;Enemy&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -402,6 +405,9 @@
       <Filter>&lt;Character&gt;\&lt;Enemy&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\ghost.h">
+      <Filter>&lt;Character&gt;\&lt;Enemy&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\flyer.h">
       <Filter>&lt;Character&gt;\&lt;Enemy&gt;</Filter>
     </ClInclude>
   </ItemGroup>
