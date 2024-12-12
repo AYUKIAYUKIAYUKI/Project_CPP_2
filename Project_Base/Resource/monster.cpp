@@ -164,6 +164,10 @@ CMonster* CMonster::Create()
 //============================================================================
 void CMonster::BranchAction()
 {
+	// プレイヤーが存在しなければアクションをしない
+	if (!FindPlayer())
+		return;
+
 	// タイプに応じて処理を変更
 	switch (m_ActionType)
 	{
@@ -209,21 +213,15 @@ void CMonster::Hold()
 		SetNowMotion(0);
 	}
 
-	// プレイヤータイプのオブジェクトを検索
-	CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::PLAYER);
-
-	// オブジェクトが見つからければ終了
-	if (pObj == nullptr)
-		return;
-
-	// プレイヤークラスにダウンキャスト
-	CPlayer* pPlayer = utility::DownCast<CPlayer, CObject>(pObj);
+	// プレイヤーを取得
+	CPlayer* const pPlayer = FindPlayer();
 
 	// プレイヤーへの距離を出す
 	Vec3 Norm = pPlayer->GetPos() - GetPos();
 
 	// プレイヤーに近ければ歩いてくる
-	if (Norm.x * Norm.x + Norm.y * Norm.y + Norm.z * Norm.z < 2000.0f)
+	if (Norm.y * Norm.y <  GetHeight() * GetHeight() &&
+		Norm.x * Norm.x + Norm.z * Norm.z < 2000.0f)
 	{
 		m_ActionType = ACTION::COMING;
 	}
@@ -250,15 +248,21 @@ void CMonster::Coming()
 	if (StopBlockSide())
 		return;
 
-	// プレイヤータイプのオブジェクトを検索
-	CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::PLAYER);
+	// プレイヤーを取得
+	CPlayer* const pPlayer = FindPlayer();
 
-	// オブジェクトが見つからければ終了
-	if (pObj == nullptr)
+	// プレイヤーとの距離の差を出す
+	Vec3 Norm = pPlayer->GetPos() - GetPos();
+
+	// プレイヤーから遠ければ
+	if (Norm.x * Norm.x + Norm.z * Norm.z > 4500.0f)
+	{
+		// アクションタイプを立ち止まるに変更
+		m_ActionType = ACTION::HOLD;
+
+		// 以降の処理は行わない
 		return;
-
-	// プレイヤークラスにダウンキャスト
-	CPlayer* pPlayer = utility::DownCast<CPlayer, CObject>(pObj);
+	}
 
 	// 自身の目標方角をコピー
 	float fDirectionTarget = GetDirectionTarget();
@@ -303,14 +307,6 @@ bool CMonster::StopBlockSide()
 			float
 				fWidth = pBlock->GetModel()->Size.x + GetRadius(),
 				fHeight = pBlock->GetModel()->Size.y + GetHeight();
-
-#ifdef _DEBUG
-			ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-			if (ImGui::Begin("Test")) {
-				ImGui::Text("Y:%f", Norm.y * Norm.y);
-				ImGui::End();
-			}
-#endif // _DEBUG
 
 			// 高さが同じくらい、かつある程度隣接しているブロックがあれば引き下がる
 			if (Norm.y * Norm.y < fHeight * fHeight &&
