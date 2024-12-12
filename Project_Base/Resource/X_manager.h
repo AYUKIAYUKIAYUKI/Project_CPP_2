@@ -51,7 +51,9 @@ public:
 		STAUP4,				// 銅像上4
 		AROUND,				// 周辺領域
 		PUMPKIN,			// パンプキン
-		ENEMY,				// 敵
+		GHOST,				// ゴースト
+		MONUP,				// モンスター上
+		MONDOWN,			// モンスター下
 		BLONORMAL,			// 通常ブロック
 		BLOSIDE,			// 横長ブロック
 		BLOTALL,			// 縦長ブロック

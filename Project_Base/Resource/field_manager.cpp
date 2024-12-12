@@ -16,7 +16,9 @@
 #include "motion_set.h"
 #include "object_HUD.h"
 #include "player.h"
+#include "monster.h"
 #include "ghost.h"
+//#include "flyer.h"
 #include "boss.h"
 #include "block.h"
 #include "life.h"
@@ -229,6 +231,9 @@ HRESULT CField_Manager::Init()
 	m_pRenderFan = CFan::Create();
 
 	// エネミーを生成
+#if 1
+	CMonster::Create();
+#else
 	CEnemy* pEnemy = CGhost::Create();
 	pEnemy->SetDirection(-D3DX_PI);
 	Vec3 PosTarget = {
@@ -238,6 +243,7 @@ HRESULT CField_Manager::Init()
 	};
 	pEnemy->SetPos(PosTarget);
 	pEnemy->SetPosTarget(PosTarget);
+#endif
 
 	return S_OK;
 }

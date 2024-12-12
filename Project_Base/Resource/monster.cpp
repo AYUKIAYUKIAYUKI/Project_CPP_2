@@ -130,7 +130,7 @@ CMonster* CMonster::Create()
 	pNewInstance->Init();
 
 	// モーションをセット
-	pNewInstance->CCharacter::SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\ENEMY\\enemy_motion.json"));
+	pNewInstance->CCharacter::SetMotion(utility::OpenJsonFile("Data\\JSON\\CHARACTER\\ENEMY\\monster_motion.json"));
 
 	{ // パラメータ設定
 
@@ -203,6 +203,12 @@ void CMonster::BranchAction()
 //============================================================================
 void CMonster::Hold()
 {
+	// 待機モーションに変更
+	if (GetNowMotion() != 0)
+	{
+		SetNowMotion(0);
+	}
+
 	// プレイヤータイプのオブジェクトを検索
 	CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::PLAYER);
 
@@ -231,6 +237,12 @@ void CMonster::Hold()
 //============================================================================
 void CMonster::Coming()
 {
+	// 歩いてくるモーションに変更
+	if (GetNowMotion() != 1)
+	{
+		SetNowMotion(1);
+	}
+
 	// 衝突検出
 	HitCheck();
 
@@ -352,5 +364,16 @@ void CMonster::GoBack()
 //============================================================================
 void CMonster::DeadEnd()
 {
+	// 死亡モーションに変更
+	if (GetNowMotion() != 2)
+	{
+		SetNowMotion(2);
+	}
 
+	// 死亡モーションの再生が終了したら
+	if (GetStopState())
+	{
+		// 破棄
+		SetRelease();
+	}
 }
