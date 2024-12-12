@@ -232,19 +232,26 @@ HRESULT CField_Manager::Init()
 
 	// エネミーを生成
 #if 1
-	CEnemy* pEnemy = CFlyer::Create();
-	pEnemy->SetPosTarget({ 0.0f, 50.0f, 0.0f });
-	pEnemy->SetDirectionTarget(D3DX_PI * -0.5f);
-#else
-	CEnemy* pEnemy = CGhost::Create();
-	pEnemy->SetDirection(-D3DX_PI);
+	CEnemy* pEnemy = nullptr;
+
+	// モンスター
+	pEnemy = CMonster::Create();
+	pEnemy->SetDirectionTarget(D3DX_PI * -0.3f);
+
+	// ゴースト
+	pEnemy = CGhost::Create();
 	Vec3 PosTarget = {
-		cosf(-D3DX_PI) * 300.0f,
+		cosf(-(D3DX_PI * -0.7f)) * 300.0f,
 		0.0f,
-		sinf(D3DX_PI) * 300.0f,
+		sinf((D3DX_PI * -0.7f)) * 300.0f,
 	};
 	pEnemy->SetPos(PosTarget);
 	pEnemy->SetPosTarget(PosTarget);
+
+	// フライヤー
+	pEnemy = CFlyer::Create();
+	pEnemy->SetPosTarget({ 0.0f, 50.0f, 0.0f });
+	pEnemy->SetDirectionTarget(D3DX_PI * -0.5f);
 #endif
 
 	return S_OK;
