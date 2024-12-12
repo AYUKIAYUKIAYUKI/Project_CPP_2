@@ -78,6 +78,7 @@ public:
 		DWORD				dwNumMat;	// マテリアル数
 		D3DXCOLOR*			apColMat;	// マテリアル色	
 		LPDIRECT3DTEXTURE9*	apTex;		// テクスチャ
+		TYPE				Type;		// タイプ
 	};
 
 	// <special function>

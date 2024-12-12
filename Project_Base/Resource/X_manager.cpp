@@ -144,6 +144,8 @@ CX_Manager::CX_Manager()
 		m_apModelTemp[wCntModel].dwNumMat = 0;			// マテリアル数
 		m_apModelTemp[wCntModel].apColMat = nullptr;	// マテリアルの色のポインタ
 		m_apModelTemp[wCntModel].apTex = nullptr;		// テクスチャのポインタ
+		TYPE Type = TYPE::RENDER_SPHERE + wCntModel;
+		m_apModelTemp[wCntModel].Type = Type;			// タイプ
 	}
 }
 

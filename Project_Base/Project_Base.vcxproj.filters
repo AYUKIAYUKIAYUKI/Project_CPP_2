@@ -79,40 +79,40 @@
       <Filter>&lt;System&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\character.cpp">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
+      <Filter>&lt;Character&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\character_state.cpp">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
+      <Filter>&lt;Character&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\character_state_manager.cpp">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
+      <Filter>&lt;Character&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\enemy.cpp">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Enemy&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Enemy&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\player.cpp">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\player_state.cpp">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\player_state_damage.cpp">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\player_state_dash.cpp">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\player_state_default.cpp">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\player_state_jump.cpp">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\block.cpp">
-      <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+      <Filter>&lt;Stage&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\rubble.cpp">
-      <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+      <Filter>&lt;Stage&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\state.cpp">
       <Filter>&lt;Object&gt;</Filter>
@@ -124,16 +124,16 @@
       <Filter>&lt;Utility&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\sparks.cpp">
-      <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+      <Filter>&lt;Stage&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\object_Effect.cpp">
       <Filter>&lt;Object&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\player_state_slash.cpp">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\player_state_wall.cpp">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_widgets.cpp">
       <Filter>&lt;ImGui&gt;</Filter>
@@ -169,10 +169,10 @@
       <Filter>&lt;Object&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\constellation.cpp">
-      <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+      <Filter>&lt;Stage&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\character_motion.cpp">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
+      <Filter>&lt;Character&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\render_collision.cpp">
       <Filter>&lt;Collider&gt;\&lt;Render&gt;</Filter>
@@ -187,18 +187,18 @@
       <Filter>&lt;Collider&gt;\&lt;Render&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\boss.cpp">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Boss&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Boss&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\HUD_manager.cpp" />
     <ClCompile Include="Resource\item.cpp">
-      <Filter>&lt;Object&gt;\&lt;Stage&gt;\&lt;Item&gt;</Filter>
+      <Filter>&lt;Stage&gt;\&lt;Item&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\life.cpp" />
     <ClCompile Include="Resource\monster.cpp">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Enemy&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Enemy&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\ghost.cpp">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Enemy&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Enemy&gt;</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -280,40 +280,40 @@
       <Filter>&lt;System&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\character.h">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
+      <Filter>&lt;Character&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\character_state.h">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
+      <Filter>&lt;Character&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\character_state_manager.h">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
+      <Filter>&lt;Character&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\enemy.h">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Enemy&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Enemy&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\player.h">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\player_state.h">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\player_state_damage.h">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\player_state_dash.h">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\player_state_default.h">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\player_state_jump.h">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\block.h">
-      <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+      <Filter>&lt;Stage&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\rubble.h">
-      <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+      <Filter>&lt;Stage&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\state.h">
       <Filter>&lt;Object&gt;</Filter>
@@ -325,16 +325,16 @@
       <Filter>&lt;Utility&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\sparks.h">
-      <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+      <Filter>&lt;Stage&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\object_Effect.h">
       <Filter>&lt;Object&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\player_state_wall.h">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\player_state_slash.h">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Player&gt;</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imstb_truetype.h">
       <Filter>&lt;ImGui&gt;</Filter>
@@ -373,10 +373,10 @@
       <Filter>&lt;Object&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\constellation.h">
-      <Filter>&lt;Object&gt;\&lt;Stage&gt;</Filter>
+      <Filter>&lt;Stage&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\character_motion.h">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;</Filter>
+      <Filter>&lt;Character&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\render_sphere.h">
       <Filter>&lt;Collider&gt;\&lt;Render&gt;</Filter>
@@ -391,18 +391,18 @@
       <Filter>&lt;Collider&gt;\&lt;Render&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\boss.h">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Boss&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Boss&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\HUD_manager.h" />
     <ClInclude Include="Resource\item.h">
-      <Filter>&lt;Object&gt;\&lt;Stage&gt;\&lt;Item&gt;</Filter>
+      <Filter>&lt;Stage&gt;\&lt;Item&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\life.h" />
     <ClInclude Include="Resource\monster.h">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Enemy&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Enemy&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\ghost.h">
-      <Filter>&lt;Object&gt;\&lt;Character&gt;\&lt;Enemy&gt;</Filter>
+      <Filter>&lt;Character&gt;\&lt;Enemy&gt;</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -418,18 +418,6 @@
     <Filter Include="&lt;System&gt;\&lt;Input&gt;">
       <UniqueIdentifier>{671f83ae-673a-4a83-83fd-d45193394866}</UniqueIdentifier>
     </Filter>
-    <Filter Include="&lt;Object&gt;\&lt;Character&gt;">
-      <UniqueIdentifier>{936f6653-9f8b-4497-87fd-a78f47b730b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="&lt;Object&gt;\&lt;Character&gt;\&lt;Enemy&gt;">
-      <UniqueIdentifier>{4a13d1eb-45a8-4384-99a5-74eff050a7b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="&lt;Object&gt;\&lt;Character&gt;\&lt;Player&gt;">
-      <UniqueIdentifier>{439af8f7-27a7-4e67-b858-d6e348818fce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="&lt;Object&gt;\&lt;Stage&gt;">
-      <UniqueIdentifier>{181bc8d0-f873-4338-b08a-ac0133216b0f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="&lt;Scene&gt;">
       <UniqueIdentifier>{bbc8e6b6-eda4-4574-8892-2f94771dc113}</UniqueIdentifier>
     </Filter>
@@ -442,10 +430,22 @@
     <Filter Include="&lt;Collider&gt;\&lt;Render&gt;">
       <UniqueIdentifier>{a9a65daa-9cd0-43a7-a0b3-d88ebdc5c175}</UniqueIdentifier>
     </Filter>
-    <Filter Include="&lt;Object&gt;\&lt;Character&gt;\&lt;Boss&gt;">
+    <Filter Include="&lt;Character&gt;">
+      <UniqueIdentifier>{936f6653-9f8b-4497-87fd-a78f47b730b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;Character&gt;\&lt;Enemy&gt;">
+      <UniqueIdentifier>{4a13d1eb-45a8-4384-99a5-74eff050a7b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;Character&gt;\&lt;Player&gt;">
+      <UniqueIdentifier>{439af8f7-27a7-4e67-b858-d6e348818fce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;Character&gt;\&lt;Boss&gt;">
       <UniqueIdentifier>{b95b35c4-0a85-4085-9ea3-98b827d9e901}</UniqueIdentifier>
     </Filter>
-    <Filter Include="&lt;Object&gt;\&lt;Stage&gt;\&lt;Item&gt;">
+    <Filter Include="&lt;Stage&gt;">
+      <UniqueIdentifier>{181bc8d0-f873-4338-b08a-ac0133216b0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;Stage&gt;\&lt;Item&gt;">
       <UniqueIdentifier>{7ad7f24d-48a1-4fec-b5ab-37eb01f1317f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
