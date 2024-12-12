@@ -55,14 +55,17 @@ private:
 	// <function>
 	void BranchAction();	// 行動分岐
 	void UpDown();			// 昇降
-	void Slash();			// 斬撃
 	void DeadEnd();			// 死亡
 
 	// <data>
-	ACTION m_ActionType;	// 行動タイプ
+	ACTION m_ActionType;		// 行動タイプ
+	bool   m_bAdder;			// 増加判定
+	float  m_fDiffFromInitY;	// 高さの変化量
+	float  m_fMinRangeDiff;		// 変化量の最低量
+	float  m_fMaxRangeDiff;		// 変化量の最大量
 
 	// <static data>
-	static const JSON m_InitParam;	// 基礎パラメータ
+	static JSON m_InitParam;	// 基礎パラメータ
 };
 
 #endif // _FLYER_H_

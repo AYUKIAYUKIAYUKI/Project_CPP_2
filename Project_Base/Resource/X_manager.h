@@ -54,6 +54,9 @@ public:
 		GHOST,				// ゴースト
 		MONUP,				// モンスター上
 		MONDOWN,			// モンスター下
+		FLYBODY,			// フライヤー体
+		FLYLEFT,			// フライヤー左羽
+		FLYRIGHT,			// フライヤー右羽
 		BLONORMAL,			// 通常ブロック
 		BLOSIDE,			// 横長ブロック
 		BLOTALL,			// 縦長ブロック

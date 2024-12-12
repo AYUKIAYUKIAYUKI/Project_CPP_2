@@ -18,7 +18,7 @@
 #include "player.h"
 #include "monster.h"
 #include "ghost.h"
-//#include "flyer.h"
+#include "flyer.h"
 #include "boss.h"
 #include "block.h"
 #include "life.h"
@@ -232,7 +232,9 @@ HRESULT CField_Manager::Init()
 
 	// エネミーを生成
 #if 1
-	CMonster::Create();
+	CEnemy* pEnemy = CFlyer::Create();
+	pEnemy->SetPosTarget({ 0.0f, 50.0f, 0.0f });
+	pEnemy->SetDirectionTarget(D3DX_PI * -0.5f);
 #else
 	CEnemy* pEnemy = CGhost::Create();
 	pEnemy->SetDirection(-D3DX_PI);

@@ -22,7 +22,7 @@ using namespace abbr;
 //****************************************************
 
 // 基礎パラメータの展開
-const JSON CFlyer::m_InitParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\ENEMY\\flyer_param.json");
+JSON CFlyer::m_InitParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\ENEMY\\flyer_param.json");
 
 //============================================================================
 // 
@@ -35,7 +35,11 @@ const JSON CFlyer::m_InitParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\E
 //============================================================================
 CFlyer::CFlyer() :
 	CEnemy{},
-	m_ActionType{ ACTION::UPDOWN }
+	m_ActionType{ ACTION::UPDOWN },
+	m_bAdder{ false },
+	m_fDiffFromInitY{ 0.0f },
+	m_fMinRangeDiff{ 0.0f },
+	m_fMaxRangeDiff{ 0.0f }
 {
 
 }
@@ -79,8 +83,24 @@ void CFlyer::Update()
 	// 行動分岐
 	BranchAction();
 
+	// 方角に座標を合わせる
+	AutoSetPosTarget();
+
 	// エネミークラスの更新処理
 	CEnemy::Update();
+
+#if 0
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("PosY")) {
+		ImGui::Text("%f", GetPos().y);
+		ImGui::Text("%f", GetPosTarget().y);
+		ImGui::Text("%f", m_fDiffFromInitY);
+		ImGui::End();
+	}
+
+	if (CManager::GetKeyboard()->GetRelease(DIK_RETURN))
+		m_InitParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\ENEMY\\flyer_param.json");
+#endif
 }
 
 //============================================================================
@@ -136,13 +156,17 @@ CFlyer* CFlyer::Create()
 			fCoef = static_cast<float>(m_InitParam["Coef"]),
 			fSpeed = static_cast<float>(m_InitParam["Speed"]),
 			fRadius = static_cast<float>(m_InitParam["Radius"]),
-			fHeight = static_cast<float>(m_InitParam["Height"]);
+			fHeight = static_cast<float>(m_InitParam["Height"]),
+			fMin = static_cast<float>(m_InitParam["MinRangeDiff"]),
+			fMax = static_cast<float>(m_InitParam["MaxRangeDiff"]);
 
 		// データをセット
 		pNewInstance->CCharacter::SetCorrectCoef(fCoef);	// 補間強度
 		pNewInstance->CCharacter::SetMoveSpeed(fSpeed);		// 移動速度
 		pNewInstance->CCharacter::SetLife(nLife);			// 体力
 		pNewInstance->CEnemy::SetBndSize(fRadius, fHeight);	// バウンディングサイズ
+		pNewInstance->m_fMinRangeDiff = fMin;				// 変化量の最低値
+		pNewInstance->m_fMaxRangeDiff = fMax;				// 変化量の最大値
 	}
 
 	return pNewInstance;
@@ -166,14 +190,9 @@ void CFlyer::BranchAction()
 	// タイプに応じて処理を変更
 	switch (m_ActionType)
 	{
-		// 昇降
+		// 立ち止まる
 	case ACTION::UPDOWN:
 		UpDown();
-		break;
-
-		// 斬撃
-	case ACTION::SLASH:
-		Slash();
 		break;
 
 		// 死亡
@@ -186,7 +205,7 @@ void CFlyer::BranchAction()
 #ifdef _DEBUG
 		assert(false && "エネミーの行動に例外発生");
 #else
-		m_ActionType = ACTION::HOLD;
+		m_ActionType = ACTION::UPDOWN;
 #endif // _DEBUG
 		break;
 	}
@@ -197,22 +216,52 @@ void CFlyer::BranchAction()
 //============================================================================
 void CFlyer::UpDown()
 {
-	// 待機モーションに変更
+	// 回転モーション中は昇降しない
+	if (GetNowMotion() == 1 && !GetStopState())
+	{
+		return;
+	}
+
+	// 昇降モーションに変更
 	if (GetNowMotion() != 0)
 	{
 		SetNowMotion(0);
 	}
 
+	// 移動速度をコピー
+	float fSpeed = GetMoveSpeed();
+
+	// 増加と減少を切り替えて上下に高さの補間を繰り返す
+	if (m_bAdder)
+	{
+		m_fDiffFromInitY += (m_fMaxRangeDiff - m_fDiffFromInitY) * fSpeed;
+	}
+	else
+	{
+		m_fDiffFromInitY += (m_fMinRangeDiff - m_fDiffFromInitY) * fSpeed;
+	}
+
+	// 最大値・最低値にある程度近似で増減をスイッチ
+	if (m_fDiffFromInitY > m_fMaxRangeDiff - 0.1f ||
+		m_fDiffFromInitY < m_fMinRangeDiff + 0.1f)
+	{
+		// 回転モーションをセット
+		SetNowMotion(1);
+
+		// 高さの変化量をリセット
+		m_fDiffFromInitY = 0.0f;
+
+		// 昇降をスイッチ
+		m_bAdder = !m_bAdder;
+	}
+
+	// 目標座標をコピー
+	Vec3 PosTarget = GetPosTarget();
+	PosTarget.y += m_fDiffFromInitY;
+	SetPosTarget(PosTarget);
+
 	// 衝突検出
 	HitCheck();
-}
-
-//============================================================================
-// 斬撃
-//============================================================================
-void CFlyer::Slash()
-{
-
 }
 
 //============================================================================

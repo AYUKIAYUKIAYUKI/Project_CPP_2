@@ -1,7 +1,9 @@
 {
   "Coef": 0.025,
-  "Speed": 0.002,
+  "Speed": 0.05,
   "Life": 1,
   "Radius": 7.0,
-  "Height": 7.0
+  "Height": 7.0,
+  "MinRangeDiff": -1.5,
+  "MaxRangeDiff": 1.5
 }
