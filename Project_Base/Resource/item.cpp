@@ -44,11 +44,12 @@ using namespace abbr;
 //============================================================================
 CItem::CItem() :
 	CObject_X{ LAYER::STENCIL },
+	m_pBndSphere{ DBG_NEW CBounding_Sphere() },
 	m_fCorrectCoef{ 0.0f },
 	m_fDirection{ 0.0f },
 	m_RotTarget{ VEC3_INIT },
 	m_PosTarget{ VEC3_INIT },
-	m_pBndSphere{ DBG_NEW CBounding_Sphere() }
+	m_pSummoning{ nullptr }
 {
 
 }

@@ -58,6 +58,19 @@ public:
 		FLYBODY,	// フライヤー体
 		FLYLEFT,	// フライヤー左羽
 		FLYRIGHT,	// フライヤー右羽
+		SUMCIRCLE,	// 魔法陣
+		SUM0,		// ルーン0
+		SUM1,		// ルーン1
+		SUM2,		// ルーン2
+		SUM3,		// ルーン3
+		SUM4,		// ルーン4
+		SUM5,		// ルーン5
+		SUM6,		// ルーン6
+		SUM7,		// ルーン7
+		SUM8,		// ルーン8
+		SUM9,		// ルーン9
+		SUM10,		// ルーン10
+		SUM11,		// ルーン11
 		MAX
 	};
 

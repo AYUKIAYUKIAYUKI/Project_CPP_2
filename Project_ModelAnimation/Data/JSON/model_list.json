@@ -35,8 +35,21 @@
 		"Data\\MODEL\\CHARACTER\\MONSTER\\up.x",
 		"Data\\MODEL\\CHARACTER\\MONSTER\\down.x",
 		"Data\\MODEL\\grid.x",
-		"Data\\MODEL\\CHARACTER\\FLYER\\body.x",
-		"Data\\MODEL\\CHARACTER\\FLYER\\left.x",
-		"Data\\MODEL\\CHARACTER\\FLYER\\right.x"	
+		"Data\\MODEL\\FLYER\\body.x",
+		"Data\\MODEL\\FLYER\\left.x",
+		"Data\\MODEL\\FLYER\\right.x",
+		"Data\\MODEL\\SUMMONING\\circle.x",
+		"Data\\MODEL\\SUMMONING\\0.x",
+		"Data\\MODEL\\SUMMONING\\1.x",
+		"Data\\MODEL\\SUMMONING\\2.x",
+		"Data\\MODEL\\SUMMONING\\3.x",
+		"Data\\MODEL\\SUMMONING\\4.x",
+		"Data\\MODEL\\SUMMONING\\5.x",
+		"Data\\MODEL\\SUMMONING\\6.x",
+		"Data\\MODEL\\SUMMONING\\7.x",
+		"Data\\MODEL\\SUMMONING\\8.x",
+		"Data\\MODEL\\SUMMONING\\9.x",
+		"Data\\MODEL\\SUMMONING\\10.x",
+		"Data\\MODEL\\SUMMONING\\11.x"
 	]
 }
