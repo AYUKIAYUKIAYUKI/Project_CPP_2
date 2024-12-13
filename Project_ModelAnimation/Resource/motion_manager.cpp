@@ -879,83 +879,86 @@ void CMotion_Manager::EditDest()
 	// 選択中のパーツの目標値情報のポインタを作成
 	CMotion_Set::KeyDest* const pDest = &GetSelectKey()->apDest[m_wSelectParts];
 
+	// ウィンドウとウィジェットの幅をコピー
+	float fWidth = ImGui::GetContentRegionAvail().x, fSeparate = ImGui::GetStyle().ItemSpacing.x;
+	
+	// ボタンのサイズ
+	const float 
+		fResetButtonWidth = (fWidth + -fSeparate * 3.0f) / 4.0f,
+		fCopyPasteButtonWidth = (fWidth + -fSeparate * 1.0f) / 2.0f;
+
 	// 目標縮尺を変動
-	ImGui::Separator();
-	ImGui::BulletText("ScaleDest");
+	ImGui::SeparatorText("ScaleDest");
 	{
-		// 縮尺：X
-		if (ImGui::Button("Reset:ScaleX"))
-		{
+		// 縮尺リセット
+		if (ImGui::Button("Reset:X", { fResetButtonWidth, 30.0f }))
 			pDest->ScaleTarget.x = 1.0f;
-		}
 		ImGui::SameLine();
-		ImGui::DragFloat("Scale:X", &pDest->ScaleTarget.x, 0.01f, 0.0f);
-		// 縮尺：Y
-		if (ImGui::Button("Reset:ScaleY"))
-		{
+		if (ImGui::Button("Reset:Y", { fResetButtonWidth, 30.0f }))
 			pDest->ScaleTarget.y = 1.0f;
-		}
 		ImGui::SameLine();
-		ImGui::DragFloat("Scale:Y", &pDest->ScaleTarget.y, 0.01f, 0.0f);
-		// 縮尺：Z
-		if (ImGui::Button("Reset:ScaleZ"))
-		{
+		if (ImGui::Button("Reset:Z", { fResetButtonWidth, 30.0f }))
 			pDest->ScaleTarget.z = 1.0f;
-		}
 		ImGui::SameLine();
-		ImGui::DragFloat("Scale:Z", &pDest->ScaleTarget.z, 0.01f, 0.0f);
+		if (ImGui::Button("Reset:All", { fResetButtonWidth, 30.0f }))
+			pDest->ScaleTarget = { 1.0f, 1.0f, 1.0f };
+		ImGui::Separator();
+
+		// 縮尺変更
+		float* ScalePtr[3] = { &pDest->ScaleTarget.x, &pDest->ScaleTarget.y, &pDest->ScaleTarget.z };
+		ImGui::SetNextItemWidth(-1.0f);
+		ImGui::DragFloat3("##Scale", *ScalePtr, 0.01f, 0.0f);
+		ImGui::Separator();
+
+		// コピーペースト
+		static Vec3 Copy = { 1.0f, 1.0f, 1.0f };
+		if (ImGui::Button("Copy", { fCopyPasteButtonWidth, 30.0f }))
+			Copy = pDest->ScaleTarget;
+		ImGui::SameLine();
+		if (ImGui::Button("Paste", { fCopyPasteButtonWidth, 30.0f }))
+			pDest->ScaleTarget = Copy;
 	}
 
 	// 目標向きを変動
-	ImGui::Separator();
-	ImGui::BulletText("RotDest");
+	ImGui::SeparatorText("RotDest");
 	{
 		// 向き：X
-		if (ImGui::Button("Reset:RotX"))
-		{
+		if (ImGui::Button("Reset:RotX", { 110.0f, 30.0f }))
 			pDest->RotTarget.x = 0.0f;
-		}
 		ImGui::SameLine();
 		ImGui::DragFloat("Rot:X", &pDest->RotTarget.x, D3DX_PI * 0.01f, -D3DX_PI, D3DX_PI);
+
 		// 向き：X
-		if (ImGui::Button("Reset:RotY"))
-		{
+		if (ImGui::Button("Reset:RotY", { 110.0f, 30.0f }))
 			pDest->RotTarget.y = 0.0f;
-		}
 		ImGui::SameLine();
 		ImGui::DragFloat("Rot:Y", &pDest->RotTarget.y, D3DX_PI * 0.01f, -D3DX_PI, D3DX_PI);
+
 		// 向き：Z
-		if (ImGui::Button("Reset:RotZ"))
-		{
+		if (ImGui::Button("Reset:RotZ", { 110.0f, 30.0f }))
 			pDest->RotTarget.z = 0.0f;
-		}
 		ImGui::SameLine();
 		ImGui::DragFloat("Rot:Z", &pDest->RotTarget.z, D3DX_PI * 0.01f, -D3DX_PI, D3DX_PI);
 	}
 
 	// 目標座標
-	ImGui::Separator();
-	ImGui::BulletText("ScaleDest");
+	ImGui::SeparatorText("PosDest");
 	{
 		// 座標：X
-		if (ImGui::Button("Reset:PosX"))
-		{
+		if (ImGui::Button("Reset:PosX", { 110.0f, 30.0f }))
 			pDest->PosTarget.x = 0.0f;
-		}
 		ImGui::SameLine();
 		ImGui::DragFloat("Pos:X", &pDest->PosTarget.x, 0.01f);
+
 		// 座標：Y
-		if (ImGui::Button("Reset:PosY"))
-		{
+		if (ImGui::Button("Reset:PosY", { 110.0f, 30.0f }))
 			pDest->PosTarget.y = 0.0f;
-		}
 		ImGui::SameLine();
 		ImGui::DragFloat("Pos:Y", &pDest->PosTarget.y, 0.01f);
+
 		// 座標：Z
-		if (ImGui::Button("Reset:PosZ"))
-		{
+		if (ImGui::Button("Reset:PosZ", { 110.0f, 30.0f }))
 			pDest->PosTarget.z = 0.0f;
-		}
 		ImGui::SameLine();
 		ImGui::DragFloat("Pos:Z", &pDest->PosTarget.z, 0.01f);
 	}
