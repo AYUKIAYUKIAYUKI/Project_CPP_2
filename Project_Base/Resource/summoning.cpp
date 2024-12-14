@@ -108,7 +108,7 @@ CSummoning* CSummoning::Create()
 	CSummoning* pNewInstance = DBG_NEW CSummoning(LAYER::DEFAULT);
 
 	// ƒ^ƒCƒv‚ðÝ’è
-	pNewInstance->CObject::SetType(TYPE::ENEMY);
+	pNewInstance->CObject::SetType(TYPE::NONE);
 
 	// ‰ŠúÝ’è
 	pNewInstance->Init();

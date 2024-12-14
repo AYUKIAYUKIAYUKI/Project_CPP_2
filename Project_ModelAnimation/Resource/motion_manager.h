@@ -53,7 +53,6 @@ private:
 	void	PrintDebug();			// デバッグ表示
 	bool	Import();				// インポート
 	void	Edit();					// 編集
-	void	Copy();					// コピー
 	void	EditParts();			// パーツ情報の編集
 	void	EditOffset();			// オフセット情報の編集
 	void	EditMotion();			// モーション情報の編集

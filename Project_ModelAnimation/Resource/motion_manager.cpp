@@ -54,9 +54,9 @@ void CMotion_Manager::Update()
 		return;	// インポート時更新しない
 
 	// ウィンドウを表示
-	ImVec2 Rect = { 600, 980 };
+	ImVec2 Rect = { 600, 1005 };
 	ImGui::SetNextWindowSize(Rect);
-	ImGui::SetNextWindowPos({ SCREEN_WIDTH - (Rect.x + 100), 50 });
+	ImGui::SetNextWindowPos({ SCREEN_WIDTH - (Rect.x + 100), 45 });
 	ImGui::Begin("Edit MotionList");
 
 	// 編集
@@ -333,9 +333,6 @@ bool CMotion_Manager::Import()
 //============================================================================
 void CMotion_Manager::Edit()
 {
-	// コピー
-	Copy();
-
 	// 再生切り替え
 	if( ImGui::Checkbox("Playing motion", &m_bPlay))
 	{
@@ -377,32 +374,6 @@ void CMotion_Manager::Edit()
 	{
 		Export(Copy);
 	}
-}
-
-//============================================================================
-// コピー
-//============================================================================
-void CMotion_Manager::Copy()
-{
-	ImGui::Separator();
-	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("Copy Motion"))
-	{
-		if (m_CopyKey.apDest == nullptr)
-		{
-			if (ImGui::Button("Cooy"))
-			{
-				// 総フレーム数をコピー
-				m_CopyKey.nMaxFrame = GetSelectMotion()->vpKey[m_MotionSet->m_wNowKey].nMaxFrame;
-			}
-		}
-		else
-		{
-			if (ImGui::Button("Paste"))
-				GetSelectMotion()->vpKey.push_back(m_CopyKey);
-		}
-	}
-	ImGui::End();
 }
 
 //============================================================================
@@ -891,16 +862,16 @@ void CMotion_Manager::EditDest()
 	ImGui::SeparatorText("ScaleDest");
 	{
 		// 縮尺リセット
-		if (ImGui::Button("Reset:X", { fResetButtonWidth, 30.0f }))
+		if (ImGui::Button("Reset:X##Scale", { fResetButtonWidth, 30.0f }))
 			pDest->ScaleTarget.x = 1.0f;
 		ImGui::SameLine();
-		if (ImGui::Button("Reset:Y", { fResetButtonWidth, 30.0f }))
+		if (ImGui::Button("Reset:Y##Scale", { fResetButtonWidth, 30.0f }))
 			pDest->ScaleTarget.y = 1.0f;
 		ImGui::SameLine();
-		if (ImGui::Button("Reset:Z", { fResetButtonWidth, 30.0f }))
+		if (ImGui::Button("Reset:Z##Scale", { fResetButtonWidth, 30.0f }))
 			pDest->ScaleTarget.z = 1.0f;
 		ImGui::SameLine();
-		if (ImGui::Button("Reset:All", { fResetButtonWidth, 30.0f }))
+		if (ImGui::Button("Reset:All##Scale", { fResetButtonWidth, 30.0f }))
 			pDest->ScaleTarget = { 1.0f, 1.0f, 1.0f };
 		ImGui::Separator();
 
@@ -912,55 +883,75 @@ void CMotion_Manager::EditDest()
 
 		// コピーペースト
 		static Vec3 Copy = { 1.0f, 1.0f, 1.0f };
-		if (ImGui::Button("Copy", { fCopyPasteButtonWidth, 30.0f }))
+		if (ImGui::Button("Copy##Scale", { fCopyPasteButtonWidth, 30.0f }))
 			Copy = pDest->ScaleTarget;
 		ImGui::SameLine();
-		if (ImGui::Button("Paste", { fCopyPasteButtonWidth, 30.0f }))
+		if (ImGui::Button("Paste##Scale", { fCopyPasteButtonWidth, 30.0f }))
 			pDest->ScaleTarget = Copy;
 	}
 
 	// 目標向きを変動
 	ImGui::SeparatorText("RotDest");
 	{
-		// 向き：X
-		if (ImGui::Button("Reset:RotX", { 110.0f, 30.0f }))
+		// 向きリセット
+		if (ImGui::Button("Reset:X##Rot", { fResetButtonWidth, 30.0f }))
 			pDest->RotTarget.x = 0.0f;
 		ImGui::SameLine();
-		ImGui::DragFloat("Rot:X", &pDest->RotTarget.x, D3DX_PI * 0.01f, -D3DX_PI, D3DX_PI);
-
-		// 向き：X
-		if (ImGui::Button("Reset:RotY", { 110.0f, 30.0f }))
+		if (ImGui::Button("Reset:Y##Rot", { fResetButtonWidth, 30.0f }))
 			pDest->RotTarget.y = 0.0f;
 		ImGui::SameLine();
-		ImGui::DragFloat("Rot:Y", &pDest->RotTarget.y, D3DX_PI * 0.01f, -D3DX_PI, D3DX_PI);
-
-		// 向き：Z
-		if (ImGui::Button("Reset:RotZ", { 110.0f, 30.0f }))
+		if (ImGui::Button("Reset:Z##Rot", { fResetButtonWidth, 30.0f }))
 			pDest->RotTarget.z = 0.0f;
 		ImGui::SameLine();
-		ImGui::DragFloat("Rot:Z", &pDest->RotTarget.z, D3DX_PI * 0.01f, -D3DX_PI, D3DX_PI);
+		if (ImGui::Button("Reset:All##Rot", { fResetButtonWidth, 30.0f }))
+			pDest->RotTarget = VEC3_INIT;
+		ImGui::Separator();
+
+		// 向き変更
+		float* RotPtr[3] = { &pDest->RotTarget.x, &pDest->RotTarget.y, &pDest->RotTarget.z };
+		ImGui::SetNextItemWidth(-1.0f);
+		ImGui::DragFloat3("##Rot", *RotPtr, 0.01f, 0.0f);
+		ImGui::Separator();
+
+		// コピーペースト
+		static Vec3 Copy = { 0.0f, 0.0f, 0.0f };
+		if (ImGui::Button("Copy##Rot", { fCopyPasteButtonWidth, 30.0f }))
+			Copy = pDest->RotTarget;
+		ImGui::SameLine();
+		if (ImGui::Button("Paste##Rot", { fCopyPasteButtonWidth, 30.0f }))
+			pDest->RotTarget = Copy;
 	}
 
 	// 目標座標
 	ImGui::SeparatorText("PosDest");
 	{
-		// 座標：X
-		if (ImGui::Button("Reset:PosX", { 110.0f, 30.0f }))
+		// 座標リセット
+		if (ImGui::Button("Reset:X##Pos", { fResetButtonWidth, 30.0f }))
 			pDest->PosTarget.x = 0.0f;
 		ImGui::SameLine();
-		ImGui::DragFloat("Pos:X", &pDest->PosTarget.x, 0.01f);
-
-		// 座標：Y
-		if (ImGui::Button("Reset:PosY", { 110.0f, 30.0f }))
+		if (ImGui::Button("Reset:Y##Pos", { fResetButtonWidth, 30.0f }))
 			pDest->PosTarget.y = 0.0f;
 		ImGui::SameLine();
-		ImGui::DragFloat("Pos:Y", &pDest->PosTarget.y, 0.01f);
-
-		// 座標：Z
-		if (ImGui::Button("Reset:PosZ", { 110.0f, 30.0f }))
+		if (ImGui::Button("Reset:Z##Pos", { fResetButtonWidth, 30.0f }))
 			pDest->PosTarget.z = 0.0f;
 		ImGui::SameLine();
-		ImGui::DragFloat("Pos:Z", &pDest->PosTarget.z, 0.01f);
+		if (ImGui::Button("Reset:All##Pos", { fResetButtonWidth, 30.0f }))
+			pDest->PosTarget = VEC3_INIT;
+		ImGui::Separator();
+
+		// 座標変更
+		float* PosPtr[3] = { &pDest->PosTarget.x, &pDest->PosTarget.y, &pDest->PosTarget.z };
+		ImGui::SetNextItemWidth(-1.0f);
+		ImGui::DragFloat3("##Pos", *PosPtr, 0.01f, 0.0f);
+		ImGui::Separator();
+
+		// コピーペースト
+		static Vec3 Copy = { 0.0f, 0.0f, 0.0f };
+		if (ImGui::Button("Copy##Pos", { fCopyPasteButtonWidth, 30.0f }))
+			Copy = pDest->PosTarget;
+		ImGui::SameLine();
+		if (ImGui::Button("Paste##Pos", { fCopyPasteButtonWidth, 30.0f }))
+			pDest->PosTarget = Copy;
 	}
 
 #if !SORT_ON_EXPORT
