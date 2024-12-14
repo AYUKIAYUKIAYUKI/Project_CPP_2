@@ -21,7 +21,7 @@ class CPlayer_State_Dash : public CPlayer_State
 public:
 
 	/// <summary> ダッシュキャスト期間 </summary>
-	static constexpr int MAX_DASH_CAST = 30;
+	static constexpr int MAX_DASH_CAST = 45;
 
 	// <special function>
 	CPlayer_State_Dash();			// コンストラクタ
@@ -34,15 +34,11 @@ public:
 
 private:
 
-	/// <summary> ダッシュ継続期間 </summary>
-	static constexpr int MAX_DASH_DURATION = 10;
-
 	// <function>
-	void SetPosTarget_Unnamed();	// 目標座標をダッシュ方向に増加
+	void SetPosToFacing();	// 目標座標をダッシュ方向に増加
 
 	// <data>
 	bool	m_bDirection;		// 方向
-	int		m_nDashDuration;	// ダッシュ継続期間
 };
 
 #endif	// _PLAYER_STATE_DASH_

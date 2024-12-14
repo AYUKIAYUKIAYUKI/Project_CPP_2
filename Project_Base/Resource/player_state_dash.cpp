@@ -35,8 +35,7 @@ using namespace abbr;
 //============================================================================
 CPlayer_State_Dash::CPlayer_State_Dash() :
 	CPlayer_State{},
-	m_bDirection{ false },
-	m_nDashDuration{ 0 }
+	m_bDirection{ false }
 {
 	// アクションデータのダッシュした回数をインクリメント
 	CField_Manager::GetInstance()->IncrementCntDash();
@@ -46,6 +45,9 @@ CPlayer_State_Dash::CPlayer_State_Dash() :
 		m_bDirection = 0;
 	else
 		m_bDirection = 1;
+
+	// ダッシュモーションを再生
+	m_pCharacter->SetNowMotion(6);
 }
 
 //============================================================================
@@ -73,13 +75,10 @@ void CPlayer_State_Dash::Update()
 	m_pCharacter->SetVelY(0.0f);
 
 	// 目標座標をダッシュ方向に増加
-	SetPosTarget_Unnamed();
-
-	// 継続期間をカウントアップ
-	++m_nDashDuration;
+	SetPosToFacing();
 
 	// 継続期間が最大に到達で
-	if (m_nDashDuration >= MAX_DASH_DURATION)
+	if (m_pCharacter->GetStopState())
 	{
 		// 通常状態へ
 		To_Default();
@@ -117,7 +116,7 @@ void CPlayer_State_Dash::To_Damage()
 //============================================================================
 // 目標座標をダッシュ方向に増加
 //============================================================================
-void CPlayer_State_Dash::SetPosTarget_Unnamed()
+void CPlayer_State_Dash::SetPosToFacing()
 {
 	// 目標方角をコピー
 	float fDirectionTarget = m_pCharacter->GetDirectionTarget();
@@ -125,11 +124,11 @@ void CPlayer_State_Dash::SetPosTarget_Unnamed()
 	// 設定されている移動方向に方角を増加
 	if (m_bDirection)
 	{
-		fDirectionTarget += m_pCharacter->GetMoveSpeed() * 3.0f;
+		fDirectionTarget += m_pCharacter->GetMoveSpeed() * 2.0f;
 	}
 	else
 	{
-		fDirectionTarget += m_pCharacter->GetMoveSpeed() * -3.0f;
+		fDirectionTarget += m_pCharacter->GetMoveSpeed() * -2.0f;
 	}
 
 	// 目標方角を反映
