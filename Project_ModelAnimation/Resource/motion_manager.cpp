@@ -54,9 +54,9 @@ void CMotion_Manager::Update()
 		return;	// インポート時更新しない
 
 	// ウィンドウを表示
-	ImVec2 Rect = { 600, 1005 };
+	ImVec2 Rect = { 600, -1 };
 	ImGui::SetNextWindowSize(Rect);
-	ImGui::SetNextWindowPos({ SCREEN_WIDTH - (Rect.x + 100), 45 });
+	ImGui::SetNextWindowPos({ SCREEN_WIDTH - (Rect.x + 100), 10 });
 	ImGui::Begin("Edit MotionList");
 
 	// 編集
@@ -722,6 +722,38 @@ void CMotion_Manager::EditKey()
 	}
 	ImGui::SameLine();
 	ImGui::Text("Select:%d", m_wSelectKey);
+
+#if 1
+	ImGui::BulletText("Copy Key");
+	{ // キーごとコピーペースト
+
+		// ウィンドウとウィジェットの幅をコピー
+		float fWidth = ImGui::GetContentRegionAvail().x, fSeparate = ImGui::GetStyle().ItemSpacing.x;
+
+		// ボタンのサイズ
+		const float fCopyPasteButtonWidth = (fWidth + -fSeparate * 1.0f) / 2.0f;
+
+		// コピー用
+		static std::vector<CMotion_Set::KeyDest> CopyAllDest;
+
+		if (ImGui::Button("Copy##All", { fCopyPasteButtonWidth, 30.0f }))
+		{
+			// 先のコピーをリセット
+			CopyAllDest.clear();
+
+			// 現在のキーの全パーツの全目標をコピー
+			for (WORD wCntParts = 0; wCntParts < m_MotionSet->m_wMaxParts; ++wCntParts)
+				CopyAllDest.push_back(GetSelectKey()->apDest[wCntParts]);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Paste##All", { fCopyPasteButtonWidth, 30.0f }))
+		{
+			// 現在のキーの全パーツの全目標をペースト
+			for (WORD wCntParts = 0; wCntParts < m_MotionSet->m_wMaxParts; ++wCntParts)
+				GetSelectKey()->apDest[wCntParts] = CopyAllDest[wCntParts];
+		}
+	}
+#endif
 
 	// 総キー数の切り替え
 	ImGui::BulletText("Edit Key");
