@@ -377,7 +377,7 @@ void CField_Manager::AutoCreateItem()
 		// •ûŠp‚ðƒ‰ƒ“ƒ_ƒ€‚ÉÝ’è
 		pItem->SetDirection(fabsf(utility::GetRandomValue<float>()));
 
-	} while (m_pRenderFan->DetectInFanRange(pItem->GetPos()));
+	} while (!m_pRenderFan->DetectInFanRange(pItem->GetPos()));
 
 	// YÀ•W‚ðƒ‰ƒ“ƒ_ƒ€‚ÉÝ’è
 	//pItem->SetPosY(fabsf(utility::GetRandomValue<float>()));
