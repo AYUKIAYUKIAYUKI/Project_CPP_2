@@ -16,8 +16,8 @@
 //****************************************************
 // 前方宣言
 //****************************************************
-class CMotion_Set;
 class CBounding_Sphere;
+class CSummoning;
 
 //****************************************************
 // アイテムクラス
@@ -75,7 +75,7 @@ private:
 	float			  m_fDirection;		// 方角
 	D3DXVECTOR3		  m_RotTarget;		// 目標向き
 	D3DXVECTOR3		  m_PosTarget;		// 目標座標
-	CMotion_Set*	  m_pSummoning;		// 魔法陣
+	CSummoning*		  m_pSummoning;		// 魔法陣
 };
 
 #endif // _ITEM_H_

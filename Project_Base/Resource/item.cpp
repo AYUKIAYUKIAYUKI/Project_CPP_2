@@ -21,7 +21,7 @@ namespace
 // インクルードファイル
 //****************************************************
 #include "item.h"
-#include "motion_set.h"
+#include "summoning.h"
 #include "bounding_sphere.h"
 #include "field_manager.h"
 #include "player.h"
@@ -50,7 +50,7 @@ CItem::CItem() :
 	m_fDirection{ 0.0f },
 	m_RotTarget{ VEC3_INIT },
 	m_PosTarget{ VEC3_INIT },
-	m_pSummoning{ CMotion_Set::Create(LAYER::DEFAULT, utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\SUMMONING\\summoning_motion.json"))}
+	m_pSummoning{ CSummoning::Create() }
 {
 
 }
@@ -92,6 +92,9 @@ void CItem::Uninit()
 {
 	// Xオブジェクトクラスの終了処理
 	CObject_X::Uninit();
+
+	// 魔法陣を消滅モーションに変更
+	m_pSummoning->SetNowMotion(1);
 }
 
 //============================================================================

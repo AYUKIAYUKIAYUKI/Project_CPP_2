@@ -94,6 +94,7 @@
     <ClCompile Include="Resource\sparks.cpp" />
     <ClCompile Include="Resource\spline_test.cpp" />
     <ClCompile Include="Resource\state.cpp" />
+    <ClCompile Include="Resource\summoning.cpp" />
     <ClCompile Include="resource\texture_manager.cpp" />
     <ClCompile Include="Resource\title.cpp" />
     <ClCompile Include="Resource\utility.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="Resource\sparks.h" />
     <ClInclude Include="Resource\spline_test.h" />
     <ClInclude Include="Resource\state.h" />
+    <ClInclude Include="Resource\summoning.h" />
     <ClInclude Include="resource\texture_manager.h" />
     <ClInclude Include="Resource\title.h" />
     <ClInclude Include="Resource\utility.h" />
