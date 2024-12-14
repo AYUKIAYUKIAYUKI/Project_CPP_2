@@ -2,7 +2,7 @@
 // 
 // フィールドマネージャー [field_manager.cpp]
 // Author : 福田歩希
-// 
+// 97
 //============================================================================
 
 //****************************************************
@@ -380,7 +380,8 @@ void CField_Manager::AutoCreateItem()
 	} while (m_pRenderFan->DetectInFanRange(pItem->GetPos()));
 
 	// Y座標をランダムに設定
-	pItem->SetPosY(fabsf(utility::GetRandomValue<float>()));
+	//pItem->SetPosY(fabsf(utility::GetRandomValue<float>()));
+	pItem->SetPosY(10.0f);
 }
 
 //============================================================================

@@ -16,6 +16,7 @@
 //****************************************************
 // 前方宣言
 //****************************************************
+class CMotion_Set;
 class CBounding_Sphere;
 
 //****************************************************
@@ -60,6 +61,7 @@ public:
 private:
 
 	// <function>
+	void SetSummoning();	// 魔法陣をセット
 	void HitChecklPlayer();	// プレイヤーとの接触を検出
 	void AppealRotate();	// くるくる回る
 	void CorrectToTarget();	// 目標値への補間
@@ -73,7 +75,7 @@ private:
 	float			  m_fDirection;		// 方角
 	D3DXVECTOR3		  m_RotTarget;		// 目標向き
 	D3DXVECTOR3		  m_PosTarget;		// 目標座標
-	CObject_X*		  m_pSummoning;		// 魔法陣
+	CMotion_Set*	  m_pSummoning;		// 魔法陣
 };
 
 #endif // _ITEM_H_

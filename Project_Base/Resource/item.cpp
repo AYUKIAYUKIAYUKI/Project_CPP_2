@@ -21,6 +21,7 @@ namespace
 // インクルードファイル
 //****************************************************
 #include "item.h"
+#include "motion_set.h"
 #include "bounding_sphere.h"
 #include "field_manager.h"
 #include "player.h"
@@ -49,7 +50,7 @@ CItem::CItem() :
 	m_fDirection{ 0.0f },
 	m_RotTarget{ VEC3_INIT },
 	m_PosTarget{ VEC3_INIT },
-	m_pSummoning{ nullptr }
+	m_pSummoning{ CMotion_Set::Create(LAYER::DEFAULT, utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\SUMMONING\\summoning_motion.json"))}
 {
 
 }
@@ -110,6 +111,9 @@ void CItem::Update()
 	// プレイヤーとの接触を検出
 	HitChecklPlayer();
 
+	// 魔法陣をセット
+	SetSummoning();
+
 	// Xオブジェクトクラスの更新処理
 	CObject_X::Update();
 
@@ -128,7 +132,7 @@ void CItem::Update()
 #endif
 
 #ifdef _DEBUG
-#if 1	/* ステンシルテストの設定変更 */
+#if 0	/* ステンシルテストの設定変更 */
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Sstencil - Only Item"))
 	{
@@ -273,6 +277,26 @@ void CItem::SetPosY(float fPosY)
 // privateメンバ
 // 
 //============================================================================
+
+//============================================================================
+// 魔法陣をセット
+//============================================================================
+void CItem::SetSummoning()
+{
+	// 座標をコピー
+	Vec3 Pos = GetPos();
+
+	// 座標に合わせて向きをセット
+	Vec3 Rot = { 0.0f, atan2f(Pos.z, -Pos.x) + D3DX_PI * 0.5f, 0.0f };
+	m_pSummoning->SetRot(Rot);
+
+	// 座標をアイテムの背後に
+	Pos.x *= 0.95f;
+	Pos.z *= 0.95f;
+
+	// 座標をセット
+	m_pSummoning->SetPos(Pos);
+}
 
 //============================================================================
 // プレイヤーとの接触を検出
