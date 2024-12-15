@@ -1,6 +1,6 @@
 //============================================================================
 // 
-// 3Dオブジェクト [object_3D.cpp]
+// テキストメッシュオブジェクト [object_TextMesh.cpp]
 // Author : 福田歩希
 // 
 //============================================================================
@@ -8,7 +8,7 @@
 //****************************************************
 // インクルードファイル
 //****************************************************
-#include "object_3D.h"
+#include "object_TextMesh.h"
 #include "renderer.h"
 
 //****************************************************
@@ -25,10 +25,11 @@ using namespace abbr;
 //============================================================================
 // コンストラクタ
 //============================================================================
-CObject_3D::CObject_3D(LAYER Priority) :
+CObject_TextMesh::CObject_TextMesh(LAYER Priority) :
 	CObject{ Priority },
 	m_pVtxBuff{ nullptr },
 	m_pTex{ nullptr },
+	m_pSurface{ nullptr },
 	m_Size{ VEC3_INIT },
 	m_Rot{ VEC3_INIT },
 	m_Pos{ VEC3_INIT },
@@ -43,7 +44,7 @@ CObject_3D::CObject_3D(LAYER Priority) :
 //============================================================================
 // デストラクタ
 //============================================================================
-CObject_3D::~CObject_3D()
+CObject_TextMesh::~CObject_TextMesh()
 {
 
 }
@@ -51,7 +52,7 @@ CObject_3D::~CObject_3D()
 //============================================================================
 // 初期設定
 //============================================================================
-HRESULT CObject_3D::Init()
+HRESULT CObject_TextMesh::Init()
 {
 	// 頂点バッファの生成
 	if (FAILED(CreateVtxBuff()))
@@ -59,13 +60,22 @@ HRESULT CObject_3D::Init()
 		return E_FAIL;
 	}
 
+	// テクスチャの生成
+	if (FAILED(CreateTex()))
+	{
+		return E_FAIL;
+	}
+
+	// テキストタイプに設定
+	SetType(TYPE::TEXT);
+
 	return S_OK;
 }
 
 //============================================================================
 // 終了処理
 //============================================================================
-void CObject_3D::Uninit()
+void CObject_TextMesh::Uninit()
 {
 	// 頂点バッファの破棄
 	if (m_pVtxBuff != nullptr)
@@ -78,7 +88,7 @@ void CObject_3D::Uninit()
 //============================================================================
 // 更新処理
 //============================================================================
-void CObject_3D::Update()
+void CObject_TextMesh::Update()
 {
 	if (m_pVtxBuff == nullptr)
 	{ // 頂点バッファが消失
@@ -136,7 +146,7 @@ void CObject_3D::Update()
 //============================================================================
 // 描画処理
 //============================================================================
-void CObject_3D::Draw()
+void CObject_TextMesh::Draw()
 {
 	// デバイスを取得
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
@@ -174,25 +184,33 @@ void CObject_3D::Draw()
 }
 
 //============================================================================
-// テクスチャ割当
+// サーフェイスを取得
 //============================================================================
-void CObject_3D::BindTex(LPDIRECT3DTEXTURE9 pTex)
+LPDIRECT3DSURFACE9 CObject_TextMesh::GetSurface()
 {
-	m_pTex = pTex;
+	return m_pSurface;
 }
 
-//============================================================================
-// もっとテクスチャ割当
-//============================================================================
-void CObject_3D::BindTex(CTexture_Manager::TYPE Type)
-{
-	m_pTex = CTexture_Manager::GetInstance()->GetTexture(Type);
-}
+////============================================================================
+//// テクスチャ割当
+////============================================================================
+//void CObject_TextMesh::BindTex(LPDIRECT3DTEXTURE9 pTex)
+//{
+//	m_pTex = pTex;
+//}
+//
+////============================================================================
+//// もっとテクスチャ割当
+////============================================================================
+//void CObject_TextMesh::BindTex(CTexture_Manager::TYPE Type)
+//{
+//	m_pTex = CTexture_Manager::GetInstance()->GetTexture(Type);
+//}
 
 //============================================================================
 // サイズ取得
 //============================================================================
-const D3DXVECTOR3& CObject_3D::GetSize() const
+const D3DXVECTOR3& CObject_TextMesh::GetSize() const
 {
 	return m_Size;
 }
@@ -200,7 +218,7 @@ const D3DXVECTOR3& CObject_3D::GetSize() const
 //============================================================================
 // サイズ設定
 //============================================================================
-void CObject_3D::SetSize(D3DXVECTOR3 Size)
+void CObject_TextMesh::SetSize(D3DXVECTOR3 Size)
 {
 	m_Size = Size;
 }
@@ -208,7 +226,7 @@ void CObject_3D::SetSize(D3DXVECTOR3 Size)
 //============================================================================
 // 向き取得
 //============================================================================
-const D3DXVECTOR3& CObject_3D::GetRot()const
+const D3DXVECTOR3& CObject_TextMesh::GetRot()const
 {
 	return m_Rot;
 }
@@ -216,7 +234,7 @@ const D3DXVECTOR3& CObject_3D::GetRot()const
 //============================================================================
 // 向き設定
 //============================================================================
-void CObject_3D::SetRot(D3DXVECTOR3 Rot)
+void CObject_TextMesh::SetRot(D3DXVECTOR3 Rot)
 {
 	m_Rot = Rot;
 }
@@ -224,7 +242,7 @@ void CObject_3D::SetRot(D3DXVECTOR3 Rot)
 //============================================================================
 // 座標取得
 //============================================================================
-const D3DXVECTOR3& CObject_3D::GetPos() const
+const D3DXVECTOR3& CObject_TextMesh::GetPos() const
 {
 	return m_Pos;
 }
@@ -232,7 +250,7 @@ const D3DXVECTOR3& CObject_3D::GetPos() const
 //============================================================================
 // 座標設定
 //============================================================================
-void CObject_3D::SetPos(D3DXVECTOR3 Pos)
+void CObject_TextMesh::SetPos(D3DXVECTOR3 Pos)
 {
 	m_Pos = Pos;
 }
@@ -240,7 +258,7 @@ void CObject_3D::SetPos(D3DXVECTOR3 Pos)
 //============================================================================
 // 色を取得
 //============================================================================
-const D3DXCOLOR& CObject_3D::GetCol() const
+const D3DXCOLOR& CObject_TextMesh::GetCol() const
 {
 	return m_Col;
 }
@@ -248,7 +266,7 @@ const D3DXCOLOR& CObject_3D::GetCol() const
 //============================================================================
 // 色を設定
 //============================================================================
-void CObject_3D::SetCol(D3DXCOLOR Col)
+void CObject_TextMesh::SetCol(D3DXCOLOR Col)
 {
 	m_Col = Col;
 }
@@ -256,7 +274,7 @@ void CObject_3D::SetCol(D3DXCOLOR Col)
 //============================================================================
 // アルファ値を取得
 //============================================================================
-const float& CObject_3D::GetAlpha() const
+const float& CObject_TextMesh::GetAlpha() const
 {
 	return m_Col.a;
 }
@@ -264,7 +282,7 @@ const float& CObject_3D::GetAlpha() const
 //============================================================================
 // アルファ値を設定
 //============================================================================
-void CObject_3D::SetAlpha(float fAlpha)
+void CObject_TextMesh::SetAlpha(float fAlpha)
 {
 	m_Col.a = fAlpha;
 }
@@ -272,7 +290,7 @@ void CObject_3D::SetAlpha(float fAlpha)
 //============================================================================
 // 展開用対角線取得
 //============================================================================
-const float& CObject_3D::GetLength() const
+const float& CObject_TextMesh::GetLength() const
 {
 	return m_fLength;
 }
@@ -280,10 +298,10 @@ const float& CObject_3D::GetLength() const
 //============================================================================
 // 生成
 //============================================================================
-CObject_3D* CObject_3D::Create()
+CObject_TextMesh* CObject_TextMesh::Create()
 {
 	// インスタンスを生成
-	CObject_3D* pObject3D = DBG_NEW CObject_3D();
+	CObject_TextMesh* pObject3D = DBG_NEW CObject_TextMesh();
 
 	// 生成出来ていたら初期設定
 	if (pObject3D != nullptr)
@@ -303,7 +321,7 @@ CObject_3D* CObject_3D::Create()
 //============================================================================
 // 頂点バッファの生成
 //============================================================================
-HRESULT CObject_3D::CreateVtxBuff()
+HRESULT CObject_TextMesh::CreateVtxBuff()
 {
 	// デバイスを取得
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
@@ -352,9 +370,39 @@ HRESULT CObject_3D::CreateVtxBuff()
 }
 
 //============================================================================
+// テクスチャの生成
+//============================================================================
+HRESULT CObject_TextMesh::CreateTex()
+{
+	// デバイスを取得
+	auto pDev = CRenderer::GetDeviece();
+
+	// テクスチャを作成
+	HRESULT hr = pDev->CreateTexture(
+		static_cast<UINT>(m_Size.x),	// U
+		static_cast<UINT>(m_Size.y),	// V
+		0,								// ミップマップレベル
+		D3DUSAGE_RENDERTARGET,			// テクスチャの性質
+		D3DFMT_A8R8G8B8,				// ピクセルフォーマット
+		D3DPOOL_DEFAULT,				// メモリ管理フラグ
+		&m_pTex,						// テクスチャ保存先
+		nullptr);						// ハンドル
+
+	if (FAILED(hr))
+	{ // 生成失敗
+		return E_FAIL;
+	}
+
+	// テクスチャのサーフェイス情報を保持
+	m_pTex->GetSurfaceLevel(0, &m_pSurface);
+
+	return S_OK;
+}
+
+//============================================================================
 // ワールド行列設定
 //============================================================================
-void CObject_3D::SetMtxWorld()
+void CObject_TextMesh::SetMtxWorld()
 {
 	// 計算用行列
 	D3DXMATRIX mtxRot, mtxTrans;

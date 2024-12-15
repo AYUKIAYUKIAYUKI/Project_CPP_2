@@ -208,6 +208,9 @@
     <ClCompile Include="Resource\summoning.cpp">
       <Filter>&lt;Stage&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\object_TextMesh.cpp">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -419,6 +422,9 @@
     </ClInclude>
     <ClInclude Include="Resource\summoning.h">
       <Filter>&lt;Stage&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\object_TextMesh.h">
+      <Filter>&lt;Object&gt;</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

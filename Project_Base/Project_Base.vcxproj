@@ -68,6 +68,7 @@
     <ClCompile Include="Resource\object_Effect.cpp" />
     <ClCompile Include="Resource\object_HUD.cpp" />
     <ClCompile Include="Resource\object_Parts.cpp" />
+    <ClCompile Include="Resource\object_TextMesh.cpp" />
     <ClCompile Include="resource\object_X.cpp" />
     <ClCompile Include="resource\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -151,6 +152,7 @@
     <ClInclude Include="Resource\object_Effect.h" />
     <ClInclude Include="Resource\object_HUD.h" />
     <ClInclude Include="Resource\object_Parts.h" />
+    <ClInclude Include="Resource\object_TextMesh.h" />
     <ClInclude Include="resource\object_X.h" />
     <ClInclude Include="resource\pch.h" />
     <ClInclude Include="Resource\player.h" />

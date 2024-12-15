@@ -1,29 +1,28 @@
 //============================================================================
 // 
-// 3Dオブジェクト、ヘッダファイル [object_3D.h]
+// テキストメッシュオブジェクト、ヘッダファイル [object_TextMesh.h]
 // Author : 福田歩希
 // 
 //============================================================================
 
-#ifndef _OBJECT_3D_H_
-#define _OBJECT_3D_H_	// 二重インクルード防止
+#ifndef _OBJECT_TEXTMESH_H_
+#define _OBJECT_TEXTMESH_H_	// 二重インクルード防止
 
 //****************************************************
 // インクルードファイル
 //****************************************************
 #include "object.h"
-#include "texture_manager.h"
 
 //****************************************************
-// 3Dオブジェクトクラス
+// テキストメッシュクラス
 //****************************************************
-class CObject_3D : public CObject
+class CObject_TextMesh : public CObject
 {
 public:
 
 	// <special function>
-	CObject_3D(LAYER Priority = LAYER::BG);	// 描画優先度指定コンストラクタ
-	~CObject_3D() override;					// デストラクタ
+	CObject_TextMesh(LAYER Priority = LAYER::BG);	// 描画優先度指定コンストラクタ
+	~CObject_TextMesh() override;					// デストラクタ
 
 	// <function>
 	HRESULT	Init() override;	// 初期設定
@@ -31,9 +30,8 @@ public:
 	void	Update() override;	// 更新処理
 	void	Draw() override;	// 描画処理
 
-	// <setter>
-	void BindTex(LPDIRECT3DTEXTURE9 pTex);		// テクスチャ割当
-	void BindTex(CTexture_Manager::TYPE Type);	// もっとテクスチャ割当
+	// <getter>
+	LPDIRECT3DSURFACE9 GetSurface();	// サーフェイスを取得
 
 	// <getter/setter>
 	const D3DXVECTOR3& GetSize() const;	// サイズ取得
@@ -59,7 +57,7 @@ public:
 	const float& GetLength() const;	// 展開用対角線取得
 
 	// <static function>
-	static CObject_3D* Create();	// 生成
+	static CObject_TextMesh* Create();	// 生成
 
 private:
 
@@ -71,11 +69,13 @@ private:
 
 	// <function>
 	HRESULT CreateVtxBuff();	// 頂点バッファの生成
+	HRESULT CreateTex();		// テクスチャの生成
 	void	SetMtxWorld();		// ワールド行列設定
 
 	// <data>
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		// 頂点バッファのポインタ
 	LPDIRECT3DTEXTURE9		m_pTex;			// テクスチャのポインタ
+	LPDIRECT3DSURFACE9		m_pSurface;		// サーフェイスのポインタ
 	D3DXVECTOR3				m_Size;			// サイズ
 	D3DXVECTOR3				m_Rot;			// 向き
 	D3DXVECTOR3				m_Pos;			// 座標
@@ -85,4 +85,4 @@ private:
 	D3DXMATRIX				m_MtxWorld;		// ワールド行列
 };
 
-#endif // _OBJECT_3D_H_
+#endif // _OBJECT_TEXTMESH_H_
