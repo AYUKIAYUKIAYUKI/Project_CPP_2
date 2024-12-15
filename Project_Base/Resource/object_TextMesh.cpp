@@ -30,7 +30,8 @@ CObject_TextMesh::CObject_TextMesh(LAYER Priority) :
 	m_pVtxBuff{ nullptr },
 	m_pTex{ nullptr },
 	m_pSurface{ nullptr },
-	m_Size{ VEC3_INIT },
+	m_MeshSize{ VEC3_INIT },
+	m_TextSize{ VEC2_INIT },
 	m_Rot{ VEC3_INIT },
 	m_Pos{ VEC3_INIT },
 	m_Col{ XCOL_INIT },
@@ -96,8 +97,8 @@ void CObject_TextMesh::Update()
 	}
 
 	// 必要な数値を計算
-	m_fAngle = atan2f(m_Size.x, m_Size.y);
-	m_fLength = sqrtf(m_Size.x * m_Size.x + m_Size.y * m_Size.y);
+	m_fAngle = atan2f(m_MeshSize.x, m_MeshSize.y);
+	m_fLength = sqrtf(m_MeshSize.x * m_MeshSize.x + m_MeshSize.y * m_MeshSize.y);
 
 	// 頂点情報へのポインタ
 	VERTEX_3D* pVtx = nullptr;
@@ -192,19 +193,35 @@ LPDIRECT3DSURFACE9 CObject_TextMesh::GetSurface()
 }
 
 //============================================================================
-// サイズ取得
+// メッシュサイズ取得
 //============================================================================
-const D3DXVECTOR3& CObject_TextMesh::GetSize() const
+const D3DXVECTOR3& CObject_TextMesh::GetMeshSize() const
 {
-	return m_Size;
+	return m_MeshSize;
 }
 
 //============================================================================
-// サイズ設定
+// メッシュサイズ設定
 //============================================================================
-void CObject_TextMesh::SetSize(D3DXVECTOR3 Size)
+void CObject_TextMesh::SetMeshSize(D3DXVECTOR3 Size)
 {
-	m_Size = Size;
+	m_MeshSize = Size;
+}
+
+//============================================================================
+// テキストサイズ取得
+//============================================================================
+const D3DXVECTOR2& CObject_TextMesh::GetTextSize() const
+{
+	return m_TextSize;
+}
+
+//============================================================================
+// テキストサイズ設定
+//============================================================================
+void CObject_TextMesh::SetTextSize(D3DXVECTOR2 Size)
+{
+	m_TextSize = Size;
 }
 
 //============================================================================
@@ -361,19 +378,20 @@ HRESULT CObject_TextMesh::CreateTex()
 	// デバイスを取得
 	auto pDev = CRenderer::GetDeviece();
 
+	/* 仮サイズ */
 	JSON Json = utility::OpenJsonFile("Data\\JSON\\debug_param.json");
-	m_Size = utility::JsonConvertToVec3(Json["Size"]);
+	m_TextSize = utility::JsonConvertToVec2(Json["TextSize"]);
 
 	// テクスチャを作成
 	HRESULT hr = pDev->CreateTexture(
-		static_cast<UINT>(m_Size.x) * 2,	// U
-		static_cast<UINT>(m_Size.y) * 2,	// V
-		0,								// ミップマップレベル
-		D3DUSAGE_RENDERTARGET,			// テクスチャの性質
-		D3DFMT_A8R8G8B8,				// ピクセルフォーマット
-		D3DPOOL_DEFAULT,				// メモリ管理フラグ
-		&m_pTex,						// テクスチャ保存先
-		nullptr);						// ハンドル
+		static_cast<UINT>(m_TextSize.x),	// U
+		static_cast<UINT>(m_TextSize.y),	// V
+		0,									// ミップマップレベル
+		D3DUSAGE_RENDERTARGET,				// テクスチャの性質
+		D3DFMT_A8R8G8B8,					// ピクセルフォーマット
+		D3DPOOL_DEFAULT,					// メモリ管理フラグ
+		&m_pTex,							// テクスチャ保存先
+		nullptr);							// ハンドル
 
 	if (FAILED(hr))
 	{ // 生成失敗

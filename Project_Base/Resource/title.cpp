@@ -169,24 +169,25 @@ HRESULT CTitle::Init()
 		/* 最低すぎるタイトル仮表示 */
 		CObject_3D* p = CObject_3D::Create();
 		JSON Json = utility::OpenJsonFile("Data\\JSON\\debug_param.json");
-		p->BindTex(CTexture_Manager::TYPE::TITLE);
-		//p->SetSize(utility::JsonConvertToVec3(Json["Size"]));
-		//p->SetPos(utility::JsonConvertToVec3(Json["Pos"]));
+		p->BindTex(CTexture_Manager::TYPE::PLAGAUBAR);
+		p->SetSize(utility::JsonConvertToVec3(Json["Size"]));
+		p->SetPos(utility::JsonConvertToVec3(Json["Pos"]));
+		p->SetCol({ 1.0f, 1.0f, 0.0f, 0.5f });
 
 		/*最低すぎるスタート表示*/
 		m_pKESE = CObject_3D::Create();
-		m_pKESE->BindTex(CTexture_Manager::TYPE::START);
-		//m_pKESE->SetSize(utility::JsonConvertToVec3(Json["Size"]));
-		//m_pKESE->SetPos(utility::JsonConvertToVec3(Json["Pos"]));
-		//m_pKESE->SetPos({ m_pKESE->GetPos().x, m_pKESE->GetPos().y + -100.0f, m_pKESE->GetPos().z });
+		m_pKESE->BindTex(CTexture_Manager::TYPE::PLAGAUBAR);
+		m_pKESE->SetSize(utility::JsonConvertToVec3(Json["Size"]));
+		m_pKESE->SetPos(utility::JsonConvertToVec3(Json["Pos"]));
+		m_pKESE->SetPos({ m_pKESE->GetPos().x, m_pKESE->GetPos().y + -100.0f, m_pKESE->GetPos().z });
 		m_pKESE->SetAlpha(0.0f);
 
 		/* テスト */
 		CObject_TextMesh* pTest1 = CObject_TextMesh::Create();
-		pTest1->SetSize(utility::JsonConvertToVec3(Json["Size"]));
+		pTest1->SetMeshSize(utility::JsonConvertToVec3(Json["MeshSize"]));
 		pTest1->SetPos(utility::JsonConvertToVec3(Json["Pos"]));
 		CObject_TextMesh* pTest2 = CObject_TextMesh::Create();
-		pTest2->SetSize(utility::JsonConvertToVec3(Json["Size"]));
+		pTest2->SetMeshSize(utility::JsonConvertToVec3(Json["MeshSize"]));
 		pTest2->SetPos(utility::JsonConvertToVec3(Json["Pos"]));
 		pTest2->SetPos({ pTest2->GetPos().x, pTest2->GetPos().y + -100.0f, pTest2->GetPos().z });
 	}

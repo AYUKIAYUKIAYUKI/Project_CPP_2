@@ -5,6 +5,12 @@
 // 
 //============================================================================
 
+/* これはテキストメッシュの描画テスト用 */
+namespace
+{
+	float fSizeCoef = 1;	// テキストサイズの調整
+}
+
 //****************************************************
 // インクルードファイル
 //****************************************************
@@ -48,6 +54,14 @@ void CRenderer::Update()
 	CObject::LateUpdateAll();
 
 #ifdef _DEBUG
+#if 1 // テキストサイズの調整
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("DT Edit")) {
+		ImGui::DragFloat("fSizeCoef", &fSizeCoef, 0.001f, 0.0f, 100.0f);
+		ImGui::End();
+	}
+#endif
+
 #if 0 // フォグの調整
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Fog Edit")) {
@@ -127,14 +141,20 @@ void CRenderer::Draw()
 				1.0f,
 				0);
 
+			// テキストサイズをコピー
+			D3DXVECTOR2 TextSize = pTextMesh->GetTextSize();
+			
+			/* サイズを調整 */
+			TextSize *= fSizeCoef;
+
 			// テキスト表示範囲
-			RECT Rect = { 0, 0, WSCREEN_WIDTH, WSCREEN_HEIGHT };
+			RECT Rect = { 0, 0, static_cast<LONG>(TextSize.x), static_cast<LONG>(TextSize.y) };
 
 			// 描画開始
 			if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 			{
 				/* メッシュにテキストを描画 */
-				m_pFont->DrawText(NULL, "てすと", -1, &Rect, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));
+				m_pFont->DrawText(NULL, "てすと", -1, &Rect, DT_CENTER | DT_VCENTER, D3DCOLOR_RGBA(255, 255, 255, 255));
 
 				// 描画終了
 				m_pD3DDevice->EndScene();
@@ -203,7 +223,7 @@ void CRenderer::PrintDebug()
 	}
 
 	// テキストの描画
-	m_pFont->DrawText(NULL, m_DebugStr.c_str(), -1, &Rect, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));
+	m_pFont->DrawText(NULL, m_DebugStr.c_str(), -1, &Rect, DT_TOP | DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));
 }
 
 //============================================================================

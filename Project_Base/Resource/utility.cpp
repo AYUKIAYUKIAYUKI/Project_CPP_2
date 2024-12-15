@@ -214,6 +214,14 @@ nlohmann::json utility::OpenJsonFile(std::string FilePath)
 }
 
 //============================================================================
+// JsonデータをD3DXVECTOR2に変換
+//============================================================================
+D3DXVECTOR2 utility::JsonConvertToVec2(nlohmann::json Json)
+{
+	return D3DXVECTOR2(static_cast<float>(Json[0]), static_cast<float>(Json[1]));
+}
+
+//============================================================================
 // JsonデータをD3DXVECTOR3に変換
 //============================================================================
 D3DXVECTOR3 utility::JsonConvertToVec3(nlohmann::json Json)

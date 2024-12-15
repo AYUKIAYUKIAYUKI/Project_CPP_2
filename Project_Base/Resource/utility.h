@@ -40,6 +40,9 @@ namespace utility
 	// Jsonファイルの展開
 	nlohmann::json OpenJsonFile(std::string FilePath);
 
+	// JsonデータをD3DXVECTOR2に変換
+	D3DXVECTOR2 JsonConvertToVec2(nlohmann::json Json);
+
 	// JsonデータをD3DXVECTOR3に変換
 	D3DXVECTOR3 JsonConvertToVec3(nlohmann::json Json);
 

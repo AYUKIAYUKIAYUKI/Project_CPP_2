@@ -34,8 +34,12 @@ public:
 	LPDIRECT3DSURFACE9 GetSurface();	// サーフェイスを取得
 
 	// <getter/setter>
-	const D3DXVECTOR3& GetSize() const;	// サイズ取得
-	void SetSize(D3DXVECTOR3 Size);		// サイズ設定
+	const D3DXVECTOR3& GetMeshSize() const;	// メッシュサイズ取得
+	void SetMeshSize(D3DXVECTOR3 Size);		// メッシュサイズ設定
+
+	// <getter/setter>
+	const D3DXVECTOR2& GetTextSize() const;	// テキストサイズ取得
+	void SetTextSize(D3DXVECTOR2 Size);		// テキストサイズ設定
 
 	// <getter/setter>
 	const D3DXVECTOR3& GetRot() const;	// 向き取得
@@ -76,7 +80,8 @@ private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		// 頂点バッファのポインタ
 	LPDIRECT3DTEXTURE9		m_pTex;			// テクスチャのポインタ
 	LPDIRECT3DSURFACE9		m_pSurface;		// サーフェイスのポインタ
-	D3DXVECTOR3				m_Size;			// サイズ
+	D3DXVECTOR3				m_MeshSize;		// メッシュサイズ
+	D3DXVECTOR2				m_TextSize;		// テキストサイズ
 	D3DXVECTOR3				m_Rot;			// 向き
 	D3DXVECTOR3				m_Pos;			// 座標
 	D3DXCOLOR				m_Col;			// 色
