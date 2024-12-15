@@ -59,6 +59,29 @@ HRESULT CObject_3D::Init()
 		return E_FAIL;
 	}
 
+	/* テキストタイプに設定 */
+	this->SetType(TYPE::TEXT);
+
+	// デバイスを取得
+	auto pDev = CRenderer::GetDeviece();
+
+	JSON Json = utility::OpenJsonFile("Data\\JSON\\debug_param.json");
+	Vec3 Size = utility::JsonConvertToVec3(Json["Size"]);
+
+	// テクスチャを作成
+	HRESULT hr = pDev->CreateTexture(
+		Size.x,					// U
+		Size.y,					// V
+		0,						// ミップマップレベル
+		D3DUSAGE_RENDERTARGET,	// テクスチャの性質
+		D3DFMT_A8R8G8B8,		// ピクセルフォーマット
+		D3DPOOL_DEFAULT,		// メモリ管理フラグ
+		&m_pTex,				// テクスチャ保存先
+		nullptr);				// ハンドル
+
+	// テクスチャのサーフェイスを取得
+	m_pTex->GetSurfaceLevel(0, &m_pSurface);
+
 	return S_OK;
 }
 
@@ -174,20 +197,28 @@ void CObject_3D::Draw()
 }
 
 //============================================================================
-// テクスチャ割当
+// サーフェイスを取得
 //============================================================================
-void CObject_3D::BindTex(LPDIRECT3DTEXTURE9 pTex)
+LPDIRECT3DSURFACE9 CObject_3D::GetSurface()
 {
-	m_pTex = pTex;
+	return m_pSurface;
 }
 
-//============================================================================
-// もっとテクスチャ割当
-//============================================================================
-void CObject_3D::BindTex(CTexture_Manager::TYPE Type)
-{
-	m_pTex = CTexture_Manager::GetInstance()->GetTexture(Type);
-}
+////============================================================================
+//// テクスチャ割当
+////============================================================================
+//void CObject_3D::BindTex(LPDIRECT3DTEXTURE9 pTex)
+//{
+//	m_pTex = pTex;
+//}
+//
+////============================================================================
+//// もっとテクスチャ割当
+////============================================================================
+//void CObject_3D::BindTex(CTexture_Manager::TYPE Type)
+//{
+//	m_pTex = CTexture_Manager::GetInstance()->GetTexture(Type);
+//}
 
 //============================================================================
 // サイズ取得

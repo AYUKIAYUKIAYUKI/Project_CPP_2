@@ -16,6 +16,9 @@
 // オブジェクト取得
 #include "object.h"
 
+/* テスト */
+#include "object_3D.h"
+
 //****************************************************
 // プリプロセッサディレクティブ
 //****************************************************
@@ -47,7 +50,7 @@ void CRenderer::Update()
 	CObject::LateUpdateAll();
 
 #ifdef _DEBUG
-#if 1 // フォグの調整
+#if 0 // フォグの調整
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Fog Edit")) {
 		ImGui::InputFloat("fStart", &m_fFogStart);
@@ -65,7 +68,6 @@ void CRenderer::Update()
 //============================================================================
 void CRenderer::Draw()
 {
-#if ENABLE_STENCIL_BUFFER
 	// 画面バッファクリア
 	m_pD3DDevice->Clear(0,											// クリアしたい四角形の数を設定 (ビューポート全体の場合は0)
 		nullptr,													// 四角形構造体のポインタを設定 (nullptrを渡すことでビューポート全体の範囲)
@@ -73,15 +75,6 @@ void CRenderer::Draw()
 		D3DCOLOR_RGBA(0, 0, 0, 0),									// このカラーでターゲットをクリア
 		1.0f,														// この値に大してデプスバッファをクリア
 		0);															// この値でステンシルバッファをクリア
-#else
-	// 画面バッファクリア
-	m_pD3DDevice->Clear(0,
-		nullptr,
-		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
-		D3DCOLOR_RGBA(0, 0, 0, 0),
-		1.0f,
-		0);
-#endif
 
 	// 疑似スクリーンのテクスチャ内へ描画開始
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
@@ -95,16 +88,62 @@ void CRenderer::Draw()
 		// シーンの専用描画
 		CScene_Manager::GetInstance()->GetScene()->Draw();
 
+		// デバッグ表示
+		PrintDebug();
+
 		// ImGuiの描画
 		ImGui::Render();
 		ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
 
-		// デバッグ表示
-		PrintDebug();
-
 		// 描画終了
 		m_pD3DDevice->EndScene();
 	}
+
+#if 0 // テキスト描画準備中
+	/* 3Dオブジェクトのテストタイプを検索 */
+	auto p = CObject::FindSpecificObject(CObject::TYPE::TEXT);
+
+	/* テスト3Dオブジェクトが存在していれば */
+	if (p)
+	{
+		// 3Dオブジェクトにダウンキャスト
+		CObject_3D* pTest = utility::DownCast<CObject_3D, CObject>(p);
+
+		// レンダリングターゲット保持用
+		LPDIRECT3DSURFACE9 oldRenderTarget = nullptr;
+
+		// バックバッファの情報をコピー
+		m_pD3DDevice->GetRenderTarget(0, &oldRenderTarget);
+
+		// レンダリングターゲットに3Dオブジェクトのサーフェイスを指定
+		m_pD3DDevice->SetRenderTarget(0, pTest->GetSurface());
+
+		// 画面バッファクリア
+		m_pD3DDevice->Clear(0,
+			nullptr,
+			(D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+			D3DCOLOR_RGBA(0, 0, 0, 0),
+			1.0f,
+			0);
+
+		// 描画開始
+		if (SUCCEEDED(m_pD3DDevice->BeginScene()))
+		{
+			// 描画終了
+			m_pD3DDevice->EndScene();
+		}
+
+		// レンダリングターゲットをバックバッファに戻す
+		m_pD3DDevice->SetRenderTarget(0, oldRenderTarget);
+
+		// 保持していたレンダリングターゲットの破棄
+		if (oldRenderTarget != nullptr)
+		{
+			oldRenderTarget->Release();
+			oldRenderTarget = nullptr;
+		}
+	}
+#endif
 
 	// バックバッファとフロントバッファの入れ替え
 	m_pD3DDevice->Present(nullptr, nullptr, nullptr, nullptr);
@@ -308,13 +347,8 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 
 	// デバイスのプレゼンテーションパラメータの設定
 	ZeroMemory(&d3dpp, sizeof(d3dpp));			// パラメータのゼロクリア
-#if 1
-	d3dpp.BackBufferWidth = 1536;	// ゲームサイズ(幅)
-	d3dpp.BackBufferHeight = 864;	// ゲームサイズ(高さ)
-#else
-	d3dpp.BackBufferWidth = GetSystemMetrics(SM_CXSCREEN);	// ゲームサイズ(幅)
-	d3dpp.BackBufferHeight = GetSystemMetrics(SM_CYSCREEN);	// ゲームサイズ(高さ)
-#endif
+	d3dpp.BackBufferWidth = 1536;				// ゲームサイズ(幅)
+	d3dpp.BackBufferHeight = 864;				// ゲームサイズ(高さ)
 	d3dpp.BackBufferFormat = d3ddm.Format;		// バックバッファの形式
 	d3dpp.BackBufferCount = 1;					// バックバッファの数
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;	// ダブルバッファの切り替え(映像信号に同期)
@@ -398,7 +432,7 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 	ImGui_ImplDX9_Init(CRenderer::GetDeviece());
 
 	// フォントを生成
-	D3DXCreateFont(m_pD3DDevice,
+	HRESULT hr = D3DXCreateFont(m_pD3DDevice,
 		18,
 		0,
 		FW_HEAVY,
@@ -408,7 +442,7 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 		OUT_DEFAULT_PRECIS,
 		DEFAULT_QUALITY,
 		DEFAULT_PITCH,
-		"Terminal",
+		"Data\\FONT\\meiryo.ttc",
 		&m_pFont);
 
 	return S_OK;

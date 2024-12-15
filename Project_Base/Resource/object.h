@@ -37,6 +37,7 @@ public:
 	enum class TYPE : WORD
 	{
 		NONE = 0,	// 無し
+		TEXT,		// テキスト
 		PLAYER,		// プレイヤー
 		BOSS,		// ボス
 		ENEMY,		// エネミー

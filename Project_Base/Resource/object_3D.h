@@ -31,9 +31,12 @@ public:
 	void	Update() override;	// 更新処理
 	void	Draw() override;	// 描画処理
 
+	// <getter>
+	LPDIRECT3DSURFACE9 GetSurface();	// サーフェイスを取得
+
 	// <setter>
-	void BindTex(LPDIRECT3DTEXTURE9 pTex);		// テクスチャ割当
-	void BindTex(CTexture_Manager::TYPE Type);	// もっとテクスチャ割当
+	//void BindTex(LPDIRECT3DTEXTURE9 pTex);		// テクスチャ割当
+	//void BindTex(CTexture_Manager::TYPE Type);	// もっとテクスチャ割当
 
 	// <getter/setter>
 	const D3DXVECTOR3& GetSize() const;	// サイズ取得
@@ -76,6 +79,7 @@ private:
 	// <data>
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		// 頂点バッファのポインタ
 	LPDIRECT3DTEXTURE9		m_pTex;			// テクスチャのポインタ
+	LPDIRECT3DSURFACE9		m_pSurface;		// サーフェイスのポインタ
 	D3DXVECTOR3				m_Size;			// サイズ
 	D3DXVECTOR3				m_Rot;			// 向き
 	D3DXVECTOR3				m_Pos;			// 座標
