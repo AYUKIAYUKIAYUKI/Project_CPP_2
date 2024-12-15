@@ -191,22 +191,6 @@ LPDIRECT3DSURFACE9 CObject_TextMesh::GetSurface()
 	return m_pSurface;
 }
 
-////============================================================================
-//// テクスチャ割当
-////============================================================================
-//void CObject_TextMesh::BindTex(LPDIRECT3DTEXTURE9 pTex)
-//{
-//	m_pTex = pTex;
-//}
-//
-////============================================================================
-//// もっとテクスチャ割当
-////============================================================================
-//void CObject_TextMesh::BindTex(CTexture_Manager::TYPE Type)
-//{
-//	m_pTex = CTexture_Manager::GetInstance()->GetTexture(Type);
-//}
-
 //============================================================================
 // サイズ取得
 //============================================================================
@@ -377,10 +361,13 @@ HRESULT CObject_TextMesh::CreateTex()
 	// デバイスを取得
 	auto pDev = CRenderer::GetDeviece();
 
+	JSON Json = utility::OpenJsonFile("Data\\JSON\\debug_param.json");
+	m_Size = utility::JsonConvertToVec3(Json["Size"]);
+
 	// テクスチャを作成
 	HRESULT hr = pDev->CreateTexture(
-		static_cast<UINT>(m_Size.x),	// U
-		static_cast<UINT>(m_Size.y),	// V
+		static_cast<UINT>(m_Size.x) * 2,	// U
+		static_cast<UINT>(m_Size.y) * 2,	// V
 		0,								// ミップマップレベル
 		D3DUSAGE_RENDERTARGET,			// テクスチャの性質
 		D3DFMT_A8R8G8B8,				// ピクセルフォーマット

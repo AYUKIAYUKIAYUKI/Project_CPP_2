@@ -22,7 +22,7 @@ class CObject_3D : public CObject
 public:
 
 	// <special function>
-	CObject_3D(LAYER Priority = LAYER::BG);	// 描画優先度指定コンストラクタ
+	CObject_3D(LAYER Priority = LAYER::BG);	// コンストラクタ
 	~CObject_3D() override;					// デストラクタ
 
 	// <function>

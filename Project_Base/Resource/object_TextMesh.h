@@ -21,8 +21,8 @@ class CObject_TextMesh : public CObject
 public:
 
 	// <special function>
-	CObject_TextMesh(LAYER Priority = LAYER::BG);	// 描画優先度指定コンストラクタ
-	~CObject_TextMesh() override;					// デストラクタ
+	CObject_TextMesh(LAYER Priority = LAYER::FRONT);	// コンストラクタ
+	~CObject_TextMesh() override;						// デストラクタ
 
 	// <function>
 	HRESULT	Init() override;	// 初期設定

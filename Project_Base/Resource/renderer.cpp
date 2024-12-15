@@ -105,8 +105,8 @@ void CRenderer::Draw()
 	// 通常のバックバッファを保持
 	m_pD3DDevice->GetRenderTarget(0, &oldRenderTarget);
 
-	// 通常優先度のオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
+	// 前面優先度のオブジェクトを取得
+	CObject* pObj = CObject::GetTopObject(CObject::LAYER::FRONT);
 
 	while (pObj != nullptr)
 	{
@@ -118,7 +118,7 @@ void CRenderer::Draw()
 
 			// レンダリングターゲットにテキストメッシュのサーフェイスを指定
 			m_pD3DDevice->SetRenderTarget(0, pTextMesh->GetSurface());
-
+			
 			// 画面バッファクリア
 			m_pD3DDevice->Clear(0,
 				nullptr,
@@ -127,11 +127,14 @@ void CRenderer::Draw()
 				1.0f,
 				0);
 
+			// テキスト表示範囲
+			RECT Rect = { 0, 0, WSCREEN_WIDTH, WSCREEN_HEIGHT };
+
 			// 描画開始
 			if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 			{
 				/* メッシュにテキストを描画 */
-				PrintDebug();
+				m_pFont->DrawText(NULL, "てすと", -1, &Rect, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));
 
 				// 描画終了
 				m_pD3DDevice->EndScene();
