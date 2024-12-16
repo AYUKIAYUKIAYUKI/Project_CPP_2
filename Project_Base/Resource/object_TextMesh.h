@@ -37,7 +37,14 @@ public:
 	const std::string& GetText() const;	// テキストを取得
 	void SetText(std::string Text);		// テキストを設定
 
-		// <getter/setter>
+	// <getter/setter>
+	const std::string& GetTextTarget() const;	// 目標テキストを取得
+	void SetTextTarget(std::string Text);		// 目標テキストを設定
+
+	// <setter>
+	void SetTextSpeed(int nSpeed);	// テキストスピードを設定
+
+	// <getter/setter>
 	const D3DXVECTOR2& GetTextSize() const;	// テキストサイズ取得
 	void SetTextSize(D3DXVECTOR2 Size);		// テキストサイズ設定
 
@@ -78,6 +85,7 @@ private:
 	// <function>
 	HRESULT CreateVtxBuff();	// 頂点バッファの生成
 	HRESULT CreateTex();		// テクスチャの生成
+	void	TextAnimation();	// テキスト送り
 	void	SetMtxWorld();		// ワールド行列設定
 
 	// <data>
@@ -85,6 +93,8 @@ private:
 	LPDIRECT3DTEXTURE9		m_pTex;			// テクスチャのポインタ
 	LPDIRECT3DSURFACE9		m_pSurface;		// サーフェイスのポインタ
 	std::string				m_Text;			// テキスト
+	std::string				m_TextTarget;	// 目標テキスト
+	int						m_nTextSpeed;	// テキストスピード
 	D3DXVECTOR2				m_TextSize;		// テキストサイズ
 	D3DXVECTOR3				m_MeshSize;		// メッシュサイズ
 	D3DXVECTOR3				m_Rot;			// 向き

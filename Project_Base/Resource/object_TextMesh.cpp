@@ -31,6 +31,8 @@ CObject_TextMesh::CObject_TextMesh(LAYER Priority) :
 	m_pTex{ nullptr },
 	m_pSurface{ nullptr },
 	m_Text{},
+	m_TextTarget{},
+	m_nTextSpeed{ 0 },
 	m_TextSize{ VEC2_INIT },
 	m_MeshSize{ VEC3_INIT },
 	m_Rot{ VEC3_INIT },
@@ -92,6 +94,9 @@ void CObject_TextMesh::Uninit()
 //============================================================================
 void CObject_TextMesh::Update()
 {
+	// テキスト送り
+	TextAnimation();
+
 	if (m_pVtxBuff == nullptr)
 	{ // 頂点バッファが消失
 		assert(false);
@@ -207,6 +212,30 @@ const std::string& CObject_TextMesh::GetText() const
 void CObject_TextMesh::SetText(std::string Text)
 {
 	m_Text = Text;
+}
+
+//============================================================================
+// 目標テキストを取得
+//============================================================================
+const std::string& CObject_TextMesh::GetTextTarget() const
+{
+	return m_TextTarget;
+}
+
+//============================================================================
+// 目標テキストを設定
+//============================================================================
+void CObject_TextMesh::SetTextTarget(std::string Text)
+{
+	m_TextTarget = Text;
+}
+
+//============================================================================
+// テキストスピードを設定
+//============================================================================
+void CObject_TextMesh::SetTextSpeed(int nSpeed)
+{
+	m_nTextSpeed = nSpeed;
 }
 
 //============================================================================
@@ -332,6 +361,8 @@ CObject_TextMesh* CObject_TextMesh::Create(JSON Json)
 		// データをキャスト
 		std::string
 			Text = utility::JsonConvertToSJIS(Json["Text"]);
+		int
+			nTextSpeed = static_cast<int>(Json["TextSpeed"]);
 		Vec2
 			TextSize = utility::JsonConvertToVec2(Json["TextSize"]);
 		Vec3
@@ -342,7 +373,8 @@ CObject_TextMesh* CObject_TextMesh::Create(JSON Json)
 			Col = utility::JsonConvertToXCol(Json["Col"]);
 
 		// データをセット
-		pNewInstance->SetText(Text);			// テキスト
+		pNewInstance->SetTextTarget(Text);		// 目標テキスト
+		pNewInstance->SetTextSpeed(nTextSpeed);	// テキストスピード
 		pNewInstance->SetTextSize(TextSize);	// テキストサイズ
 		pNewInstance->SetMeshSize(MeshSize);	// メッシュサイズ
 		pNewInstance->SetRot(Rot);				// 向き
@@ -441,6 +473,32 @@ HRESULT CObject_TextMesh::CreateTex()
 	m_pTex->GetSurfaceLevel(0, &m_pSurface);
 
 	return S_OK;
+}
+
+//============================================================================
+// テキスト送り
+//============================================================================
+void CObject_TextMesh::TextAnimation()
+{
+	// テキストが全て表示されていたら処理をしない
+	if (m_Text == m_TextTarget)
+		return;
+
+	/* やめよう */
+	static int nCnt = 0;
+	
+	// カウントをインクリメント
+	++nCnt;
+
+	// カウントが規定値に達したら
+	if (nCnt > m_nTextSpeed)
+	{
+		// テキストを1文字追加
+		m_Text += m_TextTarget.substr(m_Text.size(), 2);
+
+		// カウントをリセット
+		nCnt = 0;
+	}
 }
 
 //============================================================================
