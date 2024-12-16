@@ -211,6 +211,9 @@
     <ClCompile Include="Resource\object_TextMesh.cpp">
       <Filter>&lt;Object&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\object_PopUp.cpp">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -424,6 +427,9 @@
       <Filter>&lt;Stage&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\object_TextMesh.h">
+      <Filter>&lt;Object&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\object_PopUp.h">
       <Filter>&lt;Object&gt;</Filter>
     </ClInclude>
   </ItemGroup>

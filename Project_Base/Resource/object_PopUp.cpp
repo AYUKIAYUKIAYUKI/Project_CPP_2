@@ -1,0 +1,245 @@
+//============================================================================
+// 
+// ポップアップオブジェクト [object_PopUp.cpp]
+// Author : 福田歩希
+// 
+//============================================================================
+
+//****************************************************
+// インクルードファイル
+//****************************************************
+#include "object_PopUp.h"
+#include "renderer.h"
+
+//****************************************************
+// usingディレクティブ
+//****************************************************
+using namespace abbr;
+
+//============================================================================
+// 
+// publicメンバ
+// 
+//============================================================================
+
+//============================================================================
+// コンストラクタ
+//============================================================================
+CObject_PopUp::CObject_PopUp(LAYER Priority) :
+	CObject_3D{ Priority },
+	m_fCorrectionCoef{ 0.0f },
+	m_PosTarget{ VEC3_INIT },
+	m_RotTarget{ VEC3_INIT },
+	m_SizeTarget{ VEC3_INIT },
+	m_ColTarget{ XCOL_INIT }
+{
+
+}
+
+//============================================================================
+// デストラクタ
+//============================================================================
+CObject_PopUp::~CObject_PopUp()
+{
+
+}
+
+//============================================================================
+// 初期設定
+//============================================================================
+HRESULT CObject_PopUp::Init()
+{
+	// 3Dオブジェクトの初期設定
+	if (FAILED(CObject_3D::Init()))
+	{
+		return E_FAIL;
+	}
+
+	// タイプ無し
+	SetType(TYPE::NONE);
+
+	return S_OK;
+}
+
+//============================================================================
+// 終了処理
+//============================================================================
+void CObject_PopUp::Uninit()
+{
+	// 3Dオブジェクトの終了処理
+	CObject_3D::Uninit();
+}
+
+//============================================================================
+// 更新処理
+//============================================================================
+void CObject_PopUp::Update()
+{
+	// 目標値への補正
+	CorrectToTarget();
+
+	// 3Dオブジェクトの更新処理
+	CObject_3D::Update();
+}
+
+//============================================================================
+// 描画処理
+//============================================================================
+void CObject_PopUp::Draw()
+{
+	// 3Dオブジェクトの描画処理
+	CObject_3D::Draw();
+}
+
+//============================================================================
+// 補正係数設定
+//============================================================================
+void CObject_PopUp::SetCorrectionCoef(float fCorrectioncoef)
+{
+	m_fCorrectionCoef = fCorrectioncoef;
+}
+
+//============================================================================
+// 目標座標取得
+//============================================================================
+const D3DXVECTOR3& CObject_PopUp::GetPosTarget() const
+{
+	return m_PosTarget;
+}
+
+//============================================================================
+// 目標座標設定
+//============================================================================
+void CObject_PopUp::SetPosTarget(D3DXVECTOR3 PosTarget)
+{
+	m_PosTarget = PosTarget;
+}
+
+//============================================================================
+// 目標向き取得
+//============================================================================
+const D3DXVECTOR3& CObject_PopUp::GetRotTarget() const
+{
+	return m_RotTarget;
+}
+
+//============================================================================
+// 目標向き設定
+//============================================================================
+void CObject_PopUp::SetRotTarget(D3DXVECTOR3 RotTarget)
+{
+	m_RotTarget = RotTarget;
+}
+
+//============================================================================
+// 目標サイズ取得
+//============================================================================
+const D3DXVECTOR3& CObject_PopUp::GetSizeTarget() const
+{
+	return m_SizeTarget;
+}
+
+//============================================================================
+// 目標サイズ設定
+//============================================================================
+void CObject_PopUp::SetSizeTarget(D3DXVECTOR3 SizeTarget)
+{
+	m_SizeTarget = SizeTarget;
+}
+
+//============================================================================
+// 目標色取得
+//============================================================================
+const D3DXCOLOR& CObject_PopUp::GetColTarget() const
+{
+	return m_ColTarget;
+}
+
+//============================================================================
+// 目標色設定
+//============================================================================
+void CObject_PopUp::SetColTarget(D3DXCOLOR ColTarget)
+{
+	m_ColTarget = ColTarget;
+}
+
+//============================================================================
+// 生成
+//============================================================================
+CObject_PopUp* CObject_PopUp::Create(JSON Json)
+{
+	// インスタンスを生成
+	CObject_PopUp* pNewInstance = DBG_NEW CObject_PopUp();
+
+	// 生成出来ていたら初期設定
+	if (pNewInstance == nullptr)
+	{
+		assert(false && "HUDオブジェクトの生成に失敗");
+	}
+
+	// 初期設定
+	pNewInstance->Init();
+
+	{ // パラメータを設定
+
+		// データをキャスト
+		float
+			fCorrectCoef = static_cast<float>(Json["CorrectionCoef"]);
+		Vec3
+			Size = utility::JsonConvertToVec3(Json["Size"]),
+			SizeTarget = utility::JsonConvertToVec3(Json["SizeTarget"]),
+			Rot = utility::JsonConvertToVec3(Json["Rot"]),
+			RotTarget = utility::JsonConvertToVec3(Json["RotTarget"]),
+			Pos = utility::JsonConvertToVec3(Json["Pos"]),
+			PosTarget = utility::JsonConvertToVec3(Json["PosTarget"]);
+		XCol
+			Col = static_cast<XCol>(Json["Col"]),
+			ColTarget = static_cast<XCol>(Json["ColTarhet"]);
+
+		// データをセット
+		pNewInstance->SetCorrectionCoef(fCorrectCoef);	// 補間強度
+		pNewInstance->SetSize(Size);					// サイズ
+		pNewInstance->SetSizeTarget(SizeTarget);		// 目標サイズ
+		pNewInstance->SetRot(Rot);						// 向き
+		pNewInstance->SetRotTarget(RotTarget);			// 目標向き
+		pNewInstance->SetPos(Pos);						// 座標
+		pNewInstance->SetPosTarget(PosTarget);			// 目標座標
+		pNewInstance->SetCol(Col);						// 色
+		pNewInstance->SetColTarget(ColTarget);			// 目標色
+	}
+
+	return pNewInstance;
+}
+
+//============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
+
+//============================================================================
+// 目標値への補正
+//============================================================================
+void CObject_PopUp::CorrectToTarget()
+{
+	// 目標座標へ移動
+	Vec3 NowPos = GetPos();
+	NowPos += (m_PosTarget - NowPos) * m_fCorrectionCoef;
+	SetPos(NowPos);
+
+	// 目標向きへ補正
+	Vec3 NowRot = GetRot();
+	utility::AdjustDirection(m_RotTarget.y, NowRot.y);	// 向きの範囲の補正
+	NowRot += (m_RotTarget - NowRot) * m_fCorrectionCoef;
+	SetRot(NowRot);
+
+	// 目標サイズへ補正
+	Vec3 NowSize = GetSize();
+	NowSize += (m_SizeTarget - NowSize) * m_fCorrectionCoef;
+	SetSize(NowSize);
+
+	// 目標色補正
+	XCol NowCol = GetCol();
+	NowCol += (m_ColTarget - NowCol) * m_fCorrectionCoef;
+	SetCol(NowCol);
+}
