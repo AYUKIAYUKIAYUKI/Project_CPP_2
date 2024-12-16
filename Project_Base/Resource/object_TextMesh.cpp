@@ -30,6 +30,7 @@ CObject_TextMesh::CObject_TextMesh(LAYER Priority) :
 	m_pVtxBuff{ nullptr },
 	m_pTex{ nullptr },
 	m_pSurface{ nullptr },
+	m_Text{},
 	m_MeshSize{ VEC3_INIT },
 	m_TextSize{ VEC2_INIT },
 	m_Rot{ VEC3_INIT },
@@ -190,6 +191,22 @@ void CObject_TextMesh::Draw()
 LPDIRECT3DSURFACE9 CObject_TextMesh::GetSurface()
 {
 	return m_pSurface;
+}
+
+//============================================================================
+// テキストを取得
+//============================================================================
+const std::string& CObject_TextMesh::GetText() const
+{
+	return m_Text;
+}
+
+//============================================================================
+// テキストを設定
+//============================================================================
+void CObject_TextMesh::SetText(std::string Text)
+{
+	m_Text = Text;
 }
 
 //============================================================================

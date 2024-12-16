@@ -182,11 +182,15 @@ HRESULT CTitle::Init()
 		m_pKESE->SetPos({ m_pKESE->GetPos().x, m_pKESE->GetPos().y + -100.0f, m_pKESE->GetPos().z });
 		m_pKESE->SetAlpha(0.0f);
 
-		/* テスト */
+		/* テスト1 */
 		CObject_TextMesh* pTest1 = CObject_TextMesh::Create();
+		pTest1->SetText(utility::JsonConvertToSJIS(Json["Text"][0]));
 		pTest1->SetMeshSize(utility::JsonConvertToVec3(Json["MeshSize"]));
 		pTest1->SetPos(utility::JsonConvertToVec3(Json["Pos"]));
+
+		/* テスト2 */
 		CObject_TextMesh* pTest2 = CObject_TextMesh::Create();
+		pTest2->SetText(utility::JsonConvertToSJIS(Json["Text"][1]));
 		pTest2->SetMeshSize(utility::JsonConvertToVec3(Json["MeshSize"]));
 		pTest2->SetPos(utility::JsonConvertToVec3(Json["Pos"]));
 		pTest2->SetPos({ pTest2->GetPos().x, pTest2->GetPos().y + -100.0f, pTest2->GetPos().z });

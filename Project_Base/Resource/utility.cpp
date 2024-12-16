@@ -228,3 +228,69 @@ D3DXVECTOR3 utility::JsonConvertToVec3(nlohmann::json Json)
 {
 	return D3DXVECTOR3(static_cast<float>(Json[0]), static_cast<float>(Json[1]), static_cast<float>(Json[2]));
 }
+
+//============================================================================
+// UTF8のJsonデータをSJISに変換
+//============================================================================
+std::string utility::JsonConvertToSJIS(nlohmann::json Json)
+{
+	// 文字列の長さを格納
+	int nLength = 0;
+
+	// UTF8の文字列をstring型にコピー
+	const std::string& Str = Json;
+
+	// UTF8の文字列の長さを取得
+	nLength = MultiByteToWideChar(CP_UTF8, 0, Str.c_str(), -1, nullptr, 0);
+
+	// エラー発生
+	if (nLength == 0) 
+	{
+		// エラーコードを取得
+		DWORD error = GetLastError();
+
+		// 例外をスロー
+		throw std::runtime_error("Failed");
+	}
+
+	// UTF16変換後の文字列を格納
+	std::wstring WideStr(nLength, L'\0');
+
+	// UTF8をUTF16に変換
+	MultiByteToWideChar(
+		CP_UTF8,		// 変換コードページ
+		0,				// 変換の種類
+		Str.c_str(),	// 変換したい文字列の
+		-1,				// 文字列の長さ (-1で全体指定)
+		&WideStr[0],	// 変換後の文字列を受け取るポインタ
+		nLength);		// 文字列のバッファサイズ
+
+	// UTF16の文字列の長さを取得
+	nLength = WideCharToMultiByte(CP_ACP, 0, WideStr.c_str(), -1, nullptr, 0, nullptr, nullptr);
+
+	// エラー発生
+	if (nLength == 0)
+	{
+		// エラーコードを取得
+		DWORD error = GetLastError();
+
+		// 例外をスロー
+		throw std::runtime_error("Failed");
+	}
+
+	// SJIS変換後の文字列を格納
+	std::string SjisStr(nLength, '\0');
+
+	// UTF16をSJISに変換
+	WideCharToMultiByte(
+		CP_ACP,				// 変換コードページ
+		0,					// 変換の種類
+		WideStr.c_str(),	// 変換したいワイド文字列
+		-1,					// 文字列の長さ (-1で全体指定)
+		&SjisStr[0],		// 変換後の文字列を受け取るポインタ
+		nLength,			// 文字列のバッファサイズ
+		nullptr,			// 変換できない文字の代わりに出す文字
+		nullptr);			// 代わりの文字の使用判定を受け取るポインタ
+
+	return SjisStr;
+}

@@ -34,6 +34,10 @@ public:
 	LPDIRECT3DSURFACE9 GetSurface();	// サーフェイスを取得
 
 	// <getter/setter>
+	const std::string& GetText() const;	// テキストを取得
+	void SetText(std::string Text);		// テキストを設定
+
+	// <getter/setter>
 	const D3DXVECTOR3& GetMeshSize() const;	// メッシュサイズ取得
 	void SetMeshSize(D3DXVECTOR3 Size);		// メッシュサイズ設定
 
@@ -80,6 +84,7 @@ private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		// 頂点バッファのポインタ
 	LPDIRECT3DTEXTURE9		m_pTex;			// テクスチャのポインタ
 	LPDIRECT3DSURFACE9		m_pSurface;		// サーフェイスのポインタ
+	std::string				m_Text;			// テキスト
 	D3DXVECTOR3				m_MeshSize;		// メッシュサイズ
 	D3DXVECTOR2				m_TextSize;		// テキストサイズ
 	D3DXVECTOR3				m_Rot;			// 向き

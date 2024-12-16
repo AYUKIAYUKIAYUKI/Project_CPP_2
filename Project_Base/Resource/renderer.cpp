@@ -153,8 +153,8 @@ void CRenderer::Draw()
 			// 描画開始
 			if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 			{
-				/* メッシュにテキストを描画 */
-				m_pFont->DrawText(NULL, "てすと", -1, &Rect, DT_CENTER | DT_VCENTER, D3DCOLOR_RGBA(255, 255, 255, 255));
+				// メッシュにテキストを描s画
+				m_pFont->DrawText(NULL, pTextMesh->GetText().c_str(), -1, &Rect, DT_CENTER | DT_VCENTER, D3DCOLOR_RGBA(255, 255, 255, 255));
 
 				// 描画終了
 				m_pD3DDevice->EndScene();
