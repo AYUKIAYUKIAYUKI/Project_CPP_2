@@ -153,7 +153,7 @@ void CRenderer::Draw()
 			// 描画開始
 			if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 			{
-				// メッシュにテキストを描s画
+				// メッシュにテキストを描画
 				m_pFont->DrawText(NULL, pTextMesh->GetText().c_str(), -1, &Rect, DT_CENTER | DT_VCENTER, D3DCOLOR_RGBA(255, 255, 255, 255));
 
 				// 描画終了
@@ -462,6 +462,10 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 	ImGui_ImplWin32_Init(hWnd);
 	ImGui_ImplDX9_Init(CRenderer::GetDeviece());
 
+	// フォントをプロセスに追加
+	if (AddFontResourceEx("Data\\FONT\\Hangyaku-xRRwq.ttf", FR_PRIVATE, 0) == 0)
+		throw std::runtime_error("Add Font Failed");
+
 	// フォントを生成
 	D3DXCreateFont(m_pD3DDevice,
 		18,
@@ -470,10 +474,10 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 		1,
 		FALSE,
 		SHIFTJIS_CHARSET,
-		OUT_DEFAULT_PRECIS,
+		OUT_TT_PRECIS,
 		DEFAULT_QUALITY,
 		DEFAULT_PITCH,
-		"Data\\FONT\\meiryo.ttc",
+		"叛逆明朝",
 		&m_pFont);
 
 	return S_OK;
@@ -493,6 +497,10 @@ void CRenderer::Uninit()
 		m_pFont->Release();
 		m_pFont = nullptr;
 	}
+
+	// フォントをプロセスから除外
+	if (RemoveFontResourceEx("Data\\FONT\\Hangyaku-xRRwq.ttf", FR_PRIVATE, 0) == 0)
+		throw std::runtime_error("Add Font Failed");
 
 	// ImGUiの終了処理
 	ImGui_ImplDX9_Shutdown();
