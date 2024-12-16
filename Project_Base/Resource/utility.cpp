@@ -230,6 +230,14 @@ D3DXVECTOR3 utility::JsonConvertToVec3(nlohmann::json Json)
 }
 
 //============================================================================
+// JsonデータをD3DXCOLORに変換
+//============================================================================
+D3DXCOLOR utility::JsonConvertToXCol(nlohmann::json Json)
+{
+	return D3DXCOLOR(static_cast<float>(Json[0]), static_cast<float>(Json[1]), static_cast<float>(Json[2]), static_cast<float>(Json[3]));
+}
+
+//============================================================================
 // UTF8のJsonデータをSJISに変換
 //============================================================================
 std::string utility::JsonConvertToSJIS(nlohmann::json Json)

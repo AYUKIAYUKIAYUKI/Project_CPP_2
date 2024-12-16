@@ -174,7 +174,7 @@ CObject_PopUp* CObject_PopUp::Create(JSON Json)
 	// 生成出来ていたら初期設定
 	if (pNewInstance == nullptr)
 	{
-		assert(false && "HUDオブジェクトの生成に失敗");
+		assert(false && "ポップアップオブジェクトの生成に失敗");
 	}
 
 	// 初期設定

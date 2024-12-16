@@ -217,32 +217,32 @@ CHUD_Manager::~CHUD_Manager()
 HRESULT CHUD_Manager::Init()
 {
 	{ // マップ枠を作成
-		m_pMapBase = CObject_HUD::Create("Data\\JSON\\HUD\\mapbase.json");
+		m_pMapBase = CObject_HUD::Create(utility::OpenJsonFile("Data\\JSON\\HUD\\mapbase.json"));
 		m_pMapBase->BindTex(CTexture_Manager::TYPE::MAPBASE);
 	}
 
 	{ // マップ輪を作成
-		m_pMapRing = CObject_HUD::Create("Data\\JSON\\HUD\\mapring.json");
+		m_pMapRing = CObject_HUD::Create(utility::OpenJsonFile("Data\\JSON\\HUD\\mapring.json"));
 		m_pMapRing->BindTex(CTexture_Manager::TYPE::MAPRING);
 	}
 
 	{ // プレイヤーマップシンボルを作成
-		m_pMapSymbolPlayer = CObject_HUD::Create("Data\\JSON\\HUD\\mapsymbolplayer.json");
+		m_pMapSymbolPlayer = CObject_HUD::Create(utility::OpenJsonFile("Data\\JSON\\HUD\\mapsymbolplayer.json"));
 		m_pMapSymbolPlayer->BindTex(CTexture_Manager::TYPE::MAPSYMBOLPLA);
 	}
 
 	{ // アイテムマップシンボルを作成
-		m_pMapSymbolItem = CObject_HUD::Create("Data\\JSON\\HUD\\mapsymbolitem.json");
+		m_pMapSymbolItem = CObject_HUD::Create(utility::OpenJsonFile("Data\\JSON\\HUD\\mapsymbolitem.json"));
 		m_pMapSymbolItem->BindTex(CTexture_Manager::TYPE::MAPSYMBOLITE);
 	}
 
 	{ // プレイヤーゲージバーを生成
-		m_pPlayerGauge = CObject_HUD::Create("Data\\JSON\\HUD\\playergauge.json");
+		m_pPlayerGauge = CObject_HUD::Create(utility::OpenJsonFile("Data\\JSON\\HUD\\playergauge.json"));
 		m_pPlayerGauge->BindTex(CTexture_Manager::TYPE::PLAGAUBAR);
 	}
 
 	{ // プレイヤーゲージ枠を生成
-		m_pPlayerGaugeWindow = CObject_HUD::Create("Data\\JSON\\HUD\\playergaugewindow.json");
+		m_pPlayerGaugeWindow = CObject_HUD::Create(utility::OpenJsonFile("Data\\JSON\\HUD\\playergaugewindow.json"));
 		m_pPlayerGaugeWindow->BindTex(CTexture_Manager::TYPE::PLAGAUBASE);
 	}
 
@@ -250,17 +250,17 @@ HRESULT CHUD_Manager::Init()
 	for (WORD wCntLife = 0; wCntLife < CPlayer::MAX_LIFE; ++wCntLife)
 	{
 		std::string FilePath = "Data\\JSON\\HUD\\playerlife\\" + to_string(wCntLife) + ".json";
-		m_pPlayerLife[wCntLife] = CObject_HUD::Create(FilePath);
+		m_pPlayerLife[wCntLife] = CObject_HUD::Create(utility::OpenJsonFile(FilePath));
 		m_pPlayerLife[wCntLife]->BindTex(CTexture_Manager::TYPE::PLALIFE);
 	}
 
 	{ // ボスゲージ背景を生成
-		m_pBossGaugeBack = CObject_HUD::Create("Data\\JSON\\HUD\\bossgaugeback.json");
+		m_pBossGaugeBack = CObject_HUD::Create(utility::OpenJsonFile("Data\\JSON\\HUD\\bossgaugeback.json"));
 		m_pBossGaugeBack->BindTex(CTexture_Manager::TYPE::BOSSGAUBACK);
 	}
 
 	{ // ボスゲージバーを生成
-		m_pBossGaugeBar = CObject_HUD::Create("Data\\JSON\\HUD\\bossgaugebar.json");
+		m_pBossGaugeBar = CObject_HUD::Create(utility::OpenJsonFile("Data\\JSON\\HUD\\bossgaugebar.json"));
 		m_pBossGaugeBar->BindTex(CTexture_Manager::TYPE::BOSSGAUBAR);
 
 		// X方向目標サイズを0にしておく
@@ -273,7 +273,7 @@ HRESULT CHUD_Manager::Init()
 	}
 
 	{ // ボスゲージ枠を生成
-		m_pBossGaugeBase = CObject_HUD::Create("Data\\JSON\\HUD\\bossgaugebase.json");
+		m_pBossGaugeBase = CObject_HUD::Create(utility::OpenJsonFile("Data\\JSON\\HUD\\bossgaugebase.json"));
 		m_pBossGaugeBase->BindTex(CTexture_Manager::TYPE::BOSSGAUBASE);
 	}
 

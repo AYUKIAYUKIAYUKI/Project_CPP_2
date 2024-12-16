@@ -23,7 +23,7 @@ using namespace abbr;
 //============================================================================
 
 //============================================================================
-// 描画優先度指定コンストラクタ
+// コンストラクタ
 //============================================================================
 CObject_HUD::CObject_HUD(LAYER Priority) :
 	CObject_2D{ Priority },
@@ -185,7 +185,7 @@ void CObject_HUD::SetColTarget(D3DXCOLOR ColTarget)
 //============================================================================
 // 生成
 //============================================================================
-CObject_HUD* CObject_HUD::Create()
+CObject_HUD* CObject_HUD::Create(JSON Json)
 {
 	// インスタンスを生成
 	CObject_HUD* pNewInstance = DBG_NEW CObject_HUD();
@@ -199,75 +199,37 @@ CObject_HUD* CObject_HUD::Create()
 	// 初期設定
 	pNewInstance->Init();
 
-	return pNewInstance;
-}
+	{ // パラメータを設定
 
-//============================================================================
-// 生成
-//============================================================================
-CObject_HUD* CObject_HUD::Create(std::string FilePath)
-{
-	// インスタンスを生成
-	CObject_HUD* pNewInstance = DBG_NEW CObject_HUD();
+		// ジェイソンデータのエイリアス
+		JSON
+			ColData = Json["Col"],
+			ColTargetData = Json["ColTarget"];
 
-	// 生成出来ていたら初期設定
-	if (pNewInstance == nullptr)
-	{
-		assert(false && "HUDオブジェクトの生成に失敗");
-	}
+		// データをキャスト
+		float
+			fCorrectCoef = static_cast<float>(Json["CorrectionCoef"]);
+		Vec3
+			Size = utility::JsonConvertToVec3(Json["Size"]),
+			SizeTarget = utility::JsonConvertToVec3(Json["SizeTarget"]),
+			Rot = utility::JsonConvertToVec3(Json["Rot"]),
+			RotTarget = utility::JsonConvertToVec3(Json["RotTarget"]),
+			Pos = utility::JsonConvertToVec3(Json["Pos"]),
+			PosTarget = utility::JsonConvertToVec3(Json["PosTarget"]);
+		XCol
+			Col = utility::JsonConvertToXCol(Json["Col"]),
+			ColTarget = utility::JsonConvertToXCol(Json["ColTarget"]);
 
-	// 初期設定
-	pNewInstance->Init();
-
-	// JSONファイルを読み取り展開
-	std::ifstream ifs(FilePath);
-
-	// ファイルが展開出来ていたら
-	if (ifs.good())
-	{
-		// JSONデータをパース
-		JSON Json;
-		ifs >> Json;
-
-		// 補正係数を設定
-		auto CorrectionCoef = Json["CorrectionCoef"];
-		pNewInstance->SetCorrectionCoef(CorrectionCoef);
-
-		// 初期座標を設定
-		auto Pos = Json["Pos"];
-		pNewInstance->SetPos(Vec3(Pos[0], Pos[1], Pos[2]));
-
-		// 目標座標を設定
-		auto PosTarget = Json["PosTarget"];
-		pNewInstance->SetPosTarget(Vec3(PosTarget[0], PosTarget[1], PosTarget[2]));
-
-		// 初期向きを設定
-		auto Rot = Json["Rot"];
-		pNewInstance->SetRot(Vec3(Rot[0], Rot[1], Rot[2]));
-
-		// 目標向きを設定
-		auto RotTarget = Json["RotTarget"];
-		pNewInstance->SetRotTarget(Vec3(RotTarget[0], RotTarget[1], RotTarget[2]));
-
-		// 初期サイズを設定
-		auto Size = Json["Size"];
-		pNewInstance->SetSize(Vec3(Size[0], Size[1], Size[2]));
-
-		// 目標サイズを設定
-		auto SizeTarget = Json["SizeTarget"];
-		pNewInstance->SetSizeTarget(Vec3(SizeTarget[0], SizeTarget[1], SizeTarget[2]));
-
-		// 初期色を設定
-		auto Col = Json["Col"];
-		pNewInstance->SetCol(XCol(Col[0], Col[1], Col[2], Col[3]));
-
-		// 目標色を設定
-		auto ColTarget = Json["ColTarget"];
-		pNewInstance->SetColTarget(XCol(ColTarget[0], ColTarget[1], ColTarget[2], ColTarget[3]));
-	}
-	else
-	{
-		assert(false && (*FilePath.c_str() + "の読み取りに失敗しました"));
+		// データをセット
+		pNewInstance->SetCorrectionCoef(fCorrectCoef);	// 補間強度
+		pNewInstance->SetSize(Size);					// サイズ
+		pNewInstance->SetSizeTarget(SizeTarget);		// 目標サイズ
+		pNewInstance->SetRot(Rot);						// 向き
+		pNewInstance->SetRotTarget(RotTarget);			// 目標向き
+		pNewInstance->SetPos(Pos);						// 座標
+		pNewInstance->SetPosTarget(PosTarget);			// 目標座標
+		pNewInstance->SetCol(Col);						// 色
+		pNewInstance->SetColTarget(ColTarget);			// 目標色
 	}
 
 	return pNewInstance;

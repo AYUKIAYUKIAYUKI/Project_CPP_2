@@ -185,7 +185,7 @@ HRESULT CResult::Init()
 	m_pFakePlayer->SetPos({ 0.0f, -1000.0f, 0.0f });
 
 	// テキストの生成
-	m_pText = CObject_HUD::Create("Data\\JSON\\HUD\\result.json");
+	m_pText = CObject_HUD::Create(utility::OpenJsonFile("Data\\JSON\\HUD\\result.json"));
 	m_pText->BindTex(CTexture_Manager::TYPE::RESULT);
 
 	/* スプラインテストの初期設定 */

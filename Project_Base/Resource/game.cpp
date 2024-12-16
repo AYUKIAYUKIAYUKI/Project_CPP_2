@@ -175,7 +175,7 @@ HRESULT CGame::Init()
 	pCamera->ChangeTrackPlayer(true);
 
 	// フェード表示を生成
-	m_pRenderFade = CObject_HUD::Create("Data\\JSON\\HUD\\black.json");
+	m_pRenderFade = CObject_HUD::Create(utility::OpenJsonFile("Data\\JSON\\HUD\\black.json"));
 
 	/* テスト1 */
 	JSON Json = utility::OpenJsonFile("Data\\JSON\\debug_param.json");

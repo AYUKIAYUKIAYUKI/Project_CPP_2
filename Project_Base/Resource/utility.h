@@ -46,6 +46,9 @@ namespace utility
 	// JsonデータをD3DXVECTOR3に変換
 	D3DXVECTOR3 JsonConvertToVec3(nlohmann::json Json);
 
+	// JsonデータをD3DXCOLRに変換
+	D3DXCOLOR JsonConvertToXCol(nlohmann::json Json);
+
 	// UTF8のJsonデータをSJISに変換
 	std::string JsonConvertToSJIS(nlohmann::json Json);
 
