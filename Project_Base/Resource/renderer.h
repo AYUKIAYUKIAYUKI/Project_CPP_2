@@ -62,6 +62,7 @@ private:
 	float										m_fFogStart;	// フォグの始点
 	float										m_fFogEnd;		// フォグの終点
 	LPD3DXFONT									m_pFont;		// フォント
+	LPD3DXFONT									m_pDebugFont;	// デバッグフォント
 	std::string									m_DebugStr;		// 表示用文字列
 	std::vector<std::pair<std::string, int>>	m_TimeStr;		// 時限式文字列
 

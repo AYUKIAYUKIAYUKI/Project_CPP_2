@@ -223,7 +223,7 @@ void CRenderer::PrintDebug()
 	}
 
 	// テキストの描画
-	m_pFont->DrawText(NULL, m_DebugStr.c_str(), -1, &Rect, DT_TOP | DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));
+	m_pDebugFont->DrawText(NULL, m_DebugStr.c_str(), -1, &Rect, DT_TOP | DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));
 }
 
 //============================================================================
@@ -341,6 +341,7 @@ CRenderer::CRenderer() :
 	m_fFogStart{ FOG_SRART },
 	m_fFogEnd{ FOG_END },
 	m_pFont{ nullptr },
+	m_pDebugFont{ nullptr },
 	m_DebugStr{},
 	m_TimeStr{}
 {
@@ -468,17 +469,32 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 
 	// フォントを生成
 	D3DXCreateFont(m_pD3DDevice,
-		18,
+		0x0128,
 		0,
 		FW_HEAVY,
-		1,
+		4,
 		FALSE,
 		SHIFTJIS_CHARSET,
-		OUT_TT_PRECIS,
+		OUT_DEFAULT_PRECIS,
 		DEFAULT_QUALITY,
 		DEFAULT_PITCH,
 		"叛逆明朝",
 		&m_pFont);
+
+
+	// デバッグフォントを生成
+	D3DXCreateFont(m_pD3DDevice,
+		0x16,
+		0,
+		FW_HEAVY,
+		0,
+		FALSE,
+		SHIFTJIS_CHARSET,
+		OUT_DEFAULT_PRECIS,
+		DEFAULT_QUALITY,
+		DEFAULT_PITCH,
+		"Terminal",
+		&m_pDebugFont);
 
 	return S_OK;
 }
@@ -490,6 +506,13 @@ void CRenderer::Uninit()
 {
 	// 全オブジェクト解放処理
 	CObject::ReleaseAll();
+
+	// デバッグフォントの破棄
+	if (m_pDebugFont != nullptr)
+	{
+		m_pDebugFont->Release();
+		m_pDebugFont = nullptr;
+	}
 
 	// フォントの破棄
 	if (m_pFont != nullptr)

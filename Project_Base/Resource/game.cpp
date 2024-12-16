@@ -17,6 +17,7 @@
 #include "player.h"
 
 #include "title.h"
+#include "object_TextMesh.h"
 
 //============================================================================
 // 
@@ -175,6 +176,13 @@ HRESULT CGame::Init()
 
 	// フェード表示を生成
 	m_pRenderFade = CObject_HUD::Create("Data\\JSON\\HUD\\black.json");
+
+	/* テスト1 */
+	JSON Json = utility::OpenJsonFile("Data\\JSON\\debug_param.json");
+	CObject_TextMesh* pTest1 = CObject_TextMesh::Create();
+	pTest1->SetText(utility::JsonConvertToSJIS(Json["Text"][0]));
+	pTest1->SetMeshSize(utility::JsonConvertToVec3(Json["MeshSize"]));
+	pTest1->SetPos({ 0.0f, 10.0f, -CField_Manager::FIELD_RADIUS });
 
 	return S_OK;
 }
