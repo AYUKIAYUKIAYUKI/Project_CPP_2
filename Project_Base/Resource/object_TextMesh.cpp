@@ -31,8 +31,8 @@ CObject_TextMesh::CObject_TextMesh(LAYER Priority) :
 	m_pTex{ nullptr },
 	m_pSurface{ nullptr },
 	m_Text{},
-	m_MeshSize{ VEC3_INIT },
 	m_TextSize{ VEC2_INIT },
+	m_MeshSize{ VEC3_INIT },
 	m_Rot{ VEC3_INIT },
 	m_Pos{ VEC3_INIT },
 	m_Col{ XCOL_INIT },
@@ -210,22 +210,6 @@ void CObject_TextMesh::SetText(std::string Text)
 }
 
 //============================================================================
-// メッシュサイズ取得
-//============================================================================
-const D3DXVECTOR3& CObject_TextMesh::GetMeshSize() const
-{
-	return m_MeshSize;
-}
-
-//============================================================================
-// メッシュサイズ設定
-//============================================================================
-void CObject_TextMesh::SetMeshSize(D3DXVECTOR3 Size)
-{
-	m_MeshSize = Size;
-}
-
-//============================================================================
 // テキストサイズ取得
 //============================================================================
 const D3DXVECTOR2& CObject_TextMesh::GetTextSize() const
@@ -239,6 +223,22 @@ const D3DXVECTOR2& CObject_TextMesh::GetTextSize() const
 void CObject_TextMesh::SetTextSize(D3DXVECTOR2 Size)
 {
 	m_TextSize = Size;
+}
+
+//============================================================================
+// メッシュサイズ取得
+//============================================================================
+const D3DXVECTOR3& CObject_TextMesh::GetMeshSize() const
+{
+	return m_MeshSize;
+}
+
+//============================================================================
+// メッシュサイズ設定
+//============================================================================
+void CObject_TextMesh::SetMeshSize(D3DXVECTOR3 Size)
+{
+	m_MeshSize = Size;
 }
 
 //============================================================================
@@ -316,18 +316,44 @@ const float& CObject_TextMesh::GetLength() const
 //============================================================================
 // 生成
 //============================================================================
-CObject_TextMesh* CObject_TextMesh::Create()
+CObject_TextMesh* CObject_TextMesh::Create(JSON Json)
 {
 	// インスタンスを生成
-	CObject_TextMesh* pObject3D = DBG_NEW CObject_TextMesh();
+	CObject_TextMesh* pNewInstance = DBG_NEW CObject_TextMesh();
 
-	// 生成出来ていたら初期設定
-	if (pObject3D != nullptr)
+	// 生成失敗
+	if (pNewInstance == nullptr)
 	{
-		pObject3D->Init();
+		assert(false && "テキストメッシュオブジェクトの生成に失敗");
 	}
 
-	return pObject3D;
+	{ // パラメータの設定
+
+		// データをキャスト
+		std::string
+			Text = utility::JsonConvertToSJIS(Json["Text"]);
+		Vec2
+			TextSize = utility::JsonConvertToVec2(Json["TextSize"]);
+		Vec3
+			MeshSize = utility::JsonConvertToVec3(Json["MeshSize"]),
+			Rot = utility::JsonConvertToVec3(Json["Rot"]),
+			Pos = utility::JsonConvertToVec3(Json["Pos"]);
+		XCol
+			Col = utility::JsonConvertToXCol(Json["Col"]);
+
+		// データをセット
+		pNewInstance->SetText(Text);			// テキスト
+		pNewInstance->SetTextSize(TextSize);	// テキストサイズ
+		pNewInstance->SetMeshSize(MeshSize);	// メッシュサイズ
+		pNewInstance->SetRot(Rot);				// 向き
+		pNewInstance->SetPos(Pos);				// 座標
+		pNewInstance->SetCol(Col);				// 色
+	}
+	
+	// テキストメッシュの初期設定
+	pNewInstance->Init();
+
+	return pNewInstance;
 }
 
 //============================================================================
@@ -394,10 +420,6 @@ HRESULT CObject_TextMesh::CreateTex()
 {
 	// デバイスを取得
 	auto pDev = CRenderer::GetDeviece();
-
-	/* 仮サイズ */
-	JSON Json = utility::OpenJsonFile("Data\\JSON\\debug_param.json");
-	m_TextSize = utility::JsonConvertToVec2(Json["TextSize"]);
 
 	// テクスチャを作成
 	HRESULT hr = pDev->CreateTexture(

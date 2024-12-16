@@ -182,6 +182,7 @@ HRESULT CTitle::Init()
 		m_pKESE->SetPos({ m_pKESE->GetPos().x, m_pKESE->GetPos().y + -100.0f, m_pKESE->GetPos().z });
 		m_pKESE->SetAlpha(0.0f);
 
+#if 0x00000000
 		/* ƒeƒXƒg1 */
 		CObject_TextMesh* pTest1 = CObject_TextMesh::Create();
 		pTest1->SetText(utility::JsonConvertToSJIS(Json["Text"][0]));
@@ -194,6 +195,7 @@ HRESULT CTitle::Init()
 		pTest2->SetMeshSize(utility::JsonConvertToVec3(Json["MeshSize"]));
 		pTest2->SetPos(utility::JsonConvertToVec3(Json["Pos"]));
 		pTest2->SetPos({ pTest2->GetPos().x, pTest2->GetPos().y + -100.0f, pTest2->GetPos().z });
+#endif
 	}
 
 	return S_OK;

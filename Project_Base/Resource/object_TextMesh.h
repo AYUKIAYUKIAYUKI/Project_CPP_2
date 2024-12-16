@@ -37,13 +37,13 @@ public:
 	const std::string& GetText() const;	// テキストを取得
 	void SetText(std::string Text);		// テキストを設定
 
+		// <getter/setter>
+	const D3DXVECTOR2& GetTextSize() const;	// テキストサイズ取得
+	void SetTextSize(D3DXVECTOR2 Size);		// テキストサイズ設定
+
 	// <getter/setter>
 	const D3DXVECTOR3& GetMeshSize() const;	// メッシュサイズ取得
 	void SetMeshSize(D3DXVECTOR3 Size);		// メッシュサイズ設定
-
-	// <getter/setter>
-	const D3DXVECTOR2& GetTextSize() const;	// テキストサイズ取得
-	void SetTextSize(D3DXVECTOR2 Size);		// テキストサイズ設定
 
 	// <getter/setter>
 	const D3DXVECTOR3& GetRot() const;	// 向き取得
@@ -65,7 +65,7 @@ public:
 	const float& GetLength() const;	// 展開用対角線取得
 
 	// <static function>
-	static CObject_TextMesh* Create();	// 生成
+	static CObject_TextMesh* Create(JSON Json);	// 生成
 
 private:
 
@@ -85,8 +85,8 @@ private:
 	LPDIRECT3DTEXTURE9		m_pTex;			// テクスチャのポインタ
 	LPDIRECT3DSURFACE9		m_pSurface;		// サーフェイスのポインタ
 	std::string				m_Text;			// テキスト
-	D3DXVECTOR3				m_MeshSize;		// メッシュサイズ
 	D3DXVECTOR2				m_TextSize;		// テキストサイズ
+	D3DXVECTOR3				m_MeshSize;		// メッシュサイズ
 	D3DXVECTOR3				m_Rot;			// 向き
 	D3DXVECTOR3				m_Pos;			// 座標
 	D3DXCOLOR				m_Col;			// 色

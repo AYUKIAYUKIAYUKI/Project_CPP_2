@@ -9,6 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "object_PopUp.h"
+#include "object_TextMesh.h"
 #include "renderer.h"
 #include "manager.h"
 
@@ -32,7 +33,8 @@ CObject_PopUp::CObject_PopUp(LAYER Priority) :
 	m_PosTarget{ VEC3_INIT },
 	m_RotTarget{ VEC3_INIT },
 	m_SizeTarget{ VEC3_INIT },
-	m_ColTarget{ XCOL_INIT }
+	m_ColTarget{ XCOL_INIT },
+	m_pTextMesh{ nullptr }
 {
 
 }
@@ -201,7 +203,7 @@ CObject_PopUp* CObject_PopUp::Create(JSON Json)
 	// インスタンスを生成
 	CObject_PopUp* pNewInstance = DBG_NEW CObject_PopUp();
 
-	// 生成出来ていたら初期設定
+	// 生成失敗
 	if (pNewInstance == nullptr)
 	{
 		assert(false && "ポップアップオブジェクトの生成に失敗");
@@ -238,6 +240,12 @@ CObject_PopUp* CObject_PopUp::Create(JSON Json)
 		pNewInstance->SetColTarget(ColTarget);		// 目標色
 	}
 
+	// テキストメッシュ用データのパスをコピー
+	std::string FileName = Json["TextMeshFile"];
+
+	// テキストメッシュを作成
+	pNewInstance->m_pTextMesh = CObject_TextMesh::Create(utility::OpenJsonFile(FileName));
+
 	return pNewInstance;
 }
 
@@ -248,14 +256,14 @@ CObject_PopUp* CObject_PopUp::Create(JSON Json)
 //============================================================================
 
 //============================================================================
-// 目標値への補正
+// 目標値への補間
 //============================================================================
 void CObject_PopUp::CorrectToTarget()
 {
-	// 目標座標へ移動
-	Vec3 NowPos = GetPos();
-	NowPos += (m_PosTarget - NowPos) * m_fCorrectCoef;
-	SetPos(NowPos);
+	// 目標サイズへ補正
+	Vec3 NowSize = GetSize();
+	NowSize += (m_SizeTarget - NowSize) * m_fCorrectCoef;
+	SetSize(NowSize);
 
 	// 目標向きへ補正
 	Vec3 NowRot = GetRot();
@@ -263,13 +271,19 @@ void CObject_PopUp::CorrectToTarget()
 	NowRot += (m_RotTarget - NowRot) * m_fCorrectCoef;
 	SetRot(NowRot);
 
-	// 目標サイズへ補正
-	Vec3 NowSize = GetSize();
-	NowSize += (m_SizeTarget - NowSize) * m_fCorrectCoef;
-	SetSize(NowSize);
+	// 目標座標へ移動
+	Vec3 NowPos = GetPos();
+	NowPos += (m_PosTarget - NowPos) * m_fCorrectCoef;
+	SetPos(NowPos);
 
 	// 目標色補正
 	XCol NowCol = GetCol();
 	NowCol += (m_ColTarget - NowCol) * m_fCorrectCoef;
 	SetCol(NowCol);
+
+	// さらにこの時、テキストメッシュにも同様のパラメータを与える
+	m_pTextMesh->SetMeshSize(NowSize);
+	m_pTextMesh->SetRot(NowRot);
+	m_pTextMesh->SetPos(NowPos);
+	m_pTextMesh->SetCol(NowCol);
 }

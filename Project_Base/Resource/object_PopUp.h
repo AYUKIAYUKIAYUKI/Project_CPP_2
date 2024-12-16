@@ -14,6 +14,11 @@
 #include "object_3D.h"
 
 //****************************************************
+// 前方宣言
+//****************************************************
+class CObject_TextMesh;
+
+//****************************************************
 // ポップアップオブジェクトクラス
 //****************************************************
 class CObject_PopUp : public CObject_3D
@@ -60,11 +65,12 @@ private:
 	void CorrectToTarget();	// 目標値へ補間
 
 	// <data>
-	float		m_fCorrectCoef;	// 補間強度
-	D3DXVECTOR3	m_PosTarget;	// 目標座標
-	D3DXVECTOR3	m_RotTarget;	// 目標向き
-	D3DXVECTOR3 m_SizeTarget;	// 目標サイズ
-	D3DXCOLOR	m_ColTarget;	// 目標色
+	float			  m_fCorrectCoef;	// 補間強度
+	D3DXVECTOR3		  m_PosTarget;		// 目標座標
+	D3DXVECTOR3		  m_RotTarget;		// 目標向き
+	D3DXVECTOR3		  m_SizeTarget;		// 目標サイズ
+	D3DXCOLOR		  m_ColTarget;		// 目標色
+	CObject_TextMesh* m_pTextMesh;		// テキストメッシュ
 };
 
 #endif // _OBJECT_POPUP_H_
