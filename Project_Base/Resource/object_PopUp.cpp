@@ -10,6 +10,7 @@
 //****************************************************
 #include "object_PopUp.h"
 #include "renderer.h"
+#include "manager.h"
 
 //****************************************************
 // usingディレクティブ
@@ -27,7 +28,7 @@ using namespace abbr;
 //============================================================================
 CObject_PopUp::CObject_PopUp(LAYER Priority) :
 	CObject_3D{ Priority },
-	m_fCorrectionCoef{ 0.0f },
+	m_fCorrectCoef{ 0.0f },
 	m_PosTarget{ VEC3_INIT },
 	m_RotTarget{ VEC3_INIT },
 	m_SizeTarget{ VEC3_INIT },
@@ -58,6 +59,9 @@ HRESULT CObject_PopUp::Init()
 	// タイプ無し
 	SetType(TYPE::NONE);
 
+	// ポップアップテクスチャ
+	BindTex(CTexture_Manager::TYPE::POPUP);
+
 	return S_OK;
 }
 
@@ -75,6 +79,9 @@ void CObject_PopUp::Uninit()
 //============================================================================
 void CObject_PopUp::Update()
 {
+	if (CManager::GetKeyboard()->GetTrigger(DIK_M))
+		Disappear();
+
 	// 目標値への補正
 	CorrectToTarget();
 
@@ -92,11 +99,34 @@ void CObject_PopUp::Draw()
 }
 
 //============================================================================
-// 補正係数設定
+// 消滅
 //============================================================================
-void CObject_PopUp::SetCorrectionCoef(float fCorrectioncoef)
+void CObject_PopUp::Disappear()
 {
-	m_fCorrectionCoef = fCorrectioncoef;
+	// その場で消滅
+	m_SizeTarget = VEC3_INIT;
+	m_ColTarget = XCOL_INIT;
+}
+
+//============================================================================
+// 全目標値リセット
+//============================================================================
+void CObject_PopUp::AllTargetReset()
+{
+	// 全ての目標値をリセット
+	m_fCorrectCoef *= 0.5f;
+	m_SizeTarget = VEC3_INIT;
+	m_RotTarget = VEC3_INIT;
+	m_PosTarget = VEC3_INIT;
+	m_ColTarget = XCOL_INIT;
+}
+
+//============================================================================
+// 補間強度を設定
+//============================================================================
+void CObject_PopUp::SetCorrectCoef(float fCoef)
+{
+	m_fCorrectCoef = fCoef;
 }
 
 //============================================================================
@@ -193,19 +223,19 @@ CObject_PopUp* CObject_PopUp::Create(JSON Json)
 			Pos = utility::JsonConvertToVec3(Json["Pos"]),
 			PosTarget = utility::JsonConvertToVec3(Json["PosTarget"]);
 		XCol
-			Col = static_cast<XCol>(Json["Col"]),
-			ColTarget = static_cast<XCol>(Json["ColTarhet"]);
+			Col = utility::JsonConvertToXCol(Json["Col"]),
+			ColTarget = utility::JsonConvertToXCol(Json["ColTarget"]);
 
 		// データをセット
-		pNewInstance->SetCorrectionCoef(fCorrectCoef);	// 補間強度
-		pNewInstance->SetSize(Size);					// サイズ
-		pNewInstance->SetSizeTarget(SizeTarget);		// 目標サイズ
-		pNewInstance->SetRot(Rot);						// 向き
-		pNewInstance->SetRotTarget(RotTarget);			// 目標向き
-		pNewInstance->SetPos(Pos);						// 座標
-		pNewInstance->SetPosTarget(PosTarget);			// 目標座標
-		pNewInstance->SetCol(Col);						// 色
-		pNewInstance->SetColTarget(ColTarget);			// 目標色
+		pNewInstance->SetCorrectCoef(fCorrectCoef);	// 補間強度
+		pNewInstance->SetSize(Size);				// サイズ
+		pNewInstance->SetSizeTarget(SizeTarget);	// 目標サイズ
+		pNewInstance->SetRot(Rot);					// 向き
+		pNewInstance->SetRotTarget(RotTarget);		// 目標向き
+		pNewInstance->SetPos(Pos);					// 座標
+		pNewInstance->SetPosTarget(PosTarget);		// 目標座標
+		pNewInstance->SetCol(Col);					// 色
+		pNewInstance->SetColTarget(ColTarget);		// 目標色
 	}
 
 	return pNewInstance;
@@ -224,22 +254,22 @@ void CObject_PopUp::CorrectToTarget()
 {
 	// 目標座標へ移動
 	Vec3 NowPos = GetPos();
-	NowPos += (m_PosTarget - NowPos) * m_fCorrectionCoef;
+	NowPos += (m_PosTarget - NowPos) * m_fCorrectCoef;
 	SetPos(NowPos);
 
 	// 目標向きへ補正
 	Vec3 NowRot = GetRot();
 	utility::AdjustDirection(m_RotTarget.y, NowRot.y);	// 向きの範囲の補正
-	NowRot += (m_RotTarget - NowRot) * m_fCorrectionCoef;
+	NowRot += (m_RotTarget - NowRot) * m_fCorrectCoef;
 	SetRot(NowRot);
 
 	// 目標サイズへ補正
 	Vec3 NowSize = GetSize();
-	NowSize += (m_SizeTarget - NowSize) * m_fCorrectionCoef;
+	NowSize += (m_SizeTarget - NowSize) * m_fCorrectCoef;
 	SetSize(NowSize);
 
 	// 目標色補正
 	XCol NowCol = GetCol();
-	NowCol += (m_ColTarget - NowCol) * m_fCorrectionCoef;
+	NowCol += (m_ColTarget - NowCol) * m_fCorrectCoef;
 	SetCol(NowCol);
 }

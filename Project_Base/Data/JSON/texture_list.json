@@ -17,6 +17,7 @@
 		"Data\\TEXTURE\\HUD\\playergauge\\base.png",
 		"Data\\TEXTURE\\HUD\\bossgauge\\base.png",
 		"Data\\TEXTURE\\HUD\\bossgauge\\bar.png",
-		"Data\\TEXTURE\\HUD\\bossgauge\\back.png"
+		"Data\\TEXTURE\\HUD\\bossgauge\\back.png",
+		"Data\\TEXTURE\\popup.png"
 	]
 }

@@ -17,6 +17,7 @@
 #include "player.h"
 
 #include "title.h"
+#include "object_PopUp.h"
 #include "object_TextMesh.h"
 
 //============================================================================
@@ -177,8 +178,12 @@ HRESULT CGame::Init()
 	// フェード表示を生成
 	m_pRenderFade = CObject_HUD::Create(utility::OpenJsonFile("Data\\JSON\\HUD\\black.json"));
 
+	/* ポップアップを表示 */
+	JSON Json = utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_0.json");
+	CObject_PopUp* pPopUp = CObject_PopUp::Create(Json);
+
 	/* テスト1 */
-	JSON Json = utility::OpenJsonFile("Data\\JSON\\debug_param.json");
+	Json = utility::OpenJsonFile("Data\\JSON\\debug_param.json");
 	CObject_TextMesh* pTest1 = CObject_TextMesh::Create();
 	pTest1->SetText(utility::JsonConvertToSJIS(Json["Text"][0]));
 	pTest1->SetMeshSize(utility::JsonConvertToVec3(Json["MeshSize"]));

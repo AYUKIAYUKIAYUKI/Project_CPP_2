@@ -21,7 +21,7 @@ class CObject_PopUp : public CObject_3D
 public:
 
 	// <special function>
-	CObject_PopUp(LAYER Priority = LAYER::UI);	// コンストラクタ
+	CObject_PopUp(LAYER Priority = LAYER::FRONT);	// コンストラクタ
 	~CObject_PopUp() override;					// デストラクタ
 
 	// <function>
@@ -29,9 +29,11 @@ public:
 	void	Uninit() override;	// 終了処理
 	void	Update() override;	// 更新処理
 	void	Draw() override;	// 描画処理
+	void	Disappear();		// 消滅
+	void	AllTargetReset();	// 全目標値リセット
 
 	// <Setter>
-	void SetCorrectionCoef(float fCorrectionCoef);	// 補正係数設定
+	void SetCorrectCoef(float fCorrectionCoef);	// 補間強度を設定
 
 	// <getter/setter>
 	const D3DXVECTOR3& GetPosTarget() const;	// 目標座標取得
@@ -55,14 +57,14 @@ public:
 private:
 
 	// <function>
-	void CorrectToTarget();	// 目標値へ補正
+	void CorrectToTarget();	// 目標値へ補間
 
 	// <data>
-	float		m_fCorrectionCoef;	// 補正係数
-	D3DXVECTOR3	m_PosTarget;		// 目標座標
-	D3DXVECTOR3	m_RotTarget;		// 目標向き
-	D3DXVECTOR3 m_SizeTarget;		// 目標サイズ
-	D3DXCOLOR	m_ColTarget;		// 目標色
+	float		m_fCorrectCoef;	// 補間強度
+	D3DXVECTOR3	m_PosTarget;	// 目標座標
+	D3DXVECTOR3	m_RotTarget;	// 目標向き
+	D3DXVECTOR3 m_SizeTarget;	// 目標サイズ
+	D3DXCOLOR	m_ColTarget;	// 目標色
 };
 
 #endif // _OBJECT_POPUP_H_

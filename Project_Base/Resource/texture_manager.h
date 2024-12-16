@@ -38,6 +38,7 @@ public:
 		BOSSGAUBASE,		// ボスゲージ枠
 		BOSSGAUBAR,			// ボスゲージバー
 		BOSSGAUBACK,		// ボスゲージ背景
+		POPUP,				// ポップアップ
 		MAX,
 	};
 
