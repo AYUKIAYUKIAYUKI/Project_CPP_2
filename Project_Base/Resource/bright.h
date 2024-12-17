@@ -38,9 +38,11 @@ private:
 	// <static function>
 	static void Create(D3DXVECTOR3 Pos);	// 生成
 
+	// <function>
+	bool Disappear();	// 消滅
+
 	// <static data>
-	static WORD m_nCntGenerateSpan;	// 生成スパンカウント
-	static JSON m_InitParam;		// 基礎パラメータ
+	static const JSON m_MotionData;	// モーションデータ
 };
 
 #endif	// _BRIGHT_H_

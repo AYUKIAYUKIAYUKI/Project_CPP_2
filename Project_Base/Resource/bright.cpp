@@ -18,10 +18,9 @@ using namespace abbr;
 //****************************************************
 // 静的メンバ変数の初期化
 //****************************************************
-WORD CBright::m_nCntGenerateSpan = 0;	// 生成スパンのカウント
 
-// 基礎パラメータの展開
-//JSON CBright::m_InitParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\bright.json");
+// モーションデータの展開
+const JSON CBright::m_MotionData = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\bright_motion.json");
 
 //============================================================================
 // 
@@ -57,6 +56,9 @@ HRESULT CBright::Init()
 		return E_FAIL;
 	}
 
+	// 出現モーションをセット
+	SetNowMotion(0);
+
 	return S_OK;
 }
 
@@ -74,17 +76,16 @@ void CBright::Uninit()
 //============================================================================
 void CBright::Update()
 {
-#if 0
-	// 寿命の半分に到達したら消滅の準備に入る
-	if (GetDuration() == GetMaxDuration() * 0.5f)
-	{
-		// 目標サイズを縮小
-		SetSizeTarget(VEC3_INIT);
+	// 消滅判定
+	if (Disappear())
+		return;	// 消滅時は更新しない
 
-		// カラーを薄黒く
-		SetColTarget(XCol(1.0f, 1.0f, 1.0f, 0.0f));
+	// 出現モーションが終了していたら
+	if (GetStopState() && GetNowMotion() == 0)
+	{
+		// 通常モーションに変更
+		SetNowMotion(1);
 	}
-#endif
 
 	// モーションセットの更新処理
 	CMotion_Set::Update();
@@ -97,41 +98,6 @@ void CBright::Draw()
 {
 	// モーションセットの描画処理
 	CMotion_Set::Draw();
-}
-
-//============================================================================
-// 拡散発生
-//============================================================================
-void CBright::Generate(D3DXVECTOR3 Pos)
-{
-#if 0
-	// 生成スパンをカウントアップ
-	m_nCntGenerateSpan++;
-
-	// 設定された生成スパンに到達で
-	if (m_nCntGenerateSpan > SPREAD_SPAN)
-	{
-		// 生成スパンのカウントをリセット
-		m_nCntGenerateSpan = 0;
-
-		// オフセットをコピー
-		auto Offset = m_InitParam["Offset"];
-
-		// いくつか生成
-		for (WORD wCnt = 0; wCnt < 3; ++wCnt)
-		{
-			// 渡された座標をランダムにずらす
-			Pos += {
-				utility::GetRandomValue<float>()* static_cast<float>(Offset),
-					utility::GetRandomValue<float>()* static_cast<float>(Offset),
-					utility::GetRandomValue<float>()* static_cast<float>(Offset)
-			};
-
-			// 星座の生成
-			Create(Pos);
-		}
-	}
-#endif
 }
 
 //============================================================================
@@ -156,11 +122,30 @@ void CBright::Create(D3DXVECTOR3 Pos)
 	// 閃光の初期設定
 	pNewInstance->Init();
 
-	{ // パラメータ設定
+	// 座標を設定
+	pNewInstance->SetPos(Pos);
 
-		// データをキャスト
+	// モーションをセット
+	pNewInstance->CMotion_Set::SetMotion(LAYER::DEFAULT, m_MotionData);
+}
 
-		// データをセット
+//============================================================================
+// 消滅
+//============================================================================
+bool CBright::Disappear()
+{
+	// 消滅モーションで泣ければ処理しない
+	if (GetNowMotion() != 1)
+		return false;
 
+	// 消滅モーション再生が終了したら
+	if (GetStopState())
+	{
+		// 破棄予約
+		SetRelease();
+
+		return true;
 	}
+
+	return false;
 }

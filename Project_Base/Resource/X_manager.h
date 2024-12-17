@@ -62,6 +62,7 @@ public:
 		BLOTALL,			// 縦長ブロック
 		LIFE,				// ライフ
 		SUMCIRCLE,			// 魔法陣
+		BRIGHT,				// 閃光
 		SUM0,				// ルーン0
 		SUM1,				// ルーン1
 		SUM2,				// ルーン2
