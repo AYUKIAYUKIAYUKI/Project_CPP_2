@@ -106,7 +106,7 @@ void CCamera::SetVibration(float fCoef)
 //============================================================================
 // カメラをセット
 //============================================================================
-void CCamera::SetCamera()
+void CCamera::SetCamera(D3DXVECTOR3 Pos)
 {
 #if 0	// バッファのクリアはレンダラーに委ねる
 	// デバイスを取得
@@ -125,7 +125,7 @@ void CCamera::SetCamera()
 	CalcMtxProjection();
 
 	// ビュー行列を計算
-	CalcMtxView();
+	CalcMtxView(Pos);
 }
 
 //============================================================================
@@ -494,7 +494,7 @@ void CCamera::CalcMtxProjection()
 //============================================================================
 // ビュー行列計算
 //============================================================================
-void CCamera::CalcMtxView()
+void CCamera::CalcMtxView(D3DXVECTOR3 Pos)
 {
 	// デバイスを取得
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
@@ -507,6 +507,12 @@ void CCamera::CalcMtxView()
 
 	// 俯瞰度合いを反映
 	posV.y += m_fAdjust;
+
+	// 初期座標以外を渡された場合その視点をコピー
+	if (Pos != VEC3_INIT)
+	{
+		posV = Pos;
+	}
 
 	// ビュー行列の生成
 	D3DXMatrixLookAtLH(&m_MtxView,

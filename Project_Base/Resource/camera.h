@@ -23,7 +23,7 @@ public:
 	HRESULT	Init();						// 初期設定
 	void	Update();					// 更新処理
 	void	SetVibration(float fCoef);	// カメラ振動
-	void	SetCamera();				// カメラをセット
+	void	SetCamera(D3DXVECTOR3 Pos);	// カメラをセット
 	void	SetAppearBoss();			// ボス登場用のカメラセット
 
 	// <getter/setter>
@@ -59,17 +59,17 @@ private:
 	static constexpr float COEF_ADJUST = 0.1f;
 
 	// <function>
-	void BranchViewMode();		// ビューモード分岐
-	void Control();				// 操作
-	void CorrectToTarget();		// 目標値への補間
-	void AutoSetRot();			// 自動で目標向きへ補間
-	void AutoRestrictPitch();	// ピッチ角の範囲制限
-	void AutoSetPos();			// 自動で目標座標へ補間
-	void CalcPosV();			// 視点座標を計算
-	void CalcPosR();			// 注視点座標を計算
-	void CalcMtxProjection();	// プロジェクション行列計算
-	void CalcMtxView();			// ビュー行列計算
-	void PrintDebug();			// デバッグ表示
+	void BranchViewMode();				// ビューモード分岐
+	void Control();						// 操作
+	void CorrectToTarget();				// 目標値への補間
+	void AutoSetRot();					// 自動で目標向きへ補間
+	void AutoRestrictPitch();			// ピッチ角の範囲制限
+	void AutoSetPos();					// 自動で目標座標へ補間
+	void CalcPosV();					// 視点座標を計算
+	void CalcPosR();					// 注視点座標を計算
+	void CalcMtxProjection();			// プロジェクション行列計算
+	void CalcMtxView(D3DXVECTOR3 Pos);	// ビュー行列計算
+	void PrintDebug();					// デバッグ表示
 
 	// <data>
 	D3DXVECTOR3	m_Rot;				// 向き

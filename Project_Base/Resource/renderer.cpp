@@ -92,7 +92,7 @@ void CRenderer::Draw()
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 	{
 		// カメラをセット
-		CManager::GetManager()->GetCamera()->SetCamera();
+		CManager::GetManager()->GetCamera()->SetCamera({ 0.0f, 0.0f, 0.0f });	// ゼロ座標 -> 通常カメラ
 
 		// 全オブジェクトの描画
 		CObject::DrawAll();
@@ -153,6 +153,15 @@ void CRenderer::Draw()
 			// 描画開始
 			if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 			{
+				// テキストメッシュ座標をコピー
+				D3DXVECTOR3 Pos = pTextMesh->GetPos();
+
+				// 若干フィールドの外側に
+				Pos.x *= 1.5f;
+				Pos.z *= 1.5f;
+
+				// カメラをセット
+				CManager::GetManager()->GetCamera()->SetCamera(Pos);	// 数値を持った座標 -> ポップアップカメラ
 #if 0
 				// 全オブジェクトの描画 (幻想的なな雰囲気が出るが重くなりそう)
 				CObject::DrawAll();
