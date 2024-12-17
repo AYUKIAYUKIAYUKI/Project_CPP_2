@@ -512,6 +512,8 @@ void CCamera::CalcMtxView(D3DXVECTOR3 Pos)
 	if (Pos != VEC3_INIT)
 	{
 		posV = Pos;
+		posV.y += -30.0f;
+		posR = VEC3_INIT;
 	}
 
 	// ビュー行列の生成

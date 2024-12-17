@@ -39,7 +39,9 @@ void CGame::Update()
 	CScene::Update();
 
 	// 真実の蝶をプレイヤーに同期させる
-	m_pTrueButterfly->SetPos(m_pPlayerPtr->GetPos());
+	D3DXVECTOR3 Pos = m_pPlayerPtr->GetPos();			// 座標をコピーし
+	Pos.y += utility::GetRandomValue<float>() * 0.01f;	// 少し上下にゆらす
+	m_pTrueButterfly->SetPos(Pos);
 	m_pTrueButterfly->SetRot(m_pPlayerPtr->GetRot());
 
 	// フィールドマネージャーの更新

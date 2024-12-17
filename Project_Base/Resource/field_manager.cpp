@@ -259,7 +259,7 @@ void CField_Manager::InitEnvironment()
 		pTrueStatue->SetPos(utility::JsonConvertToVec3(StatueParam["Pos"]));
 
 		// ”j‰óƒ‚[ƒVƒ‡ƒ“‚ðÝ’è
-		pTrueStatue->SetNowMotion(0);
+		pTrueStatue->SetNowMotion(2);
 	}
 }
 

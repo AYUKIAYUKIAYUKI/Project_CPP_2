@@ -157,8 +157,8 @@ void CRenderer::Draw()
 				D3DXVECTOR3 Pos = pTextMesh->GetPos();
 
 				// 若干フィールドの外側に
-				Pos.x *= 1.5f;
-				Pos.z *= 1.5f;
+				Pos.x *= 1.35f;
+				Pos.z *= 1.35f;
 
 				// カメラをセット
 				CManager::GetManager()->GetCamera()->SetCamera(Pos);	// 数値を持った座標 -> ポップアップカメラ
