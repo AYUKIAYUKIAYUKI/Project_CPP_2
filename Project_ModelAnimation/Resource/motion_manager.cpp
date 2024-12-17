@@ -579,8 +579,10 @@ void CMotion_Manager::EditMotion()
 	ImGui::SameLine();
 	ImGui::Text("Select:%d", m_MotionSet->m_wNowMotion);
 
+	// ƒ‚[ƒVƒ‡ƒ“‚ðØ‚è‘Ö‚¦‚Ä‚¢‚½‚ç
 	if (bChange)
 	{
+		m_MotionSet->m_bStop = false;
 		m_MotionSet->m_wNowKey = 0;
 		m_MotionSet->m_wNowFrame = 0;
 	}
