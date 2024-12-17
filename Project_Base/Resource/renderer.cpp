@@ -8,7 +8,7 @@
 /* これはテキストメッシュの描画テスト用 */
 namespace
 {
-	float fSizeCoef = 1;	// テキストサイズの調整
+	float fSizeCoef = 1.0f;	// テキストサイズの調整
 }
 
 //****************************************************
@@ -469,7 +469,7 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 
 	// フォントを生成
 	D3DXCreateFont(m_pD3DDevice,
-		0x0128,
+		0x096,
 		0,
 		FW_HEAVY,
 		4,

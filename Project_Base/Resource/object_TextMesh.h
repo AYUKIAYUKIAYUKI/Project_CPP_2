@@ -41,9 +41,6 @@ public:
 	const std::string& GetTextTarget() const;	// 目標テキストを取得
 	void SetTextTarget(std::string Text);		// 目標テキストを設定
 
-	// <setter>
-	void SetTextSpeed(int nSpeed);	// テキストスピードを設定
-
 	// <getter/setter>
 	const D3DXVECTOR2& GetTextSize() const;	// テキストサイズ取得
 	void SetTextSize(D3DXVECTOR2 Size);		// テキストサイズ設定
@@ -96,6 +93,7 @@ private:
 	std::string				m_TextTarget;	// 目標テキスト
 	int						m_nCntDisp;		// テキスト送りカウント
 	int						m_nTextSpeed;	// テキストスピード
+	int						m_nTextDelay;	// テキストディレイ
 	int						m_nCntReturn;	// 改行カウント
 	D3DXVECTOR2				m_TextSize;		// テキストサイズ
 	D3DXVECTOR3				m_MeshSize;		// メッシュサイズ

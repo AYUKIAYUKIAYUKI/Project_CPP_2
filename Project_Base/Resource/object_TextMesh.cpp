@@ -34,6 +34,7 @@ CObject_TextMesh::CObject_TextMesh(LAYER Priority) :
 	m_TextTarget{},
 	m_nCntDisp{ 0 },
 	m_nTextSpeed{ 0 },
+	m_nTextDelay{ 0 },
 	m_nCntReturn{ 0 },
 	m_TextSize{ VEC2_INIT },
 	m_MeshSize{ VEC3_INIT },
@@ -233,14 +234,6 @@ void CObject_TextMesh::SetTextTarget(std::string Text)
 }
 
 //============================================================================
-// テキストスピードを設定
-//============================================================================
-void CObject_TextMesh::SetTextSpeed(int nSpeed)
-{
-	m_nTextSpeed = nSpeed;
-}
-
-//============================================================================
 // テキストサイズ取得
 //============================================================================
 const D3DXVECTOR2& CObject_TextMesh::GetTextSize() const
@@ -364,7 +357,9 @@ CObject_TextMesh* CObject_TextMesh::Create(JSON Json)
 		std::string
 			Text = utility::JsonConvertToSJIS(Json["Text"]);
 		int
-			nTextSpeed = static_cast<int>(Json["TextSpeed"]);
+			nTextSpeed = static_cast<int>(Json["TextSpeed"]),
+			nTextDelay = static_cast<int>(Json["TextDelay"]),
+			nInitTextDelay = static_cast<int>(Json["InitTextDelay"]);
 		Vec2
 			TextSize = utility::JsonConvertToVec2(Json["TextSize"]);
 		Vec3
@@ -375,13 +370,15 @@ CObject_TextMesh* CObject_TextMesh::Create(JSON Json)
 			Col = utility::JsonConvertToXCol(Json["Col"]);
 
 		// データをセット
-		pNewInstance->SetTextTarget(Text);		// 目標テキスト
-		pNewInstance->SetTextSpeed(nTextSpeed);	// テキストスピード
-		pNewInstance->SetTextSize(TextSize);	// テキストサイズ
-		pNewInstance->SetMeshSize(MeshSize);	// メッシュサイズ
-		pNewInstance->SetRot(Rot);				// 向き
-		pNewInstance->SetPos(Pos);				// 座標
-		pNewInstance->SetCol(Col);				// 色
+		pNewInstance->m_TextTarget = Text;			// 目標テキスト
+		pNewInstance->m_nTextSpeed = nTextSpeed;	// テキストスピード
+		pNewInstance->m_nTextDelay = nTextDelay;	// テキストディレイ
+		pNewInstance->m_nCntDisp = nInitTextDelay;	// テキストディレイ
+		pNewInstance->m_TextSize = TextSize;		// テキストサイズ
+		pNewInstance->m_MeshSize = MeshSize;		// メッシュサイズ
+		pNewInstance->m_Rot = Rot;					// 向き
+		pNewInstance->m_Pos = Pos;					// 座標
+		pNewInstance->m_Col = Col;					// 色
 	}
 	
 	// テキストメッシュの初期設定
@@ -492,6 +489,9 @@ void CObject_TextMesh::TextAnimation()
 	// テキスト送りカウントが規定値に達したら
 	if (m_nCntDisp > m_nTextSpeed)
 	{
+		// テキスト送りカウントをリセット
+		m_nCntDisp = 0;
+
 		// 目標テキストから1文字切り分ける
 		std::string SjisChar = m_TextTarget.substr(m_Text.size() + m_nCntReturn, 2);
 
@@ -500,15 +500,15 @@ void CObject_TextMesh::TextAnimation()
 		{
 			SjisChar = "\n";
 
+			// テキスト送りカウントにディレイ
+			m_nCntDisp = m_nTextDelay;
+
 			// 切り分け位置を半角ずらす
 			++m_nCntReturn;
 		}
 
 		// テキストを1文字追加
 		m_Text += SjisChar;
-
-		// テキスト送りカウントをリセット
-		m_nCntDisp = 0;
 	}
 }
 
