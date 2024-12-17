@@ -18,10 +18,15 @@ using namespace abbr;
 //****************************************************
 // 静的メンバ変数の初期化
 //****************************************************
-WORD CConstellation::m_nCntGenerateSpan = 0;	// 生成スパンのカウント
 
 // 基礎パラメータの展開
-JSON CConstellation::m_InitParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\constellation.json");
+JSON CConstellation::m_InitParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\CONSTELLATION\\constellation_param.json");
+
+// 生成カウント
+int CConstellation::m_nCntGenetrate = 0;
+
+// 生成スパン
+const int CConstellation::m_nGenerateSpan = static_cast<int>(CConstellation::m_InitParam["GenerateSpan"]);
 
 //============================================================================
 // 
@@ -103,26 +108,26 @@ void CConstellation::Draw()
 //============================================================================
 void CConstellation::GenerateSpread(D3DXVECTOR3 Pos)
 {
-	// 生成スパンをカウントアップ
-	m_nCntGenerateSpan++;
+	// 生成カウントをインクリメント
+	++m_nCntGenetrate;
 
-	// 設定された生成スパンに到達で
-	if (m_nCntGenerateSpan > SPREAD_SPAN)
+	// 規定の生成スパンに到達で
+	if (m_nCntGenetrate > m_nGenerateSpan)
 	{
-		// 生成スパンのカウントをリセット
-		m_nCntGenerateSpan = 0;
+		// 生成カウントをリセット
+		m_nCntGenetrate = 0;
 
-		// オフセットをコピー
-		auto Offset = m_InitParam["Offset"];
+		// 拡散オフセットをコピー
+		float fSpreadOffset = static_cast<float>(m_InitParam["Spreadoffset"]);
 
 		// いくつか生成
-		for (WORD wCnt = 0; wCnt < 3; ++wCnt)
+		for (WORD wCntCreate = 0; wCntCreate < 3; ++wCntCreate)
 		{
 			// 渡された座標をランダムにずらす
 			Pos += {
-				utility::GetRandomValue<float>() * static_cast<float>(Offset),
-				utility::GetRandomValue<float>() * static_cast<float>(Offset),
-				utility::GetRandomValue<float>() * static_cast<float>(Offset)
+				utility::GetRandomValue<float>() * fSpreadOffset,
+				utility::GetRandomValue<float>() * fSpreadOffset,
+				utility::GetRandomValue<float>() * fSpreadOffset
 			};
 
 			// 星座の生成
@@ -142,30 +147,41 @@ void CConstellation::GenerateSpread(D3DXVECTOR3 Pos)
 //============================================================================
 void CConstellation::Create(D3DXVECTOR3 Pos)
 {
-	CConstellation* pNew = DBG_NEW CConstellation();
+	CConstellation* pNewInstance = DBG_NEW CConstellation();
 
 	// 生成失敗
-	if (!pNew)
+	if (!pNewInstance)
 	{
 		assert(false && "星座の生成に失敗");
 	}
 
 	// 星座の初期設定
-	pNew->Init();
+	pNewInstance->Init();
 
-	// 基礎パラメータをコピー
-	auto const& CorrectionCoef = m_InitParam["CorrectionCoef"];
-	auto const& SizeTarget = m_InitParam["SizeTarget"];
-	auto const& ColTarget = m_InitParam["ColTarget"];
-	auto const& MaxDuration = m_InitParam["MaxDuration"];
+	{ // パラメータ設定
 
-	// 各種パラメータ設定
-	CTexture_Manager::TYPE Type = CTexture_Manager::TYPE::CONSTELLATION0;
-	pNew->BindTex(Type + rand() % 4);													// テクスチャ
-	pNew->SetCorrectionCoef(static_cast<float>(CorrectionCoef));						// 補正係数
-	pNew->SetSizeTarget(Vec3(SizeTarget[0], SizeTarget[1], SizeTarget[2]));				// 目標サイズ
-	pNew->SetPos(Pos);																	// 座標
-	pNew->SetPosTarget(Pos);															// 目標座標
-	pNew->SetColTarget(XCol(ColTarget[0], ColTarget[1], ColTarget[2], ColTarget[3]));	// 目標色
-	pNew->SetMaxDuration(static_cast<int>(MaxDuration));								// 最大期間
+		// データをキャスト
+		float
+			CorrectCoef = m_InitParam["CorrectCoef"];
+		Vec3
+			SizeTarget = utility::JsonConvertToVec3(m_InitParam["SizeTarget"]);
+		XCol
+			ColTarget = utility::JsonConvertToXCol(m_InitParam["ColTarget"]);
+		int
+			nMaxDuration = static_cast<int>(m_InitParam["MaxDuration"]);
+
+		// データをセット
+		pNewInstance->CObject_Effect::SetCorrectionCoef(CorrectCoef);	// 補間強度
+		pNewInstance->CObject_Effect::SetSizeTarget(SizeTarget);		// 目標サイズ
+		pNewInstance->CObject_Effect::SetPos(Pos);						// 座標
+		pNewInstance->CObject_Effect::SetPosTarget(Pos);				// 目標座標
+		pNewInstance->CObject_Effect::SetColTarget(ColTarget);			// 目標色
+		pNewInstance->CObject_Effect::SetMaxDuration(nMaxDuration);		// 最大期間
+
+		// テクスチャを設定
+		CTexture_Manager::TYPE Type = CTexture_Manager::TYPE::CONSTELLATION0;
+
+		// ランダムな星座テクスチャに分岐
+		pNewInstance->BindTex(Type + rand() % 4);
+	}
 }

@@ -35,9 +35,6 @@ public:
 
 private:
 
-	/// <summary> 拡散発生スパン </summary>
-	static constexpr WORD SPREAD_SPAN = 10;
-
 	// <static fuction>
 	static void Create(D3DXVECTOR3 Pos);	// 生成
 
@@ -45,8 +42,9 @@ private:
 	D3DXVECTOR3	m_InitPos;	// 初期座標
 
 	// <static data>
-	static WORD m_nCntGenerateSpan;	// 生成スパンのカウント
-	static JSON m_InitParam;		// 基礎パラメータ
+	static JSON		 m_InitParam;		// 基礎パラメータ
+	static int		 m_nCntGenetrate;	// 生成カウント
+	static const int m_nGenerateSpan;	// 生成スパン
 };
 
 #endif	// _CONSTELLATION_H_

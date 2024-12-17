@@ -21,7 +21,7 @@ using namespace abbr;
 WORD CBright::m_nCntGenerateSpan = 0;	// 生成スパンのカウント
 
 // 基礎パラメータの展開
-JSON CBright::m_InitParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\bright.json");
+//JSON CBright::m_InitParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\bright.json");
 
 //============================================================================
 // 
