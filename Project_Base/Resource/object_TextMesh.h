@@ -94,7 +94,9 @@ private:
 	LPDIRECT3DSURFACE9		m_pSurface;		// サーフェイスのポインタ
 	std::string				m_Text;			// テキスト
 	std::string				m_TextTarget;	// 目標テキスト
+	int						m_nCntDisp;		// テキスト送りカウント
 	int						m_nTextSpeed;	// テキストスピード
+	int						m_nCntReturn;	// 改行カウント
 	D3DXVECTOR2				m_TextSize;		// テキストサイズ
 	D3DXVECTOR3				m_MeshSize;		// メッシュサイズ
 	D3DXVECTOR3				m_Rot;			// 向き

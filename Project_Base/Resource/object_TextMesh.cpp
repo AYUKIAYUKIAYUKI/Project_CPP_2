@@ -32,7 +32,9 @@ CObject_TextMesh::CObject_TextMesh(LAYER Priority) :
 	m_pSurface{ nullptr },
 	m_Text{},
 	m_TextTarget{},
+	m_nCntDisp{ 0 },
 	m_nTextSpeed{ 0 },
+	m_nCntReturn{ 0 },
 	m_TextSize{ VEC2_INIT },
 	m_MeshSize{ VEC3_INIT },
 	m_Rot{ VEC3_INIT },
@@ -483,21 +485,30 @@ void CObject_TextMesh::TextAnimation()
 	// テキストが全て表示されていたら処理をしない
 	if (m_Text == m_TextTarget)
 		return;
-
-	/* やめよう */
-	static int nCnt = 0;
 	
-	// カウントをインクリメント
-	++nCnt;
+	// テキスト送りカウントをインクリメント
+	++m_nCntDisp;
 
-	// カウントが規定値に達したら
-	if (nCnt > m_nTextSpeed)
+	// テキスト送りカウントが規定値に達したら
+	if (m_nCntDisp > m_nTextSpeed)
 	{
-		// テキストを1文字追加
-		m_Text += m_TextTarget.substr(m_Text.size(), 2);
+		// 目標テキストから1文字切り分ける
+		std::string SjisChar = m_TextTarget.substr(m_Text.size() + m_nCntReturn, 2);
 
-		// カウントをリセット
-		nCnt = 0;
+		// 改行シンボルで文字置き換え
+		if (SjisChar == "\n#")
+		{
+			SjisChar = "\n";
+
+			// 切り分け位置を半角ずらす
+			++m_nCntReturn;
+		}
+
+		// テキストを1文字追加
+		m_Text += SjisChar;
+
+		// テキスト送りカウントをリセット
+		m_nCntDisp = 0;
 	}
 }
 
