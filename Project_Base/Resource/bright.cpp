@@ -20,7 +20,7 @@ using namespace abbr;
 //****************************************************
 
 // モーションデータの展開
-const JSON CBright::m_MotionData = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\bright_motion.json");
+const JSON CBright::m_MotionData = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\BRIGHT\\bright_motion.json");
 
 //============================================================================
 // 
@@ -98,6 +98,15 @@ void CBright::Draw()
 {
 	// モーションセットの描画処理
 	CMotion_Set::Draw();
+}
+
+//============================================================================
+// 発生
+//============================================================================
+void CBright::Generate(D3DXVECTOR3 Pos)
+{
+	/* 仮 */
+	Create(Pos);
 }
 
 //============================================================================

@@ -71,7 +71,8 @@ public:
 		SUM9,		// ƒ‹[ƒ“9
 		SUM10,		// ƒ‹[ƒ“10
 		SUM11,		// ƒ‹[ƒ“11
-		BRIGHT,		// ‘MŒõ
+		BRIGHT_0,	// ‘MŒõ0
+		BRIGHT_1,	// ‘MŒõ1
 		MAX
 	};
 
