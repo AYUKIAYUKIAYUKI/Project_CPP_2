@@ -118,7 +118,7 @@ void CConstellation::GenerateSpread(D3DXVECTOR3 Pos)
 		m_nCntGenetrate = 0;
 
 		// 拡散オフセットをコピー
-		float fSpreadOffset = static_cast<float>(m_InitParam["Spreadoffset"]);
+		float fSpreadOffset = static_cast<float>(m_InitParam["SpreadOffset"]);
 
 		// いくつか生成
 		for (WORD wCntCreate = 0; wCntCreate < 3; ++wCntCreate)

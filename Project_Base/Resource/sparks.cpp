@@ -18,10 +18,21 @@ using namespace abbr;
 //****************************************************
 // 静的メンバ変数の初期化
 //****************************************************
-WORD CSparks::m_nCntGenerateSpan = 0;	// 生成スパンのカウント
 
 // 基礎パラメータの展開
-JSON CSparks::m_InitParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\sparks.json");
+JSON CSparks::m_InitParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\SPARKS\\sparks_param.json");
+
+// 生成カウント
+int CSparks::m_nCntGenerate = 0;
+
+// 自動発生スパン
+const int CSparks::m_nAutoGenerateSpan = static_cast<int>(CSparks::m_InitParam["AutoGenerateSpan"]);
+
+// 局所発生スパン
+const int CSparks::m_nAreaGenerateSpan = static_cast<int>(CSparks::m_InitParam["AreaGenerateSpan"]);
+
+// 猛発生スパン
+const int CSparks::m_nFuryGenerateSpan = static_cast<int>(CSparks::m_InitParam["FuryGenerateSpan"]);
 
 //============================================================================
 // 
@@ -110,14 +121,14 @@ void CSparks::Draw()
 //============================================================================
 void CSparks::AutoGenerate()
 {
-	// 生成スパンをカウントアップ
-	++m_nCntGenerateSpan;
+	// 生成カウントをインクリメント
+	++m_nCntGenerate;
 
-	// 設定された生成スパンに到達で
-	if (m_nCntGenerateSpan > AUTOGENERATE_SPAN)
+	// 規定の生成スパンに到達で
+	if (m_nCntGenerate > m_nAutoGenerateSpan)
 	{
-		// 生成スパンのカウントをリセット
-		m_nCntGenerateSpan = 0;
+		// 生成カウントをリセット
+		m_nCntGenerate = 0;
 
 		// 自動生成
 		AutoCreate();
@@ -129,14 +140,14 @@ void CSparks::AutoGenerate()
 //============================================================================
 void CSparks::AreaGenerate(D3DXVECTOR3 Pos)
 {
-	// 生成スパンをカウントアップ
-	++m_nCntGenerateSpan;
+	// 生成カウントをインクリメント
+	++m_nCntGenerate;
 
-	// 設定された生成スパンに到達で
-	if (m_nCntGenerateSpan > AREAGENERATE_SPAN)
+	// 規定の生成スパンに到達で
+	if (m_nCntGenerate > m_nAreaGenerateSpan)
 	{
-		// 生成スパンのカウントをリセット
-		m_nCntGenerateSpan = 0;
+		// 生成カウントをリセット
+		m_nCntGenerate = 0;
 
 		// 局所生成
 		AreaCreate(Pos);
@@ -148,14 +159,14 @@ void CSparks::AreaGenerate(D3DXVECTOR3 Pos)
 //============================================================================
 void CSparks::FuryGenerate()
 {
-	// 生成スパンをカウントアップ
-	++m_nCntGenerateSpan;
+	// 生成カウントをインクリメント
+	++m_nCntGenerate;
 
-	// 設定された生成スパンに到達で
-	if (m_nCntGenerateSpan > FURYGENERATE_SPAN)
+	// 規定の生成スパンに到達で
+	if (m_nCntGenerate > m_nFuryGenerateSpan)
 	{
-		// 生成スパンのカウントをリセット
-		m_nCntGenerateSpan = 0;
+		// 生成カウントをリセット
+		m_nCntGenerate = 0;
 
 		// 猛生成
 		FuryCreate();

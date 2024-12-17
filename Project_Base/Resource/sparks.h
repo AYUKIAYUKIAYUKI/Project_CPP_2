@@ -37,19 +37,10 @@ public:
 
 private:
 
-	/// <summary> 自動発生スパン </summary>
-	static constexpr WORD AUTOGENERATE_SPAN = 30;
-
-	/// <summary> 局所発生スパン </summary>
-	static constexpr WORD AREAGENERATE_SPAN = 20;
-
-	/// <summary> 猛発生スパン </summary>
-	static constexpr WORD FURYGENERATE_SPAN = 10;
-
 	// <static fuction>
 	static void AutoCreate();					// 自動生成
 	static void AreaCreate(D3DXVECTOR3 Pos);	// 局所生成
-	static void FuryCreate();					// 猛発生
+	static void FuryCreate();					// 猛生成
 
 	// <data>
 	D3DXVECTOR3	m_InitPos;		// 初期座標
@@ -57,8 +48,11 @@ private:
 	float		m_fAdderY;		// 上昇量
 
 	// <static data>
-	static WORD m_nCntGenerateSpan;	// 生成スパンのカウント
-	static JSON m_InitParam;		// 基礎パラメータ
+	static JSON m_InitParam;				// 基礎パラメータ
+	static int  m_nCntGenerate;				// 生成カウント
+	static const int m_nAutoGenerateSpan;	// 自動生成スパン
+	static const int m_nAreaGenerateSpan;	// 局所発生スパン
+	static const int m_nFuryGenerateSpan;	// 猛発生スパン
 };
 
 #endif	// _SPARKS_H_

@@ -1,5 +1,8 @@
 {
-	"Priority": 3,
+	"AutoGenerateSpan": 30,
+	"AreaGenerateSpan": 20,
+	"FuryGenerateSpan": 10,
+	"Priority": 2,
 	"TextureType": 3,
 	"CorrectionCoef": 0.025,
 	"SizeTarget": [ 3.0, 3.0, 3.0 ],
