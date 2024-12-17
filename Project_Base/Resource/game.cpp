@@ -15,6 +15,10 @@
 #include "HUD_manager.h"
 #include "object_HUD.h"
 #include "player.h"
+#include "monster.h"
+#include "ghost.h"
+#include "flyer.h"
+#include "bright.h"
 
 #include "title.h"
 #include "object_PopUp.h"
@@ -181,6 +185,34 @@ HRESULT CGame::Init()
 	/* ポップアップを表示 */
 	JSON Json = utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_0.json");
 	CObject_PopUp::Create(Json);
+
+	// エネミーを生成
+#if 1
+	CEnemy* pEnemy = nullptr;
+
+	// モンスター
+	pEnemy = CMonster::Create();
+	pEnemy->SetDirectionTarget(D3DX_PI * -0.4f);
+
+	// ゴースト
+	pEnemy = CGhost::Create();
+	D3DXVECTOR3 PosTarget = {
+		cosf(-(D3DX_PI * -0.5f)) * 300.0f,
+		80.0f,
+		sinf((D3DX_PI * -0.5f)) * 300.0f,
+	};
+	pEnemy->SetPos(PosTarget);
+	pEnemy->SetPosTarget(PosTarget);
+
+	// 閃光を生成
+	CBright::Generate(pEnemy->GetPos());
+	CBright::Generate(pEnemy->GetPosTarget());
+
+	// フライヤー
+	pEnemy = CFlyer::Create();
+	pEnemy->SetPosTarget({ 0.0f, 50.0f, 0.0f });
+	pEnemy->SetDirectionTarget(D3DX_PI * -0.6f);
+#endif
 
 	return S_OK;
 }

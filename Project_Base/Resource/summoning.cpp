@@ -130,7 +130,7 @@ CSummoning* CSummoning::Create()
 //============================================================================
 bool CSummoning::Disappear()
 {
-	// 消滅モーションで泣ければ処理しない
+	// 消滅モーションでなければ処理しない
 	if (GetNowMotion() != 1)
 		return false;
 

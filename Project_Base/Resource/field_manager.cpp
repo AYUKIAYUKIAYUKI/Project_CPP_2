@@ -27,8 +27,6 @@
 // デバッグ表示用
 #include "fan.h"
 
-#include "bright.h"
-
 //****************************************************
 // usingディレクティブ
 //****************************************************
@@ -232,30 +230,6 @@ HRESULT CField_Manager::Init()
 	// 扇形表示を生成
 	m_pRenderFan = CFan::Create();
 
-	// エネミーを生成
-#if 1
-	CEnemy* pEnemy = nullptr;
-
-	// モンスター
-	pEnemy = CMonster::Create();
-	pEnemy->SetDirectionTarget(D3DX_PI * -0.3f);
-
-	// ゴースト
-	pEnemy = CGhost::Create();
-	Vec3 PosTarget = {
-		cosf(-(D3DX_PI * -0.7f)) * 300.0f,
-		0.0f,
-		sinf((D3DX_PI * -0.7f)) * 300.0f,
-	};
-	pEnemy->SetPos(PosTarget);
-	pEnemy->SetPosTarget(PosTarget);
-
-	// フライヤー
-	pEnemy = CFlyer::Create();
-	pEnemy->SetPosTarget({ 0.0f, 50.0f, 0.0f });
-	pEnemy->SetDirectionTarget(D3DX_PI * -0.5f);
-#endif
-
 	return S_OK;
 }
 
@@ -429,9 +403,6 @@ void CField_Manager::AutoCreateBlockDash()
 
 	// ブロックを生成
 	CBlock::Create(NewPos, NewRot);
-
-	// 閃光を生成
-	CBright::Generate(NewPos);
 }
 
 //============================================================================

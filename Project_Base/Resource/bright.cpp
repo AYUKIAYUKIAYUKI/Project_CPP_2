@@ -22,6 +22,9 @@ using namespace abbr;
 // モーションデータの展開
 const JSON CBright::m_MotionData = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\BRIGHT\\bright_motion.json");
 
+// 基礎パラメータの展開
+const JSON CBright::m_InitParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\BRIGHT\\bright_param.json");
+
 //============================================================================
 // 
 // publicメンバ
@@ -32,6 +35,8 @@ const JSON CBright::m_MotionData = utility::OpenJsonFile("Data\\JSON\\ENVIRONMEN
 // コンストラクタ
 //============================================================================
 CBright::CBright() :
+	m_nCntDuration{ 0 },
+	m_nMaxDuration{ 0 },
 	CMotion_Set{ LAYER::DEFAULT }
 {
 
@@ -131,8 +136,16 @@ void CBright::Create(D3DXVECTOR3 Pos)
 	// 閃光の初期設定
 	pNewInstance->Init();
 
-	// 座標を設定
-	pNewInstance->SetPos(Pos);
+	{ // パラメータを設定
+
+		// データをキャスト
+		int
+			nMaxDuration = static_cast<int>(m_InitParam["MaxDuration"]);
+
+		// データをセット
+		pNewInstance->m_nMaxDuration = nMaxDuration;	// 最大継続期間
+		pNewInstance->CMotion_Set::SetPos(Pos);			// 座標
+	}
 
 	// モーションをセット
 	pNewInstance->CMotion_Set::SetMotion(LAYER::DEFAULT, m_MotionData);
@@ -143,9 +156,22 @@ void CBright::Create(D3DXVECTOR3 Pos)
 //============================================================================
 bool CBright::Disappear()
 {
-	// 消滅モーションで泣ければ処理しない
-	if (GetNowMotion() != 1)
+	// 消滅モーションで無ければ
+	if (GetNowMotion() != 2)
+	{	
+		// 継続期間をインクリメント
+		++m_nCntDuration;
+
+		// 最大継続期間に達したら
+		if (m_nCntDuration > m_nMaxDuration)
+		{
+			// 消滅モーションに変更
+			SetNowMotion(2);
+		}
+
+		// 終了
 		return false;
+	}
 
 	// 消滅モーション再生が終了したら
 	if (GetStopState())

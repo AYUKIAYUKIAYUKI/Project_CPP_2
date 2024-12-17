@@ -41,8 +41,13 @@ private:
 	// <function>
 	bool Disappear();	// 消滅
 
+	// <data>
+	int m_nCntDuration;	// 継続期間
+	int m_nMaxDuration;	// 最大継続期間
+
 	// <static data>
 	static const JSON m_MotionData;	// モーションデータ
+	static const JSON m_InitParam;	// 基礎パラメータ
 };
 
 #endif	// _BRIGHT_H_
