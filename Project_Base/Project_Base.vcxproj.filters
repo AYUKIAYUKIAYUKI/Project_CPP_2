@@ -214,6 +214,9 @@
     <ClCompile Include="Resource\object_PopUp.cpp">
       <Filter>&lt;Object&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\bright.cpp">
+      <Filter>&lt;Stage&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -431,6 +434,9 @@
     </ClInclude>
     <ClInclude Include="Resource\object_PopUp.h">
       <Filter>&lt;Object&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\bright.h">
+      <Filter>&lt;Stage&gt;</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

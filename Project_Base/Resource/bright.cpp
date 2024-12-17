@@ -1,6 +1,6 @@
 //============================================================================
 // 
-// 星座 [constellation.cpp]
+// 閃光 [bright.cpp]
 // Author : 福田歩希
 // 
 //============================================================================
@@ -8,7 +8,7 @@
 //****************************************************
 // インクルードファイル
 //****************************************************
-#include "constellation.h"
+#include "bright.h"
 
 //****************************************************
 // usingディレクティブ
@@ -18,10 +18,10 @@ using namespace abbr;
 //****************************************************
 // 静的メンバ変数の初期化
 //****************************************************
-WORD CConstellation::m_nCntGenerateSpan = 0;	// 生成スパンのカウント
+WORD CBright::m_nCntGenerateSpan = 0;	// 生成スパンのカウント
 
 // 基礎パラメータの展開
-JSON CConstellation::m_InitParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\constellation.json");
+JSON CBright::m_InitParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\bright.json");
 
 //============================================================================
 // 
@@ -32,9 +32,8 @@ JSON CConstellation::m_InitParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMEN
 //============================================================================
 // コンストラクタ
 //============================================================================
-CConstellation::CConstellation() :
-	CObject_Effect{},
-	m_InitPos{ VEC3_INIT }
+CBright::CBright() :
+	CMotion_Set{ LAYER::DEFAULT }
 {
 
 }
@@ -42,7 +41,7 @@ CConstellation::CConstellation() :
 //============================================================================
 // デストラクタ
 //============================================================================
-CConstellation::~CConstellation()
+CBright::~CBright()
 {
 
 }
@@ -50,10 +49,10 @@ CConstellation::~CConstellation()
 //============================================================================
 // 初期設定
 //============================================================================
-HRESULT CConstellation::Init()
+HRESULT CBright::Init()
 {
-	// エフェクトオブジェクトの初期設定
-	if (FAILED(CObject_Effect::Init()))
+	// モーションオブジェクトの初期設定
+	if (FAILED(CMotion_Set::Init()))
 	{
 		return E_FAIL;
 	}
@@ -64,17 +63,18 @@ HRESULT CConstellation::Init()
 //============================================================================
 // 終了処理
 //============================================================================
-void CConstellation::Uninit()
+void CBright::Uninit()
 {
-	// エフェクトオブジェクトの終了処理
-	CObject_Effect::Uninit();
+	// モーションセット終了処理
+	CMotion_Set::Uninit();
 }
 
 //============================================================================
 // 更新処理
 //============================================================================
-void CConstellation::Update()
+void CBright::Update()
 {
+#if 0
 	// 寿命の半分に到達したら消滅の準備に入る
 	if (GetDuration() == GetMaxDuration() * 0.5f)
 	{
@@ -84,25 +84,27 @@ void CConstellation::Update()
 		// カラーを薄黒く
 		SetColTarget(XCol(1.0f, 1.0f, 1.0f, 0.0f));
 	}
+#endif
 
-	// エフェクトオブジェクトの更新処理
-	CObject_Effect::Update();
+	// モーションセットの更新処理
+	CMotion_Set::Update();
 }
 
 //============================================================================
 // 描画処理
 //============================================================================
-void CConstellation::Draw()
+void CBright::Draw()
 {
-	// エフェクトオブジェクトの描画処理
-	CObject_Effect::Draw();
+	// モーションセットの描画処理
+	CMotion_Set::Draw();
 }
 
 //============================================================================
 // 拡散発生
 //============================================================================
-void CConstellation::GenerateSpread(D3DXVECTOR3 Pos)
+void CBright::Generate(D3DXVECTOR3 Pos)
 {
+#if 0
 	// 生成スパンをカウントアップ
 	m_nCntGenerateSpan++;
 
@@ -120,15 +122,16 @@ void CConstellation::GenerateSpread(D3DXVECTOR3 Pos)
 		{
 			// 渡された座標をランダムにずらす
 			Pos += {
-				utility::GetRandomValue<float>() * static_cast<float>(Offset),
-				utility::GetRandomValue<float>() * static_cast<float>(Offset),
-				utility::GetRandomValue<float>() * static_cast<float>(Offset)
+				utility::GetRandomValue<float>()* static_cast<float>(Offset),
+					utility::GetRandomValue<float>()* static_cast<float>(Offset),
+					utility::GetRandomValue<float>()* static_cast<float>(Offset)
 			};
 
 			// 星座の生成
 			Create(Pos);
 		}
 	}
+#endif
 }
 
 //============================================================================
@@ -140,32 +143,24 @@ void CConstellation::GenerateSpread(D3DXVECTOR3 Pos)
 //============================================================================
 // 生成
 //============================================================================
-void CConstellation::Create(D3DXVECTOR3 Pos)
+void CBright::Create(D3DXVECTOR3 Pos)
 {
-	CConstellation* pNew = DBG_NEW CConstellation();
+	CBright* pNewInstance = DBG_NEW CBright();
 
 	// 生成失敗
-	if (!pNew)
+	if (!pNewInstance)
 	{
-		assert(false && "星座の生成に失敗");
+		assert(false && "閃光の生成に失敗");
 	}
 
-	// 星座の初期設定
-	pNew->Init();
+	// 閃光の初期設定
+	pNewInstance->Init();
 
-	// 基礎パラメータをコピー
-	auto const& CorrectionCoef = m_InitParam["CorrectionCoef"];
-	auto const& SizeTarget = m_InitParam["SizeTarget"];
-	auto const& ColTarget = m_InitParam["ColTarget"];
-	auto const& MaxDuration = m_InitParam["MaxDuration"];
+	{ // パラメータ設定
 
-	// 各種パラメータ設定
-	CTexture_Manager::TYPE Type = CTexture_Manager::TYPE::CONSTELLATION0;
-	pNew->BindTex(Type + rand() % 4);													// テクスチャ
-	pNew->SetCorrectionCoef(static_cast<float>(CorrectionCoef));						// 補正係数
-	pNew->SetSizeTarget(Vec3(SizeTarget[0], SizeTarget[1], SizeTarget[2]));				// 目標サイズ
-	pNew->SetPos(Pos);																	// 座標
-	pNew->SetPosTarget(Pos);															// 目標座標
-	pNew->SetColTarget(XCol(ColTarget[0], ColTarget[1], ColTarget[2], ColTarget[3]));	// 目標色
-	pNew->SetMaxDuration(static_cast<int>(MaxDuration));								// 最大期間
+		// データをキャスト
+
+		// データをセット
+
+	}
 }

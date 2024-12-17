@@ -115,8 +115,7 @@ CTitle::CTitle() :
 	m_nNowFrame{ 0 },
 	m_nMaxFrame{ 0 },
 	m_pFakePlayer{ nullptr },
-	m_pTree{ nullptr },
-	m_pHole{ nullptr }
+	m_pTree{ nullptr }
 {
 	m_vPath.clear();
 }

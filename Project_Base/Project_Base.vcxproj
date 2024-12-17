@@ -31,6 +31,7 @@
     <ClCompile Include="Resource\bounding_cylinder.cpp" />
     <ClCompile Include="Resource\bounding_sphere.cpp" />
     <ClCompile Include="Resource\bounding_volume.cpp" />
+    <ClCompile Include="Resource\bright.cpp" />
     <ClCompile Include="Resource\character_motion.cpp" />
     <ClCompile Include="Resource\collision.cpp" />
     <ClCompile Include="Resource\constellation.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="Resource\bounding_cylinder.h" />
     <ClInclude Include="Resource\bounding_sphere.h" />
     <ClInclude Include="Resource\bounding_volume.h" />
+    <ClInclude Include="Resource\bright.h" />
     <ClInclude Include="Resource\character_motion.h" />
     <ClInclude Include="Resource\collision.h" />
     <ClInclude Include="Resource\constellation.h" />
