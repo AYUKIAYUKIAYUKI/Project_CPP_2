@@ -38,6 +38,10 @@ void CGame::Update()
 	// シーンクラスの更新処理
 	CScene::Update();
 
+	// 真実の蝶をプレイヤーに同期させる
+	m_pTrueButterfly->SetPos(m_pPlayerPtr->GetPos());
+	m_pTrueButterfly->SetRot(m_pPlayerPtr->GetRot());
+
 	// フィールドマネージャーの更新
 	CField_Manager::GetInstance()->Update();
 
@@ -148,7 +152,9 @@ CGame* CGame::Create()
 CGame::CGame() :
 	CScene{},
 	m_bTransition{ false },
-	m_pRenderFade{ nullptr }
+	m_pRenderFade{ nullptr },
+	m_pPlayerPtr{ nullptr },
+	m_pTrueButterfly{ nullptr }
 {
 
 }
@@ -167,13 +173,17 @@ CGame::~CGame()
 HRESULT CGame::Init()
 {
 	// プレイヤーを生成
-	CPlayer* pPlayer = CPlayer::Create();
+	m_pPlayerPtr = CPlayer::Create();
+
+	// 真実の蝶を生成
+	m_pTrueButterfly = CMotion_Set::Create(CObject::LAYER::DEFAULT, CObject::TYPE::LATEDRAW, utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BUTTERFLY\\butterfly_motion.json"));
+	m_pTrueButterfly->SetNowMotion(1);
 
 	// フィールドマネージャーにプレイヤーをセット
-	CField_Manager::GetInstance()->SetSyncPlayer(pPlayer);
+	CField_Manager::GetInstance()->SetSyncPlayer(m_pPlayerPtr);
 
 	// HUDマネージャーにプレイヤーをセット
-	CHUD_Manager::GetInstance()->SetSyncPlayer(pPlayer);
+	CHUD_Manager::GetInstance()->SetSyncPlayer(m_pPlayerPtr);
 
 	// カメラ情報を変更
 	CCamera* pCamera = CManager::GetManager()->GetCamera();

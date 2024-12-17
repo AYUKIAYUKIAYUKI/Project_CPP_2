@@ -177,7 +177,7 @@ HRESULT CResult::Init()
 	pCamera->SetUpAdjust(0.0f);
 
 	// フェイクプレイヤーの生成
-	m_pFakePlayer = CMotion_Set::Create(CObject::LAYER::DEFAULT, utility::OpenJsonFile("Data\\JSON\\CHARACTER\\PLAYER\\player_motion.json"));
+	m_pFakePlayer = CMotion_Set::Create(CObject::LAYER::DEFAULT, CObject::TYPE::NONE, utility::OpenJsonFile("Data\\JSON\\CHARACTER\\PLAYER\\player_motion.json"));
 	auto FakePlayerParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\PLAYER\\fakeplayer.json");
 	m_pFakePlayer->SetNowMotion(1);
 	m_pFakePlayer->SetRot(utility::JsonConvertToVec3(FakePlayerParam["Rot"]));

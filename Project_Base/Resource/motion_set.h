@@ -86,7 +86,7 @@ public:
 	CObject_Parts* GetParentParts();	// 親パーツを取得
 
 	// <static function>
-	static CMotion_Set* Create(LAYER Layer, JSON Json);	// 生成
+	static CMotion_Set* Create(LAYER Layer, TYPE Type, JSON Json);	// 生成
 
 protected:
 

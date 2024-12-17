@@ -284,8 +284,6 @@ void CObject_PopUp::CorrectToTarget()
 	// さらにこの時、テキストメッシュにも同様のパラメータを与える
 	m_pTextMesh->SetMeshSize(NowSize);
 	m_pTextMesh->SetRot(NowRot);
-	NowPos.x *= 0.975f;
-	NowPos.z *= 0.975f;
 	m_pTextMesh->SetPos(NowPos);
 	m_pTextMesh->SetCol(NowCol);
 }

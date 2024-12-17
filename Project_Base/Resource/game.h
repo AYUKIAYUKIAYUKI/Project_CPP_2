@@ -17,6 +17,8 @@
 // 前方宣言
 //****************************************************
 class CObject_HUD;
+class CPlayer;
+class CMotion_Set;
 
 //****************************************************
 // ゲームクラス
@@ -45,8 +47,10 @@ private:
 	void	Uninit() override;	// 終了処理
 
 	// <data>
-	bool		 m_bTransition;	// 遷移フラグ
-	CObject_HUD* m_pRenderFade;	// フェード表示
+	bool		   m_bTransition;		// 遷移フラグ
+	CObject_HUD*   m_pRenderFade;		// フェード表示
+	CPlayer const* m_pPlayerPtr;		// プレイヤーのポインタ
+	CMotion_Set*   m_pTrueButterfly;	// 真実の蝶
 };
 
 #endif // _GAME_H_

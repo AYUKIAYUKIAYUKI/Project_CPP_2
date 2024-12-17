@@ -241,13 +241,25 @@ void CField_Manager::InitEnvironment()
 	{ // 銅像の生成
 
 		// パラメータを反映
-		m_pStatue = CMotion_Set::Create(CObject::LAYER::DEFAULT, utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\STATUE\\statue_motion.json"));
+		m_pStatue = CMotion_Set::Create(CObject::LAYER::DEFAULT, CObject::TYPE::NONE, utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\STATUE\\statue_motion.json"));
 		auto StatueParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\STATUE\\statue_param.json");
 		m_pStatue->SetRot(utility::JsonConvertToVec3(StatueParam["Rot"]));
 		m_pStatue->SetPos(utility::JsonConvertToVec3(StatueParam["Pos"]));
-		
+
 		// 初期モーションを設定
 		m_pStatue->SetNowMotion(2);
+	}
+
+	{ // 真実の銅像を生成
+
+		// パラメータを反映
+		CMotion_Set* pTrueStatue = CMotion_Set::Create(CObject::LAYER::DEFAULT, CObject::TYPE::LATEDRAW, utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\STATUE\\statue_motion.json"));
+		auto StatueParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\STATUE\\statue_param.json");
+		pTrueStatue->SetRot(utility::JsonConvertToVec3(StatueParam["Rot"]));
+		pTrueStatue->SetPos(utility::JsonConvertToVec3(StatueParam["Pos"]));
+
+		// 破壊モーションを設定
+		pTrueStatue->SetNowMotion(0);
 	}
 }
 

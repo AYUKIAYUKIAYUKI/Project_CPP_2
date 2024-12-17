@@ -153,6 +153,13 @@ void CRenderer::Draw()
 			// 描画開始
 			if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 			{
+#if 0
+				// 全オブジェクトの描画 (幻想的なな雰囲気が出るが重くなりそう)
+				CObject::DrawAll();
+#else
+				// 特別なオブジェクトを後描画
+				CObject::LateDrawAll();
+#endif
 				// メッシュにテキストを描画
 				m_pFont->DrawText(NULL, pTextMesh->GetText().c_str(), -1, &Rect, DT_CENTER | DT_VCENTER, D3DCOLOR_RGBA(255, 255, 255, 255));
 

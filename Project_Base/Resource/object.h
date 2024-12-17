@@ -43,6 +43,7 @@ public:
 		ENEMY,		// エネミー
 		BLOCK,		// ブロック
 		ITEM,		// アイテム
+		LATEDRAW,	// 後描画対応
 		MAX
 	};
 
@@ -74,6 +75,7 @@ public:
 	static void UpdateAll();		// 全オブジェクト更新処理
 	static void LateUpdateAll();	// 全オブジェクト後更新処理
 	static void DrawAll();			// 全オブジェクト描画処理
+	static void LateDrawAll();		// 全オブジェクト描画処理
 
 	// <static getter>
 	static CObject* GetTopObject();					// 先頭オブジェクトのポインタ取得
@@ -82,7 +84,7 @@ public:
 	static CObject* FindSpecificObject(TYPE Type);	// 特定タイプのオブジェクト探す
 	static int		CountSpecificObject(TYPE Type);	// 特定タイプのオブジェクト数を取得
 
-	// <>
+	// <仮>
 	template <typename T> static T* DownCast(CObject* pBase);	// オブジェクト派生専用ダウンキャスト
 
 private:

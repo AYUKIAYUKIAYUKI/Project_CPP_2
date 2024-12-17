@@ -217,7 +217,7 @@ CObject_Parts* CMotion_Set::GetParentParts()
 //============================================================================
 // 生成
 //============================================================================
-CMotion_Set* CMotion_Set::Create(LAYER Layer, JSON Json)
+CMotion_Set* CMotion_Set::Create(LAYER Layer, TYPE Type, JSON Json)
 {
 	// モーションセットを生成
 	CMotion_Set* pNew = DBG_NEW CMotion_Set(Layer);
@@ -235,6 +235,9 @@ CMotion_Set* CMotion_Set::Create(LAYER Layer, JSON Json)
 	for (WORD wCntParts = 0; wCntParts < pNew->m_wMaxParts; ++wCntParts)
 	{
 		pNew->m_vpModelParts.push_back(CObject_Parts::Create(Layer, static_cast<CX_Manager::TYPE>(Json["ModelType"][wCntParts]), nullptr));
+	
+		// 各パーツオブジェクトにタイプを設定する
+		pNew->m_vpModelParts[wCntParts]->SetType(Type);
 	}
 
 	// 生成されたパーツに対し、各種設定を行う

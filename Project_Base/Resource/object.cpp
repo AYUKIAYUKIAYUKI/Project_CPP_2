@@ -349,8 +349,12 @@ void CObject::DrawAll()
 			pDev->SetRenderState(D3DRS_STENCILZFAIL, ZFail);	// Zテストのみ失敗
 			pDev->SetRenderState(D3DRS_STENCILFAIL, Fail);		// Zテスト・ステンシルテストに失敗
 
-			// 描画処理
-			pObj->Draw();
+			// 特定オブジェクト以外描画処理
+			if (pObj->GetType() != TYPE::LATEDRAW)
+			{
+				// 描画処理
+				pObj->Draw();
+			}
 
 			// 次のオブジェクトのポインタをコピー
 			pObj = pNext;
@@ -381,6 +385,34 @@ void CObject::DrawAll()
 	// ステンシルバッファへの書き込みを無効化
 	pDev->SetRenderState(D3DRS_STENCILENABLE, FALSE);
 #endif
+}
+
+//============================================================================
+// 全後描画処理
+//============================================================================
+void CObject::LateDrawAll()
+{
+	for (int nCntPriority = 0; nCntPriority < static_cast<WORD>(LAYER::MAX); nCntPriority++)
+	{
+		// 先頭オブジェクトのポインタをコピー
+		CObject* pObj = m_pTop[nCntPriority];
+
+		// 次のオブジェクトが無くなるまで
+		while (pObj != nullptr)
+		{
+			// 次のオブジェクトのポインタをコピー
+			CObject* pNext = pObj->m_pNext;
+
+			// 特定オブジェクトのみ描画処理
+			if (pObj->GetType() == TYPE::LATEDRAW)
+			{
+				pObj->Draw();
+			}
+
+			// 次のオブジェクトのポインタをコピー
+			pObj = pNext;
+		}
+	}
 }
 
 //============================================================================
