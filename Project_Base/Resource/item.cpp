@@ -293,9 +293,11 @@ void CItem::SetSummoning()
 	Vec3 Rot = { 0.0f, atan2f(Pos.z, -Pos.x) + D3DX_PI * 0.5f, 0.0f };
 	m_pSummoning->SetRot(Rot);
 
+#if 0
 	// 座標をアイテムの背後に
 	Pos.x *= 0.95f;
 	Pos.z *= 0.95f;
+#endif
 
 	// 座標をセット
 	m_pSummoning->SetPos(Pos);
