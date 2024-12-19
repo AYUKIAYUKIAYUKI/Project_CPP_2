@@ -175,6 +175,9 @@ void CRenderer::Draw()
 				// 描画終了
 				m_pD3DDevice->EndScene();
 			}
+
+			// カメラをセット (最後に通常カメラをセットしないとビルボードのマトリックスが変わる)
+			CManager::GetManager()->GetCamera()->SetCamera({ 0.0f, 0.0f, 0.0f });	// ゼロ座標 -> 通常カメラ
 		}
 
 		pObj = pObj->GetNext();
