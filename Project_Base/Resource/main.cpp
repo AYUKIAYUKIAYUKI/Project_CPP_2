@@ -151,17 +151,22 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 				}
 				catch (const std::bad_alloc& error_alloc)
 				{
-					MessageBox(NULL, "new使用時にエラー", error_alloc.what(), MB_OK | MB_ICONERROR);
+					MessageBox(NULL, error_alloc.what(), "new使用時にエラー", MB_OK | MB_ICONERROR);
 					break;
 				}
 				catch (const std::bad_cast& error_cast)
 				{
-					MessageBox(NULL, "キャスト時にエラー", error_cast.what(), MB_OK | MB_ICONERROR);
+					MessageBox(NULL, error_cast.what(), "キャスト時にエラー", MB_OK | MB_ICONERROR);
+					break;
+				}
+				catch (const std::runtime_error& error_runtime)
+				{
+					MessageBox(NULL, error_runtime.what(), "不正な動作が発生", MB_OK | MB_ICONERROR);
 					break;
 				}
 				catch (const std::exception& error)
 				{
-					MessageBox(NULL, "エラー発生", error.what(), MB_OK | MB_ICONERROR);
+					MessageBox(NULL, error.what(), "その他エラー発生", MB_OK | MB_ICONERROR);
 					break;
 				}
 

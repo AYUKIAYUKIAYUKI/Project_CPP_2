@@ -191,26 +191,15 @@ nlohmann::json utility::OpenJsonFile(std::string FilePath)
 	// JSONファイルを読み取り展開
 	std::ifstream ifs(FilePath);
 
-	// ファイルが展開出来ていたら
-	if (ifs.good())
-	{
-		// JSONデータをパース
-		nlohmann::json Json;
-		ifs >> Json;
+	// ファイル展開失敗
+	if (!ifs.good()) throw std::ios_base::failure("Json Open Failed:" + FilePath);
 
-		// JSONオブジェクトを引き渡す
-		return Json;
-	}
-	else
-	{
-#if 0
-		CRenderer::SetTimeString("JSONファイル【" + FilePath + "】の展開に失敗しました", 90);
-#else
-		assert(false && "JSONファイルの展開に失敗");
-#endif
-	}
+	// JSONデータをパース
+	nlohmann::json Json;
+	ifs >> Json;
 
-	return nullptr;
+	// JSONオブジェクトを引き渡す
+	return Json;
 }
 
 //============================================================================
@@ -258,7 +247,7 @@ std::string utility::JsonConvertToSJIS(nlohmann::json Json)
 		DWORD error = GetLastError();
 
 		// 例外をスロー
-		throw std::runtime_error("Failed");
+		throw std::runtime_error("UTF8 Convert To UTF16 Failed");
 	}
 
 	// UTF16変換後の文字列を格納
@@ -283,7 +272,7 @@ std::string utility::JsonConvertToSJIS(nlohmann::json Json)
 		DWORD error = GetLastError();
 
 		// 例外をスロー
-		throw std::runtime_error("Failed");
+		throw std::runtime_error("UTF16 Convert To SJIS Failed");
 	}
 
 	// SJIS変換後の文字列を格納
