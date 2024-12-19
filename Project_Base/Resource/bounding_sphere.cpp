@@ -85,7 +85,9 @@ void CBounding_Sphere::SetRadius(float fRad)
 	m_fRadius = fRad;
 
 #ifdef _DEBUG
+#if RENDER_COLLISION
 	// 球表示の持つシンクロ半径にセット
 	m_pRenderSphere->SetSyncRadius(fRad);
+#endif
 #endif // _DEBUG
 }

@@ -86,8 +86,10 @@ void CBounding_Box::SetSize(D3DXVECTOR3 Size)
 	m_Size = Size;
 
 #ifdef _DEBUG
+#if RENDER_COLLISION
 	// 箱表示の持つシンクロサイズにセット
 	m_pRenderBox->SetSyncSize(Size);
+#endif
 #endif // _DEBUG
 }
 

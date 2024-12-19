@@ -83,8 +83,10 @@ void CBounding_Cylinder::SetRadius(float fRad)
 	m_fRadius = fRad;
 
 #ifdef _DEBUG
+#if RENDER_COLLISION
 	// 円柱表示の持つシンクロ半径にセット
 	m_pRenderCylinder->SetSyncRadius(fRad);
+#endif
 #endif // _DEBUG
 }
 
@@ -105,7 +107,9 @@ void CBounding_Cylinder::SetHeight(float fHeight)
 	m_fHeight = fHeight;
 
 #ifdef _DEBUG
+#if RENDER_COLLISION
 	// 円柱表示の持つシンクロ高さにセット
 	m_pRenderCylinder->SetSyncHeight(fHeight);
+#endif
 #endif // _DEBUG
 }
