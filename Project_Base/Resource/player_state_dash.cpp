@@ -67,9 +67,11 @@ void CPlayer_State_Dash::Update()
 	CPlayer_State::Update();
 
 	// 星座エフェクトを発生
-	for (int nCnt = 0; nCnt < 2; ++nCnt)
+	for (WORD wCnt = 0; wCnt < 2; ++wCnt)
+	{
 		CConstellation::GenerateSpread(m_pCharacter->GetPos());
 		CConstellation::GenerateSpread(m_pCharacter->GetPosTarget());
+	}
 
 	// Y軸方向の加速度を無くす
 	m_pCharacter->SetVelY(0.0f);

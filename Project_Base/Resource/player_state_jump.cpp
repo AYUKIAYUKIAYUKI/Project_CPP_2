@@ -14,6 +14,7 @@
 #include "player_state_wall.h"
 #include "player_state_slash.h"
 #include "player_state_damage.h"
+#include "constellation.h"
 
 // フィールド取得用
 #include "field_manager.h"
@@ -42,6 +43,9 @@ CPlayer_State_Jump::CPlayer_State_Jump() :
 {
 	// アクションデータのジャンプした回数をインクリメント
 	CField_Manager::GetInstance()->IncrementCntJump();
+
+	// 飛び立ちモーションを再生
+	m_pCharacter->SetNowMotion(7);
 }
 
 //============================================================================
@@ -59,6 +63,21 @@ void CPlayer_State_Jump::Update()
 {
 	// プレイヤーステートクラスの更新処理
 	CPlayer_State::Update();
+
+	// 星座エフェクトを発生
+	for (WORD wCnt = 0; wCnt < 2; ++wCnt)
+	{
+		CConstellation::GenerateSpread(m_pCharacter->GetPos());
+		CConstellation::GenerateSpread(m_pCharacter->GetPosTarget());
+	}
+
+	// 飛び立ちモーションが終了していたら
+	if (m_pCharacter->GetNowMotion() == 7 &&
+		m_pCharacter->GetStopState())
+	{
+		// 飛行モーションに変更
+		m_pCharacter->SetNowMotion(8);
+	}
 
 	// Y軸方向の加速度が無く、Y方向の移動目標のノルムが小さい時
 	if (m_pCharacter->GetVelY() == 0.0f &&

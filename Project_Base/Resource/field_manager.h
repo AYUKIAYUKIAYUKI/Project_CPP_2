@@ -28,7 +28,7 @@ public:
 	static constexpr float FIELD_RADIUS = 300.0f;
 
 	/// <summary> フィールド重力 </summary>
-	static constexpr float FIELD_GRAVITY = -0.35f;
+	static constexpr float FIELD_GRAVITY = -0.15f;
 
 	/// <summary> 最大破壊ブロック数 </summary>
 	static constexpr int MAX_DESTROY_BLOCK = 50;

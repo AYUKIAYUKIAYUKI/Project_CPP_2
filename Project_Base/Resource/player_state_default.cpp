@@ -228,7 +228,8 @@ void CPlayer_State_Default::ChangeMotion()
 	}
 	else
 	{
-		if (m_pCharacter->GetNowMotion() != 0)
+		if (m_pCharacter->GetNowMotion() != 0 &&
+			m_pCharacter->GetNowMotion() != 9)
 		{ // 通常モーションを再生していなければ
 
 			// 通常モーション
