@@ -92,6 +92,33 @@ void CField_Manager::Draw()
 }
 
 //============================================================================
+// 座標をフィールドサイズに調整
+//============================================================================
+bool CField_Manager::AdjustPosToFieldSize(CObject* pObj)
+{
+	// モーションセットクラスにダウンキャスト
+	CMotion_Set* pMotion = utility::DownCast<CMotion_Set, CObject>(pObj);
+
+	// 現在の座標から
+	Vec3 NewPos = pMotion->GetPos();
+
+	// 角度を割り出し
+	float fDirection = atan2f(-NewPos.z, NewPos.x);
+
+	// 同じ方角でフィールドサイズ分の座標へ整える
+	NewPos = {
+		cosf(fDirection) * CField_Manager::FIELD_RADIUS,
+		NewPos.y,
+		sinf(fDirection) * CField_Manager::FIELD_RADIUS
+	};
+
+	// 座標をセット
+	pMotion->SetPos(NewPos);
+
+	return true;
+}
+
+//============================================================================
 // ジャンプした回数のインクリメント
 //============================================================================
 void CField_Manager::IncrementCntJump()

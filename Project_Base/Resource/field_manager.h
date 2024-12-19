@@ -11,6 +11,7 @@
 //****************************************************
 // 前方宣言
 //****************************************************
+class CObject;
 class CObject_X;
 class CMotion_Set;
 class CPlayer;
@@ -39,11 +40,12 @@ public:
 	CField_Manager& operator=(CField_Manager&&) = delete;		// ムーブ代入演算子
 
 	// <function>
-	void InitForTitle();		// タイトルでの追加初期設定
-	void Update();				// 更新処理
-	void Draw();				// 描画処理
-	void IncrementCntJump();	// ジャンプした回数のインクリメント
-	void IncrementCntDash();	// ダッシュした回数のインクリメント
+	void InitForTitle();						// タイトルでの追加初期設定
+	void Update();								// 更新処理
+	void Draw();								// 描画処理
+	bool AdjustPosToFieldSize(CObject* pObj);	// 座標をフィールドサイズに調整
+	void IncrementCntJump();					// ジャンプした回数のインクリメント
+	void IncrementCntDash();					// ダッシュした回数のインクリメント
 
 	// <getter>
 	int GetCntDestroyBlock();	// ブロックの破壊数を取得

@@ -144,13 +144,29 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 				// 現在時刻を保存
 				dwExecLastTime = dwCurrentTime;
 
-				// マネージャーの更新処理
-				CManager::GetManager()->Update();
+				try
+				{
+					// マネージャーの更新処理
+					CManager::GetManager()->Update();
+				}
+				catch (const std::bad_alloc& error_alloc)
+				{
+					MessageBox(NULL, "new使用時にエラー", error_alloc.what(), MB_OK | MB_ICONERROR);
+					break;
+				}
+				catch (const std::bad_cast& error_cast)
+				{
+					MessageBox(NULL, "キャスト時にエラー", error_cast.what(), MB_OK | MB_ICONERROR);
+					break;
+				}
+				catch (const std::exception& error)
+				{
+					MessageBox(NULL, "エラー発生", error.what(), MB_OK | MB_ICONERROR);
+					break;
+				}
 
 #ifdef _DEBUG	// FPS表示
-
 				CRenderer::SetDebugString("FPS:" + std::to_string(nCountFPS));
-
 #endif	// _DEBUG
 
 				// マネージャーの描画処理

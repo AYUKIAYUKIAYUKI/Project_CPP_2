@@ -38,7 +38,7 @@ using namespace abbr;
 CPlayer_State_Slash::CPlayer_State_Slash() :
 	CPlayer_State{},
 	m_SlashType{ SLASH_TYPE::LEFT },
-	m_pSlashModel{ CObject_X::Create(CX_Manager::TYPE::PLAHEAD) },
+	m_pSlashModel{ CObject_X::Create(CX_Manager::TYPE::SUM0) },
 	m_pBndSlash{ std::make_unique<CBounding_Sphere>() }
 {
 	// aŒ‚ƒ‚ƒfƒ‹‚ÌÀ•W‚ğİ’è (¶¬’¼Œã‚ÌÀ•W‚Å1f•`‰æ‚³‚ê‚Ä‚µ‚Ü‚¤‚½‚ß)

@@ -468,8 +468,8 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindiw)
 
 	// ImGuiの入出力設定
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	io.Fonts->AddFontFromFileTTF("Data\\FONT\\meiryo.ttc", 18.0f, nullptr);
 
 	// ImGuiの表示スタイルを設定

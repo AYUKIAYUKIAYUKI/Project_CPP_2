@@ -91,10 +91,7 @@ template <typename T1, typename T2> T1* utility::DownCast(T2* pBase)
 	T1* pObj = dynamic_cast<T1*>(pBase);
 
 	// ダウンキャスト失敗
-	if (!pObj)
-	{
-		assert(false);
-	}
+	if (!pObj) throw std::bad_cast();
 
 	return pObj;
 }
@@ -104,16 +101,14 @@ template <typename T1, typename T2> T1* utility::DownCast(T2* pBase)
 //============================================================================
 template <typename T1, typename T2> T1* utility::DownCast(T1* pDest, T2* pBase)
 {
-	pDest;	/* 警告回避 */
+	/* 警告回避 */
+	pDest;
 
 	// 引数のオブジェクトを指定されたクラスにダウンキャスト
 	T1* pObj = dynamic_cast<T1*>(pBase);
 
 	// ダウンキャスト失敗
-	if (!pObj)
-	{
-		assert(false);
-	}
+	if (!pObj) throw std::bad_cast();
 
 	return pObj;
 }
