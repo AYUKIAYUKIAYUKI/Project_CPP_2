@@ -87,8 +87,10 @@ void CField_Manager::Update()
 //============================================================================
 void CField_Manager::Draw()
 {
-	// 扇形の描画処理
-	m_pRenderFan->Draw();
+#ifdef _DEBUG
+	// 扇形範囲の描画
+	m_pFan->Draw();
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -234,7 +236,7 @@ CField_Manager::CField_Manager() :
 	m_pSyncPlayer{ nullptr },
 	m_pStatue{ nullptr },
 	m_nCntStatueVibration{ 0 },
-	m_pRenderFan{ nullptr }
+	m_pFan{ nullptr }
 {
 	// アクションデータの初期化
 	m_ActionData.nCntDash = 0;
@@ -254,8 +256,8 @@ CField_Manager::~CField_Manager()
 //============================================================================
 HRESULT CField_Manager::Init()
 {
-	// 扇形表示を生成
-	m_pRenderFan = CFan::Create();
+	// 扇形範囲を生成
+	m_pFan = CFan::Create();
 
 	return S_OK;
 }
@@ -295,11 +297,11 @@ void CField_Manager::InitEnvironment()
 //============================================================================
 void CField_Manager::Uninit()
 {
-	// 扇形表示を破棄
-	if (m_pRenderFan != nullptr)
+	// 扇形範囲を破棄
+	if (m_pFan != nullptr)
 	{
-		m_pRenderFan->Release();	// 解放
-		m_pRenderFan = nullptr;		// ポインタを初期化
+		m_pFan->Release();	// 解放
+		m_pFan = nullptr;	// ポインタを初期化
 	}
 }
 
@@ -322,10 +324,10 @@ void CField_Manager::UpdateFan()
 		return;
 
 	// プレイヤーの現在の方角を扇形の方角にする
-	m_pRenderFan->SetDirection(m_pSyncPlayer->GetDirection());
+	m_pFan->SetDirection(m_pSyncPlayer->GetDirection());
 
-	// 扇形表示の更新処理
-	m_pRenderFan->Update();
+	// 扇形範囲の更新処理
+	m_pFan->Update();
 }
 
 //============================================================================
@@ -392,7 +394,7 @@ void CField_Manager::AutoCreateItem()
 		// 方角をランダムに設定
 		pItem->SetDirection(fabsf(utility::GetRandomValue<float>()));
 
-	} while (m_pRenderFan->DetectInFanRange(pItem->GetPos()));
+	} while (m_pFan->DetectInFanRange(pItem->GetPos()));
 
 	// Y座標をランダムに設定
 	pItem->SetPosY(fabsf(utility::GetRandomValue<float>()));
@@ -405,7 +407,7 @@ void CField_Manager::AutoCreateBlockDash()
 {
 	// 生成座標計算用 ((方角 + 扇形幅の角度)の場所が生成ポイント)
 	float fDirection = m_pSyncPlayer->GetDirection();	// プレイヤーの現在の方角をコピー
-	float fRange = m_pRenderFan->GetRange();			// 扇形範囲の幅をコピー
+	float fRange = m_pFan->GetRange();					// 扇形範囲の幅をコピー
 	Vec3  NewPos = VEC3_INIT, NewRot = VEC3_INIT;		// ブロック用の座標・向きを作成
 
 	// 現在座標と目標座標に対し原点からの方向ベクトルを作成
@@ -435,7 +437,7 @@ void CField_Manager::AutoCreateBlockDash()
 			return;
 		}
 
-	} while (!m_pRenderFan->DetectInFanRange(NewPos));
+	} while (!m_pFan->DetectInFanRange(NewPos));
 
 	// 向きを決定
 	NewRot.y = atan2f(-NewPos.x, -NewPos.z);
@@ -496,7 +498,7 @@ void CField_Manager::AutoDestroyBlock()
 			CBlock* pBlock = nullptr;
 			pBlock = utility::DownCast(pBlock, pObj);
 
-			if (!m_pRenderFan->DetectInFanRange(pBlock->GetPos()))
+			if (!m_pFan->DetectInFanRange(pBlock->GetPos()))
 			{ // 扇形の範囲内にブロックが無ければ
 
 				// ブロックを破棄

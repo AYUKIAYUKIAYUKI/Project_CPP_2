@@ -14,6 +14,11 @@
 #include "object.h"
 
 //****************************************************
+// 前方宣言
+//****************************************************
+class CMotion_Set;
+
+//****************************************************
 // 扇形クラス
 //****************************************************
 class CFan
@@ -39,8 +44,7 @@ public:
 	void SetRange(float fRange);	// 範囲を設定
 
 	// <staic function>
-	static CFan* Create();													// 生成
-	static CFan* Create(D3DXVECTOR3 Pos, float fDirection, float fRange);	// 生成
+	static CFan* Create();	// 生成
 
 private:
 
@@ -62,12 +66,17 @@ private:
 	void	SetMtxWorld();		// ワールド行列設定
 
 	// <data>
-	LPDIRECT3DVERTEXBUFFER9	m_pVtxBuff;			// 頂点バッファのポインタ
-	D3DXMATRIX				m_MtxWorld;			// ワールド行列
-	D3DXVECTOR3				m_Pos;				// 座標
-	D3DXVECTOR3				m_DirVec[NUM_VEC];	// 方向ベクトル
-	float					m_fDirection;		// 方角
-	float					m_fRange;			// 範囲
+	LPDIRECT3DVERTEXBUFFER9	m_pVtxBuff;				// 頂点バッファのポインタ
+	D3DXMATRIX				m_MtxWorld;				// ワールド行列
+	D3DXVECTOR3				m_Pos;					// 座標
+	D3DXVECTOR3				m_DirVec[NUM_VEC];		// 方向ベクトル
+	float					m_fDirection;			// 方角
+	float					m_fRange;				// 範囲
+	CMotion_Set*			m_pLineDisp[NUM_VEC];	// ライン表示
+
+	// <static data>
+	static const JSON m_MotionData[NUM_VEC];	// モーションデータ
+	static const JSON m_InitParam;				// 基礎パラメータ
 };
 
 #endif	// _FAN_H_

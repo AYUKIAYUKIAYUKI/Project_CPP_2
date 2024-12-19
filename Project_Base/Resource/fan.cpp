@@ -9,14 +9,31 @@
 // インクルードファイル
 //****************************************************
 #include "fan.h"
+#include "motion_set.h"
 #include "field_manager.h"
-
 #include "renderer.h"
+
+//****************************************************
+// プリプロセッサディレクティブ
+//****************************************************
+#define DRAW_DEBUG_LINE 1	// デバッグ用のラインを描画する
 
 //****************************************************
 // usingディレクティブ
 //****************************************************
 using namespace abbr;
+
+//****************************************************
+// 静的メンバ変数の初期化
+//****************************************************
+
+// モーションデータを展開
+const JSON CFan::m_MotionData[NUM_VEC] = {
+	utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\LINE\\hard_motion.json"),
+	utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\LINE\\easy_motion.json") };
+
+// 基礎パラメータの展開
+const JSON CFan::m_InitParam = utility::OpenJsonFile("Data\\JSON\\fan_parameter.json");
 
 //============================================================================
 //
@@ -42,20 +59,24 @@ void CFan::Release()
 //============================================================================
 void CFan::Update()
 {
+#if DRAW_DEBUG_LINE	// デバッグ用のラインを描画する
 	// 頂点座標の設定
 	SetVtx();
 
 	// ワールド行列設定
 	SetMtxWorld();
+#endif // DRAW_DEBUG_LINE
 
-#if 1
-#ifdef _DEBUG
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-	CRenderer::SetDebugString("扇形の方角：" + to_string(m_fDirection));
-	CRenderer::SetDebugString("扇形の範囲：" + to_string(m_fRange));
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-#endif // _DEBUG
-#endif
+	// 方角に合わせて範囲分の方向ベクトルを2本作成
+	m_DirVec[0] = { cosf(m_fDirection + m_fRange), 0, sinf(m_fDirection + m_fRange) };
+	m_DirVec[1] = { cosf(m_fDirection - m_fRange), 0, sinf(m_fDirection - m_fRange) };
+
+	// ライン表示のパラメータをセット
+	for (WORD wCntLine = 0; wCntLine < NUM_VEC; ++wCntLine)
+	{
+		m_pLineDisp[wCntLine]->SetPos(m_DirVec[wCntLine] * CField_Manager::FIELD_RADIUS);
+		m_pLineDisp[wCntLine]->SetRot({ 0.0f, atan2f(-m_DirVec[wCntLine].z, m_DirVec[wCntLine].x), 0.0f });
+	}
 }
 
 //============================================================================
@@ -63,6 +84,7 @@ void CFan::Update()
 //============================================================================
 void CFan::Draw()
 {
+#if DRAW_DEBUG_LINE	// デバッグ用のラインを描画する
 	// デバイスを取得
 	LPDIRECT3DDEVICE9 pDev = CRenderer::GetDeviece();
 
@@ -88,6 +110,7 @@ void CFan::Draw()
 
 	// ライトをオン
 	pDev->SetRenderState(D3DRS_LIGHTING, TRUE);
+#endif // デバッグ用のラインを描画する
 }
 
 //============================================================================
@@ -178,56 +201,12 @@ CFan* CFan::Create()
 {
 	CFan* pNewInstance = DBG_NEW CFan();
 
-	if (!pNewInstance)
-	{
-		assert(false && "扇形インスタンスの生成に失敗");
-	}
+	// 生成失敗
+	if (!pNewInstance) throw std::bad_alloc();
 
 	// 初期設定
 	pNewInstance->Init();
 	
-	// JSONファイルを読み取り展開
-	std::ifstream ifs("Data\\JSON\\fan_parameter.json");
-
-	// ファイルが展開出来ていたら
-	if (ifs.good())
-	{
-		// JSONデータをパース
-		JSON Json;
-		ifs >> Json;
-
-		// 各種パラメータをデシリアライズ
-		pNewInstance->SetDirection(Json["Direction"]);
-		pNewInstance->SetRange(Json["Range"]);
-	}
-	else
-	{
-		assert(false && "spline_test.jsonの読み取りに失敗しました");
-	}
-
-	return pNewInstance;
-}
-
-//============================================================================
-// 生成
-//============================================================================
-CFan* CFan::Create(D3DXVECTOR3 Pos, float fDirection, float fRange)
-{
-	CFan* pNewInstance = DBG_NEW CFan();
-
-	if (!pNewInstance)
-	{
-		assert(false && "扇形インスタンスの生成に失敗");
-	}
-
-	// 初期設定
-	pNewInstance->Init();
-
-	// パラメータを反映
-	pNewInstance->SetPos(Pos);
-	pNewInstance->SetDirection(fDirection);
-	pNewInstance->SetRange(fRange);
-
 	return pNewInstance;
 }
 
@@ -245,7 +224,8 @@ CFan::CFan() :
 	m_Pos{ VEC3_INIT },
 	m_DirVec{ VEC3_INIT, VEC3_INIT },
 	m_fDirection{ 0.0f },
-	m_fRange{ 0.0f }
+	m_fRange{ 0.0f },
+	m_pLineDisp{ nullptr, nullptr }
 {
 	// ワールド行列の初期化
 	D3DXMatrixIdentity(&m_MtxWorld);
@@ -256,7 +236,8 @@ CFan::CFan() :
 //============================================================================
 CFan::~CFan()
 {
-
+	// 念のため終了処理
+	Uninit();
 }
 
 //============================================================================
@@ -264,14 +245,22 @@ CFan::~CFan()
 //============================================================================
 HRESULT CFan::Init()
 {
+#if DRAW_DEBUG_LINE	// デバッグ用のラインを描画
 	// 頂点バッファの生成
 	if (FAILED(CreateVtxBuff()))
 	{
 		return E_FAIL;
 	}
+#endif // DRAW_DEBUG_LINE
 
 	// 扇形の範囲を設定
 	m_fRange = D3DX_PI * 0.1f;
+
+	// ライン表示を作成
+	for (WORD wCntLine = 0; wCntLine < NUM_VEC; ++wCntLine)
+	{
+		m_pLineDisp[wCntLine] = CMotion_Set::Create(CObject::LAYER::DEFAULT, CObject::TYPE::NONE, m_MotionData[wCntLine]);
+	}
 
 	return S_OK;
 }
@@ -331,12 +320,14 @@ HRESULT CFan::CreateVtxBuff()
 //============================================================================
 void CFan::Uninit()
 {
+#if DRAW_DEBUG_LINE
 	// 頂点バッファの破棄
 	if (m_pVtxBuff != nullptr)
 	{
 		m_pVtxBuff->Release();
 		m_pVtxBuff = nullptr;
 	}
+#endif // DRAW_DEBUG_LINE
 }
 
 //============================================================================
@@ -358,14 +349,6 @@ void CFan::SetVtx()
 	pVtx[0].pos = m_DirVec[0] * 500.0f;
 	pVtx[1].pos = m_Pos;
 	pVtx[2].pos = m_DirVec[1] * 500.0f;
-	
-	// すぐにけせ
-#if 0
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-	for (int i = 0; i < 2; ++i)
-	CRenderer::SetDebugString("方向ベクトル" + to_string(i) + "：" + to_string(m_DirVec[i].x) + "：" + to_string(m_DirVec[i].z));
-	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-#endif
 
 	// 頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();

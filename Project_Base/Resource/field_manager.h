@@ -113,7 +113,7 @@ private:
 	const CPlayer*	m_pSyncPlayer;			// プレイヤーのポインタ
 	CMotion_Set*	m_pStatue;				// 銅像
 	int				m_nCntStatueVibration;	// 銅像振動カウント
-	CFan*			m_pRenderFan;			// 扇形表示
+	CFan*			m_pFan;					// 扇形範囲
 
 	// <static data>
 	static CField_Manager* m_pFieldManager;	// フィールドマネージャーの本体 
