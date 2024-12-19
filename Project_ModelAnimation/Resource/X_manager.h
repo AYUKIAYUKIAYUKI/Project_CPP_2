@@ -73,6 +73,8 @@ public:
 		SUM11,		// ƒ‹[ƒ“11
 		BRIGHT_0,	// ‘MŒõ0
 		BRIGHT_1,	// ‘MŒõ1
+		LINE_0,		// ü0
+		LINE_1,		// ü1
 		MAX
 	};
 
