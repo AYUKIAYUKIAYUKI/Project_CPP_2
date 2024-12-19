@@ -5,6 +5,14 @@
 // 
 //============================================================================
 
+// カメラ調整用
+namespace
+{
+	float
+		FDistance = 135.0f,	// 間距離
+		FAdderY = 25.0f;	// 俯瞰度合い
+}
+
 //****************************************************
 // インクルードファイル
 //****************************************************
@@ -317,17 +325,13 @@ void CCamera::BranchViewMode()
 			m_RotTarget = VEC3_INIT;								// カメラの目標向きをリセット
 			m_RotTarget.y = atan2f(NegVec.x, NegVec.z);				// カメラの目標向きを作成した逆位置ベクトル方向に
 			utility::AdjustAngle(m_Rot.y, m_RotTarget.y);			// カメラ回転の角度の差を補正
-			m_fDistance += (200.0f - m_fDistance) * COEF_ADJUST;	// 間距離を固定
-			m_fAdjust += (15.0f - m_fAdjust) * COEF_ADJUST;			// 俯瞰度合いを固定
+			m_fDistance += (FDistance - m_fDistance) * COEF_ADJUST;	// 間距離を固定
+			m_fAdjust += (FAdderY - m_fAdjust) * COEF_ADJUST;		// 俯瞰度合いを固定
 		}
 	}
-	else
-	{ // 追従しない
-#ifdef _DEBUG
-		// カメラ操作
-		Control();
-#endif // _DEBUG
-	}
+
+	// カメラ操作
+	Control();
 }
 
 //============================================================================
@@ -335,38 +339,12 @@ void CCamera::BranchViewMode()
 //============================================================================
 void CCamera::Control()
 {
-	// 移動上下
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Camera Param"))
 	{
-		if (CManager::GetKeyboard()->GetPress(DIK_W))
-			m_PosTarget.y += 1.0f;
-		else if (CManager::GetKeyboard()->GetPress(DIK_S))
-			m_PosTarget.y -= 1.0f;
-	}
-
-	// 左右の向き変更
-	{
-		if (CManager::GetKeyboard()->GetPress(DIK_RIGHT))
-			m_RotTarget.y += 0.02f;
-		else if (CManager::GetKeyboard()->GetPress(DIK_LEFT))
-			m_RotTarget.y -= 0.02f;
-	}
-
-	// 上下の向き変更
-	{
-		if (CManager::GetKeyboard()->GetPress(DIK_UP))
-			m_RotTarget.x += 0.02f;
-		else if (CManager::GetKeyboard()->GetPress(DIK_DOWN))
-			m_RotTarget.x -= 0.02f;
-	}
-
-	// ズーム調節
-	{
-		if (CManager::GetKeyboard()->GetPress(DIK_AT) && m_fDistance > 10.0f)
-			m_fDistance -= 10.0f;
-		else if (CManager::GetKeyboard()->GetPress(DIK_COLON))
-			m_fDistance += 10.0f;
-		else if (CManager::GetKeyboard()->GetPress(DIK_BACKSLASH))
-			m_fDistance = 200.0f;
+		ImGui::DragFloat("fDistance", &FDistance);
+		ImGui::DragFloat("AdderY", &FAdderY);
+		ImGui::End();
 	}
 }
 
@@ -506,7 +484,7 @@ void CCamera::CalcMtxView(D3DXVECTOR3 Pos)
 	Vec3 posV = m_PosV, posR = m_PosR;
 
 	// 俯瞰度合いを反映
-	posV.y += m_fAdjust;
+	posV.y += FAdderY;
 
 	// 初期座標以外を渡された場合その視点をコピー
 	if (Pos != VEC3_INIT)
