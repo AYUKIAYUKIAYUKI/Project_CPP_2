@@ -253,8 +253,14 @@ HRESULT CFan::Init()
 	}
 #endif // DRAW_DEBUG_LINE
 
-	// 扇形の範囲を設定
-	m_fRange = D3DX_PI * 0.1f;
+	// データをキャスト
+	float
+		fDirection = static_cast<float>(m_InitParam["Direction"]),
+		fRange = static_cast<float>(m_InitParam["Range"]);
+		
+	// 扇形のパラメータをセット
+	m_fDirection = fDirection;	// 方角
+	m_fRange = fRange;			// 範囲
 
 	// ライン表示を作成
 	for (WORD wCntLine = 0; wCntLine < NUM_VEC; ++wCntLine)
