@@ -33,7 +33,7 @@ public:
 	static constexpr float DEFAULT_MOVE_SPEED = 0.0035f;
 
 	/// <summary> 目標値への補間強度 </summary>
-	static constexpr float CORRECT_COEF = 0.5f;
+	static constexpr float CORRECT_COEF = 0.1f;
 
 	// <special function>
 	CPlayer();	// コンストラクタ

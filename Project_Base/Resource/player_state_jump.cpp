@@ -65,11 +65,7 @@ void CPlayer_State_Jump::Update()
 	CPlayer_State::Update();
 
 	// 星座エフェクトを発生
-	for (WORD wCnt = 0; wCnt < 2; ++wCnt)
-	{
-		CConstellation::GenerateSpread(m_pCharacter->GetPos());
-		CConstellation::GenerateSpread(m_pCharacter->GetPosTarget());
-	}
+	CConstellation::GenerateSpread(m_pCharacter->GetPos());
 
 	// 飛び立ちモーションが終了していたら
 	if (m_pCharacter->GetNowMotion() == 7 &&
@@ -81,7 +77,7 @@ void CPlayer_State_Jump::Update()
 
 	// Y軸方向の加速度が無く、Y方向の移動目標のノルムが小さい時
 	if (m_pCharacter->GetVelY() == 0.0f &&
-		fabsf(m_pCharacter->GetPosTarget().y - m_pCharacter->GetPos().y) <= 0.1f)
+		fabsf(m_pCharacter->GetPosTarget().y - m_pCharacter->GetPos().y) <= 0.25f)
 	{
 		// 通常状態へ
 		To_Default();

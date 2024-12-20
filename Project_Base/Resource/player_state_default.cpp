@@ -14,6 +14,7 @@
 #include "player_state_jump.h"
 #include "player_state_slash.h"
 #include "player_state_damage.h"
+#include "constellation.h"
 
 // フィールド取得用
 #include "field_manager.h"
@@ -217,55 +218,75 @@ void CPlayer_State_Default::ChangeMotion()
 	// プレイヤーの目標座標へのベクトルを作成
 	Vec3 Norm = m_pCharacter->GetPosTarget() - m_pCharacter->GetPos();
 
-	// プレイヤーの移動時のノルムに応じてモーション分岐
-	if (Norm.x * Norm.x + Norm.z * Norm.z > 0.1f)
-	{
-		if (m_pCharacter->GetNowMotion() != 4)
-		{ // 移動モーションを再生していなければ
+	// 着地判定で処理分岐
+	if (!m_bLand)
+	{ // 空中の時のみ
 
-			// 移動モーションを再生
-			m_pCharacter->SetNowMotion(4);
+		if (m_pCharacter->GetVelY() < 0.0f)
+		{ // 落下の最中
+
+			if (m_pCharacter->GetNowMotion() != 8)
+			{ // 飛行モーションを再生していなければ
+
+				// 飛行モーションを再生
+				m_pCharacter->SetNowMotion(8);
+			}
 		}
+		else if (m_pCharacter->GetNowMotion() != 9 &&
+			m_pCharacter->GetVelY() == 0.0f)
+		{ // 地面についていて、着地モーションをまだ再生していないとき
+
+			// 着地モーションをセット
+			m_pCharacter->SetNowMotion(9);
+
+			// 着地判定を出す
+			m_bLand = true;
+		}
+
+		// 星座エフェクトを発生
+		CConstellation::GenerateSpread(m_pCharacter->GetPosTarget());
 	}
 	else
-	{
-		// 着地の形跡があれば
-		if (!m_bLand)
-		{
-			// 加速度が0のとき
-			if (m_pCharacter->GetNowMotion() != 9 &&
-				m_pCharacter->GetVelY() == 0.0f)
-			{
-				// 着地モーションをセット
-				m_pCharacter->SetNowMotion(9);
+	{ // 着地中のみ
 
-				// 着地判定を出す
-				m_bLand = true;
+		// 着地状態からでも、下方向に移動しているとき
+		if (m_pCharacter->GetNowMotion() != 9 &&
+			m_pCharacter->GetVelY() < -2.0f)
+		{
+			// 着地判定を解除
+			m_bLand = false;
+		}
+
+		// 移動量に応じて分岐
+		if (m_pCharacter->GetVelY() == 0.0f &&
+			Norm.x * Norm.x + Norm.z * Norm.z > 0.1f)
+		{ // 地面に接していて移動を行っていたら
+
+			if (m_pCharacter->GetNowMotion() != 4)
+			{ // 移動モーションを再生していなければ
+
+				// 移動モーションを再生
+				m_pCharacter->SetNowMotion(4);
 			}
 		}
 		else
-		{
-			// 着地判定後に下方向に大幅な加速度の変動があれば
-			if (m_pCharacter->GetNowMotion() != 9 &&
-				m_pCharacter->GetVelY() < -2.0f)
-			{
-				m_bLand = false;
+		{ // それ以外の時は
+
+			if (m_pCharacter->GetNowMotion() != 0 &&
+				m_pCharacter->GetNowMotion() != 8 &&
+				m_pCharacter->GetNowMotion() != 9)
+			{ // 通常・飛行・着地モーションを再生していなければ
+
+				// 通常モーションをセット
+				m_pCharacter->SetNowMotion(0);
 			}
-		}
+			else if (m_pCharacter->GetStopState() &&
+				m_pCharacter->GetNowMotion() == 9)
+			{ // 着地モーションの再生が終了したら
 
-		if (m_pCharacter->GetNowMotion() != 0 &&
-			m_pCharacter->GetNowMotion() != 8 &&
-			m_pCharacter->GetNowMotion() != 9)
-		{ // 通常モーションを再生していなければ
-
-			// 通常モーションをセット
-			m_pCharacter->SetNowMotion(0);
-		}
-		else if (m_pCharacter->GetStopState() &&
-			m_pCharacter->GetNowMotion() == 9)
-		{
-			// 通常モーションをセット
-			m_pCharacter->SetNowMotion(0);
+				// 通常モーションをセット
+				m_pCharacter->SetNowMotion(0);
+			}
 		}
 	}
 }

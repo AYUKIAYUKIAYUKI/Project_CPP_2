@@ -417,12 +417,18 @@ void CPlayer::HitCheck()
 				
 				CRenderer::SetTimeString("通常座標系での座標:x " + to_string(GetPosTarget().x) + ":y " + to_string(GetPosTarget().y) + ":z " + to_string(GetPosTarget().z), 600);
 #else
-				// 変更された目標方角の現在の方角へ戻す	/* パターン1 */
-				SetDirectionTarget(GetDirection());
+				//// 変更された目標方角の現在の方角へ戻す	/* パターン1 */
+				//SetDirectionTarget(GetDirection());
 
-				// 変更された目標座標を現在の座標に戻す
-				AutoSetPosTarget();
+				//// 変更された目標座標を現在の座標に戻す
+				//AutoSetPosTarget();
 #endif
+				// 衝突前の座標から、当たる直前となる方角を出す	/* パターン2 */
+				SetDirectionTarget(atan2f(CylinderOldPos.z, CylinderOldPos.x));
+
+				// 衝突寸前の方角から目標座標を割り出す
+				AutoSetPosTarget();
+
 				break;
 			}
 			case 4:	// 右
