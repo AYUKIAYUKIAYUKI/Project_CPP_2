@@ -36,6 +36,9 @@ private:
 	// <function>
 	bool Control();			// 操作
 	void ChangeMotion();	// モーションを変更
+
+	// <data>
+	bool m_bLand;	// 着地判定
 };
 
 #endif	// _PLAYER_STATE_DEFAULT_

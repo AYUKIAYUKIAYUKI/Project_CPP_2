@@ -36,7 +36,8 @@ using namespace abbr;
 // コンストラクタ
 //============================================================================
 CPlayer_State_Default::CPlayer_State_Default() :
-	CPlayer_State{}
+	CPlayer_State{},
+	m_bLand{ false }
 {
 
 }
@@ -228,18 +229,40 @@ void CPlayer_State_Default::ChangeMotion()
 	}
 	else
 	{
-		if (m_pCharacter->GetNowMotion() != 9 &&
-			m_pCharacter->GetVelY() == 0.0f &&
-			m_pCharacter->GetPosTarget().y < m_pCharacter->GetPos().y)
-		{ // 着地モーションを再生していなくて、落下->着地の形跡があれば
+		// 着地の形跡があれば
+		if (!m_bLand)
+		{
+			// 加速度が0のとき
+			if (m_pCharacter->GetNowMotion() != 9 &&
+				m_pCharacter->GetVelY() == 0.0f)
+			{
+				// 着地モーションをセット
+				m_pCharacter->SetNowMotion(9);
 
-			// 着地モーションをセット
-			m_pCharacter->SetNowMotion(9);
+				// 着地判定を出す
+				m_bLand = true;
+			}
 		}
-		else if (m_pCharacter->GetNowMotion() != 0 &&
-			m_pCharacter->GetNowMotion() != 9)
-		{ // 通常・着地モーションを再生していなければ
+		else
+		{
+			// 着地判定後に加速度の変動があれば
+			if (m_pCharacter->GetVelY() != 0.0f)
+			{
+				m_bLand = false;
+			}
+		}
 
+		if (m_pCharacter->GetNowMotion() != 0 &&
+			m_pCharacter->GetNowMotion() != 8 &&
+			m_pCharacter->GetNowMotion() != 9)
+		{ // 通常モーションを再生していなければ
+
+			// 通常モーションをセット
+			m_pCharacter->SetNowMotion(0);
+		}
+		else if (m_pCharacter->GetStopState() &&
+			m_pCharacter->GetNowMotion() == 9)
+		{
 			// 通常モーションをセット
 			m_pCharacter->SetNowMotion(0);
 		}

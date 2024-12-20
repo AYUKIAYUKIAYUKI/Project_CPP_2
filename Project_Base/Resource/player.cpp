@@ -153,10 +153,11 @@ void CPlayer::Update()
 		ImGui::Text("Speed:%.1f", GetMoveSpeed());
 		ImGui::Text("Rot:X %.1f:Y %.1f:Z %.1f", GetRot().x * (180 / D3DX_PI), GetRot().y * (180 / D3DX_PI), GetRot().z * (180 / D3DX_PI));
 		ImGui::Text("RotTarget:X %.1f:Y %.1f:Z %.1f", GetRotTarget().x * (180 / D3DX_PI), GetRotTarget().y * (180 / D3DX_PI), GetRotTarget().z * (180 / D3DX_PI));
-		ImGui::Text("Pos:X %.1f:Y %.1f:Z %.1f", GetPos().x, GetPos().y, GetPos().z);
-		ImGui::Text("PosTarget:X %.1f:Y %.1f:Z %.1f", GetPosTarget().x, GetPosTarget().y, GetPosTarget().z);
+		ImGui::Text("Pos:X %.1f:Y %.6f:Z %.1f", GetPos().x, GetPos().y, GetPos().z);
+		ImGui::Text("PosTarget:X %.1f:Y %.6f:Z %.1f", GetPosTarget().x, GetPosTarget().y, GetPosTarget().z);
 		ImGui::Text("VelY:%.1f", GetVelY());
-		ImGui::Text("Life:%df", GetLife());
+		ImGui::Text("Life:%d", GetLife());
+		ImGui::Text("Motion:%d", GetNowMotion());
 		ImGui::End();
 	}
 #endif	// _DEBUG
