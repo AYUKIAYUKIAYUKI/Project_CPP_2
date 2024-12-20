@@ -27,14 +27,6 @@ public:
 	// <funciton>
 	void Update() override;		// 更新処理
 	void To_Default() override;	// 状態へ
-
-private:
-
-	/// <summary> ダメージ継続期間 </summary>
-	static constexpr int MAX_DASH_DURATION = 120;
-
-	// <data>
-	int m_nDamageDuration;	// ダメージ継続期間
 };
 
 #endif	// _PLAYER_STATE_DAMAGE_
