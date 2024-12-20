@@ -82,6 +82,20 @@ void CPlayer_State_Slash::Update()
 		m_pCharacter->GetPos().z + -cosf(m_pCharacter->GetRot().y) * 15.0f
 	};
 
+	// ”½“®‚ÌÕŒ‚—Ê‚ðì¬
+	float fImpact = -0.001f;
+
+	// Œü‚¢‚Ä‚¢‚é•ûŒü‚ð¶‰E‚Å”»•Ê
+	bool bFaceSide = m_pCharacter->CheckFacingSide();
+
+	// ‚¨ŒÝ‚¢‚ÌˆÊ’uŠÖŒW‚É‡‚í‚¹‚Ä‚«”ò‚Î‚·•ûŠp‚ð•ÏX
+	if (!bFaceSide) fImpact *= -1.0f;
+
+	// ƒvƒŒƒCƒ„[‚ª”½“®‚ÅŒã‘Þ
+	float fNewDirectionTarget = m_pCharacter->GetDirectionTarget();
+	fNewDirectionTarget += fImpact;
+	m_pCharacter->SetDirectionTarget(fNewDirectionTarget);
+
 	// ŽaŒ‚ƒ‚ƒfƒ‹‚ð‰ñ“]
 	Vec3 NewRot = m_pSlashModel->GetRot();
 	NewRot.y += 1.0f;
