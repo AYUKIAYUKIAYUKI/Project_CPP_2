@@ -245,8 +245,9 @@ void CPlayer_State_Default::ChangeMotion()
 		}
 		else
 		{
-			// 着地判定後に加速度の変動があれば
-			if (m_pCharacter->GetVelY() != 0.0f)
+			// 着地判定後に下方向に大幅な加速度の変動があれば
+			if (m_pCharacter->GetNowMotion() != 9 &&
+				m_pCharacter->GetVelY() < -2.0f)
 			{
 				m_bLand = false;
 			}
