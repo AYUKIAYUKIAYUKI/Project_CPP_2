@@ -190,13 +190,13 @@ bool CPlayer_State_Default::Control()
 		}
 	}
 
-	if (pMouse->GetTrigger(0))
+	if (pKeyboard->GetTrigger(DIK_SPACE) || pKeyboard->GetTrigger(DIK_W))
 	{
 		// ƒWƒƒƒ“ƒvó‘Ô‚Ö
 		To_Jump();
 		return true;
 	}
-	else if (pKeyboard->GetTrigger(DIK_W) || pKeyboard->GetTrigger(DIK_S))
+	else if (pMouse->GetTrigger(0))
 	{
 		// aŒ‚ó‘Ô‚Ö
 		To_Slash();

@@ -220,7 +220,7 @@ void CPlayer_State_Jump::Control()
 		}
 	}
 
-	if (pKeyboard->GetTrigger(DIK_W) || pKeyboard->GetTrigger(DIK_S))
+	if (pMouse->GetTrigger(0))
 	{
 		// ŽaŒ‚ó‘Ô‚Ö
 		To_Slash();
@@ -239,7 +239,8 @@ void CPlayer_State_Jump::AdjustGravity()
 	m_nJumpRemainDuration++;
 
 	// ƒWƒƒƒ“ƒv‚Ì“ü—Í‚ð‚â‚ß‚é‚©A“ü—Í‚ÌŒp‘±ŠúŠÔ‚ªÅ‘å‰„’·—P—\‚É’B‚·‚é‚Æ‰„’·‚ðI—¹‚·‚é
-	if (CManager::GetMouse()->GetRelease(0) || m_nJumpRemainDuration > MAX_JUMPREMAIN_DURATION)
+	if (CManager::GetKeyboard()->GetRelease(DIK_SPACE) || CManager::GetKeyboard()->GetRelease(DIK_W) ||
+		m_nJumpRemainDuration > MAX_JUMPREMAIN_DURATION)
 	{
 		m_bEndRemain = true;
 	}

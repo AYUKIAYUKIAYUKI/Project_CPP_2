@@ -27,11 +27,6 @@ using namespace abbr;
 // 静的メンバ変数の初期化
 //****************************************************
 
-// モーションデータを展開
-const JSON CFan::m_MotionData[NUM_VEC] = {
-	utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\LINE\\hard_motion.json"),
-	utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT\\LINE\\easy_motion.json") };
-
 // 基礎パラメータの展開
 const JSON CFan::m_InitParam = utility::OpenJsonFile("Data\\JSON\\fan_parameter.json");
 
@@ -70,13 +65,6 @@ void CFan::Update()
 	// 方角に合わせて範囲分の方向ベクトルを2本作成
 	m_DirVec[0] = { cosf(m_fDirection + m_fRange), 0, sinf(m_fDirection + m_fRange) };
 	m_DirVec[1] = { cosf(m_fDirection - m_fRange), 0, sinf(m_fDirection - m_fRange) };
-
-	// ライン表示のパラメータをセット
-	for (WORD wCntLine = 0; wCntLine < NUM_VEC; ++wCntLine)
-	{
-		m_pLineDisp[wCntLine]->SetPos(m_DirVec[wCntLine] * CField_Manager::FIELD_RADIUS);
-		m_pLineDisp[wCntLine]->SetRot({ 0.0f, atan2f(-m_DirVec[wCntLine].z, m_DirVec[wCntLine].x), 0.0f });
-	}
 }
 
 //============================================================================
@@ -224,8 +212,7 @@ CFan::CFan() :
 	m_Pos{ VEC3_INIT },
 	m_DirVec{ VEC3_INIT, VEC3_INIT },
 	m_fDirection{ 0.0f },
-	m_fRange{ 0.0f },
-	m_pLineDisp{ nullptr, nullptr }
+	m_fRange{ 0.0f }
 {
 	// ワールド行列の初期化
 	D3DXMatrixIdentity(&m_MtxWorld);
@@ -261,12 +248,6 @@ HRESULT CFan::Init()
 	// 扇形のパラメータをセット
 	m_fDirection = fDirection;	// 方角
 	m_fRange = fRange;			// 範囲
-
-	// ライン表示を作成
-	for (WORD wCntLine = 0; wCntLine < NUM_VEC; ++wCntLine)
-	{
-		m_pLineDisp[wCntLine] = CMotion_Set::Create(CObject::LAYER::DEFAULT, CObject::TYPE::NONE, m_MotionData[wCntLine]);
-	}
 
 	return S_OK;
 }
