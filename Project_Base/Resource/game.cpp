@@ -175,7 +175,9 @@ CGame::~CGame()
 HRESULT CGame::Init()
 {
 	// プレイヤーを生成
-	m_pPlayerPtr = CPlayer::Create();
+	CPlayer* pPlayer = CPlayer::Create();
+	pPlayer->SetPos({ -100.0f, 0.0f, 0.0f });	/* ダメージ回避用 */
+	m_pPlayerPtr = pPlayer;
 
 	// 真実の蝶を生成
 	m_pTrueButterfly = CMotion_Set::Create(CObject::LAYER::DEFAULT, CObject::TYPE::LATEDRAW, utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BUTTERFLY\\butterfly_motion.json"));
