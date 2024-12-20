@@ -380,10 +380,29 @@ void CBoss::DirectAttack()
 	// 衝突判定に成功したら
 	if (HitCheck())
 	{
-		// プレイヤーに1ダメージ
+		// プレイヤーを取得
 		CPlayer* pPlayer = nullptr;
 		pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
-		pPlayer->SetDamage(-1);
+
+		// 原点からキャラクターのいる場所への方向ベクトルを作成
+		Vec3 CharacterPosVec = GetPos() - VEC3_INIT;
+		D3DXVec3Normalize(&CharacterPosVec, &CharacterPosVec);
+
+		// 原点からプレイヤーのいる場所へのベクトルを作成
+		Vec3 PlayerVec = pPlayer->GetPos() - VEC3_INIT;
+		D3DXVec3Normalize(&PlayerVec, &PlayerVec);
+
+		// 2本の方向ベクトルの外積を作成
+		float fCross = (CharacterPosVec.x * PlayerVec.z) - (CharacterPosVec.z * PlayerVec.x);
+
+		// 半径に応じて衝撃量を作成
+		float fImpact = GetRadius() * 0.001f;
+
+		// お互いの位置関係に合わせて吹き飛ばす方角を変更
+		if (fCross < 0.0f) fImpact *= -1.0f;
+
+		// 1ダメージと衝撃力を与える
+		pPlayer->SetDamage(-1, fImpact);
 	}
 }
 

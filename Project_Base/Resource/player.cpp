@@ -175,7 +175,7 @@ void CPlayer::Draw()
 //============================================================================
 // ダメージを受ける
 //============================================================================
-void CPlayer::SetDamage(int nDamage)
+void CPlayer::SetDamage(int nDamage, float fImpact)
 {
 	if (typeid(*m_pState) != typeid(CPlayer_State_Damage))
 	{
@@ -183,6 +183,14 @@ void CPlayer::SetDamage(int nDamage)
 		int nNewLife = GetLife();
 		nNewLife += nDamage;
 		SetLife(nNewLife);
+
+		// 軽く上に吹き飛ぶ
+		SetVelY(3.5f);
+
+		// 衝撃量分、方角を変動
+		float fNewDirectionTarget = GetDirectionTarget();
+		fNewDirectionTarget += fImpact;
+		SetDirectionTarget(fNewDirectionTarget);
 
 		// ダメージ状態へ変更するよう命令する
 		m_pState->To_Damage();

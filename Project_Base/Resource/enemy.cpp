@@ -211,8 +211,25 @@ bool CEnemy::HitCheck()
 	// プレイヤーの持つ円柱範囲内に侵入していたら衝突
 	if (collision::HitCylinderToCylinder(m_pBndCylinder, pPlayer->GetBndCylinder()))
 	{
-		// 1ダメージを与える
-		pPlayer->SetDamage(-1);
+		// 原点からキャラクターのいる場所への方向ベクトルを作成
+		Vec3 CharacterPosVec = GetPos() - VEC3_INIT;
+		D3DXVec3Normalize(&CharacterPosVec, &CharacterPosVec);
+
+		// 原点からプレイヤーのいる場所へのベクトルを作成
+		Vec3 PlayerVec = pPlayer->GetPos() - VEC3_INIT;
+		D3DXVec3Normalize(&PlayerVec, &PlayerVec);
+
+		// 2本の方向ベクトルの外積を作成
+		float fCross = (CharacterPosVec.x * PlayerVec.z) - (CharacterPosVec.z * PlayerVec.x);
+		
+		// 半径に応じて衝撃量を作成
+		float fImpact = GetRadius() * 0.01f;
+
+		// お互いの位置関係に合わせて吹き飛ばす方角を変更
+		if (fCross < 0.0f) fImpact *= -1.0f;
+
+		// 1ダメージと衝撃力を与える
+		pPlayer->SetDamage(-1, fImpact);
 
 		// 衝突した
 		return true;

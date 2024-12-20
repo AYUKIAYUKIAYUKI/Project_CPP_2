@@ -218,6 +218,9 @@ void CFlyer::UpDown()
 	// ‰ñ“]ƒ‚[ƒVƒ‡ƒ“’†‚Í¸~‚µ‚È‚¢
 	if (GetNowMotion() == 1 && !GetStopState())
 	{
+		// Õ“ËŒŸo
+		HitCheck();
+
 		return;
 	}
 
