@@ -9,6 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "monster.h"
+#include "sound.h"
 
 #include "player.h"
 #include "block.h"
@@ -368,6 +369,9 @@ void CMonster::DeadEnd()
 	if (GetNowMotion() != 2)
 	{
 		SetNowMotion(2);
+
+		// 消滅SEを鳴らす
+		CSound::GetInstance()->Play(CSound::LABEL::DISAPPEAR);
 	}
 
 	// 死亡モーションの再生が終了したら

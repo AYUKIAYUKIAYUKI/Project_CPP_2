@@ -14,6 +14,7 @@
 #include "player_state_jump.h"
 #include "player_state_slash.h"
 #include "player_state_damage.h"
+#include "sound.h"
 #include "constellation.h"
 
 // フィールド取得用
@@ -241,6 +242,9 @@ void CPlayer_State_Default::ChangeMotion()
 
 			// 着地判定を出す
 			m_bLand = true;
+
+			// 着地SEを鳴らす
+			CSound::GetInstance()->Play(CSound::LABEL::LAND);
 		}
 
 		// 星座エフェクトを発生

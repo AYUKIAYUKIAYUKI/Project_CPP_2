@@ -9,6 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "ghost.h"
+#include "sound.h"
 
 #include "player.h"
 
@@ -273,6 +274,9 @@ void CGhost::DeadEnd()
 	if (GetNowMotion() != 2)
 	{
 		SetNowMotion(2);
+
+		// 消滅SEを鳴らす
+		CSound::GetInstance()->Play(CSound::LABEL::DISAPPEAR);
 	}
 
 	// 死亡モーションの再生が終了したら

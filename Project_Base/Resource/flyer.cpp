@@ -9,6 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "flyer.h"
+#include "sound.h"
 
 #include "player.h"
 
@@ -275,6 +276,9 @@ void CFlyer::DeadEnd()
 	if (GetNowMotion() != 2)
 	{
 		SetNowMotion(2);
+
+		// 消滅SEを鳴らす
+		CSound::GetInstance()->Play(CSound::LABEL::DISAPPEAR);
 	}
 
 	// 死亡モーションの再生が終了したら

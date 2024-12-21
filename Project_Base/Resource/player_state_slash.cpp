@@ -13,6 +13,7 @@
 #include "player_state_default.h"
 #include "player_state_damage.h"
 #include "manager.h"
+#include "sound.h"
 #include "collision.h"
 #include "field_manager.h"
 
@@ -45,6 +46,9 @@ CPlayer_State_Slash::CPlayer_State_Slash() :
 
 	// ŽaŒ‚ƒ‚[ƒVƒ‡ƒ“‚ðÄ¶
 	m_pCharacter->SetNowMotion(5);
+
+	// ŽaŒ‚SE‚ð–Â‚ç‚·
+	CSound::GetInstance()->Play(CSound::LABEL::SLASH);
 }
 
 //============================================================================

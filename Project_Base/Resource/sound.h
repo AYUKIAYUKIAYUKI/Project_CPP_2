@@ -23,8 +23,11 @@ public:
 		FILEDBGM = 0,	// フィールドBGM
 		BOSSBGM,		// ボスBGM
 		TEXT,			// テキスト
-		HEAL,			// 回復
+		DASH,			// ダッシュ
+		SLASH,			// 斬撃
+		LAND,			// 着地
 		DAMAGE,			// 被弾
+		HEAL,			// 回復
 		DISAPPEAR,		// 消滅
 		MAX,
 	};

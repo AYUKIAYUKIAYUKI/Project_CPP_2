@@ -10,6 +10,7 @@
 //****************************************************
 #include "player_state_damage.h"
 #include "player_state_default.h"
+#include "sound.h"
 #include "manager.h"
 #include "field_manager.h"
 
@@ -32,6 +33,9 @@ CPlayer_State_Damage::CPlayer_State_Damage() :
 {
 	// ダメージモーションをセット
 	m_pCharacter->SetNowMotion(10);
+
+	// 被弾SEを鳴らす
+	CSound::GetInstance()->Play(CSound::LABEL::DAMAGE);
 }
 
 //============================================================================

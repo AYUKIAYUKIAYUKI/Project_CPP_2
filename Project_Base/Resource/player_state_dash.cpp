@@ -11,6 +11,7 @@
 #include "player_state_dash.h"
 #include "player_state_default.h"
 #include "player_state_damage.h"
+#include "sound.h"
 #include "constellation.h"
 
 // フィールドサイズ取得用
@@ -48,6 +49,9 @@ CPlayer_State_Dash::CPlayer_State_Dash() :
 
 	// ダッシュモーションを再生
 	m_pCharacter->SetNowMotion(6);
+
+	// ダッシュを鳴らす
+	CSound::GetInstance()->Play(CSound::LABEL::DASH);
 }
 
 //============================================================================
