@@ -95,6 +95,9 @@ void CPlayer_State_Dash::To_Default()
 	if (GetNextState() == nullptr)
 	{
 		SetNextState(DBG_NEW CPlayer_State_Default());
+
+		// 空中のダッシュ解除後に着地をしてしまわないため
+		m_pCharacter->SetVelY(-0.001f);
 	}
 }
 
@@ -126,11 +129,11 @@ void CPlayer_State_Dash::SetPosToFacing()
 	// 設定されている移動方向に方角を増加
 	if (m_bDirection)
 	{
-		fDirectionTarget += m_pCharacter->GetMoveSpeed() * 2.0f;
+		fDirectionTarget += m_pCharacter->GetMoveSpeed() * 1.5f;
 	}
 	else
 	{
-		fDirectionTarget += m_pCharacter->GetMoveSpeed() * -2.0f;
+		fDirectionTarget += m_pCharacter->GetMoveSpeed() * -1.5f;
 	}
 
 	// 目標方角を反映

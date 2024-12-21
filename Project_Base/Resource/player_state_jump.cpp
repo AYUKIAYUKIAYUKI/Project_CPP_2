@@ -77,7 +77,7 @@ void CPlayer_State_Jump::Update()
 
 	// YŽ²•ûŒü‚Ì‰Á‘¬“x‚ª–³‚­AY•ûŒü‚ÌˆÚ“®–Ú•W‚Ìƒmƒ‹ƒ€‚ª¬‚³‚¢Žž
 	if (m_pCharacter->GetVelY() == 0.0f &&
-		fabsf(m_pCharacter->GetPosTarget().y - m_pCharacter->GetPos().y) <= 0.25f)
+		fabsf(m_pCharacter->GetPosTarget().y - m_pCharacter->GetPos().y) <= 0.3f)
 	{
 		// ’Êíó‘Ô‚Ö
 		To_Default();

@@ -185,7 +185,7 @@ void CPlayer::SetDamage(int nDamage, float fImpact)
 		SetLife(nNewLife);
 
 		// Œy‚­ã‚É‚«”ò‚Ô
-		SetVelY(3.5f);
+		SetVelY(3.0f);
 
 		// ÕŒ‚—Ê•ªA•ûŠp‚ğ•Ï“®
 		float fNewDirectionTarget = GetDirectionTarget();
