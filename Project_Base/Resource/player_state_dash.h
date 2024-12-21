@@ -21,7 +21,7 @@ class CPlayer_State_Dash : public CPlayer_State
 public:
 
 	/// <summary> ダッシュキャスト期間 </summary>
-	static constexpr int MAX_DASH_CAST = 45;
+	static constexpr int MAX_DASH_CAST = 60;
 
 	// <special function>
 	CPlayer_State_Dash();			// コンストラクタ

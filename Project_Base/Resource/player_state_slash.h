@@ -15,11 +15,6 @@
 #include "bounding_sphere.h"
 
 //****************************************************
-// 前方宣言
-//****************************************************
-class CObject_X;
-
-//****************************************************
 // プレイヤー斬撃ステートクラス
 //****************************************************
 class CPlayer_State_Slash : public CPlayer_State
@@ -39,7 +34,7 @@ public:
 	};
 
 	/// <summary> 斬撃キャスト期間 </summary>
-	static constexpr int MAX_SLASH_CAST = 25;
+	static constexpr int MAX_SLASH_CAST = 40;
 
 	// <special function>
 	CPlayer_State_Slash();				// コンストラクタ
@@ -58,7 +53,6 @@ private:
 
 	// <data>
 	SLASH_TYPE							m_SlashType;	// 斬撃方向のタイプ
-	CObject_X*							m_pSlashModel;	// 斬撃のモデル
 	std::unique_ptr<CBounding_Sphere>	m_pBndSlash;	// 斬撃のバウンディング
 	
 };
