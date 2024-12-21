@@ -219,6 +219,42 @@ HRESULT CSound::Play(LABEL label)
 }
 
 //=============================================================================
+// 遷移
+//=============================================================================
+void CSound::Transition(LABEL labelPrev, LABEL labelNext)
+{
+	// 次の曲指定が、最後に再生された曲なら処理しない
+	if (m_LastTransition == labelNext) return;
+
+	// ラベル指定を要素数に変換
+	WORD
+		wPrev = static_cast<WORD>(labelPrev),
+		wNext = static_cast<WORD>(labelNext);
+
+	// ボリュームが減少していく
+	m_aSoundInfo[wPrev].fVolume += -0.003f;
+
+	// フェードアウトが済んだら
+	if (m_aSoundInfo[wPrev].fVolume <= 0.0f)
+	{
+		// 曲のボリュームは戻しておく
+		m_aSoundInfo[wPrev].fVolume = 1.0f;
+
+		// この曲を停止
+		Stop(labelPrev);
+
+		// 次の曲を再生
+		Play(labelNext);
+
+		// 最後に遷移した曲を保持
+		m_LastTransition = labelNext;
+	}
+
+	// ボリュームを反映
+	m_apSourceVoice[wPrev]->SetVolume(m_aSoundInfo[wPrev].fVolume);
+}
+
+//=============================================================================
 // セグメント停止(ラベル指定)
 //=============================================================================
 void CSound::Stop(LABEL label)
@@ -300,10 +336,10 @@ CSound* CSound::GetInstance()
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CSound::CSound()
+CSound::CSound() :
+	m_pXAudio2{ nullptr },
+	m_pMasteringVoice{ nullptr }
 {
-	m_pXAudio2 = nullptr;								// XAudio2オブジェクトへのインターフェイス
-	m_pMasteringVoice = nullptr;						// マスターボイス
 	m_apSourceVoice[static_cast<int>(LABEL::MAX)] = {};	// ソースボイス
 	m_apDataAudio[static_cast<int>(LABEL::MAX)] = {};	// オーディオデータ
 	m_aSizeAudio[static_cast<int>(LABEL::MAX)] = {};	// オーディオデータサイズ

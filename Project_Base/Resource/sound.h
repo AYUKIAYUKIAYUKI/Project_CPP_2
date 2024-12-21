@@ -32,13 +32,14 @@ public:
 		MAX,
 	};
 
-	HRESULT Init(HWND hWnd);		// 初期設定
-	void Release();					// 解放
-	HRESULT Play(LABEL label);		// 再生
-	void Stop(LABEL label);			// 停止 (選択)
-	void Stop();					// 停止 (全て)
-	void SetVol(LABEL label);		// 音量を設定
-	float GetVol(LABEL label);		// 音量を取得
+	HRESULT Init(HWND hWnd);	// 初期設定
+	void Release();				// 解放
+	HRESULT Play(LABEL label);	// 再生
+	void Transition(LABEL labelPrev, LABEL labelNext);	// 遷移
+	void Stop(LABEL label);		// 停止 (選択)
+	void Stop();				// 停止 (全て)
+	void SetVol(LABEL label);	// 音量を設定
+	float GetVol(LABEL label);	// 音量を取得
 
 	static CSound* GetInstance();	// サウンドを取得
 
@@ -68,7 +69,7 @@ private:
 	BYTE* m_apDataAudio[static_cast<int>(LABEL::MAX)];					// オーディオデータ
 	DWORD m_aSizeAudio[static_cast<int>(LABEL::MAX)];					// オーディオデータサイズ
 	SOUNDINFO m_aSoundInfo[static_cast<int>(LABEL::MAX)];				// サウンド情報
-	LABEL m_NextBgm;													// 次のBGM
+	LABEL m_LastTransition;												// 最後に遷移した曲
 
 	static CSound* m_pSound;	// サウンド
 };

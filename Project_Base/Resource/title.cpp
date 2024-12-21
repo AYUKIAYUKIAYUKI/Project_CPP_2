@@ -198,9 +198,6 @@ HRESULT CTitle::Init()
 #endif
 	}
 
-	// Å‰‚ÌBGM‚ð‚©‚¯‚é
-	CSound::GetInstance()->Play(CSound::LABEL::FILEDBGM);
-
 	return S_OK;
 }
 

@@ -12,6 +12,7 @@
 #include "manager.h"
 #include "renderer.h"
 #include "scene.h"
+#include "sound.h"
 #include "game.h"
 #include "motion_set.h"
 #include "object_HUD.h"
@@ -559,6 +560,7 @@ void CField_Manager::AppearBossEvent()
 	if (m_pStatue->GetNowMotion() == 2)
 		return;
 
+	// フォグ範囲を拡大
 	CRenderer::CorrectFogEnd(1350.0f);
 
 	// 再生中のモーションに応じて処理を分岐
@@ -600,6 +602,9 @@ void CField_Manager::AppearBossEvent()
 			CManager::GetManager()->GetCamera()->SetVibration(0.05f);
 		}
 	}
+
+	// BGMを遷移
+	CSound::GetInstance()->Transition(CSound::LABEL::FILEDBGM, CSound::LABEL::BOSSBGM);
 }
 
 //============================================================================

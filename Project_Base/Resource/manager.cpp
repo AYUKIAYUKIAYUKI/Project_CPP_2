@@ -306,6 +306,9 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 	// ƒpƒbƒh‚Ì‰Šú‰»
 	m_pPad->Init(hInstance, hWnd);
 
+	// Å‰‚ÌBGM‚ð‚©‚¯‚é
+	CSound::GetInstance()->Play(CSound::LABEL::FILEDBGM);
+
 	return S_OK;
 }
 
