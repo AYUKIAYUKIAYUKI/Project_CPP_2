@@ -235,14 +235,14 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 	// カメラの初期化
 	m_pCamera->Init();
 
-	// シーンマネージャーの生成 (カメラ生成後)
-	if (FAILED(CScene_Manager::Create()))
+	// サウンド初期設定
+	if (FAILED(CSound::GetInstance()->Init(hWnd)))
 	{
 		return E_FAIL;
 	}
 
-	// サウンド初期設定
-	if (FAILED(CSound::GetInstance()->Init(hWnd)))
+	// シーンマネージャーの生成 (カメラ・サウンド生成後)
+	if (FAILED(CScene_Manager::Create()))
 	{
 		return E_FAIL;
 	}
@@ -306,9 +306,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 	// パッドの初期化
 	m_pPad->Init(hInstance, hWnd);
 
-	// BGMをかける
-	CSound::GetInstance()->Play(CSound::LABEL::TEST);
-
 	return S_OK;
 }
 
@@ -369,11 +366,11 @@ void CManager::Uninit()
 	// テクスチャマネージャー破棄
 	CTexture_Manager::Release();
 
-	// サウンドの破棄
-	CSound::GetInstance()->Release();
-
 	// シーンマネージャーの破棄
 	CScene_Manager::Release();
+
+	// サウンドの破棄
+	CSound::GetInstance()->Release();
 
 	// フィールドマネージャーの破棄
 	CField_Manager::Release();

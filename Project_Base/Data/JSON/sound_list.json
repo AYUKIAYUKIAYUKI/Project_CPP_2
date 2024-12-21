@@ -1,11 +1,26 @@
 {
   "FilePath": [
-    "Data\\SE\\define.wav"
+    "Data\\BGM\\black.wav",
+    "Data\\BGM\\inst.wav",
+    "Data\\SE\\text.wav",
+    "Data\\SE\\heal.wav",
+    "Data\\SE\\damage.wav",
+    "Data\\SE\\disappear.wav"
   ],
   "CountLoop": [
+    -1,
+    -1,
+    0,
+    0,
+    0,
     0
   ],
   "Volume": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
     1.0
   ]
 }

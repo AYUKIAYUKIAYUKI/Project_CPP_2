@@ -311,11 +311,14 @@ CSound::CSound()
 	// サウンド情報を取得
 	JSON Json = utility::OpenJsonFile("Data\\JSON\\sound_list.json");
 
+	// ポインタ保持用
+	static std::vector<std::string> vFilePath;
+
 	// サウンド情報を割り当て
 	for (WORD wCntSound = 0; wCntSound < static_cast<WORD>(LABEL::MAX); ++wCntSound)
 	{
 		// ファイルパスをキャストしポインタを残す
-		static const std::string& FilePath = static_cast<std::string>(Json["FilePath"][wCntSound]);
+		vFilePath.push_back(static_cast<std::string>(Json["FilePath"][wCntSound]));
 
 		// ループカウントをキャスト
 		int nCntLoop = static_cast<int>(Json["CountLoop"][wCntSound]);
@@ -324,7 +327,7 @@ CSound::CSound()
 		float fVolume = static_cast<float>(Json["Volume"][wCntSound]);
 
 		// データをセット
-		m_aSoundInfo[wCntSound] = { FilePath.c_str(), nCntLoop, fVolume};
+		m_aSoundInfo[wCntSound] = { vFilePath[wCntSound].c_str(), nCntLoop, fVolume};
 	}
 }
 

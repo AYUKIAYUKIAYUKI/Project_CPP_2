@@ -10,6 +10,7 @@
 //****************************************************
 #include "object_TextMesh.h"
 #include "renderer.h"
+#include "sound.h"
 
 //****************************************************
 // usingディレクティブ
@@ -509,6 +510,9 @@ void CObject_TextMesh::TextAnimation()
 
 		// テキストを1文字追加
 		m_Text += SjisChar;
+
+		// テキストSEを鳴らす
+		CSound::GetInstance()->Play(CSound::LABEL::TEXT);
 	}
 }
 

@@ -9,6 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "title.h"
+#include "sound.h"
 #include "game.h"
 #include "manager.h"
 #include "renderer.h"
@@ -196,6 +197,9 @@ HRESULT CTitle::Init()
 		pTest2->SetPos({ pTest2->GetPos().x, pTest2->GetPos().y + -100.0f, pTest2->GetPos().z });
 #endif
 	}
+
+	// 最初のBGMをかける
+	CSound::GetInstance()->Play(CSound::LABEL::FILEDBGM);
 
 	return S_OK;
 }

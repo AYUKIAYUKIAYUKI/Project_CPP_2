@@ -20,7 +20,12 @@ public:
 	//****************************************************
 	enum class LABEL : WORD
 	{
-		TEST = 0,	// テスト
+		FILEDBGM = 0,	// フィールドBGM
+		BOSSBGM,		// ボスBGM
+		TEXT,			// テキスト
+		HEAL,			// 回復
+		DAMAGE,			// 被弾
+		DISAPPEAR,		// 消滅
 		MAX,
 	};
 
@@ -59,7 +64,8 @@ private:
 	IXAudio2SourceVoice* m_apSourceVoice[static_cast<int>(LABEL::MAX)];	// ソースボイス
 	BYTE* m_apDataAudio[static_cast<int>(LABEL::MAX)];					// オーディオデータ
 	DWORD m_aSizeAudio[static_cast<int>(LABEL::MAX)];					// オーディオデータサイズ
-	SOUNDINFO m_aSoundInfo[static_cast<int>(LABEL::MAX)];				// サウンド情報 (仮)
+	SOUNDINFO m_aSoundInfo[static_cast<int>(LABEL::MAX)];				// サウンド情報
+	LABEL m_NextBgm;													// 次のBGM
 
 	static CSound* m_pSound;	// サウンド
 };
