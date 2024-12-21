@@ -41,7 +41,7 @@ CPlayer_State_Slash::CPlayer_State_Slash() :
 	m_pBndSlash{ std::make_unique<CBounding_Sphere>() }
 {
 	// 斬撃のバウンディングのサイズを設定
-	m_pBndSlash->SetRadius(8.0f);
+	m_pBndSlash->SetRadius(5.0f);
 
 	// 斬撃モーションを再生
 	m_pCharacter->SetNowMotion(5);
@@ -70,9 +70,9 @@ void CPlayer_State_Slash::Update()
 	// プレイヤーの向いている方向のベクトルを作成
 	Vec3 PlayerFacing =
 	{
-		m_pCharacter->GetPos().x + -sinf(m_pCharacter->GetRot().y) * 12.5f,
+		m_pCharacter->GetPos().x + -sinf(m_pCharacter->GetRot().y) * 11.0f,
 		m_pCharacter->GetPos().y + 4.0f,
-		m_pCharacter->GetPos().z + -cosf(m_pCharacter->GetRot().y) * 12.5f
+		m_pCharacter->GetPos().z + -cosf(m_pCharacter->GetRot().y) * 11.0f
 	};
 
 	// 反動の衝撃量を作成
