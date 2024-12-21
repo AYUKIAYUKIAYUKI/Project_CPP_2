@@ -36,7 +36,6 @@ CObject_TextMesh::CObject_TextMesh(LAYER Priority) :
 	m_nCntDisp{ 0 },
 	m_nTextSpeed{ 0 },
 	m_nTextDelay{ 0 },
-	m_nCntReturn{ 0 },
 	m_TextSize{ VEC2_INIT },
 	m_MeshSize{ VEC3_INIT },
 	m_Rot{ VEC3_INIT },
@@ -494,18 +493,22 @@ void CObject_TextMesh::TextAnimation()
 		m_nCntDisp = 0;
 
 		// 目標テキストから1文字切り分ける
-		std::string SjisChar = m_TextTarget.substr(m_Text.size() + m_nCntReturn, 2);
+		std::string SjisChar = m_TextTarget.substr(m_Text.size(), 2);
 
 		// 改行シンボルで文字置き換え
 		if (SjisChar == "\n#")
 		{
+			// 改行シンボルの場所をコピー
+			WORD wReturnPos = static_cast<WORD>(m_TextTarget.find("\n#", 0));
+
+			// 正規の改行文字に置換
+			m_TextTarget.replace(wReturnPos, 2, "\n");
+
+			// 切り分けた文字も置換
 			SjisChar = "\n";
 
 			// テキスト送りカウントにディレイ
 			m_nCntDisp = m_nTextDelay;
-
-			// 切り分け位置を半角ずらす
-			++m_nCntReturn;
 		}
 
 		// テキストを1文字追加
