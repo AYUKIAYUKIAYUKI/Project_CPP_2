@@ -98,6 +98,9 @@ void CPlayer_State_Dash::To_Default()
 
 		// 空中のダッシュ解除後に着地をしてしまわないため
 		m_pCharacter->SetVelY(-0.001f);
+
+		// 落下を考慮して、飛行モーションをセットしながら通常状態へ
+		m_pCharacter->SetNowMotion(8);
 	}
 }
 

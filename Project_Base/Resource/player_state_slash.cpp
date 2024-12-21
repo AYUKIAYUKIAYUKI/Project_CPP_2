@@ -70,9 +70,9 @@ void CPlayer_State_Slash::Update()
 	// プレイヤーの向いている方向のベクトルを作成
 	Vec3 PlayerFacing =
 	{
-		m_pCharacter->GetPos().x + -sinf(m_pCharacter->GetRot().y) * 15.0f,
-		m_pCharacter->GetPos().y,
-		m_pCharacter->GetPos().z + -cosf(m_pCharacter->GetRot().y) * 15.0f
+		m_pCharacter->GetPos().x + -sinf(m_pCharacter->GetRot().y) * 12.5f,
+		m_pCharacter->GetPos().y + 4.0f,
+		m_pCharacter->GetPos().z + -cosf(m_pCharacter->GetRot().y) * 12.5f
 	};
 
 	// 反動の衝撃量を作成
