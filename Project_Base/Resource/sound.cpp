@@ -71,7 +71,8 @@ HRESULT CSound::Init(HWND hWnd)
 		memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
 
 		// サウンドデータファイルの生成
-		hFile = CreateFile(m_aSoundInfo[nCntSound].pFilename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+		const char* pFilename = m_aSoundInfo[nCntSound].pFilename;
+		hFile = CreateFile(pFilename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 		if (hFile == INVALID_HANDLE_VALUE)
 		{
 			MessageBox(hWnd, "サウンドデータファイルの生成に失敗！(1)", "警告！", MB_ICONWARNING);
@@ -307,8 +308,24 @@ CSound::CSound()
 	m_apDataAudio[static_cast<int>(LABEL::MAX)] = {};	// オーディオデータ
 	m_aSizeAudio[static_cast<int>(LABEL::MAX)] = {};	// オーディオデータサイズ
 
-	// サウンド情報
-	m_aSoundInfo[0] = { "Data\\SE\\define.wav", 0, 1.0f };
+	// サウンド情報を取得
+	JSON Json = utility::OpenJsonFile("Data\\JSON\\sound_list.json");
+
+	// サウンド情報を割り当て
+	for (WORD wCntSound = 0; wCntSound < static_cast<WORD>(LABEL::MAX); ++wCntSound)
+	{
+		// ファイルパスをキャストしポインタを残す
+		static const std::string& FilePath = static_cast<std::string>(Json["FilePath"][wCntSound]);
+
+		// ループカウントをキャスト
+		int nCntLoop = static_cast<int>(Json["CountLoop"][wCntSound]);
+
+		// 音量をキャスト
+		float fVolume = static_cast<float>(Json["Volume"][wCntSound]);
+
+		// データをセット
+		m_aSoundInfo[wCntSound] = { FilePath.c_str(), nCntLoop, fVolume};
+	}
 }
 
 //=============================================================================
