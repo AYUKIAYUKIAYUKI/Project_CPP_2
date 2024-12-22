@@ -42,6 +42,7 @@ public:
 
 	// <function>
 	void InitForTitle();						// タイトルでの追加初期設定
+	void InitForGame();							// ゲームでの初期設定
 	void Update();								// 更新処理
 	void Draw();								// 描画処理
 	bool AdjustPosToFieldSize(CObject* pObj);	// 座標をフィールドサイズに調整
@@ -93,6 +94,7 @@ private:
 	// <function>
 	HRESULT Init();								// 初期設定
 	void	InitEnvironment();					// 環境装飾の初期設定
+	void	InitBlockSet();						// 初期ブロックのセット
 	void	Uninit();							// 終了処理
 	void	UpdatePopUp();						// ポップアップ表示の更新
 	void	UpdateEnvironment();				// 環境装飾の更新処理

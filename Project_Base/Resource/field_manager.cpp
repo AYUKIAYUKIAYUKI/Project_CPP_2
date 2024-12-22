@@ -53,6 +53,15 @@ void CField_Manager::InitForTitle()
 }
 
 //============================================================================
+// ゲーム向け追加初期設定
+//============================================================================
+void CField_Manager::InitForGame()
+{
+	// 初期ブロックのセット
+	InitBlockSet();
+}
+
+//============================================================================
 // 更新処理
 //============================================================================
 void CField_Manager::Update()
@@ -70,11 +79,15 @@ void CField_Manager::Update()
 	// 扇形の更新
 	UpdateFan();
 
-	// フィールド更新
-	UpdateField();
+	// 初回フェーズ以降に進行していたら
+	if (m_nPhase > 0)
+	{
+		// フィールド更新
+		UpdateField();
 
-	// ボス登場イベント
-	AppearBossEvent();
+		// ボス登場イベント
+		AppearBossEvent();
+	}
 
 	// 遷移を通知する
 	NotifyTransition();
@@ -294,6 +307,79 @@ void CField_Manager::InitEnvironment()
 
 		// 破壊モーションを設定
 		pTrueStatue->SetNowMotion(2);
+	}
+}
+
+//============================================================================
+// 初期ブロックのセット
+//============================================================================
+void CField_Manager::InitBlockSet()
+{
+	// 初期のプレイヤー位置から見て左側を取る方角
+	float fDirection = D3DX_PI * -0.6f;
+
+	// ブロックの生成数
+	int nCntBlock = 0;
+
+	// 最初、左側の道をふさぐ
+	while (nCntBlock < 5)
+	{
+		// 新規向き・新規座標格納
+		Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
+
+		// 生成用の座標を決定
+		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
+		NewPos.y = 20.0f * (nCntBlock + 1);
+		NewPos.z = sinf(fDirection) * FIELD_RADIUS;
+
+		// 向きを決定
+		NewRot.y = atan2f(-NewPos.x, -NewPos.z);
+
+		// ブロックを生成
+		CBlock* pBlock = CBlock::Create(NewPos, NewRot);
+
+		// 長いブロックじゃないなら再抽選
+		if (pBlock->GetModel()->Type != CX_Manager::TYPE::BLOTALL)
+		{
+			pBlock->SetRelease();
+		}
+		else
+		{
+			++nCntBlock;
+		}
+	}
+
+	// 右側のブロックの方角を用意
+	fDirection = D3DX_PI * -0.4f;
+
+	// 成功検知用
+	bool bSuccess = false;
+
+	while (!bSuccess)
+	{
+		// 新規向き・新規座標格納
+		Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
+
+		// 生成用の座標を決定
+		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
+		NewPos.y = 20.0f;
+		NewPos.z = sinf(fDirection) * FIELD_RADIUS;
+
+		// 向きを決定
+		NewRot.y = atan2f(-NewPos.x, -NewPos.z);
+
+		// ブロックを生成
+		CBlock* pBlock = CBlock::Create(NewPos, NewRot);
+
+		// 長いブロックじゃないなら再抽選
+		if (pBlock->GetModel()->Type != CX_Manager::TYPE::BLOTALL)
+		{
+			pBlock->SetRelease();
+		}
+		else
+		{
+			bSuccess = true;
+		}
 	}
 }
 

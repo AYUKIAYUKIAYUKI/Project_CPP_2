@@ -174,14 +174,13 @@ CGame::~CGame()
 //============================================================================
 HRESULT CGame::Init()
 {
+	// フィールドマネージャーのゲーム用初期設定
+	CField_Manager::GetInstance()->InitForGame();
+ 
 	// プレイヤーを生成
 	CPlayer* pPlayer = CPlayer::Create();
 	pPlayer->SetPos({ -100.0f, 0.0f, 0.0f });	/* ダメージ回避用 */
 	m_pPlayerPtr = pPlayer;
-
-	// 真実の蝶を生成
-	m_pTrueButterfly = CMotion_Set::Create(CObject::LAYER::DEFAULT, CObject::TYPE::LATEDRAW, utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BUTTERFLY\\butterfly_motion.json"));
-	m_pTrueButterfly->SetNowMotion(1);
 
 	// フィールドマネージャーにプレイヤーをセット
 	CField_Manager::GetInstance()->SetSyncPlayer(m_pPlayerPtr);
@@ -193,11 +192,15 @@ HRESULT CGame::Init()
 	CCamera* pCamera = CManager::GetManager()->GetCamera();
 	pCamera->ChangeTrackPlayer(true);
 
+	// 真実の蝶を生成
+	m_pTrueButterfly = CMotion_Set::Create(CObject::LAYER::DEFAULT, CObject::TYPE::LATEDRAW, utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BUTTERFLY\\butterfly_motion.json"));
+	m_pTrueButterfly->SetNowMotion(1);
+
 	// フェード表示を生成
 	m_pRenderFade = CObject_HUD::Create(utility::OpenJsonFile("Data\\JSON\\HUD\\black.json"));
 
 	// エネミーを生成
-#if 1
+#if 0
 	CEnemy* pEnemy = nullptr;
 
 	// モンスター
