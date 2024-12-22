@@ -16,13 +16,11 @@
 #include "motion_set.h"
 #include "object_parts.h"
 #include "object_X.h"
+#include "object_TextMesh.h"
 #include "field_manager.h"
 #include "HUD_manager.h"
 #include "constellation.h"
 #include "sparks.h"
-
-#include "object_3D.h"
-#include "object_TextMesh.h"
 
 //============================================================================
 // 
@@ -109,7 +107,6 @@ CTitle* CTitle::Create()
 //============================================================================
 CTitle::CTitle() :
 	CScene{},
-	m_pKESE{ nullptr },
 	m_bTransition{ nullptr },
 	m_pButterfly{ nullptr },
 	m_vPath{},
@@ -166,36 +163,11 @@ HRESULT CTitle::Init()
 		m_pTree->SetRot(utility::JsonConvertToVec3(TreeParam["Rot"]));
 		m_pTree->SetPos(utility::JsonConvertToVec3(TreeParam["Pos"]));
 
-		/* 最低すぎるタイトル仮表示 */
-		CObject_3D* p = CObject_3D::Create();
-		JSON Json = utility::OpenJsonFile("Data\\JSON\\debug_param.json");
-		p->BindTex(CTexture_Manager::TYPE::PLAGAUBAR);
-		p->SetSize(utility::JsonConvertToVec3(Json["Size"]));
-		p->SetPos(utility::JsonConvertToVec3(Json["Pos"]));
-		p->SetCol({ 1.0f, 1.0f, 0.0f, 0.5f });
+		// タイトル表示
+		CObject_TextMesh::Create(utility::OpenJsonFile("Data\\JSON\\TEXTMESH\\title.json"));
 
-		/*最低すぎるスタート表示*/
-		m_pKESE = CObject_3D::Create();
-		m_pKESE->BindTex(CTexture_Manager::TYPE::PLAGAUBAR);
-		m_pKESE->SetSize(utility::JsonConvertToVec3(Json["Size"]));
-		m_pKESE->SetPos(utility::JsonConvertToVec3(Json["Pos"]));
-		m_pKESE->SetPos({ m_pKESE->GetPos().x, m_pKESE->GetPos().y + -100.0f, m_pKESE->GetPos().z });
-		m_pKESE->SetAlpha(0.0f);
-
-#if 0x00000000
-		/* テスト1 */
-		CObject_TextMesh* pTest1 = CObject_TextMesh::Create();
-		pTest1->SetText(utility::JsonConvertToSJIS(Json["Text"][0]));
-		pTest1->SetMeshSize(utility::JsonConvertToVec3(Json["MeshSize"]));
-		pTest1->SetPos(utility::JsonConvertToVec3(Json["Pos"]));
-
-		/* テスト2 */
-		CObject_TextMesh* pTest2 = CObject_TextMesh::Create();
-		pTest2->SetText(utility::JsonConvertToSJIS(Json["Text"][1]));
-		pTest2->SetMeshSize(utility::JsonConvertToVec3(Json["MeshSize"]));
-		pTest2->SetPos(utility::JsonConvertToVec3(Json["Pos"]));
-		pTest2->SetPos({ pTest2->GetPos().x, pTest2->GetPos().y + -100.0f, pTest2->GetPos().z });
-#endif
+		// 操作表示
+		CObject_TextMesh::Create(utility::OpenJsonFile("Data\\JSON\\TEXTMESH\\enter.json"));
 	}
 
 	return S_OK;
@@ -263,14 +235,6 @@ void CTitle::UpdateEnvironment()
 		}
 		else	
 		{ // カメラの引きが完了したら
-
-			/*最低すぎるスタート表示*/
-			{
-				float fAlpha = m_pKESE->GetAlpha();
-				if (fAlpha < 1.0f)
-					fAlpha += 0.025f;
-				m_pKESE->SetAlpha(fAlpha);
-			}
 
 			if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
 			{
@@ -399,24 +363,6 @@ void CTitle::UpdateButterfly()
 
 		// カメラを振動させる
 		pCamera->SetVibration(0.001f);
-
-		/*最低すぎるスタート表示*/
-		{
-			static int nNum = 0;
-			++nNum;
-			if (nNum > 6)
-			{
-				nNum = 0;
-				float fAlpha = m_pKESE->GetAlpha();
-				if (fAlpha >= 1.0f)
-					fAlpha = 0.0f;
-				else if (fAlpha <= 0.0f)
-					fAlpha = 1.0f;
-				else
-					fAlpha = 1.0f;
-				m_pKESE->SetAlpha(fAlpha);
-			}
-		}
 
 		// マップシンボルの特殊挙動
 		/* 蝶がフィールドからどれくらい離れてるかを渡す */

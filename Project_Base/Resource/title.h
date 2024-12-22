@@ -19,9 +19,6 @@
 class CMotion_Set;
 class CObject_X;
 
-/* 消せ */
-class CObject_3D;
-
 //****************************************************
 // タイトルクラス
 //****************************************************
@@ -47,14 +44,10 @@ private:
 	void	Uninit() override;		// 終了処理
 	void	UpdateEnvironment();	// 環境装飾の更新
 	void	UpdateButterfly();		// 蝶の更新
-	void	AdjustFog();			// フォグの調整
 
 	// <special function>
 	CTitle();			// コンストラクタ
 	~CTitle() override;	// デストラクタ
-
-	/* 消せ */
-	CObject_3D* m_pKESE;
 
 	// <data>
 	bool					 m_bTransition;	// 遷移フラグ
