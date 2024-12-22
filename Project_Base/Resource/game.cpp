@@ -196,10 +196,6 @@ HRESULT CGame::Init()
 	// フェード表示を生成
 	m_pRenderFade = CObject_HUD::Create(utility::OpenJsonFile("Data\\JSON\\HUD\\black.json"));
 
-	/* ポップアップを表示 */
-	JSON Json = utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_0.json");
-	CObject_PopUp::Create(Json);
-
 	// エネミーを生成
 #if 1
 	CEnemy* pEnemy = nullptr;

@@ -182,18 +182,21 @@ void CTitle::Uninit()
 	if (m_pButterfly != nullptr)
 	{
 		m_pButterfly->SetRelease();
+		m_pButterfly = nullptr;
 	}
 
 	// フェイクプレイヤーを破棄
 	if (m_pFakePlayer != nullptr)
 	{
 		m_pFakePlayer->SetRelease();
+		m_pFakePlayer = nullptr;
 	}
 
 	// 樹を破棄
 	if (m_pTree != nullptr)
 	{
 		m_pTree->SetRelease();
+		m_pTree = nullptr;
 	}
 }
 

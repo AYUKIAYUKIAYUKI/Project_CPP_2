@@ -13,6 +13,7 @@
 //****************************************************
 class CObject;
 class CObject_X;
+class CObject_PopUp;
 class CMotion_Set;
 class CPlayer;
 class CFan;
@@ -93,6 +94,7 @@ private:
 	HRESULT Init();								// 初期設定
 	void	InitEnvironment();					// 環境装飾の初期設定
 	void	Uninit();							// 終了処理
+	void	UpdatePopUp();						// ポップアップ表示の更新
 	void	UpdateEnvironment();				// 環境装飾の更新処理
 	void	UpdateFan();						// 扇形の更新
 	void	UpdateField();						// フィールド更新
@@ -108,6 +110,7 @@ private:
 
 	// <data>
 	ActionData		m_ActionData;			// アクションデータ
+	CObject_PopUp*	m_pPopUp;				// ポップアップ表示
 	FIELD_TYPE		m_FiledType;			// フィールドタイプ
 	int				m_nCntDestroyBlock;		// ブロックの破壊数
 	const CPlayer*	m_pSyncPlayer;			// プレイヤーのポインタ

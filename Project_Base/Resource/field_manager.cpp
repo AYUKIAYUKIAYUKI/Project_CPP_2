@@ -14,8 +14,10 @@
 #include "scene.h"
 #include "sound.h"
 #include "game.h"
-#include "motion_set.h"
+#include "object_PopUp.h"
 #include "object_HUD.h"
+#include "motion_set.h"
+#include "fan.h"
 #include "player.h"
 #include "monster.h"
 #include "ghost.h"
@@ -24,9 +26,6 @@
 #include "block.h"
 #include "life.h"
 #include "sparks.h"
-
-// デバッグ表示用
-#include "fan.h"
 
 //****************************************************
 // usingディレクティブ
@@ -61,6 +60,9 @@ void CField_Manager::Update()
 	// この更新処理がゲームシーン以外で呼ばれても処理を行わない
 	if (typeid(*CScene_Manager::GetInstance()->GetScene()) != typeid(CGame))
 		return;
+
+	// ポップアップ表示の更新
+	UpdatePopUp();
 
 	// 環境装飾の更新
 	UpdateEnvironment();
@@ -232,6 +234,7 @@ CField_Manager* CField_Manager::GetInstance()
 // コンストラクタ
 //============================================================================
 CField_Manager::CField_Manager() :
+	m_pPopUp{ nullptr },
 	m_FiledType{ FIELD_TYPE::NORMAL },
 	m_nCntDestroyBlock{ 0 },
 	m_pSyncPlayer{ nullptr },
@@ -303,6 +306,18 @@ void CField_Manager::Uninit()
 	{
 		m_pFan->Release();	// 解放
 		m_pFan = nullptr;	// ポインタを初期化
+	}
+}
+
+//============================================================================
+// ポップアップ表示の更新
+//============================================================================
+void CField_Manager::UpdatePopUp()
+{
+	// ポップアップを生成
+	if (!m_pPopUp)
+	{
+		m_pPopUp = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_0.json"));
 	}
 }
 
