@@ -234,6 +234,7 @@ CField_Manager* CField_Manager::GetInstance()
 // コンストラクタ
 //============================================================================
 CField_Manager::CField_Manager() :
+	m_nPhase{ 0 },
 	m_pPopUp{ nullptr },
 	m_FiledType{ FIELD_TYPE::NORMAL },
 	m_nCntDestroyBlock{ 0 },
@@ -314,10 +315,53 @@ void CField_Manager::Uninit()
 //============================================================================
 void CField_Manager::UpdatePopUp()
 {
-	// ポップアップを生成
-	if (!m_pPopUp)
+	switch (m_nPhase)
 	{
-		m_pPopUp = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_0.json"));
+	case 0:
+
+		// ポップアップを生成
+		if (!m_pPopUp)
+		{
+			m_pPopUp = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_0.json"));
+		}
+
+		if (CManager::GetKeyboard()->GetTrigger(DIK_P))
+		{
+			// 消滅
+			if (m_pPopUp)
+			{
+				m_pPopUp->Disappear();
+				m_pPopUp = nullptr;
+			}
+
+			// 次のフェーズへ
+			++m_nPhase;
+		}
+
+		break;
+
+	case 1:
+		
+		// ポップアップを生成
+		if (!m_pPopUp)
+		{
+			m_pPopUp = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_1.json"));
+		}
+		else
+		{
+			// プレイヤーへの同期
+			Vec3 RotTarget = VEC3_INIT, PosTarget = VEC3_INIT;	// 目標向き・目標座標を格納
+
+			RotTarget.y = -m_pSyncPlayer->GetDirection();	// Y軸向きへプレイヤーの方角をコピー
+			RotTarget.y += D3DX_PI * -0.5f;					// カメラの正面を向くように調整
+			m_pPopUp->SetRotTarget(RotTarget);				// 目標向きをセット
+
+			PosTarget = m_pSyncPlayer->GetPos() * 0.95f;	// プレイヤーの奥へ配置
+			PosTarget.y += 30.0f;							// 見やすいよう少し高さを付ける
+			m_pPopUp->SetPosTarget(PosTarget);				// 目標座標をセット
+		}
+
+		break;
 	}
 }
 

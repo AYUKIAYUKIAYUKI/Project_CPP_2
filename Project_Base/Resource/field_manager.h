@@ -110,6 +110,7 @@ private:
 
 	// <data>
 	ActionData		m_ActionData;			// アクションデータ
+	int				m_nPhase;				// フェーズ番号
 	CObject_PopUp*	m_pPopUp;				// ポップアップ表示
 	FIELD_TYPE		m_FiledType;			// フィールドタイプ
 	int				m_nCntDestroyBlock;		// ブロックの破壊数

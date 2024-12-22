@@ -267,7 +267,7 @@ void CObject_PopUp::CorrectToTarget()
 
 	// –Ú•WŒü‚«‚Ö•â³
 	Vec3 NowRot = GetRot();
-	utility::AdjustDirection(m_RotTarget.y, NowRot.y);	// Œü‚«‚Ì”ÍˆÍ‚Ì•â³
+	utility::AdjustAngle(m_RotTarget.y, NowRot.y);	// Œü‚«‚Ì”ÍˆÍ‚Ì•â³
 	NowRot += (m_RotTarget - NowRot) * m_fCorrectCoef;
 	SetRot(NowRot);
 
