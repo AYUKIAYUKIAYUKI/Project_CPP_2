@@ -178,9 +178,7 @@ HRESULT CGame::Init()
 	CField_Manager::GetInstance()->InitForGame();
  
 	// プレイヤーを生成
-	CPlayer* pPlayer = CPlayer::Create();
-	pPlayer->SetPos({ -100.0f, 0.0f, 0.0f });	/* ダメージ回避用 */
-	m_pPlayerPtr = pPlayer;
+	m_pPlayerPtr = CPlayer::Create();
 
 	// フィールドマネージャーにプレイヤーをセット
 	CField_Manager::GetInstance()->SetSyncPlayer(m_pPlayerPtr);

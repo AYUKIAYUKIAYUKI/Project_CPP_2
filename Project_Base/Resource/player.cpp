@@ -74,6 +74,12 @@ HRESULT CPlayer::Init()
 		m_pState = DBG_NEW CPlayer_State_Default();
 	}
 	
+	// キャラクタークラスの初期設定
+	if (FAILED(CCharacter::Init()))
+	{
+		assert(false && "プレイヤークラスの初期設定に失敗");
+	}
+
 	// 補正強度を設定
 	SetCorrectCoef(CORRECT_COEF);
 	
@@ -81,17 +87,18 @@ HRESULT CPlayer::Init()
 	SetDirection(D3DX_PI * -0.5f);
 	SetDirectionTarget(D3DX_PI * -0.5f);
 
+	// 初期の向きをセット
+	SetRot({ 0.0f, D3DX_PI, 0.0f });
+	SetRotTarget({ 0.0f, D3DX_PI, 0.0f });
+
 	// 初期移動速度を設定
 	SetMoveSpeed(DEFAULT_MOVE_SPEED);
 
 	// 初期体力を設定
 	SetLife(MAX_LIFE);
 
-	// キャラクタークラスの初期設定
-	if (FAILED(CCharacter::Init()))
-	{
-		assert(false && "プレイヤークラスの初期設定に失敗");
-	}
+	// 着地モーションをセット
+	SetNowMotion(10);
 
 	return S_OK;
 }

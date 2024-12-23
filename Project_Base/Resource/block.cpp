@@ -166,11 +166,15 @@ CBlock* CBlock::Create(const D3DXVECTOR3& Pos, const D3DXVECTOR3& Rot)
 	// ‰ŠúÝ’è
 	pNewInstance->Init();
 
+	// Œü‚«‚ðÝ’è
+	pNewInstance->SetRot(Rot);
+
 	// À•W‚ðÝ’è
 	pNewInstance->SetPos(Pos);
 
-	// Œü‚«‚ðÝ’è
-	pNewInstance->SetRot(Rot);
+	// F‚ðÝ’è
+	pNewInstance->SetUseCol(true);
+	pNewInstance->SetCol({ 1.0f, 1.0f, 1.0f, 0.5f });
 
 	// ƒ‚ƒfƒ‹‚ðÝ’è
 	pNewInstance->BindModel(CX_Manager::TYPE::BLONORMAL + rand() % 3);

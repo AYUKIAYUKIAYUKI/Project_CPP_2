@@ -79,8 +79,8 @@ void CField_Manager::Update()
 	// 扇形の更新
 	UpdateFan();
 
-	// 初回フェーズ以降に進行していたら
-	if (m_nPhase > 0)
+	// 10フェーズ以降に進行していたら
+	if (m_nPhase > 10)
 	{
 		// フィールド更新
 		UpdateField();
@@ -324,72 +324,154 @@ void CField_Manager::InitEnvironment()
 //============================================================================
 void CField_Manager::InitBlockSet()
 {
-	// 初期のプレイヤー位置から見て左側を取る方角
-	float fDirection = D3DX_PI * -0.6f;
+	// 方角格納用
+	float fDirection = 0.0f;
 
 	// ブロックの生成数
 	int nCntBlock = 0;
 
-	// 最初、左側の道をふさぐ
-	while (nCntBlock < 5)
-	{
-		// 新規向き・新規座標格納
-		Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
-
-		// 生成用の座標を決定
-		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
-		NewPos.y = 20.0f * (nCntBlock + 1);
-		NewPos.z = sinf(fDirection) * FIELD_RADIUS;
-
-		// 向きを決定
-		NewRot.y = atan2f(-NewPos.x, -NewPos.z);
-
-		// ブロックを生成
-		CBlock* pBlock = CBlock::Create(NewPos, NewRot);
-
-		// 長いブロックじゃないなら再抽選
-		if (pBlock->GetModel()->Type != CX_Manager::TYPE::BLOTALL)
-		{
-			pBlock->SetRelease();
-		}
-		else
-		{
-			++nCntBlock;
-		}
-	}
-
-	// 右側のブロックの方角を用意
-	fDirection = D3DX_PI * -0.4f;
-
 	// 成功検知用
 	bool bSuccess = false;
 
-	// 右側だけ行けるようにブロック配置
-	while (!bSuccess)
-	{
-		// 新規向き・新規座標格納
-		Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
+	{ // 左側の道をふさぐ
 
-		// 生成用の座標を決定
-		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
-		NewPos.y = 20.0f;
-		NewPos.z = sinf(fDirection) * FIELD_RADIUS;
+		// 初期のプレイヤー位置から見て左側を取る方角
+		fDirection = D3DX_PI * -0.6f;
 
-		// 向きを決定
-		NewRot.y = atan2f(-NewPos.x, -NewPos.z);
-
-		// ブロックを生成
-		CBlock* pBlock = CBlock::Create(NewPos, NewRot);
-
-		// 長いブロックじゃないなら再抽選
-		if (pBlock->GetModel()->Type != CX_Manager::TYPE::BLOTALL)
+		while (nCntBlock < 5)
 		{
-			pBlock->SetRelease();
+			// 新規向き・新規座標格納
+			Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
+
+			// 生成用の座標を決定
+			NewPos.x = cosf(fDirection) * FIELD_RADIUS;
+			NewPos.y = 20.0f * (nCntBlock + 1);
+			NewPos.z = sinf(fDirection) * FIELD_RADIUS;
+
+			// 向きを決定
+			NewRot.y = atan2f(-NewPos.x, -NewPos.z);
+
+			// ブロックを生成
+			CBlock* pBlock = CBlock::Create(NewPos, NewRot);
+
+			// 長いブロックじゃないなら再抽選
+			if (pBlock->GetModel()->Type != CX_Manager::TYPE::BLOTALL)
+			{
+				pBlock->SetRelease();
+			}
+			else
+			{
+				++nCntBlock;
+			}
 		}
-		else
+
+		// ブロック生成カウントをリセット
+		nCntBlock = 0;
+	}
+
+	{ // 右側に行けるようにブロック配置
+
+		// 右側のブロックの方角を用意
+		fDirection = D3DX_PI * -0.4f;
+
+		while (!bSuccess)
 		{
-			bSuccess = true;
+			// 新規向き・新規座標格納
+			Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
+
+			// 生成用の座標を決定
+			NewPos.x = cosf(fDirection) * FIELD_RADIUS;
+			NewPos.y = 20.0f;
+			NewPos.z = sinf(fDirection) * FIELD_RADIUS;
+
+			// 向きを決定
+			NewRot.y = atan2f(-NewPos.x, -NewPos.z);
+
+			// ブロックを生成
+			CBlock* pBlock = CBlock::Create(NewPos, NewRot);
+
+			// 長いブロックじゃないなら再抽選
+			if (pBlock->GetModel()->Type != CX_Manager::TYPE::BLOTALL)
+			{
+				pBlock->SetRelease();
+			}
+			else
+			{
+				bSuccess = true;
+			}
 		}
+
+		// 成功検知解除
+		bSuccess = false;
+	}
+
+	{ // ダッシュさせるため離れた場所にブロック配置
+	
+		// ブロックの方角を用意
+		fDirection = D3DX_PI * -0.25f;
+
+		while (!bSuccess)
+		{
+			// 新規向き・新規座標格納
+			Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
+
+			// 生成用の座標を決定
+			NewPos.x = cosf(fDirection) * FIELD_RADIUS;
+			NewPos.y = 50.0f;
+			NewPos.z = sinf(fDirection) * FIELD_RADIUS;
+
+			// 向きを決定
+			NewRot.y = atan2f(-NewPos.x, -NewPos.z);
+
+			// ブロックを生成
+			CBlock* pBlock = CBlock::Create(NewPos, NewRot);
+
+			// 長いブロックじゃないなら再抽選
+			if (pBlock->GetModel()->Type != CX_Manager::TYPE::BLOSIDE)
+			{
+				pBlock->SetRelease();
+			}
+			else
+			{
+				bSuccess = true;
+			}
+		}
+
+		// 成功検知解除
+		bSuccess = false;
+
+		// ブロックの方角を用意
+		fDirection = D3DX_PI * -0.235f;
+
+		while (!bSuccess)
+		{
+			// 新規向き・新規座標格納
+			Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
+
+			// 生成用の座標を決定
+			NewPos.x = cosf(fDirection) * FIELD_RADIUS;
+			NewPos.y = 20.0f;
+			NewPos.z = sinf(fDirection) * FIELD_RADIUS;
+
+			// 向きを決定
+			NewRot.y = atan2f(-NewPos.x, -NewPos.z);
+
+			// ブロックを生成
+			CBlock* pBlock = CBlock::Create(NewPos, NewRot);
+
+			// 長いブロックじゃないなら再抽選
+			if (pBlock->GetModel()->Type != CX_Manager::TYPE::BLOTALL)
+			{
+				pBlock->SetRelease();
+			}
+			else
+			{
+				bSuccess = true;
+			}
+		}
+
+		// 成功検知解除
+		bSuccess = false;
 	}
 }
 
