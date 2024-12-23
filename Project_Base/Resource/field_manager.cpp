@@ -346,9 +346,7 @@ void CField_Manager::InitBlockSet()
 			Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
 
 			// 生成用の座標を決定
-			NewPos.x = cosf(fDirection) * FIELD_RADIUS;
-			NewPos.y = 20.0f + (40.0f * wCntBlock);
-			NewPos.z = sinf(fDirection) * FIELD_RADIUS;
+			NewPos = utility::DirectionConvertVec3(fDirection, 20.0f + (40.0f * wCntBlock), FIELD_RADIUS);
 
 			// 向きを決定
 			NewRot.y = atan2f(-NewPos.x, -NewPos.z);
@@ -377,9 +375,7 @@ void CField_Manager::InitBlockSet()
 		Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
 
 		// 生成用の座標を決定
-		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
-		NewPos.y = 20.0f;
-		NewPos.z = sinf(fDirection) * FIELD_RADIUS;
+		NewPos = utility::DirectionConvertVec3(fDirection, 20.0f, FIELD_RADIUS);
 
 		// 向きを決定
 		NewRot.y = atan2f(-NewPos.x, -NewPos.z);
@@ -407,9 +403,7 @@ void CField_Manager::InitBlockSet()
 		Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
 
 		// 生成用の座標を決定
-		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
-		NewPos.y = 50.0f;
-		NewPos.z = sinf(fDirection) * FIELD_RADIUS;
+		NewPos = utility::DirectionConvertVec3(fDirection, 50.0f, FIELD_RADIUS);
 
 		// 向きを決定
 		NewRot.y = atan2f(-NewPos.x, -NewPos.z);
@@ -437,9 +431,7 @@ void CField_Manager::InitBlockSet()
 		Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
 
 		// 生成用の座標を決定
-		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
-		NewPos.y = 20.0f;
-		NewPos.z = sinf(fDirection) * FIELD_RADIUS;
+		NewPos = utility::DirectionConvertVec3(fDirection, 20.0f, FIELD_RADIUS);
 
 		// 向きを決定
 		NewRot.y = atan2f(-NewPos.x, -NewPos.z);
@@ -457,6 +449,66 @@ void CField_Manager::InitBlockSet()
 
 			// バウンディングサイズを割り当て直す
 			pBlock->SetSize(pBlock->GetModel()->Size);
+		}
+	}
+
+	{ // 敵から逃げるためのブロック
+
+		// 初期のプレイヤー位置から見て左側を取る方角
+		fDirection = D3DX_PI * -0.12f;
+
+		// 新規向き・新規座標格納
+		Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
+
+		// 生成用の座標を決定
+		NewPos = utility::DirectionConvertVec3(fDirection, 30.0f, FIELD_RADIUS);
+
+		// 向きを決定
+		NewRot.y = atan2f(-NewPos.x, -NewPos.z);
+
+		// ブロックを生成
+		CBlock* pBlock = CBlock::Create(NewPos, NewRot);
+
+		// ブロックタイプを固定
+		if (pBlock->GetModelType() != CX_Manager::TYPE::BLOSIDE)
+		{
+			// 平たいブロックモデルを割り当てる
+			pBlock->BindModel(CX_Manager::TYPE::BLOSIDE);
+
+			// バウンディングサイズを割り当て直す
+			pBlock->SetSize(pBlock->GetModel()->Size);
+		}
+	}
+
+	{ // 右側の道をふさぐ
+
+		// 右端の方角を設定
+		fDirection = D3DX_PI * -0.01f;
+
+		// 高いブロックを縦に並べる
+		for (WORD wCntBlock = 0; wCntBlock < 3; wCntBlock++)
+		{
+			// 新規向き・新規座標格納
+			Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
+
+			// 生成用の座標を決定
+			NewPos = utility::DirectionConvertVec3(fDirection, 20.0f + (40.0f * wCntBlock), FIELD_RADIUS);
+
+			// 向きを決定
+			NewRot.y = atan2f(-NewPos.x, -NewPos.z);
+
+			// ブロックを生成
+			CBlock* pBlock = CBlock::Create(NewPos, NewRot);
+
+			// ブロックタイプを固定
+			if (pBlock->GetModelType() != CX_Manager::TYPE::BLOTALL)
+			{
+				// 高いブロックモデルを割り当てる
+				pBlock->BindModel(CX_Manager::TYPE::BLOTALL);
+
+				// バウンディングサイズを割り当て直す
+				pBlock->SetSize(pBlock->GetModel()->Size);
+			}
 		}
 	}
 }
@@ -550,7 +602,7 @@ void CField_Manager::UpdatePhase()
 			m_pPopUp = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_2.json"));
 
 			// この際にエネミーも生成
-			CBright::Generate(utility::DirectionConvertVec3(D3DX_PI * -0.215f, 65.0f, CField_Manager::FIELD_RADIUS), CBright::CREATETYPE::MONSTER);
+			CBright::Generate(utility::DirectionConvertVec3(D3DX_PI * -0.12f, 95.0f, CField_Manager::FIELD_RADIUS), CBright::CREATETYPE::FLYER);
 		}
 		else
 		{
@@ -566,8 +618,24 @@ void CField_Manager::UpdatePhase()
 			m_pPopUp->SetPosTarget(PosTarget);				// 目標座標をセット
 		}
 
-		// 攻撃を発動した痕跡があれば
-		if (CManager::GetMouse()->GetTrigger(0))
+		{ // 閃光エフェクトの残存中は以降の処理をしない
+
+			// 通常優先度のオブジェクトを取得
+			CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
+
+			while (pObj != nullptr)
+			{
+				if (typeid(*pObj) == typeid(CBright))
+				{
+					return;
+				}
+
+				pObj = pObj->GetNext();
+			}
+		}
+
+		// エネミーが全滅したら
+		if (!CObject::CountSpecificObject(CObject::TYPE::ENEMY))
 		{
 			// 消滅
 			if (m_pPopUp)
@@ -578,6 +646,29 @@ void CField_Manager::UpdatePhase()
 
 			// 次のフェーズへ
 			++m_nPhase;
+		}
+
+		break;
+
+	case 3:
+
+		// ポップアップを生成
+		if (!m_pPopUp)
+		{
+			m_pPopUp = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_3.json"));
+		}
+		else
+		{
+			// プレイヤーへの同期
+			Vec3 RotTarget = VEC3_INIT, PosTarget = VEC3_INIT;	// 目標向き・目標座標を格納
+
+			RotTarget.y = -m_pSyncPlayer->GetDirection();	// Y軸向きへプレイヤーの方角をコピー
+			RotTarget.y += D3DX_PI * -0.5f;					// カメラの正面を向くように調整
+			m_pPopUp->SetRotTarget(RotTarget);				// 目標向きをセット
+
+			PosTarget = m_pSyncPlayer->GetPos() * 0.95f;	// プレイヤーの奥へ配置
+			PosTarget.y += 30.0f;							// 見やすいよう少し高さを付ける
+			m_pPopUp->SetPosTarget(PosTarget);				// 目標座標をセット
 		}
 
 		break;
