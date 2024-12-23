@@ -525,8 +525,8 @@ void CField_Manager::UpdatePhase()
 			m_pPopUp->SetPosTarget(PosTarget);				// 目標座標をセット
 		}
 
-		// ダッシュを発動した痕跡があれば
-		if (CManager::GetMouse()->GetTrigger(1))
+		// ジャンプ必須の高台を超えたら
+		if (m_pSyncPlayer->GetDirection() > D3DX_PI * -0.25f)
 		{
 			// 消滅
 			if (m_pPopUp)

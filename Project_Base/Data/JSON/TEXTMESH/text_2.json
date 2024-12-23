@@ -1,7 +1,7 @@
 ﻿{
-	"Text": "【左クリックで攻撃】\n#おいい",
-	"TextSpeed": 5,
-	"TextDelay": -30,
+	"Text": "【左クリックで攻撃】\n#邪魔な敵をやっつけよう！",
+	"TextSpeed": 4,
+	"TextDelay": -15,
 	"InitTextDelay": -70,
 	"TextSize": [ 1375.0, 800.0 ],
 	"MeshSize": [ 0.0, 0.0, 0.0 ],
