@@ -208,10 +208,9 @@ bool CBright::Disappear()
 			}
 
 			// エネミーはこのエフェクトの場所に配置
-			Vec3 BrightPos = GetPos();										// エフェクトの座標をコピー
-			pEnemy->SetPos(BrightPos);										// 描画ずれ防止に初期座標をこの場所に
-			pEnemy->SetPosTarget(BrightPos);								// 目標座標を変更
-			pEnemy->SetDirectionTarget(atan2f(BrightPos.x, BrightPos.z));	// 座標からの方角を割り当て
+			Vec3 BrightPos = GetPos();								// 閃光エフェクトの座標をコピー
+			pEnemy->SetDirection(atan2f(BrightPos.z, BrightPos.x));	// 閃光エフェクトの座標からの初期方角を割り当て
+			pEnemy->AdjustInitDirection(BrightPos.y);				// 初期方角に対し情報を整える
 		}
 
 		// 終了

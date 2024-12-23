@@ -550,7 +550,7 @@ void CField_Manager::UpdatePhase()
 			m_pPopUp = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_2.json"));
 
 			// この際にエネミーも生成
-			CBright::Generate({ 230.0f, 80.0f, -200.0f }, CBright::CREATETYPE::MONSTER);
+			CBright::Generate(utility::DirectionConvertVec3(D3DX_PI * -0.175f, 50.0f, CField_Manager::FIELD_RADIUS), CBright::CREATETYPE::GHOST);
 		}
 		else
 		{

@@ -36,6 +36,7 @@ public:
 	void	Update() override;					// 更新処理
 	void	Draw() override;					// 描画処理
 	void	SetDamage(int nDamage) override;	// ダメージを受ける
+	void	AdjustInitDirection(float fHeight);	// 初期方角に対し情報を整える
 
 	// <getter>
 	float GetRadius() const;								// 半径を取得

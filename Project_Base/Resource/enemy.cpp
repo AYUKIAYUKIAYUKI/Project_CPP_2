@@ -13,6 +13,7 @@
 
 #include "collision.h"
 #include "object_parts.h"
+#include "field_manager.h"
 #include "player.h"
 #include "player_state_damage.h"
 #include "block.h"
@@ -134,6 +135,28 @@ void CEnemy::SetDamage(int nDamage)
 	int nNewLife = GetLife();
 	nNewLife += nDamage;
 	SetLife(nNewLife);
+}
+
+//============================================================================
+// 初期方に対し情報を整える
+//============================================================================
+void CEnemy::AdjustInitDirection(float fHeight)
+{
+	// 方角をコピー
+	float fDirection = GetDirection();
+
+	// 目標方角を揃える
+	SetDirectionTarget(fDirection);
+
+	// 向きを方角に合わせる
+	Vec3 NewRot = { 0.0f, fDirection, 0.0f };
+	SetRot(NewRot);
+	SetRotTarget(NewRot);
+
+	// 座標を方角・フィールド範囲に合わせる
+	Vec3 NewPos = utility::DirectionConvertVec3(fDirection, fHeight, CField_Manager::FIELD_RADIUS);
+	SetPos(NewPos);
+	SetPosTarget(NewPos);
 }
 
 //============================================================================

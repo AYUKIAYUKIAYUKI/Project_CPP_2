@@ -184,6 +184,65 @@ void utility::AdjustDirection(float& fAngle1, float& fAngle2)
 }
 
 //============================================================================
+// D3DXVECTOR3‚ğ•ûŠp‚É•ÏŠ·
+//============================================================================
+float utility::Vec3ConvertDirection(D3DXVECTOR3 Vec)
+{
+	return atan2f(Vec.z, Vec.x);
+}
+
+//============================================================================
+// •ûŠp‚ğD3DXVECTOR3‚É•ÏŠ·
+//============================================================================
+D3DXVECTOR3 utility::DirectionConvertVec3(float fDirection)
+{
+	// Œ‹‰ÊŠi”[—p
+	D3DXVECTOR3 Vec3 = { 0.0f, 0.0f, 0.0f };
+
+	Vec3 = {
+		cosf(fDirection),
+		0.0f,
+		sinf(fDirection)
+	};
+
+	return Vec3;
+}
+
+//============================================================================
+// •ûŠp‚ğD3DXVECTOR3‚É•ÏŠ· (”ÍˆÍ)
+//============================================================================
+D3DXVECTOR3 utility::DirectionConvertVec3(float fDirection, float fCoef)
+{
+	// Œ‹‰ÊŠi”[—p
+	D3DXVECTOR3 Vec3 = { 0.0f, 0.0f, 0.0f };
+
+	Vec3 = {
+		cosf(fDirection) * fCoef,
+		0.0f,
+		sinf(fDirection) * fCoef
+	};
+
+	return Vec3;
+}
+
+//============================================================================
+// •ûŠp‚ğD3DXVECTOR3‚É•ÏŠ· (‚‚³E”ÍˆÍ)
+//============================================================================
+D3DXVECTOR3 utility::DirectionConvertVec3(float fDirection, float fHeight, float fCoef)
+{
+	// Œ‹‰ÊŠi”[—p
+	D3DXVECTOR3 Vec3 = { 0.0f, 0.0f, 0.0f };
+
+	Vec3 = {
+		cosf(fDirection) * fCoef,
+		fHeight,
+		sinf(fDirection) * fCoef
+	};
+
+	return Vec3;
+}
+
+//============================================================================
 // JSONƒtƒ@ƒCƒ‹‚Ì“WŠJ
 //============================================================================
 nlohmann::json utility::OpenJsonFile(std::string FilePath)

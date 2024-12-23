@@ -37,6 +37,18 @@ namespace utility
 	// 向きの範囲の補正(ラジアン)
 	void AdjustDirection(float& fAngle1, float& fAngle2);
 
+	// D3DXVECTOR3を方角に変換
+	float Vec3ConvertDirection(D3DXVECTOR3 Vec);
+
+	// 方角をD3DXVECTOR3に変換
+	D3DXVECTOR3 DirectionConvertVec3(float fDirection);
+
+	// 方角をD3DXVECTOR3に変換 (範囲)
+	D3DXVECTOR3 DirectionConvertVec3(float fDirection, float fCoef);
+
+	// 方角をD3DXVECTOR3に変換 (高さ・範囲)
+	D3DXVECTOR3 DirectionConvertVec3(float fDirection, float fHeight, float fCoef);
+
 	// Jsonファイルの展開
 	nlohmann::json OpenJsonFile(std::string FilePath);
 
