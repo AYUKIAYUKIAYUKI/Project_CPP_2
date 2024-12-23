@@ -91,14 +91,18 @@ HRESULT CPlayer::Init()
 	SetRot({ 0.0f, D3DX_PI, 0.0f });
 	SetRotTarget({ 0.0f, D3DX_PI, 0.0f });
 
+	// 初期の座標をセット
+	SetPos({ 0.0f, 60.0f, 0.0f });
+	SetPosTarget({ 0.0f, 60.0f, 0.0f });
+
 	// 初期移動速度を設定
 	SetMoveSpeed(DEFAULT_MOVE_SPEED);
 
 	// 初期体力を設定
 	SetLife(MAX_LIFE);
 
-	// 着地モーションをセット
-	SetNowMotion(10);
+	// 飛行モーションをセット
+	SetNowMotion(8);
 
 	return S_OK;
 }

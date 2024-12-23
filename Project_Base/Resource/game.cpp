@@ -178,7 +178,15 @@ HRESULT CGame::Init()
 	CField_Manager::GetInstance()->InitForGame();
  
 	// プレイヤーを生成
-	m_pPlayerPtr = CPlayer::Create();
+	CPlayer* pPlayer = CPlayer::Create();
+
+#if 0
+	// この時だけ一瞬情報を編集する
+	pPlayer->SetPos({ 0.0f, 60.0f, CField_Manager::FIELD_RADIUS });
+#endif
+
+	// その後は読み取り専用のポインタに移す
+	m_pPlayerPtr = pPlayer;
 
 	// フィールドマネージャーにプレイヤーをセット
 	CField_Manager::GetInstance()->SetSyncPlayer(m_pPlayerPtr);

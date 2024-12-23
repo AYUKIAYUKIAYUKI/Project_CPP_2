@@ -339,8 +339,18 @@ void CTitle::UpdateButterfly()
 						m_pFakePlayer->SetNowMotion(8);
 					}
 
+					// カメラ距離
+					fTargetDistance = 50.0f;
+
+					// カメラ座標調整
+					if (m_nCntStart > 180)
+					{
+						AdjustCameraPos.y = (m_nCntStart - 180) * -1.0f;
+						AdjustCameraPos.z = (m_nCntStart - 180) * -1.0f;
+					}
+
 					// モーションに応じてパラメータをセット
-					else if (m_pFakePlayer->GetNowMotion() == 6 &&
+					if (m_pFakePlayer->GetNowMotion() == 6 &&
 						m_nCntStart < 10)
 					{
 						// 補間強度をセット
@@ -348,15 +358,13 @@ void CTitle::UpdateButterfly()
 					}
 					else
 					{
+#if 0
 						// カメラ座標調整
-						AdjustCameraPos.y = -45.0f + (TargetPoint.z - NewPos.z) * 0.1f;
-
+						AdjustCameraPos.y = -40.0f + (TargetPoint.z - NewPos.z) * 0.1f;
+#endif
 						// 補間強度をセット
 						fCoef = 0.015f;
 					}
-
-					// カメラ距離
-					fTargetDistance = 50.0f;
 				}
 				else if (TargetPoint.z - NewPos.z < CField_Manager::FIELD_RADIUS * 1.25f)
 				{
