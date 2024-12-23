@@ -11,6 +11,7 @@
 #include "monster.h"
 #include "sound.h"
 
+#include "field_manager.h"
 #include "player.h"
 #include "block.h"
 
@@ -38,7 +39,8 @@ const JSON CMonster::m_InitParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\
 CMonster::CMonster() :
 	CEnemy{ LAYER::DEFAULT },
 	m_ActionType{ ACTION::HOLD },
-	m_nCntActionCast{ 0 }
+	m_nCntActionCast{ 0 },
+	m_fFakeVelY{ 0.0f }
 {
 
 }
@@ -81,6 +83,9 @@ void CMonster::Update()
 {
 	// 行動分岐
 	BranchAction();
+
+	// 疑似重力
+	FakeGravity();
 
 	// 方角に座標を合わせる
 	AutoSetPosTarget();
@@ -158,6 +163,30 @@ CMonster* CMonster::Create()
 // privateメンバ
 // 
 //============================================================================
+
+//============================================================================
+// 疑似重力
+//============================================================================
+void CMonster::FakeGravity()
+{
+	// 目標座標をコピー
+	Vec3 Postarget = GetPosTarget();
+
+	if (Postarget.y + GetHeight() > 0.0f)
+	{ // 空中にいるとき
+
+		m_fFakeVelY += CField_Manager::FIELD_GRAVITY;	// 重力加速
+		Postarget.y += m_fFakeVelY;						// 高さが下がっていく
+		SetPosTarget(Postarget);						// 目標座標をセット
+	}
+	else if(Postarget.y + GetHeight() < 0.0f)
+	{ // 地面にめり込んでいるとき
+
+		m_fFakeVelY = 0.0f;			// 加速度リセット
+		Postarget.y = GetHeight();	// 高さを固定
+		SetPosTarget(Postarget);	// 目標座標をセット
+	}
+}
 
 //============================================================================
 // 行動分岐

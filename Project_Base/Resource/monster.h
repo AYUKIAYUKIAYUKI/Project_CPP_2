@@ -54,6 +54,7 @@ public:
 private:
 
 	// <function>
+	void FakeGravity();		// 疑似重力
 	void BranchAction();	// 行動分岐
 	void Hold();			// 立ち止まる
 	void Coming();			// 歩いてくる
@@ -64,6 +65,7 @@ private:
 	// <data>
 	ACTION m_ActionType;		// 行動タイプ
 	int	   m_nCntActionCast;	// 行動キャストカウント
+	float  m_fFakeVelY;			// 疑似加速度
 
 	// <static data>
 	static const JSON m_InitParam;	// 基礎パラメータ

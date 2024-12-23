@@ -526,8 +526,8 @@ void CField_Manager::UpdatePhase()
 			m_pPopUp->SetPosTarget(PosTarget);				// 目標座標をセット
 		}
 
-		// ジャンプ必須の高台を超えたら
-		if (m_pSyncPlayer->GetDirection() > D3DX_PI * -0.25f)
+		// 空中ダッシュ必須の高台を超えたら
+		if (m_pSyncPlayer->GetDirection() > D3DX_PI * -0.235f)
 		{
 			// 消滅
 			if (m_pPopUp)
@@ -550,7 +550,7 @@ void CField_Manager::UpdatePhase()
 			m_pPopUp = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_2.json"));
 
 			// この際にエネミーも生成
-			CBright::Generate(utility::DirectionConvertVec3(D3DX_PI * -0.175f, 50.0f, CField_Manager::FIELD_RADIUS), CBright::CREATETYPE::GHOST);
+			CBright::Generate(utility::DirectionConvertVec3(D3DX_PI * -0.215f, 65.0f, CField_Manager::FIELD_RADIUS), CBright::CREATETYPE::MONSTER);
 		}
 		else
 		{
