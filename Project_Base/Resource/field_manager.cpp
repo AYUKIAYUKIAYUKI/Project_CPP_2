@@ -25,6 +25,7 @@
 #include "boss.h"
 #include "block.h"
 #include "life.h"
+#include "bright.h"
 #include "sparks.h"
 
 // ブロック調整用
@@ -547,6 +548,9 @@ void CField_Manager::UpdatePhase()
 		if (!m_pPopUp)
 		{
 			m_pPopUp = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_2.json"));
+
+			// この際にエネミーも生成
+			CBright::Generate({ 230.0f, 80.0f, -200.0f }, CBright::CREATETYPE::MONSTER);
 		}
 		else
 		{

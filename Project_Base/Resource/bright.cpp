@@ -9,6 +9,10 @@
 // インクルードファイル
 //****************************************************
 #include "bright.h"
+#include "enemy.h"
+#include "monster.h"
+#include "ghost.h"
+#include "flyer.h"
 
 //****************************************************
 // usingディレクティブ
@@ -37,6 +41,7 @@ const JSON CBright::m_InitParam = utility::OpenJsonFile("Data\\JSON\\ENVIRONMENT
 CBright::CBright() :
 	m_nCntDuration{ 0 },
 	m_nMaxDuration{ 0 },
+	m_CreateType{ CREATETYPE::NONE },
 	CMotion_Set{ LAYER::DEFAULT }
 {
 
@@ -108,10 +113,9 @@ void CBright::Draw()
 //============================================================================
 // 発生
 //============================================================================
-void CBright::Generate(D3DXVECTOR3 Pos)
+void CBright::Generate(D3DXVECTOR3 Pos, CREATETYPE Type)
 {
-	/* 仮 */
-	Create(Pos);
+	Create(Pos, Type);
 }
 
 //============================================================================
@@ -123,7 +127,7 @@ void CBright::Generate(D3DXVECTOR3 Pos)
 //============================================================================
 // 生成
 //============================================================================
-void CBright::Create(D3DXVECTOR3 Pos)
+void CBright::Create(D3DXVECTOR3 Pos, CREATETYPE Type)
 {
 	CBright* pNewInstance = DBG_NEW CBright();
 
@@ -144,6 +148,7 @@ void CBright::Create(D3DXVECTOR3 Pos)
 
 		// データをセット
 		pNewInstance->m_nMaxDuration = nMaxDuration;	// 最大継続期間
+		pNewInstance->m_CreateType = Type;				// 生成するエネミータイプ
 		pNewInstance->CMotion_Set::SetPos(Pos);			// 座標
 	}
 
@@ -158,7 +163,7 @@ bool CBright::Disappear()
 {
 	// 消滅モーションで無ければ
 	if (GetNowMotion() != 2)
-	{	
+	{
 		// 継続期間をインクリメント
 		++m_nCntDuration;
 
@@ -167,6 +172,46 @@ bool CBright::Disappear()
 		{
 			// 消滅モーションに変更
 			SetNowMotion(2);
+
+			// エネミー情報を設定するためのポインタ
+			CEnemy* pEnemy = nullptr;
+
+			switch (m_CreateType)
+			{
+				// 無し
+			case CREATETYPE::NONE:
+
+				// 終了
+				return false;
+
+				break;
+
+				// モンスター
+			case CREATETYPE::MONSTER:
+				pEnemy = CMonster::Create();
+				break;
+
+				// ゴースト
+			case CREATETYPE::GHOST:
+				pEnemy = CGhost::Create();
+				break;
+
+				// フライヤー
+			case CREATETYPE::FLYER:
+				pEnemy = CFlyer::Create();
+				break;
+
+				// 無効なタイプ指定
+			default:
+				throw std::runtime_error("Invalid create enemy type");
+				break;
+			}
+
+			// エネミーはこのエフェクトの場所に配置
+			Vec3 BrightPos = GetPos();										// エフェクトの座標をコピー
+			pEnemy->SetPos(BrightPos);										// 描画ずれ防止に初期座標をこの場所に
+			pEnemy->SetPosTarget(BrightPos);								// 目標座標を変更
+			pEnemy->SetDirectionTarget(atan2f(BrightPos.x, BrightPos.z));	// 座標からの方角を割り当て
 		}
 
 		// 終了

@@ -20,6 +20,18 @@ class CBright : public CMotion_Set
 {
 public:
 
+	//****************************************************
+	// 生成するエネミータイプ
+	//****************************************************
+	enum class CREATETYPE : WORD
+	{
+		NONE = 0,	// 無し
+		MONSTER,	// モンスター
+		GHOST,		// ゴースト
+		FLYER,		// フライヤー
+		MAX
+	};
+
 	// <special fuction>
 	CBright();	// コンストラクタ
 	~CBright();	// デストラクタ
@@ -31,19 +43,20 @@ public:
 	void	Draw() override;	// 描画処理
 
 	// <static function>
-	static void Generate(D3DXVECTOR3 Pos);	// 発生
+	static void Generate(D3DXVECTOR3 Pos, CREATETYPE Type);	// 発生
 
 private:
 
 	// <static function>
-	static void Create(D3DXVECTOR3 Pos);	// 生成
+	static void Create(D3DXVECTOR3 Pos, CREATETYPE Type);	// 生成
 
 	// <function>
 	bool Disappear();	// 消滅
 
 	// <data>
-	int m_nCntDuration;	// 継続期間
-	int m_nMaxDuration;	// 最大継続期間
+	int			m_nCntDuration;	// 継続期間
+	int			m_nMaxDuration;	// 最大継続期間
+	CREATETYPE	m_CreateType;	// 生成するエネミータイプ
 
 	// <static data>
 	static const JSON m_MotionData;	// モーションデータ
