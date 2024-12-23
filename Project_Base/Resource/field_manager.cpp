@@ -27,6 +27,12 @@
 #include "life.h"
 #include "sparks.h"
 
+// ブロック調整用
+namespace
+{
+	CBlock* pBlock_DBG = nullptr;
+}
+
 //****************************************************
 // usingディレクティブ
 //****************************************************
@@ -327,25 +333,20 @@ void CField_Manager::InitBlockSet()
 	// 方角格納用
 	float fDirection = 0.0f;
 
-	// ブロックの生成数
-	int nCntBlock = 0;
-
-	// 成功検知用
-	bool bSuccess = false;
-
 	{ // 左側の道をふさぐ
 
 		// 初期のプレイヤー位置から見て左側を取る方角
 		fDirection = D3DX_PI * -0.6f;
 
-		while (nCntBlock < 5)
+		// 高いブロックを縦に並べる
+		for (WORD wCntBlock = 0; wCntBlock < 2; wCntBlock++)
 		{
 			// 新規向き・新規座標格納
 			Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
 
 			// 生成用の座標を決定
 			NewPos.x = cosf(fDirection) * FIELD_RADIUS;
-			NewPos.y = 20.0f * (nCntBlock + 1);
+			NewPos.y = 20.0f + (40.0f * wCntBlock);
 			NewPos.z = sinf(fDirection) * FIELD_RADIUS;
 
 			// 向きを決定
@@ -354,19 +355,16 @@ void CField_Manager::InitBlockSet()
 			// ブロックを生成
 			CBlock* pBlock = CBlock::Create(NewPos, NewRot);
 
-			// 長いブロックじゃないなら再抽選
-			if (pBlock->GetModel()->Type != CX_Manager::TYPE::BLOTALL)
+			// ブロックタイプを固定
+			if (pBlock->GetModelType() != CX_Manager::TYPE::BLOTALL)
 			{
-				pBlock->SetRelease();
-			}
-			else
-			{
-				++nCntBlock;
+				// 高いブロックモデルを割り当てる
+				pBlock->BindModel(CX_Manager::TYPE::BLOTALL);
+
+				// バウンディングサイズを割り当て直す
+				pBlock->SetSize(pBlock->GetModel()->Size);
 			}
 		}
-
-		// ブロック生成カウントをリセット
-		nCntBlock = 0;
 	}
 
 	{ // 右側に行けるようにブロック配置
@@ -374,104 +372,91 @@ void CField_Manager::InitBlockSet()
 		// 右側のブロックの方角を用意
 		fDirection = D3DX_PI * -0.4f;
 
-		while (!bSuccess)
+		// 新規向き・新規座標格納
+		Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
+
+		// 生成用の座標を決定
+		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
+		NewPos.y = 20.0f;
+		NewPos.z = sinf(fDirection) * FIELD_RADIUS;
+
+		// 向きを決定
+		NewRot.y = atan2f(-NewPos.x, -NewPos.z);
+
+		// ブロックを生成
+		CBlock* pBlock = CBlock::Create(NewPos, NewRot);
+
+		// ブロックタイプを固定
+		if (pBlock->GetModelType() != CX_Manager::TYPE::BLOTALL)
 		{
-			// 新規向き・新規座標格納
-			Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
+			// 高いブロックモデルを割り当てる
+			pBlock->BindModel(CX_Manager::TYPE::BLOTALL);
 
-			// 生成用の座標を決定
-			NewPos.x = cosf(fDirection) * FIELD_RADIUS;
-			NewPos.y = 20.0f;
-			NewPos.z = sinf(fDirection) * FIELD_RADIUS;
-
-			// 向きを決定
-			NewRot.y = atan2f(-NewPos.x, -NewPos.z);
-
-			// ブロックを生成
-			CBlock* pBlock = CBlock::Create(NewPos, NewRot);
-
-			// 長いブロックじゃないなら再抽選
-			if (pBlock->GetModel()->Type != CX_Manager::TYPE::BLOTALL)
-			{
-				pBlock->SetRelease();
-			}
-			else
-			{
-				bSuccess = true;
-			}
+			// バウンディングサイズを割り当て直す
+			pBlock->SetSize(pBlock->GetModel()->Size);
 		}
-
-		// 成功検知解除
-		bSuccess = false;
 	}
 
 	{ // ダッシュさせるため離れた場所にブロック配置
-	
+
 		// ブロックの方角を用意
 		fDirection = D3DX_PI * -0.25f;
 
-		while (!bSuccess)
+		// 新規向き・新規座標格納
+		Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
+
+		// 生成用の座標を決定
+		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
+		NewPos.y = 50.0f;
+		NewPos.z = sinf(fDirection) * FIELD_RADIUS;
+
+		// 向きを決定
+		NewRot.y = atan2f(-NewPos.x, -NewPos.z);
+
+		// ブロックを生成
+		CBlock* pBlock = CBlock::Create(NewPos, NewRot);
+
+		// ブロックタイプを固定
+		if (pBlock->GetModelType() != CX_Manager::TYPE::BLOSIDE)
 		{
-			// 新規向き・新規座標格納
-			Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
+			// 平たいブロックモデルを割り当てる
+			pBlock->BindModel(CX_Manager::TYPE::BLOSIDE);
 
-			// 生成用の座標を決定
-			NewPos.x = cosf(fDirection) * FIELD_RADIUS;
-			NewPos.y = 50.0f;
-			NewPos.z = sinf(fDirection) * FIELD_RADIUS;
-
-			// 向きを決定
-			NewRot.y = atan2f(-NewPos.x, -NewPos.z);
-
-			// ブロックを生成
-			CBlock* pBlock = CBlock::Create(NewPos, NewRot);
-
-			// 長いブロックじゃないなら再抽選
-			if (pBlock->GetModel()->Type != CX_Manager::TYPE::BLOSIDE)
-			{
-				pBlock->SetRelease();
-			}
-			else
-			{
-				bSuccess = true;
-			}
+			// バウンディングサイズを割り当て直す
+			pBlock->SetSize(pBlock->GetModel()->Size);
 		}
+	}
 
-		// 成功検知解除
-		bSuccess = false;
+	{ // 平たいブロックのの下に妨害壁
 
-		// ブロックの方角を用意
-		fDirection = D3DX_PI * -0.235f;
+		// 右側のブロックの方角を用意
+		fDirection = -0.736f;
 
-		while (!bSuccess)
+		// 新規向き・新規座標格納
+		Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
+
+		// 生成用の座標を決定
+		NewPos.x = cosf(fDirection) * FIELD_RADIUS;
+		NewPos.y = 20.0f;
+		NewPos.z = sinf(fDirection) * FIELD_RADIUS;
+
+		// 向きを決定
+		NewRot.y = atan2f(-NewPos.x, -NewPos.z);
+
+		// ブロックを生成
+		CBlock* pBlock = CBlock::Create(NewPos, NewRot);
+
+		pBlock_DBG = pBlock;
+
+		// ブロックタイプを固定
+		if (pBlock->GetModelType() != CX_Manager::TYPE::BLOTALL)
 		{
-			// 新規向き・新規座標格納
-			Vec3 NewRot = VEC3_INIT, NewPos = VEC3_INIT;
+			// 高いブロックモデルを割り当てる
+			pBlock->BindModel(CX_Manager::TYPE::BLOTALL);
 
-			// 生成用の座標を決定
-			NewPos.x = cosf(fDirection) * FIELD_RADIUS;
-			NewPos.y = 20.0f;
-			NewPos.z = sinf(fDirection) * FIELD_RADIUS;
-
-			// 向きを決定
-			NewRot.y = atan2f(-NewPos.x, -NewPos.z);
-
-			// ブロックを生成
-			CBlock* pBlock = CBlock::Create(NewPos, NewRot);
-
-			// 長いブロックじゃないなら再抽選
-			if (pBlock->GetModel()->Type != CX_Manager::TYPE::BLOTALL)
-			{
-				pBlock->SetRelease();
-			}
-			else
-			{
-				bSuccess = true;
-			}
+			// バウンディングサイズを割り当て直す
+			pBlock->SetSize(pBlock->GetModel()->Size);
 		}
-
-		// 成功検知解除
-		bSuccess = false;
 	}
 }
 
@@ -592,6 +577,15 @@ void CField_Manager::UpdatePhase()
 		}
 
 		break;
+	}
+
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Block Edit")) {
+		if (!pBlock_DBG)
+		{
+			
+		}
+		ImGui::End();
 	}
 }
 

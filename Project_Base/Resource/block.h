@@ -37,6 +37,7 @@ public:
 
 	// <getter>
 	D3DXVECTOR3 GetSize() const override;	// サイズを取得
+	void SetSize(D3DXVECTOR3 Size);			// サイズを設定
 
 	// <static function>
 	static CBlock* Create(const D3DXVECTOR3& Pos, const D3DXVECTOR3& Rot);	// 生成
