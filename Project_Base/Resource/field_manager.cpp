@@ -86,8 +86,8 @@ void CField_Manager::Update()
 	// 扇形の更新
 	UpdateFan();
 
-	// 10フェーズ以降に進行していたら
-	if (m_nPhase > 10)
+	// 4フェーズ以降に進行していたら
+	if (m_nPhase > 4)
 	{
 		// フィールド更新
 		UpdateField();
@@ -656,6 +656,52 @@ void CField_Manager::UpdatePhase()
 		if (!m_pPopUp)
 		{
 			m_pPopUp = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_3.json"));
+		}
+		else
+		{
+			// プレイヤーへの同期
+			Vec3 RotTarget = VEC3_INIT, PosTarget = VEC3_INIT;	// 目標向き・目標座標を格納
+
+			RotTarget.y = -m_pSyncPlayer->GetDirection();	// Y軸向きへプレイヤーの方角をコピー
+			RotTarget.y += D3DX_PI * -0.5f;					// カメラの正面を向くように調整
+			m_pPopUp->SetRotTarget(RotTarget);				// 目標向きをセット
+
+			PosTarget = m_pSyncPlayer->GetPos() * 0.95f;	// プレイヤーの奥へ配置
+			PosTarget.y += 30.0f;							// 見やすいよう少し高さを付ける
+			m_pPopUp->SetPosTarget(PosTarget);				// 目標座標をセット
+		}
+
+		// 最初の右のブロックより戻ったら
+		if (m_pSyncPlayer->GetDirection() < D3DX_PI * -0.4f)
+		{
+			// 消滅
+			if (m_pPopUp)
+			{
+				m_pPopUp->Disappear();
+				m_pPopUp = nullptr;
+			}
+
+			// 次のフェーズへ
+			++m_nPhase;
+		}
+
+		break;
+
+	case 4:
+
+		// ポップアップを生成
+		if (!m_pPopUp)
+		{
+			m_pPopUp = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_4.json"));
+
+			// 初回のみアイテムを定位置に生成させる
+			CItem* pItem = CLife::Create();
+			
+			// 方角を設定
+			pItem->SetDirection(D3DX_PI * 0.5f);
+
+			// 高さに設定
+			pItem->SetPosY(200.0f);
 		}
 		else
 		{
