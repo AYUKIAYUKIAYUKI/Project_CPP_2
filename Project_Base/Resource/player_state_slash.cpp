@@ -41,6 +41,9 @@ CPlayer_State_Slash::CPlayer_State_Slash() :
 	m_SlashType{ SLASH_TYPE::LEFT },
 	m_pBndSlash{ std::make_unique<CBounding_Sphere>() }
 {
+	// アクションデータのジャンプした回数をインクリメント
+	CField_Manager::GetInstance()->IncrementCntSlash();
+
 	// 斬撃のバウンディングのサイズを設定
 	m_pBndSlash->SetRadius(5.0f);
 

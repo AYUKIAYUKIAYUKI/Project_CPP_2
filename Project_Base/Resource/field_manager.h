@@ -48,6 +48,7 @@ public:
 	bool AdjustPosToFieldSize(CObject* pObj);	// 座標をフィールドサイズに調整
 	void IncrementCntJump();					// ジャンプした回数のインクリメント
 	void IncrementCntDash();					// ダッシュした回数のインクリメント
+	void IncrementCntSlash();					// 攻撃した回数のインクリメント
 
 	// <getter>
 	int GetCntDestroyBlock();	// ブロックの破壊数を取得
@@ -71,6 +72,7 @@ private:
 	{
 		int nCntJump;	// ジャンプした回数
 		int nCntDash;	// ダッシュした回数
+		int nCntSlash;	// 攻撃した回数
 	};
 
 	//****************************************************
@@ -96,7 +98,7 @@ private:
 	void	InitEnvironment();					// 環境装飾の初期設定
 	void	InitBlockSet();						// 初期ブロックのセット
 	void	Uninit();							// 終了処理
-	void	UpdatePopUp();						// ポップアップ表示の更新
+	void	UpdatePhase();						// フェーズの更新
 	void	UpdateEnvironment();				// 環境装飾の更新処理
 	void	UpdateFan();						// 扇形の更新
 	void	UpdateField();						// フィールド更新
