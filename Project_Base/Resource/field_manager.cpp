@@ -87,7 +87,7 @@ void CField_Manager::Update()
 	UpdateFan();
 
 	// 4フェーズ以降に進行していたら
-	if (m_nPhase > 4)
+	if (m_nPhase >= 4)
 	{
 		// フィールド更新
 		UpdateField();
@@ -263,6 +263,7 @@ CField_Manager* CField_Manager::GetInstance()
 //============================================================================
 CField_Manager::CField_Manager() :
 	m_nPhase{ 0 },
+	m_bFirstItem{ false },
 	m_pPopUp{ nullptr },
 	m_FiledType{ FIELD_TYPE::NORMAL },
 	m_nCntDestroyBlock{ 0 },
@@ -689,19 +690,87 @@ void CField_Manager::UpdatePhase()
 
 	case 4:
 
+		// 移動による地形の再生成が、多少行われていた痕跡があれば
+		if (m_nCntDestroyBlock >= 10)
+		{
+			// 次のフェーズへ
+			++m_nPhase;
+		}
+
+		break;
+
+	case 5:
+
 		// ポップアップを生成
 		if (!m_pPopUp)
 		{
 			m_pPopUp = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_4.json"));
+		}
+		else
+		{
+			// プレイヤーへの同期
+			Vec3 RotTarget = VEC3_INIT, PosTarget = VEC3_INIT;	// 目標向き・目標座標を格納
 
-			// 初回のみアイテムを定位置に生成させる
-			CItem* pItem = CLife::Create();
-			
-			// 方角を設定
-			pItem->SetDirection(D3DX_PI * 0.5f);
+			RotTarget.y = -m_pSyncPlayer->GetDirection();	// Y軸向きへプレイヤーの方角をコピー
+			RotTarget.y += D3DX_PI * -0.5f;					// カメラの正面を向くように調整
+			m_pPopUp->SetRotTarget(RotTarget);				// 目標向きをセット
 
-			// 高さに設定
-			pItem->SetPosY(200.0f);
+			PosTarget = m_pSyncPlayer->GetPos() * 0.95f;	// プレイヤーの奥へ配置
+			PosTarget.y += 30.0f;							// 見やすいよう少し高さを付ける
+			m_pPopUp->SetPosTarget(PosTarget);				// 目標座標をセット
+		}
+
+		// 初回のアイテムを生成後
+		if (m_bFirstItem)
+		{
+			// アイテムオブジェクトを取得
+			CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
+
+			// アイテムオブジェクトが発見出来たら
+			if (pObj)
+			{
+				// アイテムクラスにダウンキャスト
+				CItem* pItem = utility::DownCast<CItem, CObject>(pObj);
+
+				// アイテムに接近したら
+				if (m_pFan->DetectInFanRange(pItem->GetPos()))
+				{
+					// 消滅
+					if (m_pPopUp)
+					{
+						m_pPopUp->Disappear();
+						m_pPopUp = nullptr;
+					}
+
+					// 次のフェーズへ
+					++m_nPhase;
+				}
+			}
+		}
+
+		break;
+
+	case 6:
+
+		{ // アイテムオブジェクトを取得
+			CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
+
+			// アイテムオブジェクトが無くなっていたら
+			if (!pObj)
+			{
+				// 次のフェーズへ
+				++m_nPhase;
+			}
+		}
+
+		break;
+
+	case 7:
+
+		// ポップアップを生成
+		if (!m_pPopUp)
+		{
+			m_pPopUp = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_5.json"));
 		}
 		else
 		{
@@ -720,6 +789,7 @@ void CField_Manager::UpdatePhase()
 		break;
 	}
 
+#ifdef _DEBUG
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Block Edit")) {
 		if (!pBlock_DBG)
@@ -728,6 +798,7 @@ void CField_Manager::UpdatePhase()
 		}
 		ImGui::End();
 	}
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -811,18 +882,40 @@ void CField_Manager::AutoCreateItem()
 	CItem* pItem = nullptr;
 
 	// アイテムを生成
-	/* ここは何らかの分岐を設定予定です*/
-	pItem = CLife::Create();
+	if (m_bFirstItem)
+	{
+		pItem = CLife::Create();
 
-	do { // この方角における座標が、扇形範囲内であれば方角を再抽選する
+		do { // この方角における座標が、扇形範囲内であれば方角を再抽選する
 
-		// 方角をランダムに設定
-		pItem->SetDirection(fabsf(utility::GetRandomValue<float>()));
+			// 方角をランダムに設定
+			pItem->SetDirection(fabsf(utility::GetRandomValue<float>()));
 
-	} while (m_pFan->DetectInFanRange(pItem->GetPos()));
+		} while (m_pFan->DetectInFanRange(pItem->GetPos()));
 
-	// Y座標をランダムに設定
-	pItem->SetPosY(fabsf(utility::GetRandomValue<float>()));
+		// Y座標をランダムに設定
+		pItem->SetPosY(fabsf(utility::GetRandomValue<float>()));
+
+		// 描画前に一度更新
+		pItem->Update();
+	}
+	else
+	{ // 初回のみ定位置に生成する
+
+		pItem = CLife::Create();
+
+		// 方角を設定
+		pItem->SetDirection(D3DX_PI * 0.5f);
+
+		// 高さに設定
+		pItem->SetPosY(100.0f);
+
+		// 描画前に一度更新
+		pItem->Update();
+
+		// 最初のアイテムの生成完了
+		m_bFirstItem = true;
+	}
 }
 
 //============================================================================
@@ -1066,11 +1159,12 @@ void CField_Manager::PrintDebug()
 	Vec3 Norm = m_pSyncPlayer->GetPosTarget() - m_pSyncPlayer->GetPos();
 
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("Action Data")) {
+	if (ImGui::Begin("Field Data")) {
+		ImGui::Text("DestroyBlock:%d", m_nCntDestroyBlock);
+		ImGui::Text("Phase:%d", m_nPhase);
 		ImGui::Text("CountJump:%d", m_ActionData.nCntJump);
 		ImGui::Text("CountDash:%d", m_ActionData.nCntDash);
 		ImGui::Text("FieldType:%d", m_FiledType);
-		ImGui::Text("DestroyBlock:%d", m_nCntDestroyBlock);
 		ImGui::Text("Cross:%f", fCross);
 		ImGui::Text("Norm:%f", Norm.x * Norm.x + Norm.z * Norm.z);
 		ImGui::End();
