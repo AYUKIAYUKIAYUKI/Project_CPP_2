@@ -482,7 +482,7 @@ void CCamera::CalcMtxView(D3DXVECTOR3 Pos)
 	Vec3 posV = m_PosV, posR = m_PosR;
 
 	// 俯瞰度合いを反映
-	posV.y += FAdderY;
+	posV.y += m_fAdjust;
 
 	// 初期座標以外を渡された場合その視点をコピー
 	if (Pos != VEC3_INIT)
