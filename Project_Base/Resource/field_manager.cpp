@@ -671,6 +671,10 @@ void CField_Manager::UpdatePhase()
 		if (!m_pPopUp)
 		{
 			m_pPopUp = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_3.json"));
+
+			/* エネミーを生成していく */
+			CBright::Generate(utility::DirectionConvertVec3(D3DX_PI * -0.5f, 50.0f, CField_Manager::FIELD_RADIUS), CBright::CREATETYPE::GHOST);
+			CBright::Generate(utility::DirectionConvertVec3(D3DX_PI * -0.35f, 50.0f, CField_Manager::FIELD_RADIUS), CBright::CREATETYPE::MONSTER);
 		}
 		else
 		{
@@ -1021,8 +1025,15 @@ void CField_Manager::AutoCreateItem()
 
 		} while (m_pFan->DetectInFanRange(pItem->GetPos()));
 
+		/* 応急処置 */
+		float fHeight = fabsf(utility::GetRandomValue<float>());
+		if (fHeight >= 125.0f)
+		{
+			fHeight = 125.0f;
+		}
+
 		// Y座標をランダムに設定
-		pItem->SetPosY(fabsf(utility::GetRandomValue<float>()));
+		pItem->SetPosY(fHeight);
 
 		// 描画前に一度更新
 		pItem->Update();

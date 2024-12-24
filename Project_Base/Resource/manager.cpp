@@ -306,6 +306,9 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 	// パッドの初期化
 	m_pPad->Init(hInstance, hWnd);
 
+	/* 応急処置 */
+	CSound::GetInstance()->Play(CSound::LABEL::FILEDBGM);
+
 	return S_OK;
 }
 

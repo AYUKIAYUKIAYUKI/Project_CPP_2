@@ -28,6 +28,10 @@ namespace
 #include "object.h"
 #include "player.h"
 
+/* 応急処置 */
+#include "scene.h"
+#include "result.h"
+
 //****************************************************
 // usingディレクティブ
 //****************************************************
@@ -482,7 +486,18 @@ void CCamera::CalcMtxView(D3DXVECTOR3 Pos)
 	Vec3 posV = m_PosV, posR = m_PosR;
 
 	// 俯瞰度合いを反映
-	posV.y += m_fAdjust;
+	posV.y += FAdderY;
+
+	/* 応急処置 */
+	auto aa = CScene_Manager::GetInstance()->GetScene();
+
+	if (aa)
+	{
+		if (typeid(*aa) == typeid(CResult))
+		{
+			posV.y = 0.0f;
+		}
+	}
 
 	// 初期座標以外を渡された場合その視点をコピー
 	if (Pos != VEC3_INIT)
