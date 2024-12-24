@@ -12,6 +12,7 @@
 #include "bounding_cylinder.h"
 #include "manager.h"
 #include "renderer.h"
+#include "sound.h"
 #include "field_manager.h"
 #include "object_parts.h"
 #include "collision.h"
@@ -212,7 +213,7 @@ CBoss* CBoss::Create()
 	pNewInstance->SetMotion(LAYER::DEFAULT, utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BOSS\\pumpkin_motion.json"));
 
 	// 半径を設定
-	pNewInstance->m_pBndCylinder->SetRadius(115.0f);
+	pNewInstance->m_pBndCylinder->SetRadius(105.0f);
 
 	// 高さを設定
 	pNewInstance->m_pBndCylinder->SetHeight(60.0f);
@@ -335,6 +336,9 @@ void CBoss::DirectAttack()
 		CPlayer* pPlayer = nullptr;
 		pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
 		SetDirectionTarget(pPlayer->GetDirection());
+
+		// エネミー出現音を鳴らす
+		CSound::GetInstance()->Play(CSound::LABEL::EAPPEAR);
 	}
 
 	// 継続期間をインクリメント
@@ -362,6 +366,9 @@ void CBoss::DirectAttack()
 
 		// 目標座標に反映
 		SetPosTarget(PosTarget);
+
+		// ボスの攻撃音を鳴らす
+		CSound::GetInstance()->Play(CSound::LABEL::BATK);
 	}
 
 	// 3秒時点で
@@ -416,6 +423,9 @@ void CBoss::DamageBack()
 
 		// ボスがダメージモーションに変更
 		SetNowMotion(3);
+
+		// ボスのダメージ音を鳴らす
+		CSound::GetInstance()->Play(CSound::LABEL::BDAMAGE);
 	}
 	else if (GetStopState() == true)
 	{ // ダメージモーションが再生終了した時

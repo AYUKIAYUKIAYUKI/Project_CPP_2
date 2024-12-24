@@ -25,9 +25,13 @@ public:
 		TEXT,			// テキスト
 		DASH,			// ダッシュ
 		SLASH,			// 斬撃
+		BATK,			// ボス攻撃
 		LAND,			// 着地
 		DAMAGE,			// 被弾
+		BDAMAGE,		// ボス被弾
 		HEAL,			// 回復
+		EAPPEAR,		// アイテム出現
+		IAPPEAR,		// エネミー出現
 		DISAPPEAR,		// 消滅
 		MAX,
 	};

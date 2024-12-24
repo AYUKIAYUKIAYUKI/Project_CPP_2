@@ -1038,6 +1038,9 @@ void CField_Manager::AutoCreateItem()
 		// 最初のアイテムの生成完了
 		m_bFirstItem = true;
 	}
+
+	// アイテム出現音を鳴らす
+	CSound::GetInstance()->Play(CSound::LABEL::IAPPEAR);
 }
 
 //============================================================================

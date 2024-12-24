@@ -9,6 +9,7 @@
 // インクルードファイル
 //****************************************************
 #include "bright.h"
+#include "sound.h"
 #include "enemy.h"
 #include "monster.h"
 #include "ghost.h"
@@ -211,6 +212,9 @@ bool CBright::Disappear()
 			Vec3 BrightPos = GetPos();								// 閃光エフェクトの座標をコピー
 			pEnemy->SetDirection(atan2f(BrightPos.z, BrightPos.x));	// 閃光エフェクトの座標からの初期方角を割り当て
 			pEnemy->AdjustInitDirection(BrightPos.y);				// 初期方角に対し情報を整える
+
+			// エネミー出現音を鳴らす
+			CSound::GetInstance()->Play(CSound::LABEL::EAPPEAR);
 		}
 
 		// 終了

@@ -23,6 +23,7 @@ namespace
 #include "item.h"
 #include "summoning.h"
 #include "bounding_sphere.h"
+#include "sound.h"
 #include "field_manager.h"
 #include "player.h"
 #include "collision.h"
@@ -327,6 +328,9 @@ void CItem::HitChecklPlayer()
 
 		// Ž©g‚ð”jŠü—\–ñ
 		SetRelease();
+
+		// ƒAƒCƒeƒ€Žæ“¾‰¹‚ð–Â‚ç‚·
+		CSound::GetInstance()->Play(CSound::LABEL::HEAL);
 	}
 }
 
