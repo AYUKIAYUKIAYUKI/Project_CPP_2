@@ -1,7 +1,7 @@
 ﻿{
 	"Text": "不思議だね…\n#移動すると地形が変化するみたい…\n#それと、何かイイモノが出現したね",
-	"TextSpeed": 5,
-	"TextDelay": -60,
+	"TextSpeed": 4,
+	"TextDelay": -45,
 	"InitTextDelay": -70,
 	"TextSize": [ 1375.0, 800.0 ],
 	"MeshSize": [ 0.0, 0.0, 0.0 ],

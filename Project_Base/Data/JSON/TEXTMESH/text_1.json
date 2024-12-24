@@ -1,6 +1,6 @@
 ﻿{
 	"Text": "【移動時に右クリックでダッシュ】\n#ジャンプ中にダッシュをすると\n#遠い足場に届くよ！",
-	"TextSpeed": 4,
+	"TextSpeed": 5,
 	"TextDelay": -15,
 	"InitTextDelay": -70,
 	"TextSize": [ 1375.0, 800.0 ],

@@ -108,6 +108,9 @@ void CObject_PopUp::Disappear()
 	// その場で消滅
 	m_SizeTarget = VEC3_INIT;
 	m_ColTarget = XCOL_INIT;
+
+	// テキストを強制的に終了させる (消えながらも効果音がうるさい)
+	m_pTextMesh->SetTextTarget(m_pTextMesh->GetText());
 }
 
 //============================================================================

@@ -786,6 +786,93 @@ void CField_Manager::UpdatePhase()
 			m_pPopUp->SetPosTarget(PosTarget);				// 目標座標をセット
 		}
 
+		{ // アイテムオブジェクトを取得
+			CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
+
+			// アイテムオブジェクトが発見出来たら
+			if (pObj)
+			{
+				// アイテムクラスにダウンキャスト
+				CItem* pItem = utility::DownCast<CItem, CObject>(pObj);
+
+				// アイテムに接近したら
+				if (m_pFan->DetectInFanRange(pItem->GetPos()))
+				{
+					// 消滅
+					if (m_pPopUp)
+					{
+						m_pPopUp->Disappear();
+						m_pPopUp = nullptr;
+					}
+
+					// 次のフェーズへ
+					++m_nPhase;
+				}
+			}
+		}
+
+		break;
+
+	case 8:
+
+		{ // アイテムオブジェクトを取得
+			CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
+
+			// アイテムオブジェクトが無くなっていたら
+			if (!pObj)
+			{
+				// 次のフェーズへ
+				++m_nPhase;
+			}
+		}
+
+		break;
+
+	case 9:
+
+		// ポップアップを生成
+		if (!m_pPopUp)
+		{
+			m_pPopUp = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_6.json"));
+		}
+		else
+		{
+			// プレイヤーへの同期
+			Vec3 RotTarget = VEC3_INIT, PosTarget = VEC3_INIT;	// 目標向き・目標座標を格納
+
+			RotTarget.y = -m_pSyncPlayer->GetDirection();	// Y軸向きへプレイヤーの方角をコピー
+			RotTarget.y += D3DX_PI * -0.5f;					// カメラの正面を向くように調整
+			m_pPopUp->SetRotTarget(RotTarget);				// 目標向きをセット
+
+			PosTarget = m_pSyncPlayer->GetPos() * 0.95f;	// プレイヤーの奥へ配置
+			PosTarget.y += 30.0f;							// 見やすいよう少し高さを付ける
+			m_pPopUp->SetPosTarget(PosTarget);				// 目標座標をセット
+		}
+
+		{ // アイテムオブジェクトを取得
+			CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
+
+			// アイテムオブジェクトが無くなっていたら
+			if (!pObj)
+			{
+				// 消滅
+				if (m_pPopUp)
+				{
+					m_pPopUp->Disappear();
+					m_pPopUp = nullptr;
+				}
+
+				// フェーズ進行
+				++m_nPhase;
+			}
+		}
+
+		break;
+
+	case 10:
+
+		/* 現段階では終点 */
+
 		break;
 	}
 
