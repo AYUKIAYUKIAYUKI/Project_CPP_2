@@ -48,7 +48,7 @@ void CResult::Update()
 	}
 #endif
 
-#if 1
+#if 0
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Text"))
 	{
