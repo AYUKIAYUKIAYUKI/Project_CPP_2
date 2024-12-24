@@ -43,6 +43,7 @@ using namespace abbr;
 // 静的メンバ変数の初期化
 //****************************************************
 CField_Manager* CField_Manager::m_pFieldManager = nullptr;	// フィールドマネージャーの本体
+bool			CField_Manager::m_bRetry = false;			// 周回判定
 
 //============================================================================
 // 
@@ -532,6 +533,13 @@ void CField_Manager::Uninit()
 //============================================================================
 void CField_Manager::UpdatePhase()
 {
+	// 2週目なら
+	if (m_bRetry && m_nPhase == 0)
+	{
+		// 初回のフェーズを変更
+		m_nPhase = 11;
+	}
+
 	switch (m_nPhase)
 	{
 	case 0:
@@ -869,9 +877,36 @@ void CField_Manager::UpdatePhase()
 
 		break;
 
+		// 終点となるフェーズ
 	case 10:
 
-		/* 現段階では終点 */
+		// 周回判定を出す
+		m_bRetry = true;
+
+		break;
+
+		// 2週目以降はこのフェーズ
+	case 11:
+
+		// ポップアップを生成
+		if (!m_pPopUp)
+		{
+			m_pPopUp = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\popup_ex.json"));
+		}
+
+		// ある程度移動していたら
+		if (m_nCntDestroyBlock > 25)
+		{
+			// 消滅
+			if (m_pPopUp)
+			{
+				m_pPopUp->Disappear();
+				m_pPopUp = nullptr;
+			}
+
+			// 次のフェーズへ
+			++m_nPhase;
+		}
 
 		break;
 	}

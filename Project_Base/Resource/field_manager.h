@@ -126,6 +126,7 @@ private:
 
 	// <static data>
 	static CField_Manager* m_pFieldManager;	// フィールドマネージャーの本体 
+	static bool			   m_bRetry;		// 周回判定
 };
 
 #endif // _FIELD_MANAGER_H_
