@@ -39,6 +39,9 @@ void CTitle::Update()
 	// 移動演出用の期間をインクリメント
 	m_nNowFrame++;
 
+	// BGMを遷移
+	CSound::GetInstance()->Transition(CSound::LABEL::BOSSBGM, CSound::LABEL::FILEDBGM);
+
 	// 環境装飾の更新
 	UpdateEnvironment();
 

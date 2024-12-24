@@ -12,12 +12,11 @@
 // インクルードファイル
 //****************************************************
 #include "scene.h"
-#include "spline_test.h"
 
 //****************************************************
 // 前方宣言
 //****************************************************
-class CObject_HUD;
+class CObject_TextMesh;
 class CMotion_Set;
 
 //****************************************************
@@ -47,10 +46,9 @@ private:
 	~CResult() override;	// デストラクタ
 
 	// <Data>
-	D3DXVECTOR3  m_Path;		// パス
-	CMotion_Set* m_pFakePlayer;	// フェイクプレイヤー
-	CObject_HUD* m_pText;		// 文章
-	//CSpline_Test* m_pSpline;	// スプラインテスト
+	D3DXVECTOR3  m_Path;			// パス
+	CMotion_Set* m_pFakePlayer;		// フェイクプレイヤー
+	CObject_TextMesh* m_pTextMesh;	// テキスト
 };
 
 #endif // _RESULT_H_

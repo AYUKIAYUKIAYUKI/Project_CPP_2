@@ -540,6 +540,12 @@ void CField_Manager::UpdatePhase()
 		m_nPhase = 11;
 	}
 
+	// ブロックの破壊量が最大で強制的に最終フェーズへ
+	if (m_nCntDestroyBlock >= MAX_DESTROY_BLOCK)
+	{
+		m_nPhase = 10;
+	}
+
 	switch (m_nPhase)
 	{
 	case 0:

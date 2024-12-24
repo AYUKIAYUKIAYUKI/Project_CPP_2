@@ -305,19 +305,14 @@ void CCamera::BranchViewMode()
 	if (m_bTrackPlayer)
 	{ // 追従する
 
-		if (CObject::FindSpecificObject(CObject::TYPE::PLAYER) == nullptr)
-		{ // プレイヤーが存在していない時
-#ifdef _DEBUG
-			// カメラ操作を可能に
-			Control();
-#endif // _DEBUG
-		}
-		else
-		{ // プレイヤーが存在している時
+		// プレイヤーオブジェクトを検索
+		CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::PLAYER);
 
-			// プレイヤーを取得
-			CPlayer* pPlayer = nullptr;
-			pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+		// オブジェクトが存在していたら
+		if (pObj)
+		{
+			// プレイヤークラスにダウンキャスト
+			CPlayer* pPlayer = utility::DownCast<CPlayer, CObject>(pObj);
 
 			// カメラのパラメータを自動で設定
 			m_PosTarget = pPlayer->GetPosTarget();					// カメラ目標座標はプレイヤーの座標に
@@ -330,8 +325,10 @@ void CCamera::BranchViewMode()
 		}
 	}
 
+#ifdef _DEBUG
 	// カメラ操作
 	Control();
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -339,13 +336,14 @@ void CCamera::BranchViewMode()
 //============================================================================
 void CCamera::Control()
 {
-	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+#ifdef _DEBUG
 	if (ImGui::Begin("Camera Param"))
 	{
 		ImGui::DragFloat("fDistance", &FDistance);
 		ImGui::DragFloat("AdderY", &FAdderY);
 		ImGui::End();
 	}
+#endif // _DEBUG
 }
 
 //============================================================================
@@ -510,13 +508,6 @@ void CCamera::CalcMtxView(D3DXVECTOR3 Pos)
 //============================================================================
 void CCamera::PrintDebug()
 {
-	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("Camera Param"))
-	{
-		ImGui::Text("m_fDistance:%.1f", m_fDistance);
-		ImGui::Text("m_fAdjust:%.1f", m_fAdjust);
-		ImGui::End();
-	}
 #if 0
 	CRenderer::SetDebugString("＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 	CRenderer::SetDebugString("カメラ座標　　 : " + to_string(m_Pos.x) + " :  " + to_string(m_Pos.y) + " : " + to_string(m_Pos.z));

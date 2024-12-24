@@ -232,7 +232,7 @@ void CSound::Transition(LABEL labelPrev, LABEL labelNext)
 		wNext = static_cast<WORD>(labelNext);
 
 	// ボリュームが減少していく
-	m_aSoundInfo[wPrev].fVolume += -0.003f;
+	m_aSoundInfo[wPrev].fVolume += -0.005f;
 
 	// フェードアウトが済んだら
 	if (m_aSoundInfo[wPrev].fVolume <= 0.0f)
