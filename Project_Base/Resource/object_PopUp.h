@@ -34,7 +34,7 @@ public:
 	void	Uninit() override;	// 終了処理
 	void	Update() override;	// 更新処理
 	void	Draw() override;	// 描画処理
-	void	Disappear();		// 消滅
+	void	SetDisappear();		// 消滅
 	void	AllTargetReset();	// 全目標値リセット
 
 	// <Setter>

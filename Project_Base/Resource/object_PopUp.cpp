@@ -81,9 +81,6 @@ void CObject_PopUp::Uninit()
 //============================================================================
 void CObject_PopUp::Update()
 {
-	if (CManager::GetKeyboard()->GetTrigger(DIK_M))
-		Disappear();
-
 	// 目標値への補正
 	CorrectToTarget();
 
@@ -101,11 +98,11 @@ void CObject_PopUp::Draw()
 }
 
 //============================================================================
-// 消滅
+// 消滅設定
 //============================================================================
-void CObject_PopUp::Disappear()
+void CObject_PopUp::SetDisappear()
 {
-	// その場で消滅
+	// サイズと色の目標値を初期化
 	m_SizeTarget = VEC3_INIT;
 	m_ColTarget = XCOL_INIT;
 
@@ -263,8 +260,21 @@ CObject_PopUp* CObject_PopUp::Create(JSON Json)
 //============================================================================
 void CObject_PopUp::CorrectToTarget()
 {
-	// 目標サイズへ補正
+	// サイズを取得
 	Vec3 NowSize = GetSize();
+	
+	// この時、現在値・目標値とも非表示化されているなら
+	if (m_SizeTarget == VEC3_INIT &&
+		NowSize.x + NowSize.y < 0.1f)
+	{
+		// ポップアップと、付随するテキストメッシュを破棄設定
+		this->SetRelease();
+		m_pTextMesh->SetRelease();
+
+		return;
+	}
+
+	// 目標サイズへ補正
 	NowSize += (m_SizeTarget - NowSize) * m_fCorrectCoef;
 	SetSize(NowSize);
 

@@ -559,10 +559,10 @@ void CField_Manager::UpdatePhase()
 		// 最初の右のブロックを越したら
 		if (m_pSyncPlayer->GetDirection() > D3DX_PI * -0.4f)
 		{
-			// 消滅
+			// 消滅設定
 			if (m_pPopUp)
 			{
-				m_pPopUp->Disappear();
+				m_pPopUp->SetDisappear();
 				m_pPopUp = nullptr;
 			}
 
@@ -596,10 +596,10 @@ void CField_Manager::UpdatePhase()
 		// 空中ダッシュ必須の高台を超えたら
 		if (m_pSyncPlayer->GetDirection() > D3DX_PI * -0.235f)
 		{
-			// 消滅
+			// 消滅設定
 			if (m_pPopUp)
 			{
-				m_pPopUp->Disappear();
+				m_pPopUp->SetDisappear();
 				m_pPopUp = nullptr;
 			}
 
@@ -652,10 +652,10 @@ void CField_Manager::UpdatePhase()
 		// エネミーが全滅したら
 		if (!CObject::CountSpecificObject(CObject::TYPE::ENEMY))
 		{
-			// 消滅
+			// 消滅設定
 			if (m_pPopUp)
 			{
-				m_pPopUp->Disappear();
+				m_pPopUp->SetDisappear();
 				m_pPopUp = nullptr;
 			}
 
@@ -693,10 +693,10 @@ void CField_Manager::UpdatePhase()
 		// 最初の右のブロックより戻ったら
 		if (m_pSyncPlayer->GetDirection() < D3DX_PI * -0.4f)
 		{
-			// 消滅
+			// 消滅設定
 			if (m_pPopUp)
 			{
-				m_pPopUp->Disappear();
+				m_pPopUp->SetDisappear();
 				m_pPopUp = nullptr;
 			}
 
@@ -753,10 +753,10 @@ void CField_Manager::UpdatePhase()
 				// アイテムに接近したら
 				if (m_pFan->DetectInFanRange(pItem->GetPos()))
 				{
-					// 消滅
+					// 消滅設定
 					if (m_pPopUp)
 					{
-						m_pPopUp->Disappear();
+						m_pPopUp->SetDisappear();
 						m_pPopUp = nullptr;
 					}
 
@@ -816,10 +816,10 @@ void CField_Manager::UpdatePhase()
 				// アイテムに接近したら
 				if (m_pFan->DetectInFanRange(pItem->GetPos()))
 				{
-					// 消滅
+					// 消滅設定
 					if (m_pPopUp)
 					{
-						m_pPopUp->Disappear();
+						m_pPopUp->SetDisappear();
 						m_pPopUp = nullptr;
 					}
 
@@ -873,10 +873,10 @@ void CField_Manager::UpdatePhase()
 			// アイテムオブジェクトが無くなっていたら
 			if (!pObj)
 			{
-				// 消滅
+				// 消滅設定
 				if (m_pPopUp)
 				{
-					m_pPopUp->Disappear();
+					m_pPopUp->SetDisappear();
 					m_pPopUp = nullptr;
 				}
 
@@ -907,10 +907,10 @@ void CField_Manager::UpdatePhase()
 		// ある程度移動していたら
 		if (m_nCntDestroyBlock > 25)
 		{
-			// 消滅
+			// 消滅設定
 			if (m_pPopUp)
 			{
-				m_pPopUp->Disappear();
+				m_pPopUp->SetDisappear();
 				m_pPopUp = nullptr;
 			}
 
