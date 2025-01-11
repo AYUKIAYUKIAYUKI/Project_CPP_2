@@ -11,6 +11,9 @@
 #include "life.h"
 #include "renderer.h"
 
+// 取得効果用
+#include "player.h"
+
 //****************************************************
 // usingディレクティブ
 //****************************************************
@@ -126,5 +129,16 @@ CLife* CLife::Create()
 //============================================================================
 void CLife::GainEffect()
 {
+	// プレイヤーを検索
+	CObject* pFindPlayer = CObject::FindSpecificObject(CObject::TYPE::PLAYER);
 
+	// プレイヤーを発見出来たら
+	if (pFindPlayer)
+	{
+		// プレイヤークラスにダウンキャスト
+		CPlayer* pPlayer = utility::DownCast<CPlayer, CObject>(pFindPlayer);
+
+		// 体力を回復
+		pPlayer->SetLife(CPlayer::MAX_LIFE);
+	}
 }
