@@ -124,8 +124,12 @@ void CRenderer::Draw()
 
 	while (pObj != nullptr)
 	{
+		// タイプを取得
+		CObject::TYPE Type = pObj->GetType();
+
 		// テキストタイプのオブジェクトなら
-		if (pObj->GetType() == CObject::TYPE::TEXT)
+		if (Type == CObject::TYPE::TEXTMESH ||
+			Type == CObject::TYPE::ONLYTEXT)
 		{
 			// テキストメッシュクラスにダウンキャスト
 			CObject_TextMesh* pTextMesh = utility::DownCast<CObject_TextMesh, CObject>(pObj);
@@ -166,8 +170,12 @@ void CRenderer::Draw()
 				// 全オブジェクトの描画 (幻想的なな雰囲気が出るが重くなりそう)
 				CObject::DrawAll();
 #else
-				// 特別なオブジェクトを後描画
-				CObject::LateDrawAll();
+				// タイプがテキストのみでなければ
+				if (Type != CObject::TYPE::ONLYTEXT)
+				{
+					// 特別なオブジェクトを後描画
+					CObject::LateDrawAll();
+				}
 #endif
 				// メッシュにテキストを描画
 				m_pFont->DrawText(NULL, pTextMesh->GetText().c_str(), -1, &Rect, DT_CENTER | DT_VCENTER, D3DCOLOR_RGBA(255, 255, 255, 255));

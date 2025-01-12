@@ -36,6 +36,7 @@ CObject_TextMesh::CObject_TextMesh(LAYER Priority) :
 	m_nCntDisp{ 0 },
 	m_nTextSpeed{ 0 },
 	m_nTextDelay{ 0 },
+	m_nTimer{ -1 },
 	m_TextSize{ VEC2_INIT },
 	m_MeshSize{ VEC3_INIT },
 	m_Rot{ VEC3_INIT },
@@ -73,8 +74,8 @@ HRESULT CObject_TextMesh::Init()
 		return E_FAIL;
 	}
 
-	// テキストタイプに設定
-	SetType(TYPE::TEXT);
+	// テキストメッシュタイプに設定
+	SetType(TYPE::TEXTMESH);
 
 	return S_OK;
 }
@@ -97,6 +98,12 @@ void CObject_TextMesh::Uninit()
 //============================================================================
 void CObject_TextMesh::Update()
 {
+	// 時間経過で消滅
+	if (m_nTimer != -1)
+	{
+		DisapperByTimer();
+	}
+
 	// テキスト送り
 	TextAnimation();
 
@@ -234,6 +241,14 @@ void CObject_TextMesh::SetTextTarget(std::string Text)
 }
 
 //============================================================================
+// タイマーを設定
+//============================================================================
+void CObject_TextMesh::SetTimer(int nTimer)
+{
+	m_nTimer = nTimer;
+}
+
+//============================================================================
 // テキストサイズ取得
 //============================================================================
 const D3DXVECTOR2& CObject_TextMesh::GetTextSize() const
@@ -359,7 +374,8 @@ CObject_TextMesh* CObject_TextMesh::Create(JSON Json)
 		int
 			nTextSpeed = static_cast<int>(Json["TextSpeed"]),
 			nTextDelay = static_cast<int>(Json["TextDelay"]),
-			nInitTextDelay = static_cast<int>(Json["InitTextDelay"]);
+			nInitTextDelay = static_cast<int>(Json["InitTextDelay"]),
+			nTimer = static_cast<int>(Json["Timer"]);
 		Vec2
 			TextSize = utility::JsonConvertToVec2(Json["TextSize"]);
 		Vec3
@@ -373,7 +389,8 @@ CObject_TextMesh* CObject_TextMesh::Create(JSON Json)
 		pNewInstance->m_TextTarget = Text;			// 目標テキスト
 		pNewInstance->m_nTextSpeed = nTextSpeed;	// テキストスピード
 		pNewInstance->m_nTextDelay = nTextDelay;	// テキストディレイ
-		pNewInstance->m_nCntDisp = nInitTextDelay;	// テキストディレイ
+		pNewInstance->m_nCntDisp = nInitTextDelay;	// 初回テキストディレイ
+		pNewInstance->m_nTimer = nTimer;			// タイマー
 		pNewInstance->m_TextSize = TextSize;		// テキストサイズ
 		pNewInstance->m_MeshSize = MeshSize;		// メッシュサイズ
 		pNewInstance->m_Rot = Rot;					// 向き
@@ -472,6 +489,22 @@ HRESULT CObject_TextMesh::CreateTex()
 	m_pTex->GetSurfaceLevel(0, &m_pSurface);
 
 	return S_OK;
+}
+
+//============================================================================
+// 時間経過による消滅
+//============================================================================
+void CObject_TextMesh::DisapperByTimer()
+{
+	// タイマーをデクリメント
+	--m_nTimer;
+
+	// タイマーがゼロで
+	if (m_nTimer <= 0)
+	{
+		// テキストを破棄
+		SetRelease();
+	}
 }
 
 //============================================================================

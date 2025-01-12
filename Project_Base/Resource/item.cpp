@@ -289,11 +289,14 @@ void CItem::SetPosY(float fPosY)
 void CItem::DispGetText(const std::string& Str)
 {
 	// 表記を作成
-	CObject_TextMesh* pTextMesh = CObject_TextMesh::Create(utility::OpenJsonFile(Str));
+	CObject_TextMesh* pDispText = CObject_TextMesh::Create(utility::OpenJsonFile(Str));
+
+	// タイプ変更し、テキストの背景への書き込みをしない
+	pDispText->SetType(CObject::TYPE::ONLYTEXT);
 
 	// 表示場所を魔法陣に揃える
-	pTextMesh->SetPos(m_pSummoning->GetPos());
-	pTextMesh->SetRot(m_pSummoning->GetRot());
+	pDispText->SetPos(m_pSummoning->GetPos() * 1.05f);
+	pDispText->SetRot(m_pSummoning->GetRot());
 }
 
 //============================================================================

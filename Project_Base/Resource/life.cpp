@@ -142,6 +142,6 @@ void CLife::GainEffect()
 		pPlayer->SetLife(CPlayer::MAX_LIFE);
 
 		// 取得時のテキストを表示
-		DispGetText("Data\\JSON\\TEXTMESH\\get_life.json");
+		DispGetText("Data\\JSON\\TEXTMESH\\text_getlife.json");
 	}
 }

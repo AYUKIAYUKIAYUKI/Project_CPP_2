@@ -41,6 +41,9 @@ public:
 	const std::string& GetTextTarget() const;	// 目標テキストを取得
 	void SetTextTarget(std::string Text);		// 目標テキストを設定
 
+	// <timer -> setter>
+	void SetTimer(int nTimer);	// タイマーを設定
+ 
 	// <getter/setter>
 	const D3DXVECTOR2& GetTextSize() const;	// テキストサイズ取得
 	void SetTextSize(D3DXVECTOR2 Size);		// テキストサイズ設定
@@ -82,6 +85,7 @@ private:
 	// <function>
 	HRESULT CreateVtxBuff();	// 頂点バッファの生成
 	HRESULT CreateTex();		// テクスチャの生成
+	void	DisapperByTimer();	// 時間経過による消滅
 	void	TextAnimation();	// テキスト送り
 	void	SetMtxWorld();		// ワールド行列設定
 
@@ -94,6 +98,7 @@ private:
 	int						m_nCntDisp;		// テキスト送りカウント
 	int						m_nTextSpeed;	// テキストスピード
 	int						m_nTextDelay;	// テキストディレイ
+	int						m_nTimer;		// タイマー
 	D3DXVECTOR2				m_TextSize;		// テキストサイズ
 	D3DXVECTOR3				m_MeshSize;		// メッシュサイズ
 	D3DXVECTOR3				m_Rot;			// 向き
