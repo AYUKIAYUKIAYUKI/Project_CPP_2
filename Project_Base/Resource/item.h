@@ -58,6 +58,10 @@ public:
 	// <setter>
 	void SetPosY(float fPosY);	// Y座標を設定
 
+protected:
+
+	void DispGetText(const std::string& Str);	// 取得時のテキストを表示
+
 private:
 
 	// <function>

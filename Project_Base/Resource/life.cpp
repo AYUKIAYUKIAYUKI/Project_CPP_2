@@ -140,5 +140,8 @@ void CLife::GainEffect()
 
 		// 体力を回復
 		pPlayer->SetLife(CPlayer::MAX_LIFE);
+
+		// 取得時のテキストを表示
+		DispGetText("Data\\JSON\\TEXTMESH\\get_life.json");
 	}
 }

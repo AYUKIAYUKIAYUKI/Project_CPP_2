@@ -21,6 +21,7 @@ namespace
 // インクルードファイル
 //****************************************************
 #include "item.h"
+#include "object_TextMesh.h"
 #include "summoning.h"
 #include "bounding_sphere.h"
 #include "sound.h"
@@ -274,6 +275,25 @@ void CItem::SetPosY(float fPosY)
 
 	// 目標座標も同時に設定
 	m_PosTarget.y = fPosY;
+}
+
+//============================================================================
+// 
+// protectedメンバ
+// 
+//============================================================================
+
+//============================================================================
+// 取得時のテキストを表示
+//============================================================================
+void CItem::DispGetText(const std::string& Str)
+{
+	// 表記を作成
+	CObject_TextMesh* pTextMesh = CObject_TextMesh::Create(utility::OpenJsonFile(Str));
+
+	// 表示場所を魔法陣に揃える
+	pTextMesh->SetPos(m_pSummoning->GetPos());
+	pTextMesh->SetRot(m_pSummoning->GetRot());
 }
 
 //============================================================================

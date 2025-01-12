@@ -540,6 +540,16 @@ void CField_Manager::UpdatePhase()
 		m_nPhase = 11;
 	}
 
+#ifdef _DEBUG
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Skip Phase")) {
+		if (ImGui::Button("Skip to 5")) {
+			m_nPhase = 5;
+		}
+		ImGui::End();
+	}
+#endif // _DEBUG
+
 	// ブロックの破壊量が最大で強制的に最終フェーズへ
 	if (m_nCntDestroyBlock >= MAX_DESTROY_BLOCK)
 	{
