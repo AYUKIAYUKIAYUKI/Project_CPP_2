@@ -16,8 +16,11 @@
 #include "player_state_damage.h"
 #include "constellation.h"
 
-// フィールド取得用
+// フィールドパラメータ用
 #include "field_manager.h"
+
+// アクションデータ用
+#include "field_builder.h"
 
 // インプット取得用
 #include "manager.h"
@@ -42,7 +45,7 @@ CPlayer_State_Jump::CPlayer_State_Jump() :
 	m_bEndRemain{ false }
 {
 	// アクションデータのジャンプした回数をインクリメント
-	CField_Manager::GetInstance()->IncrementCntJump();
+	CField_Manager::GetInstance()->GetFieldBuilder()->IncrementCntJump();
 
 	// 飛び立ちモーションを再生
 	m_pCharacter->SetNowMotion(7);

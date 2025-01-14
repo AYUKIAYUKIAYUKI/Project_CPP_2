@@ -14,8 +14,9 @@
 #include "sound.h"
 #include "constellation.h"
 
-// フィールドサイズ取得用
+// アクションデータ用
 #include "field_manager.h"
+#include "field_builder.h"
 
 // インプット取得用
 #include "manager.h"
@@ -39,7 +40,7 @@ CPlayer_State_Dash::CPlayer_State_Dash() :
 	m_bDirection{ false }
 {
 	// アクションデータのダッシュした回数をインクリメント
-	CField_Manager::GetInstance()->IncrementCntDash();
+	CField_Manager::GetInstance()->GetFieldBuilder()->IncrementCntDash();
 
 	// 左右の入力に合わせて移動方向のフラグを変更
 	if (CManager::GetKeyboard()->GetPress(DIK_A) || CManager::GetKeyboard()->GetRelease(DIK_A))

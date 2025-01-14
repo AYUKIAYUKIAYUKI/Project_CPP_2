@@ -10,6 +10,7 @@
 //****************************************************
 #include "HUD_manager.h"
 #include "field_manager.h"
+#include "field_builder.h"
 #include "object_HUD.h"
 #include "manager.h"
 #include "renderer.h"
@@ -467,13 +468,13 @@ void CHUD_Manager::UpdateBossGaugeBar()
 	}
 
 	// 破壊したブロック数をコピー
-	float nCntDestroyBlock = static_cast<float>(CField_Manager::GetInstance()->GetCntDestroyBlock());
+	float fCntDestroyBlock = static_cast<float>(CField_Manager::GetInstance()->GetFieldBuilder()->GetCntDestroyBlock());
 
 	{ // 目標サイズを設定
 
 		// 基礎サイズを最大カウント数で割る→1カウント当たりのサイズを出す→現在のカウント数分のサイズに設定
 		Vec3 SizeTarget = m_pBossGaugeBar->GetSizeTarget();
-		SizeTarget.x = nCntDestroyBlock * (utility::JsonConvertToVec3(m_BossGaugeBarParam["SizeTarget"]).x / CField_Manager::MAX_DESTROY_BLOCK);
+		SizeTarget.x = fCntDestroyBlock * (utility::JsonConvertToVec3(m_BossGaugeBarParam["SizeTarget"]).x / CField_Manager::MAX_DESTROY_BLOCK);
 		m_pBossGaugeBar->SetSizeTarget(SizeTarget);
 	}
 
@@ -492,7 +493,7 @@ void CHUD_Manager::UpdateBossGaugeBar()
 
 		// 実値を直接変更するので、目標値への補間はここで行う
 		Vec2 TexSize = m_pBossGaugeBar->GetTexSize();
-		TexSize.x += (1.0f - (nCntDestroyBlock * (1.0f / CField_Manager::MAX_DESTROY_BLOCK)) - TexSize.x) * static_cast<float>(m_BossGaugeBarParam["CorrectionCoef"]);
+		TexSize.x += (1.0f - (fCntDestroyBlock * (1.0f / CField_Manager::MAX_DESTROY_BLOCK)) - TexSize.x) * static_cast<float>(m_BossGaugeBarParam["CorrectionCoef"]);
 		m_pBossGaugeBar->SetTexSize(TexSize);
 	}
 }

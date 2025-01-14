@@ -173,10 +173,7 @@ CGame::~CGame()
 // 初期設定
 //============================================================================
 HRESULT CGame::Init()
-{
-	// フィールドマネージャーのゲーム用初期設定
-	CField_Manager::GetInstance()->InitForGame();
- 
+{ 
 	// プレイヤーを生成
 	CPlayer* pPlayer = CPlayer::Create();
 
@@ -190,6 +187,9 @@ HRESULT CGame::Init()
 
 	// フィールドマネージャーにプレイヤーをセット
 	CField_Manager::GetInstance()->SetSyncPlayer(m_pPlayerPtr);
+
+	// フィールドマネージャーのゲーム用初期設定
+	CField_Manager::GetInstance()->InitForGame();
 
 	// HUDマネージャーにプレイヤーをセット
 	CHUD_Manager::GetInstance()->SetSyncPlayer(m_pPlayerPtr);

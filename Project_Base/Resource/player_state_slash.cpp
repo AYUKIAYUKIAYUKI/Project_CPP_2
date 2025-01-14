@@ -22,6 +22,9 @@
 #include "monster.h"
 #include "boss.h"
 
+// アクションデータ用
+#include "field_builder.h"
+
 //****************************************************
 // usingディレクティブ
 //****************************************************
@@ -42,7 +45,7 @@ CPlayer_State_Slash::CPlayer_State_Slash() :
 	m_pBndSlash{ std::make_unique<CBounding_Sphere>() }
 {
 	// アクションデータのジャンプした回数をインクリメント
-	CField_Manager::GetInstance()->IncrementCntSlash();
+	CField_Manager::GetInstance()->GetFieldBuilder()->IncrementCntSlash();
 
 	// 斬撃のバウンディングのサイズを設定
 	m_pBndSlash->SetRadius(5.0f);

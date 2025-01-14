@@ -217,6 +217,7 @@
     <ClCompile Include="Resource\bright.cpp">
       <Filter>&lt;Stage&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\field_builder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -438,6 +439,7 @@
     <ClInclude Include="Resource\bright.h">
       <Filter>&lt;Stage&gt;</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\field_builder.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Object&gt;">

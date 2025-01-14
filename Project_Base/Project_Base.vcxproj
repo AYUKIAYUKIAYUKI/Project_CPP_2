@@ -35,6 +35,7 @@
     <ClCompile Include="Resource\character_motion.cpp" />
     <ClCompile Include="Resource\collision.cpp" />
     <ClCompile Include="Resource\constellation.cpp" />
+    <ClCompile Include="Resource\field_builder.cpp" />
     <ClCompile Include="Resource\flyer.cpp" />
     <ClCompile Include="Resource\ghost.cpp" />
     <ClCompile Include="Resource\HUD_manager.cpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="Resource\character_motion.h" />
     <ClInclude Include="Resource\collision.h" />
     <ClInclude Include="Resource\constellation.h" />
+    <ClInclude Include="Resource\field_builder.h" />
     <ClInclude Include="Resource\flyer.h" />
     <ClInclude Include="Resource\ghost.h" />
     <ClInclude Include="Resource\HUD_manager.h" />

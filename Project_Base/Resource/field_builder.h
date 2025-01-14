@@ -1,0 +1,101 @@
+//============================================================================
+// 
+// フィールドビルダー、ヘッダファイル [field_builder.h]
+// Author : 福田歩希
+// 
+//============================================================================
+
+#ifndef _FIELD_BUILDER_H_
+#define _FIELD_BUILDER_H_	// 二重インクルード防止
+
+//****************************************************
+// 前方宣言
+//****************************************************
+class CPlayer;
+class CFan;
+
+//****************************************************
+// フィールドビルダークラス
+//****************************************************
+class CField_Builder
+{
+public:
+
+	// <special function>
+	CField_Builder(const CField_Builder&) = delete;				// コピーコンストラクタ
+	CField_Builder& operator=(const CField_Builder&) = delete;	// コピー代入演算子
+	CField_Builder(CField_Builder&&) = delete;					// ムーブコンストラクタ
+	CField_Builder& operator=(CField_Builder&&) = delete;		// ムーブ代入演算子
+
+	// <function>
+	void Release();				// 解放
+	void Update();				// 更新処理
+	void Draw();				// 描画処理
+	void IncrementCntJump();	// ジャンプした回数のインクリメント
+	void IncrementCntDash();	// ダッシュした回数のインクリメント
+	void IncrementCntSlash();	// 攻撃した回数のインクリメント
+
+	// <getter>
+	int GetCntDestroyBlock() ;	// ブロックの破壊数を取得
+
+	// <setter>
+	void SetSyncPlayer(const CPlayer* const pPlayer);	// プレイヤーをセット
+
+	// <static function>
+	static CField_Builder* Create();	// 生成
+
+	//// <static getter>
+	//static CField_Builder* GetInstance();	// フィールドマネージャーを取得
+
+private:
+
+	//****************************************************
+	// アクションデータ構造体の定義
+	//****************************************************
+	struct ActionData
+	{
+		int nCntJump;	// ジャンプした回数
+		int nCntDash;	// ダッシュした回数
+		int nCntSlash;	// 攻撃した回数
+	};
+
+	//****************************************************
+	// フィールドタイプの定義
+	//****************************************************
+	enum class FIELD_TYPE : WORD
+	{
+		NORMAL, // 普通
+		JUMP,	// ジャンプ
+		DASH,	// ダッシュ
+		MAX
+	};
+
+	// <special function>
+	CField_Builder();	// コンストラクタ
+	~CField_Builder();	// デストラクタ
+
+	// <function>
+	HRESULT Init();								// 初期設定
+	void	Uninit();							// 終了処理
+	void	UpdateFan();						// 扇形の更新
+	void	UpdateField();						// フィールド更新
+	void	BranchFieldType();					// フィールドタイプ分岐
+	void	AutoCreateItem();					// アイテムの自動生成
+	void	AutoCreateBlockDash();				// ダッシュタイプのブロック自動生成
+	bool	DetectNearBlock(D3DXVECTOR3 Pos);	// 隣接し合うブロックを検出
+	void	AutoDestroyBlock();					// ブロックの自動削除
+	void	DestroyAllBlock();					// 全ブロックの削除
+	void	PrintDebug();						// デバッグ表示
+
+	// <data>
+	ActionData	   m_ActionData;		// アクションデータ
+	int			   m_nCntDestroyBlock;	// ブロックの破壊数
+	FIELD_TYPE	   m_FiledType;			/* 変更予定 */
+	const CPlayer* m_pSyncPlayer;		// プレイヤーのポインタ
+	CFan*		   m_pFan;				// 扇形範囲
+
+	//// <static data>
+	//static CField_Builder* m_pFieldBuilder;	// フィールドビルダーの本体 
+};
+
+#endif // _FIELD_BUILEDER_H_

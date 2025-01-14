@@ -9,30 +9,35 @@
 // インクルードファイル
 //****************************************************
 #include "field_manager.h"
+#include "field_builder.h"
+#include "object_HUD.h"
+#include "object_PopUp.h"
+#include "motion_set.h"
+#include "player.h"
+
+// システム部分
 #include "manager.h"
 #include "renderer.h"
-#include "scene.h"
+//#include "scene.h"
 #include "sound.h"
 #include "game.h"
-#include "object_PopUp.h"
-#include "object_HUD.h"
-#include "motion_set.h"
-#include "fan.h"
-#include "player.h"
-#include "monster.h"
-#include "ghost.h"
-#include "flyer.h"
+
+// 生成オブジェクト
 #include "boss.h"
 #include "block.h"
 #include "life.h"
 #include "bright.h"
 #include "sparks.h"
 
-// ブロック調整用
+/* デバッグ用 */
 namespace
 {
-	CBlock* pBlock_DBG = nullptr;
+	// 初期配置ブロックの調整蝶ポインタ
+	CBlock* pAdjusrInitBlock = nullptr;
 }
+
+/* 修正用 */
+#define SAFE 0
 
 //****************************************************
 // usingディレクティブ
@@ -65,9 +70,34 @@ void CField_Manager::InitForTitle()
 //============================================================================
 void CField_Manager::InitForGame()
 {
+	if (!m_pFieldBuilder)
+	{
+		// フィールドビルダーの生成
+		m_pFieldBuilder = CField_Builder::Create();
+
+		// フィールドビルダーにプレイヤーをセット
+		m_pFieldBuilder->SetSyncPlayer(m_pSyncPlayer);
+	}
+
 	// 初期ブロックのセット
 	InitBlockSet();
 }
+
+////============================================================================
+//// ゲーム向け追加終了処理
+////============================================================================
+//void CField_Manager::UninitForGame()
+//{
+//	// フィールドビルダーの破棄
+//	if (m_pFieldBuilder)
+//	{
+//		// 解放処理
+//		m_pFieldBuilder->Release();
+//
+//		// ポインタを初期化
+//		m_pFieldBuilder = nullptr;
+//	}
+//}
 
 //============================================================================
 // 更新処理
@@ -84,21 +114,18 @@ void CField_Manager::Update()
 	// 環境装飾の更新
 	UpdateEnvironment();
 
-	// 扇形の更新
-	UpdateFan();
-
 	// 4フェーズ以降に進行していたら
 	if (m_nPhase >= 4)
 	{
-		// フィールド更新
-		UpdateField();
+		// フィールドビルダーの更新
+		m_pFieldBuilder->Update();
 
 		// ボス登場イベント
 		AppearBossEvent();
 	}
 
-	// 遷移を通知する
-	NotifyTransition();
+	// シーン遷移を通知する
+	NotifySceneTransition();
 
 #ifdef _DEBUG
 	// デバッグ表示
@@ -111,10 +138,8 @@ void CField_Manager::Update()
 //============================================================================
 void CField_Manager::Draw()
 {
-#ifdef _DEBUG
-	// 扇形範囲の描画
-	m_pFan->Draw();
-#endif // _DEBUG
+	// フィールドビルダーの描画処理
+	m_pFieldBuilder->Draw();
 }
 
 //============================================================================
@@ -145,35 +170,11 @@ bool CField_Manager::AdjustPosToFieldSize(CObject* pObj)
 }
 
 //============================================================================
-// ジャンプした回数のインクリメント
+// フィールドビルダーの取得
 //============================================================================
-void CField_Manager::IncrementCntJump()
+CField_Builder* const CField_Manager::GetFieldBuilder() const
 {
-	++m_ActionData.nCntJump;
-}
-
-//============================================================================
-// ダッシュした回数のインクリメント
-//============================================================================
-void CField_Manager::IncrementCntDash()
-{
-	++m_ActionData.nCntDash;
-}
-
-//============================================================================
-// 攻撃した回数のインクリメント
-//============================================================================
-void CField_Manager::IncrementCntSlash()
-{
-	++m_ActionData.nCntSlash;
-}
-
-//============================================================================
-// ブロックの破壊数を取得
-//============================================================================
-int CField_Manager::GetCntDestroyBlock()
-{
-	return m_nCntDestroyBlock;
+	return m_pFieldBuilder;
 }
 
 //============================================================================
@@ -263,20 +264,14 @@ CField_Manager* CField_Manager::GetInstance()
 // コンストラクタ
 //============================================================================
 CField_Manager::CField_Manager() :
+	m_pFieldBuilder{ nullptr },
 	m_nPhase{ 0 },
 	m_bFirstItem{ false },
 	m_pPopUp{ nullptr },
-	m_FiledType{ FIELD_TYPE::NORMAL },
-	m_nCntDestroyBlock{ 0 },
-	m_pSyncPlayer{ nullptr },
 	m_pStatue{ nullptr },
 	m_nCntStatueVibration{ 0 },
-	m_pFan{ nullptr }
+	m_pSyncPlayer{ nullptr }
 {
-	// アクションデータの初期化
-	m_ActionData.nCntDash = 0;
-	m_ActionData.nCntJump = 0;
-	m_ActionData.nCntSlash = 0;
 }
 
 //============================================================================
@@ -292,8 +287,7 @@ CField_Manager::~CField_Manager()
 //============================================================================
 HRESULT CField_Manager::Init()
 {
-	// 扇形範囲を生成
-	m_pFan = CFan::Create();
+	/* 現在は無し */
 
 	return S_OK;
 }
@@ -441,8 +435,6 @@ void CField_Manager::InitBlockSet()
 		// ブロックを生成
 		CBlock* pBlock = CBlock::Create(NewPos, NewRot);
 
-		pBlock_DBG = pBlock;
-
 		// ブロックタイプを固定
 		if (pBlock->GetModelType() != CX_Manager::TYPE::BLOTALL)
 		{
@@ -520,11 +512,14 @@ void CField_Manager::InitBlockSet()
 //============================================================================
 void CField_Manager::Uninit()
 {
-	// 扇形範囲を破棄
-	if (m_pFan != nullptr)
+	// フィールドビルダーの破棄
+	if (m_pFieldBuilder)
 	{
-		m_pFan->Release();	// 解放
-		m_pFan = nullptr;	// ポインタを初期化
+		// 解放処理
+		m_pFieldBuilder->Release();
+	
+		// ポインタを初期化
+		m_pFieldBuilder = nullptr;
 	}
 }
 
@@ -540,18 +535,11 @@ void CField_Manager::UpdatePhase()
 		m_nPhase = 11;
 	}
 
-#ifdef _DEBUG
-	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("Skip Phase")) {
-		if (ImGui::Button("Skip to 5")) {
-			m_nPhase = 5;
-		}
-		ImGui::End();
-	}
-#endif // _DEBUG
+	/* ブロックの破壊量を取得 */
+	const int nCntDestroyBlock = m_pFieldBuilder->GetCntDestroyBlock();
 
-	// ブロックの破壊量が最大で強制的に最終フェーズへ
-	if (m_nCntDestroyBlock >= MAX_DESTROY_BLOCK)
+	/* ブロックの破壊量が最大で強制的に最終フェーズへ */
+	if (nCntDestroyBlock >= MAX_DESTROY_BLOCK)
 	{
 		m_nPhase = 10;
 	}
@@ -719,7 +707,7 @@ void CField_Manager::UpdatePhase()
 	case 4:
 
 		// 移動による地形の再生成が、多少行われていた痕跡があれば
-		if (m_nCntDestroyBlock >= 10)
+		if (nCntDestroyBlock >= 10)
 		{
 			// 次のフェーズへ
 			++m_nPhase;
@@ -757,6 +745,7 @@ void CField_Manager::UpdatePhase()
 			// アイテムオブジェクトが発見出来たら
 			if (pObj)
 			{
+#if SAFE
 				// アイテムクラスにダウンキャスト
 				CItem* pItem = utility::DownCast<CItem, CObject>(pObj);
 
@@ -773,6 +762,7 @@ void CField_Manager::UpdatePhase()
 					// 次のフェーズへ
 					++m_nPhase;
 				}
+#endif // SAFE
 			}
 		}
 
@@ -820,6 +810,7 @@ void CField_Manager::UpdatePhase()
 			// アイテムオブジェクトが発見出来たら
 			if (pObj)
 			{
+#if SAFE
 				// アイテムクラスにダウンキャスト
 				CItem* pItem = utility::DownCast<CItem, CObject>(pObj);
 
@@ -836,6 +827,7 @@ void CField_Manager::UpdatePhase()
 					// 次のフェーズへ
 					++m_nPhase;
 				}
+#endif // SAFE
 			}
 		}
 
@@ -915,7 +907,7 @@ void CField_Manager::UpdatePhase()
 		}
 
 		// ある程度移動していたら
-		if (m_nCntDestroyBlock > 25)
+		if (nCntDestroyBlock > 25)
 		{
 			// 消滅設定
 			if (m_pPopUp)
@@ -930,17 +922,6 @@ void CField_Manager::UpdatePhase()
 
 		break;
 	}
-
-#ifdef _DEBUG
-	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("Block Edit")) {
-		if (!pBlock_DBG)
-		{
-			
-		}
-		ImGui::End();
-	}
-#endif // _DEBUG
 }
 
 //============================================================================
@@ -950,270 +931,6 @@ void CField_Manager::UpdateEnvironment()
 {
 	// 火の粉を生成
 	CSparks::AutoGenerate();
-}
-
-//============================================================================
-// 扇形の更新
-//============================================================================
-void CField_Manager::UpdateFan()
-{
-	// プレイヤー情報がセットされていなければ処理を行わない
-	if (m_pSyncPlayer == nullptr)
-		return;
-
-	// プレイヤーの現在の方角を扇形の方角にする
-	m_pFan->SetDirection(m_pSyncPlayer->GetDirection());
-
-	// 扇形範囲の更新処理
-	m_pFan->Update();
-}
-
-//============================================================================
-// フィールド更新
-//============================================================================
-void CField_Manager::UpdateField()
-{
-	// ブロックの破壊カウントが上限に達していたら処理を行わない
-	if (m_nCntDestroyBlock >= MAX_DESTROY_BLOCK)
-		return;
-
-	// フィールドタイプの分岐
-	BranchFieldType();
-
-	// アイテムの自動生成
-	AutoCreateItem();
-
-	// プレイヤーの目標座標へのベクトルを作成
-	Vec3 Norm = m_pSyncPlayer->GetPosTarget() - m_pSyncPlayer->GetPos();
-
-	// プレイヤーの移動時のノルムに応じてブロック生成
-	if (Norm.x * Norm.x + Norm.z * Norm.z > 0.1f)
-	{
-		// ブロックの自動生成
-		AutoCreateBlockDash();
-	}
-
-	// ブロックの自動削除
-	AutoDestroyBlock();
-
-#ifdef _DEBUG	// ブロックを全削除
-	if (CManager::GetKeyboard()->GetTrigger(DIK_DELETE))
-		DestroyAllBlock();
-#endif // _DEBUG
-}
-
-//============================================================================
-// フィールドタイプの分岐
-//============================================================================
-void CField_Manager::BranchFieldType()
-{
-	/* ここは何らかの分岐を設定予定です */
-	m_FiledType = FIELD_TYPE::JUMP;
-}
-
-//============================================================================
-// アイテムの自動生成
-//============================================================================
-void CField_Manager::AutoCreateItem()
-{
-	// 既にアイテムが1つ以上存在していれば処理をしない
-	if (CObject::FindSpecificObject(CObject::TYPE::ITEM))
-		return;
-
-	// アイテム用ポインタ
-	CItem* pItem = nullptr;
-
-	// アイテムを生成
-	if (m_bFirstItem)
-	{
-		pItem = CLife::Create();
-
-		do { // この方角における座標が、扇形範囲内であれば方角を再抽選する
-
-			// 方角をランダムに設定
-			pItem->SetDirection(fabsf(utility::GetRandomValue<float>()));
-
-		} while (m_pFan->DetectInFanRange(pItem->GetPos()));
-
-		/* 応急処置 */
-		float fHeight = fabsf(utility::GetRandomValue<float>());
-		if (fHeight >= 125.0f)
-		{
-			fHeight = 125.0f;
-		}
-
-		// Y座標をランダムに設定
-		pItem->SetPosY(fHeight);
-
-		// 描画前に一度更新
-		pItem->Update();
-	}
-	else
-	{ // 初回のみ定位置に生成する
-
-		pItem = CLife::Create();
-
-		// 方角を設定
-		pItem->SetDirection(D3DX_PI * 0.5f);
-
-		// 高さに設定
-		pItem->SetPosY(100.0f);
-
-		// 描画前に一度更新
-		pItem->Update();
-
-		// 最初のアイテムの生成完了
-		m_bFirstItem = true;
-	}
-
-	// アイテム出現音を鳴らす
-	CSound::GetInstance()->Play(CSound::LABEL::IAPPEAR);
-}
-
-//============================================================================
-// ダッシュタイプの自動生成
-//============================================================================
-void CField_Manager::AutoCreateBlockDash()
-{
-	// 生成座標計算用 ((方角 + 扇形幅の角度)の場所が生成ポイント)
-	float fDirection = m_pSyncPlayer->GetDirection();	// プレイヤーの現在の方角をコピー
-	float fRange = m_pFan->GetRange();					// 扇形範囲の幅をコピー
-	Vec3  NewPos = VEC3_INIT, NewRot = VEC3_INIT;		// ブロック用の座標・向きを作成
-
-	// 現在座標と目標座標に対し原点からの方向ベクトルを作成
-	Vec3 OldVec = m_pSyncPlayer->GetPos() - VEC3_INIT, NewVec = m_pSyncPlayer->GetPosTarget() - VEC3_INIT;
-	D3DXVec3Normalize(&OldVec, &OldVec);
-	D3DXVec3Normalize(&NewVec, &NewVec);
-
-	// 2本の方向ベクトルの外積を作成
-	float fCross = (OldVec.x * NewVec.z) - (OldVec.z * NewVec.x);
-
-	// 左に移動している場合角度を反転させる
-	if (fCross < 0.0f)
-		fRange = -fRange;
-
-	// 破棄範囲にはみ出さず生成されるように調整
-	/* 初期座標が原点の場合、生成範囲の半径がフィールドの半径を下回ると無限ループ */
-	do
-	{
-		// 生成用の座標を決定
-		NewPos.x = cosf(fDirection + fRange) * FIELD_RADIUS;
-		NewPos.y = fabsf(utility::GetRandomValue<float>());
-		NewPos.z = sinf(fDirection + fRange) * FIELD_RADIUS;
-
-		// ブロック同士の幅を検出
-		if (DetectNearBlock(NewPos))
-		{
-			return;
-		}
-
-	} while (!m_pFan->DetectInFanRange(NewPos));
-
-	// 向きを決定
-	NewRot.y = atan2f(-NewPos.x, -NewPos.z);
-
-	// ブロックを生成
-	CBlock::Create(NewPos, NewRot);
-}
-
-//============================================================================
-// 隣接し合うブロックを検出
-//============================================================================
-bool CField_Manager::DetectNearBlock(D3DXVECTOR3 Pos)
-{
-	// 通常優先度のオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
-
-	while (pObj != nullptr)
-	{
-		if (pObj->GetType() == CObject::TYPE::BLOCK)
-		{
-			// オブジェクトをブロックタグにダウンキャスト
-			CBlock* pBlock = nullptr;
-			pBlock = utility::DownCast(pBlock, pObj);
-
-			// お互いの距離を求める
-			const Vec3& Vec = pBlock->GetPos() - Pos;
-
-			// ブロックのサイズをコピー
-			const Vec3& Size = pBlock->GetSize();
-
-			// ブロックのサイズぐらいに近づいていたら
-			if ((Vec.x * Vec.x + Vec.y * Vec.y + Vec.z * Vec.z) <= (Size.x * Size.x + Size.y * Size.y + Size.z * Size.z) * 10.0f)
-			{
-				// 座標の生成をやり直す
-				return 1;
-			}
-		}
-
-		pObj = pObj->GetNext();
-	}
-
-	return 0;
-}
-
-//============================================================================
-// ブロックの自動削除
-//============================================================================
-void CField_Manager::AutoDestroyBlock()
-{
-	// 通常優先度のオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
-
-	while (pObj != nullptr)
-	{
-		if (pObj->GetType() == CObject::TYPE::BLOCK)
-		{
-			// オブジェクトをブロックタグにダウンキャスト
-			CBlock* pBlock = nullptr;
-			pBlock = utility::DownCast(pBlock, pObj);
-
-			if (!m_pFan->DetectInFanRange(pBlock->GetPos()))
-			{ // 扇形の範囲内にブロックが無ければ
-
-				// ブロックを破棄
-				pBlock->SetRelease();
-				
-				// ブロックの破壊カウントを増加
-				++m_nCntDestroyBlock;
-
-				// ブロックの破壊数カウントが最大で
-				if (m_nCntDestroyBlock >= MAX_DESTROY_BLOCK)
-				{
-					// 銅像を振動モーションに変更
-					m_pStatue->SetNowMotion(0);
-
-					// 全ブロックを破壊
-					DestroyAllBlock();
-
-					// 処理を強制終了
-					return;
-				}
-			}
-		}
-
-		pObj = pObj->GetNext();
-	}
-}
-
-//============================================================================
-// 全ブロックの削除
-//============================================================================
-void CField_Manager::DestroyAllBlock()
-{
-	// 通常優先度のオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
-
-	while (pObj != nullptr)
-	{
-		if (pObj->GetType() == CObject::TYPE::BLOCK)
-		{
-			// 破棄予約
-			pObj->SetRelease();
-		}
-
-		pObj = pObj->GetNext();
-	}
 }
 
 //============================================================================
@@ -1277,9 +994,9 @@ void CField_Manager::AppearBossEvent()
 }
 
 //============================================================================
-// 遷移を通知する
+// シーン遷移を通知する
 //============================================================================
-void CField_Manager::NotifyTransition()
+void CField_Manager::NotifySceneTransition()
 {
 	// プレイヤー情報がセットされていなければ処理を行わない
 	if (m_pSyncPlayer == nullptr)
@@ -1301,28 +1018,34 @@ void CField_Manager::NotifyTransition()
 //============================================================================
 void CField_Manager::PrintDebug()
 {
-	// 外積確認用
-	Vec3 OldVec = m_pSyncPlayer->GetPos() - VEC3_INIT, NewVec = m_pSyncPlayer->GetPosTarget() - VEC3_INIT;
-	D3DXVec3Normalize(&OldVec, &OldVec);
-	D3DXVec3Normalize(&NewVec, &NewVec);
-	float fCross = (OldVec.x * NewVec.z) - (OldVec.z * NewVec.x);
-
-	// ノルム確認用
-	Vec3 Norm = m_pSyncPlayer->GetPosTarget() - m_pSyncPlayer->GetPos();
-
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("Field Data")) {
-		ImGui::Text("DestroyBlock:%d", m_nCntDestroyBlock);
+	if (ImGui::Begin("Field Manager Data")) {
 		ImGui::Text("Phase:%d", m_nPhase);
-		ImGui::Text("CountJump:%d", m_ActionData.nCntJump);
-		ImGui::Text("CountDash:%d", m_ActionData.nCntDash);
-		ImGui::Text("FieldType:%d", m_FiledType);
-		ImGui::Text("Cross:%f", fCross);
-		ImGui::Text("Norm:%f", Norm.x * Norm.x + Norm.z * Norm.z);
 		ImGui::End();
 	}
 
-	// ボスを呼び出すデバッグコマンド
+#if 1	// フェーズスキップ
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Skip Phase")) {
+		if (ImGui::Button("Skip to 5")) {
+			m_nPhase = 5;
+		}
+		ImGui::End();
+	}
+#endif
+
+#if 0	// 初期配置ブロックの調整
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("InitBlock Edit")) {
+		if (!pAdjusrInitBlock)
+		{
+
+		}
+		ImGui::End();
+	}
+#endif
+
+#if 0	// ボスを呼び出す
 	if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT) &&
 		CManager::GetKeyboard()->GetTrigger(DIK_SPACE))
 	{
@@ -1330,4 +1053,5 @@ void CField_Manager::PrintDebug()
 		m_pStatue->SetNowMotion(0);
 		DestroyAllBlock();
 	}
+#endif
 }
