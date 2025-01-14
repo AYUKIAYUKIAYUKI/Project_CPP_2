@@ -44,9 +44,6 @@ public:
 	// <static function>
 	static CField_Builder* Create();	// 生成
 
-	//// <static getter>
-	//static CField_Builder* GetInstance();	// フィールドマネージャーを取得
-
 private:
 
 	//****************************************************
@@ -93,9 +90,6 @@ private:
 	FIELD_TYPE	   m_FiledType;			/* 変更予定 */
 	const CPlayer* m_pSyncPlayer;		// プレイヤーのポインタ
 	CFan*		   m_pFan;				// 扇形範囲
-
-	//// <static data>
-	//static CField_Builder* m_pFieldBuilder;	// フィールドビルダーの本体 
 };
 
 #endif // _FIELD_BUILEDER_H_

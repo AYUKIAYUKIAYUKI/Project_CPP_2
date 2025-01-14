@@ -43,7 +43,6 @@ public:
 	// <function>
 	void InitForTitle();						// タイトル向け追加初期設定
 	void InitForGame();							// ゲーム向け追加初期設定
-	//void UninitForGame();						// ゲーム向け追加終了処理
 	void Update();								// 更新処理
 	void Draw();								// 描画処理
 	bool AdjustPosToFieldSize(CObject* pObj);	// 座標をフィールドサイズに調整

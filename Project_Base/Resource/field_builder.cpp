@@ -33,11 +33,6 @@
 //****************************************************
 using namespace abbr;
 
-//****************************************************
-// 静的メンバ変数の初期化
-//****************************************************
-//CField_Builder* CField_Builder::m_pFieldBuilder = nullptr;	// フィールドビルダーの本体
-
 //============================================================================
 // 
 // publicメンバ
@@ -123,13 +118,13 @@ CField_Builder* CField_Builder::Create()
 	// 生成失敗
 	if (pNewInstance == nullptr)
 	{
-		//return E_FAIL;
+		assert(false && "フィールドビルダーの生成に失敗");
 	}
 
 	// フィールドビルダーの初期設定
 	if (FAILED(pNewInstance->Init()))
 	{
-		//return E_FAIL;
+		assert(false && "フィールドビルダーの初期設定エラー");
 	}
 
 	return pNewInstance;
