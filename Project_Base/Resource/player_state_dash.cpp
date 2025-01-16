@@ -108,24 +108,31 @@ void CPlayer_State_Dash::Update()
 	// 疾走効果が有効中で
 	if (pPlayer->IsEnabledBoots())
 	{
-		// ルーンエフェクトを作成
-		CObject_X* pObj = CObject_X::Create(CX_Manager::TYPE::SUM0 + (m_nDuration % 12));
+		{ // 1つずつ螺旋状に並べ、増やしていく
 
-		// 座標・向きを調整
-		pObj->SetPos(pPlayer->GetPos());
-		pObj->SetRot(pPlayer->GetRot());
+			// ルーンエフェクトを1つ作成
+			CObject_X* pEffect = CObject_X::Create(CX_Manager::TYPE::SUM0 + (m_nDuration % 12));
 
-		// オブジェクトを保持
-		m_vEffect.push_back(pObj);
+			// 座標・向きを調整
+			pEffect->SetPos(pPlayer->GetPos());
+			pEffect->SetRot(pPlayer->GetRot());
 
-		// 縮尺を作成
-		float fScale = static_cast<float>(35 - m_nDuration) * 0.075f;
+			// エフェクトを保持
+			m_vEffect.push_back(pEffect);
+		}
 
-		// 全てのエフェクトを
+		// 経過時間に合わせたルーン用縮尺を作成
+		float fScale = static_cast<float>(35 - m_nDuration) * 0.065f;
+
+		// 保持している全てのルーンエフェクトを編集
 		for (auto it : m_vEffect)
 		{
-			// 拡大
+			// じわじわと縮小
 			it->SetScale({ fScale, fScale, fScale });
+
+			// プレイヤーから遠ざかる
+			Vec3 AddMove = (it->GetPos() - pPlayer->GetPos()) * 0.001f;
+			it->SetPos(it->GetPos() + AddMove);
 		}
 	}
 
