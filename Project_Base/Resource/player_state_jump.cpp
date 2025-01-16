@@ -212,7 +212,7 @@ void CPlayer_State_Jump::Control()
 		m_pCharacter->AutoSetRotTarget();
 
 		// 移動入力時のみ
-		if (pMouse->GetTrigger(1))
+		if (pMouse->GetTrigger(1) || pPad->GetTrigger(CInputPad::JOYKEY::X))
 		{
 			// ダッシュ状態へ
 			To_Dash();
@@ -228,14 +228,14 @@ void CPlayer_State_Jump::Control()
 		m_pCharacter->AutoSetRotTarget();
 
 		// 移動入力時のみ
-		if (pMouse->GetTrigger(1))
+		if (pMouse->GetTrigger(1) || pPad->GetTrigger(CInputPad::JOYKEY::X))
 		{
 			// ダッシュ状態へ
 			To_Dash();
 		}
 	}
 
-	if (pMouse->GetTrigger(0))
+	if (pMouse->GetTrigger(0) || pPad->GetTrigger(CInputPad::JOYKEY::Y))
 	{
 		// 斬撃状態へ
 		To_Slash();
@@ -251,10 +251,11 @@ void CPlayer_State_Jump::Control()
 void CPlayer_State_Jump::AdjustGravity()
 {
 	// 入力延長期間
-	m_nJumpRemainDuration++;
+	++m_nJumpRemainDuration;
 
 	// ジャンプの入力をやめるか、入力の継続期間が最大延長猶予に達すると延長を終了する
 	if (CManager::GetKeyboard()->GetRelease(DIK_SPACE) || CManager::GetKeyboard()->GetRelease(DIK_W) ||
+		CManager::GetPad()->GetRelease(CInputPad::JOYKEY::A) ||
 		m_nJumpRemainDuration > static_cast<float>(m_JumpParam["Duration"]))
 	{
 		m_bEndRemain = true;

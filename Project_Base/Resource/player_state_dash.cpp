@@ -43,7 +43,9 @@ CPlayer_State_Dash::CPlayer_State_Dash() :
 	CField_Manager::GetInstance()->GetFieldBuilder()->IncrementCntDash();
 
 	// 左右の入力に合わせて移動方向のフラグを変更
-	if (CManager::GetKeyboard()->GetPress(DIK_A) || CManager::GetKeyboard()->GetRelease(DIK_A))
+	if (CManager::GetKeyboard()->GetPress(DIK_A) || CManager::GetKeyboard()->GetRelease(DIK_A) ||
+		CManager::GetPad()->GetPress(CInputPad::JOYKEY::LEFT) || CManager::GetPad()->GetRelease(CInputPad::JOYKEY::LEFT) ||
+		CManager::GetPad()->GetJoyStickL().X < 0)
 		m_bDirection = 0;
 	else
 		m_bDirection = 1;

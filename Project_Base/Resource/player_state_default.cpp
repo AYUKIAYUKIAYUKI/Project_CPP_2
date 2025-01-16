@@ -167,7 +167,7 @@ bool CPlayer_State_Default::Control()
 		m_pCharacter->AutoSetRotTarget();
 
 		// 移動入力時にのみ
-		if (pMouse->GetTrigger(1))
+		if (pMouse->GetTrigger(1) || pPad->GetTrigger(CInputPad::JOYKEY::X))
 		{
 			// ダッシュ状態へ
 			To_Dash();
@@ -184,7 +184,7 @@ bool CPlayer_State_Default::Control()
 		m_pCharacter->AutoSetRotTarget();
 
 		// 移動入力時にのみ
-		if (pMouse->GetTrigger(1))
+		if (pMouse->GetTrigger(1) || pPad->GetTrigger(CInputPad::JOYKEY::X))
 		{
 			// ダッシュ状態へ
 			To_Dash();
@@ -192,13 +192,13 @@ bool CPlayer_State_Default::Control()
 		}
 	}
 
-	if (pKeyboard->GetTrigger(DIK_SPACE) || pKeyboard->GetTrigger(DIK_W))
+	if (pKeyboard->GetTrigger(DIK_SPACE) || pKeyboard->GetTrigger(DIK_W) || pPad->GetTrigger(CInputPad::JOYKEY::A))
 	{
 		// ジャンプ状態へ
 		To_Jump();
 		return true;
 	}
-	else if (pMouse->GetTrigger(0))
+	else if (pMouse->GetTrigger(0) || pPad->GetTrigger(CInputPad::JOYKEY::Y))
 	{
 		// 斬撃状態へ
 		To_Slash();

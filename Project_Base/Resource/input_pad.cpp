@@ -92,25 +92,26 @@ void CInputPad::Update()
 	if (XInputGetState(0, &StateJoypad) == ERROR_SUCCESS)
 	{
 #if LEFT_JOYSTICK_CONVERT	// 左スティック入力を変換
-
 		// 左スティック入力を十字キーに変換
 		g_state_joypad.press.Gamepad.wButtons |= ConvertJoyStick();
-
 #else
-
 		// スティック入力の調整
 		AdjustJoyStick();
-
 #endif	// LEFT_JOYSTICK_CONVERT
 
 		// パッドのリリース情報を保存
-		m_aKeyStateRelease.Gamepad.wButtons = m_aKeyStateRelease.Gamepad.wButtons ^ ~StateJoypad.Gamepad.wButtons;
+		m_aKeyStateRelease.Gamepad.wButtons = m_aKeyState.Gamepad.wButtons & ~StateJoypad.Gamepad.wButtons;
 
 		// パッドのトリガー情報を保存
-		m_aKeyStateTrigger.Gamepad.wButtons = ~m_aKeyStateTrigger.Gamepad.wButtons ^ StateJoypad.Gamepad.wButtons;
-
-		// パッドのプレス情報を保存
+		m_aKeyStateTrigger.Gamepad.wButtons = ~m_aKeyState.Gamepad.wButtons & StateJoypad.Gamepad.wButtons;
+		
+#if 0 // パッドのプレス情報を保存
+		// ボタンのみ
 		m_aKeyState.Gamepad.wButtons = StateJoypad.Gamepad.wButtons;
+#else
+		// ジョイスティック・トリガーボタンを含む
+		m_aKeyState.Gamepad = StateJoypad.Gamepad;
+#endif
 	}
 }
 
