@@ -9,6 +9,11 @@
 #define _PLAYER_STATE_DASH_	// 二重インクルード防止
 
 //****************************************************
+// 前方宣言
+//****************************************************
+class CObject_X;
+
+//****************************************************
 // インクルードファイル
 //****************************************************
 #include "player_state.h"
@@ -38,7 +43,9 @@ private:
 	void SetPosToFacing();	// 目標座標をダッシュ方向に増加
 
 	// <data>
-	bool	m_bDirection;		// 方向
+	bool					m_bDirection;	// 方向
+	std::vector<CObject_X*> m_vEffect;		// エフェクト
+	int						m_nDuration;	// 継続期間
 };
 
 #endif	// _PLAYER_STATE_DASH_

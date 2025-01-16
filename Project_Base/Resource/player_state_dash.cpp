@@ -11,6 +11,7 @@
 #include "player_state_dash.h"
 #include "player_state_default.h"
 #include "player_state_damage.h"
+#include "object_X.h"
 #include "sound.h"
 #include "constellation.h"
 
@@ -37,7 +38,8 @@ using namespace abbr;
 //============================================================================
 CPlayer_State_Dash::CPlayer_State_Dash() :
 	CPlayer_State{},
-	m_bDirection{ false }
+	m_bDirection{ false },
+	m_nDuration{ 0 }
 {
 	// アクションデータのダッシュした回数をインクリメント
 	CField_Manager::GetInstance()->GetFieldBuilder()->IncrementCntDash();
@@ -62,7 +64,12 @@ CPlayer_State_Dash::CPlayer_State_Dash() :
 //============================================================================
 CPlayer_State_Dash::~CPlayer_State_Dash()
 {
-
+	// 全てのエフェクトを
+	for (auto it : m_vEffect)
+	{
+		// 破棄設定
+		it->SetRelease();
+	}
 }
 
 //============================================================================
@@ -73,11 +80,41 @@ void CPlayer_State_Dash::Update()
 	// プレイヤーステートクラスの更新処理
 	CPlayer_State::Update();
 
+	// 継続期間をインクリメント
+	++m_nDuration;
+
 	// 星座エフェクトを発生
 	for (WORD wCnt = 0; wCnt < 2; ++wCnt)
 	{
 		CConstellation::GenerateSpread(m_pCharacter->GetPos());
 		CConstellation::GenerateSpread(m_pCharacter->GetPosTarget());
+	}
+
+	// キャラクターのポインタをプレイヤークラスにダウンキャスト
+	CPlayer* pPlayer = utility::DownCast<CPlayer, CCharacter>(m_pCharacter);
+
+	// 効果が有効中で
+	if (pPlayer->IsEnabledBoots())
+	{
+		// ルーンエフェクトを作成
+		CObject_X* pObj = CObject_X::Create(CX_Manager::TYPE::SUM0 + (m_nDuration % 12));
+
+		// 座標・向きを調整
+		pObj->SetPos(pPlayer->GetPos());
+		pObj->SetRot(pPlayer->GetRot());
+
+		// オブジェクトを保持
+		m_vEffect.push_back(pObj);
+
+		// 縮尺を作成
+		float fScale = static_cast<float>(35 - m_nDuration) * 0.075f;
+
+		// 全てのエフェクトを
+		for (auto it : m_vEffect)
+		{
+			// 拡大
+			it->SetScale({ fScale, fScale, fScale });
+		}
 	}
 
 	// Y軸方向の加速度を無くす
