@@ -218,6 +218,9 @@
       <Filter>&lt;Stage&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\field_builder.cpp" />
+    <ClCompile Include="Resource\wings.cpp">
+      <Filter>&lt;Stage&gt;\&lt;Item&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -440,6 +443,9 @@
       <Filter>&lt;Stage&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\field_builder.h" />
+    <ClInclude Include="Resource\wings.h">
+      <Filter>&lt;Stage&gt;\&lt;Item&gt;</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Object&gt;">

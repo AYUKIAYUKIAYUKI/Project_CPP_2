@@ -45,6 +45,7 @@ public:
 	void	Update() override;	// 更新処理
 	void	Draw() override;	// 描画処理
 	void	SetDamage(int nDamage, float fImpact);	// ダメージを受ける
+	void	EnableWings();		// 浮遊を有効化
 
 	// <getter>
 	float GetRadius() const;								// 半径を取得

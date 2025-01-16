@@ -61,6 +61,7 @@ public:
 		BLOSIDE,			// 横長ブロック
 		BLOTALL,			// 縦長ブロック
 		LIFE,				// ライフ
+		WINGS,				// 羽
 		BRIGHT_0,			// 閃光0
 		BRIGHT_1,			// 閃光1
 		SUMCIRCLE,			// 魔法陣

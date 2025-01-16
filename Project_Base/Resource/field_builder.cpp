@@ -24,6 +24,7 @@
 #include "ghost.h"
 #include "flyer.h"
 #include "life.h"
+#include "wings.h"
 
 /* 修正用 */
 #define SAFE 0
@@ -272,7 +273,8 @@ void CField_Builder::AutoCreateItem()
 	/* 何らかのアイテムの分岐 */
 
 	// アイテムを生成
-	pItem = CLife::Create();
+	//pItem = CLife::Create();
+	pItem = CWings::Create();
 
 	do { // この方角における座標が、扇形範囲内であれば方角を再抽選する
 

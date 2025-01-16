@@ -102,6 +102,7 @@
     <ClCompile Include="resource\texture_manager.cpp" />
     <ClCompile Include="Resource\title.cpp" />
     <ClCompile Include="Resource\utility.cpp" />
+    <ClCompile Include="Resource\wings.cpp" />
     <ClCompile Include="Resource\X_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +187,7 @@
     <ClInclude Include="resource\texture_manager.h" />
     <ClInclude Include="Resource\title.h" />
     <ClInclude Include="Resource\utility.h" />
+    <ClInclude Include="Resource\wings.h" />
     <ClInclude Include="Resource\X_manager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
