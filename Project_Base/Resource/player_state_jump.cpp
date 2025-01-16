@@ -271,5 +271,20 @@ void CPlayer_State_Jump::AdjustGravity()
 	{
 		// 延長期間が終了すると通常の重力加速を行う
 		m_pCharacter->SetVelY(m_pCharacter->GetVelY() + CField_Manager::FIELD_GRAVITY);
+
+		// キャラクターのポインタをプレイヤークラスにダウンキャスト
+		CPlayer* pPlayer = utility::DownCast<CPlayer, CCharacter>(m_pCharacter);
+
+		// この時ジャンプ入力をし続けると
+		if (CManager::GetKeyboard()->GetPress(DIK_SPACE) || CManager::GetKeyboard()->GetPress(DIK_W) ||
+			CManager::GetPad()->GetPress(CInputPad::JOYKEY::A))
+		{
+			// 浮遊効果が有効中で
+			if (pPlayer->IsEnabledWings() && m_pCharacter->GetVelY() < 0.0f)
+			{
+				// ゆったり落下
+				m_pCharacter->SetVelY(CField_Manager::FIELD_GRAVITY);
+			}
+		}
 	}
 }

@@ -42,7 +42,8 @@ using namespace abbr;
 CPlayer::CPlayer() :
 	CCharacter{ LAYER::DEFAULT },
 	m_pBndCylinder{ DBG_NEW CBounding_Cylinder() },
-	m_pState{ nullptr }
+	m_pState{ nullptr },
+	m_bEnableWings{ false }
 {
 
 }
@@ -213,7 +214,7 @@ void CPlayer::SetDamage(int nDamage, float fImpact)
 //============================================================================
 void CPlayer::EnableWings()
 {
-	
+	m_bEnableWings = true;
 }
 
 //============================================================================
@@ -247,6 +248,14 @@ const CPlayer_State* const CPlayer::GetNowState() const
 {
 	// ステートのポインタを返す
 	return m_pState;
+}
+
+//============================================================================
+// 浮遊の有効状態を取得
+//============================================================================
+bool CPlayer::IsEnabledWings()
+{
+	return m_bEnableWings;
 }
 
 //============================================================================

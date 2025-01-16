@@ -52,6 +52,7 @@ public:
 	float GetHeight() const;								// 高さを取得
 	const CBounding_Cylinder* const GetBndCylinder() const;	// 円柱バウンディングを取得
 	const CPlayer_State* const GetNowState() const;			// 現在のステートを取得
+	bool  IsEnabledWings();									// 浮遊の有効状態を取得
 
 	// <static function>
 	static CPlayer* Create();	// 生成
@@ -65,6 +66,7 @@ private:
 	// <data>
 	CBounding_Cylinder*	m_pBndCylinder;	// 円柱バウンディング
 	CPlayer_State*		m_pState;		// ステート
+	bool				m_bEnableWings;	// 羽の有効状態
 };
 
 #endif // _PLAYER_H_
