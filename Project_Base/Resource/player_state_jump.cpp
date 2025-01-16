@@ -26,6 +26,16 @@
 #include "manager.h"
 
 //****************************************************
+// 静的メンバ変数の初期化
+//****************************************************
+
+// ジャンプ用パラメータ
+JSON CPlayer_State_Jump::m_JumpParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\PLAYER\\jump_param.json");
+
+// ジャンプ一回当たりの増加加速度
+float CPlayer_State_Jump::AMOUNT_JUMPACCEL = static_cast<float>(m_JumpParam["Power"]);
+
+//****************************************************
 // usingディレクティブ
 //****************************************************
 using namespace abbr;
@@ -44,6 +54,12 @@ CPlayer_State_Jump::CPlayer_State_Jump() :
 	m_nJumpRemainDuration{ 0 },
 	m_bEndRemain{ false }
 {
+#ifdef _DEBUG
+	// パラメータの再読み込み
+	m_JumpParam = utility::OpenJsonFile("Data\\JSON\\CHARACTER\\PLAYER\\jump_param.json");
+	AMOUNT_JUMPACCEL = static_cast<float>(m_JumpParam["Power"]);
+#endif // _DEBUG
+
 	// アクションデータのジャンプした回数をインクリメント
 	CField_Manager::GetInstance()->GetFieldBuilder()->IncrementCntJump();
 
@@ -239,7 +255,7 @@ void CPlayer_State_Jump::AdjustGravity()
 
 	// ジャンプの入力をやめるか、入力の継続期間が最大延長猶予に達すると延長を終了する
 	if (CManager::GetKeyboard()->GetRelease(DIK_SPACE) || CManager::GetKeyboard()->GetRelease(DIK_W) ||
-		m_nJumpRemainDuration > MAX_JUMPREMAIN_DURATION)
+		m_nJumpRemainDuration > static_cast<float>(m_JumpParam["Duration"]))
 	{
 		m_bEndRemain = true;
 	}
@@ -247,10 +263,8 @@ void CPlayer_State_Jump::AdjustGravity()
 	// 重力加速
 	if (!m_bEndRemain)
 	{
-		JSON Json = utility::OpenJsonFile("Data\\debug.json");
-
 		// ジャンプ延長中はわずかに重力に逆らう
-		m_pCharacter->SetVelY(m_pCharacter->GetVelY() + -CField_Manager::FIELD_GRAVITY * static_cast<float>(Json["Anti"]));
+		m_pCharacter->SetVelY(m_pCharacter->GetVelY() + -CField_Manager::FIELD_GRAVITY * static_cast<float>(m_JumpParam["AntiPower"]));
 	}
 	else
 	{

@@ -20,9 +20,6 @@ class CPlayer_State_Jump : public CPlayer_State
 {
 public:
 
-	/// <summary> ジャンプ一回当たりの増加加速度 </summary>
-	static constexpr float AMOUNT_JUMPACCEL = 2.5f;
-
 	// <special function>
 	CPlayer_State_Jump();			// コンストラクタ
 	~CPlayer_State_Jump() override;	// デストラクタ
@@ -35,10 +32,10 @@ public:
 	void To_Slash() override;	// 斬撃状態へ
 	void To_Damage() override;	// ダメージ状態へ
 
-private:
+	// <static data>
+	static float AMOUNT_JUMPACCEL;	// ジャンプ一回当たりの増加加速度
 
-	/// <summary> 最大延長猶予 </summary>
-	static constexpr int MAX_JUMPREMAIN_DURATION = 8;
+private:
 
 	// <function>
 	void Control();			// 操作
@@ -47,6 +44,9 @@ private:
 	// <data>
 	int		m_nJumpRemainDuration;	// 入力延長期間
 	bool	m_bEndRemain;			// 延長判定
+
+	// <static data>
+	static JSON m_JumpParam;	// ジャンプ用パラメータ
 };
 
 #endif	// _PLAYER_STATE_JUMP_
