@@ -221,6 +221,7 @@
     <ClCompile Include="Resource\wings.cpp">
       <Filter>&lt;Stage&gt;\&lt;Item&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\boots.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -446,6 +447,7 @@
     <ClInclude Include="Resource\wings.h">
       <Filter>&lt;Stage&gt;\&lt;Item&gt;</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\boots.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Object&gt;">

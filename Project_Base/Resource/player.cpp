@@ -43,7 +43,8 @@ CPlayer::CPlayer() :
 	CCharacter{ LAYER::DEFAULT },
 	m_pBndCylinder{ DBG_NEW CBounding_Cylinder() },
 	m_pState{ nullptr },
-	m_bEnableWings{ false }
+	m_bEnableWings{ false },
+	m_bEnableBoots{ false }
 {
 
 }
@@ -218,6 +219,14 @@ void CPlayer::EnableWings()
 }
 
 //============================================================================
+// ‚ğ—LŒø‰»
+//============================================================================
+void CPlayer::EnableBoots()
+{
+	m_bEnableBoots = true;
+}
+
+//============================================================================
 // ”¼Œa‚ğæ“¾
 //============================================================================
 float CPlayer::GetRadius() const
@@ -256,6 +265,14 @@ const CPlayer_State* const CPlayer::GetNowState() const
 bool CPlayer::IsEnabledWings() const
 {
 	return m_bEnableWings;
+}
+
+//============================================================================
+// ‚Ì—LŒøó‘Ô‚ğæ“¾
+//============================================================================
+bool CPlayer::IsEnabledBoots() const
+{
+	return m_bEnableBoots;
 }
 
 //============================================================================

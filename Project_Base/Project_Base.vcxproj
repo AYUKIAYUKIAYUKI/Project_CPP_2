@@ -26,6 +26,7 @@
     <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Resource\boots.cpp" />
     <ClCompile Include="Resource\boss.cpp" />
     <ClCompile Include="Resource\bounding_box.cpp" />
     <ClCompile Include="Resource\bounding_cylinder.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
+    <ClInclude Include="Resource\boots.h" />
     <ClInclude Include="Resource\boss.h" />
     <ClInclude Include="Resource\bounding_box.h" />
     <ClInclude Include="Resource\bounding_cylinder.h" />

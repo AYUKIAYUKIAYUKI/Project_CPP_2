@@ -46,6 +46,7 @@ public:
 	void	Draw() override;	// 描画処理
 	void	SetDamage(int nDamage, float fImpact);	// ダメージを受ける
 	void	EnableWings();		// 浮遊を有効化
+	void	EnableBoots();		// を有効化
 
 	// <getter>
 	float GetRadius() const;								// 半径を取得
@@ -53,6 +54,7 @@ public:
 	const CBounding_Cylinder* const GetBndCylinder() const;	// 円柱バウンディングを取得
 	const CPlayer_State* const GetNowState() const;			// 現在のステートを取得
 	bool  IsEnabledWings() const;							// 浮遊の有効状態を取得
+	bool  IsEnabledBoots() const;							// の有効状態を取得
 
 	// <static function>
 	static CPlayer* Create();	// 生成
@@ -66,7 +68,8 @@ private:
 	// <data>
 	CBounding_Cylinder*	m_pBndCylinder;	// 円柱バウンディング
 	CPlayer_State*		m_pState;		// ステート
-	bool				m_bEnableWings;	// 羽の有効状態
+	bool				m_bEnableWings;	// 浮遊の有効状態
+	bool				m_bEnableBoots;	// の有効状態
 };
 
 #endif // _PLAYER_H_

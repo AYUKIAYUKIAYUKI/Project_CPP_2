@@ -25,6 +25,7 @@
 #include "flyer.h"
 #include "life.h"
 #include "wings.h"
+#include "boots.h"
 
 /* 修正用 */
 #define SAFE 0
@@ -275,6 +276,11 @@ void CField_Builder::AutoCreateItem()
 	{
 		// 浮遊が有効化されていなければ羽を生成
 		pItem = CWings::Create();
+	}
+	else if (!m_pSyncPlayer->IsEnabledBoots())
+	{
+		// が有効化されていなければブーツを生成
+		pItem = CBoots::Create();
 	}
 	
 	// 効果付与アイテムが何も生成されていないなら

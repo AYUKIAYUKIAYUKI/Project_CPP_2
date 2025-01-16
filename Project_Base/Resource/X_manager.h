@@ -62,6 +62,7 @@ public:
 		BLOTALL,			// 縦長ブロック
 		LIFE,				// ライフ
 		WINGS,				// 羽
+		BOOTS,				// ブーツ
 		BRIGHT_0,			// 閃光0
 		BRIGHT_1,			// 閃光1
 		SUMCIRCLE,			// 魔法陣
