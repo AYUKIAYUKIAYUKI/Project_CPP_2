@@ -194,7 +194,7 @@ void CPlayer::SetDamage(int nDamage, float fImpact)
 	if (typeid(*m_pState) == typeid(CPlayer_State_Damage))
 		return;
 	
-	// ブーツ取得後にダッシュ状態なら処理しない
+	// 疾走有効化後にダッシュ状態なら処理しない
 	if (m_bEnableBoots && typeid(*m_pState) == typeid(CPlayer_State_Dash))
 		return;
 
@@ -224,7 +224,7 @@ void CPlayer::EnableWings()
 }
 
 //============================================================================
-// を有効化
+// 疾走を有効化
 //============================================================================
 void CPlayer::EnableBoots()
 {
@@ -273,7 +273,7 @@ bool CPlayer::IsEnabledWings() const
 }
 
 //============================================================================
-// の有効状態を取得
+// 疾走の有効状態を取得
 //============================================================================
 bool CPlayer::IsEnabledBoots() const
 {

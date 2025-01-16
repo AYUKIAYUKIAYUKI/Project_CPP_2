@@ -52,8 +52,20 @@ CPlayer_State_Dash::CPlayer_State_Dash() :
 	else
 		m_bDirection = 1;
 
-	// ダッシュモーションを再生
-	m_pCharacter->SetNowMotion(6);
+	// キャラクターのポインタをプレイヤークラスにダウンキャスト
+	CPlayer* pPlayer = utility::DownCast<CPlayer, CCharacter>(m_pCharacter);
+
+	// 疾走効果が有効中で
+	if (pPlayer->IsEnabledBoots())
+	{
+		// 特殊走行モーションを再生
+		m_pCharacter->SetNowMotion(11);
+	}
+	else
+	{
+		// ダッシュモーションを再生
+		m_pCharacter->SetNowMotion(6);
+	}
 
 	// ダッシュを鳴らす
 	CSound::GetInstance()->Play(CSound::LABEL::DASH);
@@ -93,7 +105,7 @@ void CPlayer_State_Dash::Update()
 	// キャラクターのポインタをプレイヤークラスにダウンキャスト
 	CPlayer* pPlayer = utility::DownCast<CPlayer, CCharacter>(m_pCharacter);
 
-	// 効果が有効中で
+	// 疾走効果が有効中で
 	if (pPlayer->IsEnabledBoots())
 	{
 		// ルーンエフェクトを作成

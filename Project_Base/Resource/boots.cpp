@@ -137,7 +137,7 @@ void CBoots::GainEffect()
 		// プレイヤークラスにダウンキャスト
 		CPlayer* pPlayer = utility::DownCast<CPlayer, CObject>(pFindPlayer);
 
-		// を有効化
+		// 疾走を有効化
 		pPlayer->EnableBoots();
 
 		// 取得時のテキストを表示
