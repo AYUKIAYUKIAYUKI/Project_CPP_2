@@ -47,8 +47,8 @@ void CField_Builder::Update()
 	// 扇形範囲の更新
 	UpdateFan();
 
-	// フィールドの更新
-	UpdateField();
+	// ビルダーの更新
+	UpdateBuilder();
 
 #ifdef _DEBUG
 	// デバッグ表示
@@ -215,16 +215,16 @@ void CField_Builder::UpdateFan()
 }
 
 //============================================================================
-// フィールド更新
+// ビルダーの更新
 //============================================================================
-void CField_Builder::UpdateField()
+void CField_Builder::UpdateBuilder()
 {
 	// ブロックの破壊カウントが上限に達していたら処理を行わない
 	if (m_nCntDestroyBlock >= CField_Manager::MAX_DESTROY_BLOCK)
 		return;
 
 	// フィールドタイプの分岐
-	BranchFieldType();
+	//BranchFieldType();
 
 	// アイテムの自動生成
 	AutoCreateItem();
@@ -232,15 +232,15 @@ void CField_Builder::UpdateField()
 	// プレイヤーの目標座標へのベクトルを作成
 	Vec3 Norm = m_pSyncPlayer->GetPosTarget() - m_pSyncPlayer->GetPos();
 
-	// プレイヤーの移動時のノルムに応じてブロック生成
+	// プレイヤーがある程度移動していることを検知した時のみ
 	if (Norm.x * Norm.x + Norm.z * Norm.z > 0.1f)
 	{
 		// ブロックの自動生成
 		AutoCreateBlockDash();
 	}
 
-	// ブロックの自動削除
-	AutoDestroyBlock();
+	// 破壊判定
+	DestroyCheck();
 
 #ifdef _DEBUG	// ブロックを全削除
 	if (CManager::GetKeyboard()->GetTrigger(DIK_DELETE))
@@ -269,52 +269,28 @@ void CField_Builder::AutoCreateItem()
 	// アイテム用ポインタ
 	CItem* pItem = nullptr;
 
-#if SAFE
+	/* 何らかのアイテムの分岐 */
+
 	// アイテムを生成
-	if (m_bFirstItem)
+	pItem = CLife::Create();
+
+	do { // この方角における座標が、扇形範囲内であれば方角を再抽選する
+
+		// 方角をランダムに設定
+		pItem->SetDirection(fabsf(utility::GetRandomValue<float>()));
+
+	} while (m_pFan->DetectInFanRange(pItem->GetPos()));
+
+	// Y座標をランダムに設定
+	float fHeight = fabsf(utility::GetRandomValue<float>());
+	if (fHeight >= 125.0f)
 	{
-		pItem = CLife::Create();
-
-		do { // この方角における座標が、扇形範囲内であれば方角を再抽選する
-
-			// 方角をランダムに設定
-			pItem->SetDirection(fabsf(utility::GetRandomValue<float>()));
-
-		} while (m_pFan->DetectInFanRange(pItem->GetPos()));
-
-		/* 応急処置 */
-		float fHeight = fabsf(utility::GetRandomValue<float>());
-		if (fHeight >= 125.0f)
-		{
-			fHeight = 125.0f;
-		}
-
-		// Y座標をランダムに設定
-		pItem->SetPosY(fHeight);
-
-		// 描画前に一度更新
-		pItem->Update();
+		fHeight = 125.0f;
 	}
-	else
-#endif // SAFE
-	{ // 初回のみ定位置に生成する
+	pItem->SetPosY(fHeight);
 
-		pItem = CLife::Create();
-
-		// 方角を設定
-		pItem->SetDirection(D3DX_PI * 0.5f);
-
-		// 高さに設定
-		pItem->SetPosY(100.0f);
-
-		// 描画前に一度更新
-		pItem->Update();
-
-#if SAFE
-		// 最初のアイテムの生成完了
-		m_bFirstItem = true;
-#endif // SAFE
-	}
+	// 描画前に一度更新
+	pItem->Update();
 
 	// アイテム出現音を鳴らす
 	CSound::GetInstance()->Play(CSound::LABEL::IAPPEAR);
@@ -403,31 +379,31 @@ bool CField_Builder::DetectNearBlock(D3DXVECTOR3 Pos)
 }
 
 //============================================================================
-// ブロックの自動削除
+// 破壊判定
 //============================================================================
-void CField_Builder::AutoDestroyBlock()
+void CField_Builder::DestroyCheck()
 {
-	// 通常優先度のオブジェクトを取得
+	// 通常レイヤーのオブジェクトを取得
 	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
 
 	while (pObj != nullptr)
 	{
+		// ブロックタイプのオブジェクトなら
 		if (pObj->GetType() == CObject::TYPE::BLOCK)
 		{
 			// オブジェクトをブロックタグにダウンキャスト
-			CBlock* pBlock = nullptr;
-			pBlock = utility::DownCast(pBlock, pObj);
+			CBlock* pBlock = utility::DownCast<CBlock, CObject>(pObj);
 
+			// 扇形の範囲内にブロックが無ければ
 			if (!m_pFan->DetectInFanRange(pBlock->GetPos()))
-			{ // 扇形の範囲内にブロックが無ければ
-
-				// ブロックを破棄
+			{
+				// このブロックは破棄
 				pBlock->SetRelease();
 
-				// ブロックの破壊カウントを増加
+				// ブロックの破壊量をインクリメント
 				++m_nCntDestroyBlock;
 
-				// ブロックの破壊数カウントが最大で
+				// ブロックの破壊量が最大カウントに達したら
 				if (m_nCntDestroyBlock >= CField_Manager::MAX_DESTROY_BLOCK)
 				{
 #if SAFE
@@ -444,6 +420,7 @@ void CField_Builder::AutoDestroyBlock()
 			}
 		}
 
+		// 次のオブジェクトを取得
 		pObj = pObj->GetNext();
 	}
 }
@@ -453,17 +430,19 @@ void CField_Builder::AutoDestroyBlock()
 //============================================================================
 void CField_Builder::DestroyAllBlock()
 {
-	// 通常優先度のオブジェクトを取得
+	// 通常レイヤーのオブジェクトを取得
 	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
 
 	while (pObj != nullptr)
 	{
+		// ブロックタイプのオブジェクトなら
 		if (pObj->GetType() == CObject::TYPE::BLOCK)
 		{
-			// 破棄予約
+			// そのまま破棄予約
 			pObj->SetRelease();
 		}
 
+		// 次のオブジェクトへ
 		pObj = pObj->GetNext();
 	}
 }

@@ -98,8 +98,8 @@ void CField_Manager::Update()
 	// 環境装飾の更新
 	UpdateEnvironment();
 
-	// 4フェーズ以降に進行していたら
-	if (m_nPhase >= 4)
+	// 5フェーズ以降に進行していたら
+	if (m_nPhase >= 5)
 	{
 		// フィールドビルダーの更新
 		m_pFieldBuilder->Update();
@@ -250,7 +250,6 @@ CField_Manager* CField_Manager::GetInstance()
 CField_Manager::CField_Manager() :
 	m_pFieldBuilder{ nullptr },
 	m_nPhase{ 0 },
-	m_bFirstItem{ false },
 	m_pPopUp{ nullptr },
 	m_pStatue{ nullptr },
 	m_nCntStatueVibration{ 0 },
@@ -555,7 +554,7 @@ void CField_Manager::UpdatePhase()
 		break;
 
 	case 1:
-		
+
 		// ポップアップを生成
 		if (!m_pPopUp)
 		{
@@ -690,6 +689,26 @@ void CField_Manager::UpdatePhase()
 
 	case 4:
 
+		{ // アイテムを生成
+			CItem* pItem = CLife::Create();
+
+			// 方角を設定
+			pItem->SetDirection(D3DX_PI * 0.5f);
+
+			// 高さに設定
+			pItem->SetPosY(100.0f);
+
+			// 描画前に一度更新
+			pItem->Update();
+		}
+
+		// 次のフェーズへ
+		++m_nPhase;
+
+		break;
+
+	case 5:
+
 		// 移動による地形の再生成が、多少行われていた痕跡があれば
 		if (nCntDestroyBlock >= 10)
 		{
@@ -699,7 +718,7 @@ void CField_Manager::UpdatePhase()
 
 		break;
 
-	case 5:
+	case 6:
 
 		// ポップアップを生成
 		if (!m_pPopUp)
@@ -720,46 +739,19 @@ void CField_Manager::UpdatePhase()
 			m_pPopUp->SetPosTarget(PosTarget);				// 目標座標をセット
 		}
 
-		// 初回のアイテムを生成後
-		if (m_bFirstItem)
-		{
-			// アイテムオブジェクトを取得
+		{// アイテムオブジェクトを取得
 			CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
 
-			// アイテムオブジェクトが発見出来たら
-			if (pObj)
-			{
-#if SAFE
-				// アイテムクラスにダウンキャスト
-				CItem* pItem = utility::DownCast<CItem, CObject>(pObj);
-
-				// アイテムに接近したら
-				if (m_pFan->DetectInFanRange(pItem->GetPos()))
-				{
-					// 消滅設定
-					if (m_pPopUp)
-					{
-						m_pPopUp->SetDisappear();
-						m_pPopUp = nullptr;
-					}
-
-					// 次のフェーズへ
-					++m_nPhase;
-				}
-#endif // SAFE
-			}
-		}
-
-		break;
-
-	case 6:
-
-		{ // アイテムオブジェクトを取得
-			CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
-
-			// アイテムオブジェクトが無くなっていたら
+			// アイテムオブジェクトが消えていたら
 			if (!pObj)
 			{
+				// 消滅設定
+				if (m_pPopUp)
+				{
+					m_pPopUp->SetDisappear();
+					m_pPopUp = nullptr;
+				}
+
 				// 次のフェーズへ
 				++m_nPhase;
 			}

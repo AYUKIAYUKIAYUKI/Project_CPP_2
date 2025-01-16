@@ -83,7 +83,6 @@ private:
 	// <data>
 	CField_Builder* m_pFieldBuilder;		// フィールドビルダー
 	int				m_nPhase;				// フェーズ番号
-	bool			m_bFirstItem;			// 固定アイテムの生成状況
 	CObject_PopUp*	m_pPopUp;				// ポップアップ表示
 	CMotion_Set*	m_pStatue;				// 銅像
 	int				m_nCntStatueVibration;	// 銅像振動カウント

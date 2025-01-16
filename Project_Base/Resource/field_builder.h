@@ -75,12 +75,12 @@ private:
 	HRESULT Init();								// 初期設定
 	void	Uninit();							// 終了処理
 	void	UpdateFan();						// 扇形の更新
-	void	UpdateField();						// フィールド更新
+	void	UpdateBuilder();					// ビルダーの更新
 	void	BranchFieldType();					// フィールドタイプ分岐
 	void	AutoCreateItem();					// アイテムの自動生成
 	void	AutoCreateBlockDash();				// ダッシュタイプのブロック自動生成
 	bool	DetectNearBlock(D3DXVECTOR3 Pos);	// 隣接し合うブロックを検出
-	void	AutoDestroyBlock();					// ブロックの自動削除
+	void	DestroyCheck();						// 破壊判定
 	void	DestroyAllBlock();					// 全ブロックの削除
 	void	PrintDebug();						// デバッグ表示
 
