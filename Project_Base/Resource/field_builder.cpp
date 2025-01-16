@@ -270,11 +270,19 @@ void CField_Builder::AutoCreateItem()
 	// アイテム用ポインタ
 	CItem* pItem = nullptr;
 
-	/* 何らかのアイテムの分岐 */
-
-	// アイテムを生成
-	//pItem = CLife::Create();
-	pItem = CWings::Create();
+	// アイテム出現テーブル
+	if (!m_pSyncPlayer->IsEnabledWings())
+	{
+		// 浮遊が有効化されていなければ羽を生成
+		pItem = CWings::Create();
+	}
+	
+	// 効果付与アイテムが何も生成されていないなら
+	if (!pItem)
+	{
+		// ライフを生成
+		pItem = CLife::Create();
+	}
 
 	do { // この方角における座標が、扇形範囲内であれば方角を再抽選する
 

@@ -253,7 +253,7 @@ const CPlayer_State* const CPlayer::GetNowState() const
 //============================================================================
 // •‚—V‚Ì—LŒøó‘Ô‚ğæ“¾
 //============================================================================
-bool CPlayer::IsEnabledWings()
+bool CPlayer::IsEnabledWings() const
 {
 	return m_bEnableWings;
 }
