@@ -60,7 +60,7 @@ HRESULT CBoots::Init()
 	BindModel(CX_Manager::TYPE::BOOTS);
 
 	// kÚ‚ğİ’è
-	SetScale(GetScale() * 0.75f);
+	SetScale(GetScale() * 4.0f);
 
 	// ”¼Œa‚ğİ’è
 	SetRadius(5.0f);
