@@ -243,7 +243,7 @@ void CField_Builder::UpdateBuilder()
 	if (Norm.x * Norm.x + Norm.z * Norm.z > 0.1f)
 	{
 		// ブロックの自動生成
-		GenerateBlock();
+		m_upFieldType->Update();
 	}
 
 	// 破壊判定
@@ -261,7 +261,14 @@ void CField_Builder::UpdateBuilder()
 //============================================================================
 void CField_Builder::BranchFieldType()
 {
-	/* ここは何らかの分岐を設定予定です */
+	// フィールドタイプクラスのユニークポインタ
+	std::unique_ptr<CField_Type> upSuper;
+
+	/* これを変更して */
+	upSuper;
+
+	// 状態を変更
+	m_upFieldType = std::move(upSuper);
 }
 
 //============================================================================
@@ -317,6 +324,7 @@ void CField_Builder::GenerateItem()
 	CSound::GetInstance()->Play(CSound::LABEL::IAPPEAR);
 }
 
+#if SAFE
 //============================================================================
 // /* 変更予定 */
 //============================================================================
@@ -362,6 +370,7 @@ void CField_Builder::GenerateBlock()
 	// ブロックを生成
 	CBlock::Create(NewPos, NewRot);
 }
+#endif // SAFE
 
 //============================================================================
 // 隣接し合うブロックを検出
