@@ -230,8 +230,15 @@
     <ClCompile Include="Resource\field_builder.cpp">
       <Filter>&lt;Stage&gt;\&lt;Builder&gt;</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\field_type.cpp" />
-    <ClCompile Include="Resource\field_type_normal.cpp" />
+    <ClCompile Include="Resource\field_type_dash.cpp">
+      <Filter>&lt;Stage&gt;\&lt;Builder&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\field_type.cpp">
+      <Filter>&lt;Stage&gt;\&lt;Builder&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\field_type_normal.cpp">
+      <Filter>&lt;Stage&gt;\&lt;Builder&gt;</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -466,8 +473,15 @@
     <ClInclude Include="Resource\field_builder.h">
       <Filter>&lt;Stage&gt;\&lt;Builder&gt;</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\field_type.h" />
-    <ClInclude Include="Resource\field_type_normal.h" />
+    <ClInclude Include="Resource\field_type_dash.h">
+      <Filter>&lt;Stage&gt;\&lt;Builder&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\field_type.h">
+      <Filter>&lt;Stage&gt;\&lt;Builder&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\field_type_normal.h">
+      <Filter>&lt;Stage&gt;\&lt;Builder&gt;</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Object&gt;">

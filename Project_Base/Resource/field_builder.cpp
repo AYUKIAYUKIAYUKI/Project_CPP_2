@@ -11,6 +11,7 @@
 #include "field_builder.h"
 #include "field_type.h"
 #include "field_type_normal.h"
+#include "field_type_dash.h"
 #include "field_manager.h"
 #include "player.h"
 #include "fan.h"
@@ -231,7 +232,14 @@ void CField_Builder::UpdateBuilder()
 		return;
 
 	// フィールドタイプの分岐
-	//BranchFieldType();
+	ImGui::SetNextWindowSize({ -1, -1 });
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Branch")) {
+		if (ImGui::Button("to Dash")) {
+			BranchFieldType();
+		}
+		ImGui::End();
+	}
 
 	// アイテムの自動生成
 	GenerateItem();
@@ -262,10 +270,10 @@ void CField_Builder::UpdateBuilder()
 void CField_Builder::BranchFieldType()
 {
 	// フィールドタイプクラスのユニークポインタ
-	std::unique_ptr<CField_Type> upSuper;
+	std::unique_ptr<CField_Type> upSuper = nullptr;
 
-	/* これを変更して */
-	upSuper;
+	/* なんらかの条件で新たなタイプを作成し */
+	upSuper = std::make_unique<CField_Type_Dash>();
 
 	// 状態を変更
 	m_upFieldType = std::move(upSuper);
@@ -497,7 +505,7 @@ void CField_Builder::PrintDebug()
 		ImGui::Text("DestroyBlock:%d", m_nCntDestroyBlock);
 		ImGui::Text("CountJump:%d", m_ActionData.nCntJump);
 		ImGui::Text("CountDash:%d", m_ActionData.nCntDash);
-		ImGui::Text("FieldType:%s", typeid(m_upFieldType).name());
+		ImGui::Text("FieldType:%s", typeid(*m_upFieldType).name());
 		ImGui::Text("Cross:%f", fCross);
 		ImGui::Text("Norm:%f", Norm.x * Norm.x + Norm.z * Norm.z);
 		ImGui::End();

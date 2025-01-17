@@ -38,6 +38,7 @@
     <ClCompile Include="Resource\constellation.cpp" />
     <ClCompile Include="Resource\field_builder.cpp" />
     <ClCompile Include="Resource\field_type.cpp" />
+    <ClCompile Include="Resource\field_type_dash.cpp" />
     <ClCompile Include="Resource\field_type_normal.cpp" />
     <ClCompile Include="Resource\flyer.cpp" />
     <ClCompile Include="Resource\ghost.cpp" />
@@ -129,6 +130,7 @@
     <ClInclude Include="Resource\constellation.h" />
     <ClInclude Include="Resource\field_builder.h" />
     <ClInclude Include="Resource\field_type.h" />
+    <ClInclude Include="Resource\field_type_dash.h" />
     <ClInclude Include="Resource\field_type_normal.h" />
     <ClInclude Include="Resource\flyer.h" />
     <ClInclude Include="Resource\ghost.h" />
