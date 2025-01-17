@@ -6,7 +6,6 @@
     <ClCompile Include="resource\camera.cpp" />
     <ClCompile Include="Resource\cubic_bezier.cpp" />
     <ClCompile Include="Resource\fan.cpp" />
-    <ClCompile Include="Resource\field_manager.cpp" />
     <ClCompile Include="resource\light.cpp" />
     <ClCompile Include="resource\main.cpp" />
     <ClCompile Include="resource\pch.cpp" />
@@ -189,7 +188,6 @@
     <ClCompile Include="Resource\boss.cpp">
       <Filter>&lt;Character&gt;\&lt;Boss&gt;</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\HUD_manager.cpp" />
     <ClCompile Include="Resource\item.cpp">
       <Filter>&lt;Stage&gt;\&lt;Item&gt;</Filter>
     </ClCompile>
@@ -217,13 +215,23 @@
     <ClCompile Include="Resource\bright.cpp">
       <Filter>&lt;Stage&gt;</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\field_builder.cpp" />
     <ClCompile Include="Resource\wings.cpp">
       <Filter>&lt;Stage&gt;\&lt;Item&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\boots.cpp">
       <Filter>&lt;Stage&gt;\&lt;Item&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\HUD_manager.cpp">
+      <Filter>&lt;System&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\field_manager.cpp">
+      <Filter>&lt;Stage&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\field_builder.cpp">
+      <Filter>&lt;Stage&gt;\&lt;Builder&gt;</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\field_type.cpp" />
+    <ClCompile Include="Resource\field_type_normal.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -231,7 +239,6 @@
     <ClInclude Include="resource\camera.h" />
     <ClInclude Include="Resource\cubic_bezier.h" />
     <ClInclude Include="Resource\fan.h" />
-    <ClInclude Include="Resource\field_manager.h" />
     <ClInclude Include="resource\light.h" />
     <ClInclude Include="resource\main.h" />
     <ClInclude Include="resource\pch.h" />
@@ -417,7 +424,6 @@
     <ClInclude Include="Resource\boss.h">
       <Filter>&lt;Character&gt;\&lt;Boss&gt;</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\HUD_manager.h" />
     <ClInclude Include="Resource\item.h">
       <Filter>&lt;Stage&gt;\&lt;Item&gt;</Filter>
     </ClInclude>
@@ -445,13 +451,23 @@
     <ClInclude Include="Resource\bright.h">
       <Filter>&lt;Stage&gt;</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\field_builder.h" />
     <ClInclude Include="Resource\wings.h">
       <Filter>&lt;Stage&gt;\&lt;Item&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\boots.h">
       <Filter>&lt;Stage&gt;\&lt;Item&gt;</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\HUD_manager.h">
+      <Filter>&lt;System&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\field_manager.h">
+      <Filter>&lt;Stage&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\field_builder.h">
+      <Filter>&lt;Stage&gt;\&lt;Builder&gt;</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\field_type.h" />
+    <ClInclude Include="Resource\field_type_normal.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Object&gt;">
@@ -495,6 +511,9 @@
     </Filter>
     <Filter Include="&lt;Stage&gt;\&lt;Item&gt;">
       <UniqueIdentifier>{7ad7f24d-48a1-4fec-b5ab-37eb01f1317f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="&lt;Stage&gt;\&lt;Builder&gt;">
+      <UniqueIdentifier>{d7254f8f-fe99-484c-b0e3-daa9aa663a1e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

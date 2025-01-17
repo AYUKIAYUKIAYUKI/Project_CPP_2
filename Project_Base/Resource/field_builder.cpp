@@ -9,6 +9,8 @@
 // インクルードファイル
 //****************************************************
 #include "field_builder.h"
+#include "field_type.h"
+#include "field_type_normal.h"
 #include "field_manager.h"
 #include "player.h"
 #include "fan.h"
@@ -157,8 +159,8 @@ void CField_Builder::Release()
 // コンストラクタ
 //============================================================================
 CField_Builder::CField_Builder() :
+	m_upFieldType{ nullptr },
 	m_nCntDestroyBlock{ 0 },
-	m_FiledType{ FIELD_TYPE::NORMAL },
 	m_pSyncPlayer{ nullptr },
 	m_pFan{ nullptr }
 {
@@ -181,6 +183,9 @@ CField_Builder::~CField_Builder()
 //============================================================================
 HRESULT CField_Builder::Init()
 {
+	// 最初のフィールドタイプを生成
+	m_upFieldType = std::unique_ptr<CField_Type>(std::make_unique<CField_Type_Normal>().release());
+
 	// 扇形範囲を生成
 	m_pFan = CFan::Create();
 
@@ -229,7 +234,7 @@ void CField_Builder::UpdateBuilder()
 	//BranchFieldType();
 
 	// アイテムの自動生成
-	AutoCreateItem();
+	GenerateItem();
 
 	// プレイヤーの目標座標へのベクトルを作成
 	Vec3 Norm = m_pSyncPlayer->GetPosTarget() - m_pSyncPlayer->GetPos();
@@ -238,13 +243,14 @@ void CField_Builder::UpdateBuilder()
 	if (Norm.x * Norm.x + Norm.z * Norm.z > 0.1f)
 	{
 		// ブロックの自動生成
-		AutoCreateBlockDash();
+		GenerateBlock();
 	}
 
 	// 破壊判定
 	DestroyCheck();
 
-#ifdef _DEBUG	// ブロックを全削除
+#ifdef _DEBUG	
+	// ブロックを全削除
 	if (CManager::GetKeyboard()->GetTrigger(DIK_DELETE))
 		DestroyAllBlock();
 #endif // _DEBUG
@@ -256,13 +262,12 @@ void CField_Builder::UpdateBuilder()
 void CField_Builder::BranchFieldType()
 {
 	/* ここは何らかの分岐を設定予定です */
-	m_FiledType = FIELD_TYPE::JUMP;
 }
 
 //============================================================================
 // アイテムの自動生成
 //============================================================================
-void CField_Builder::AutoCreateItem()
+void CField_Builder::GenerateItem()
 {
 	// 既にアイテムが1つ以上存在していれば処理をしない
 	if (CObject::FindSpecificObject(CObject::TYPE::ITEM))
@@ -313,9 +318,9 @@ void CField_Builder::AutoCreateItem()
 }
 
 //============================================================================
-// ダッシュタイプの自動生成
+// /* 変更予定 */
 //============================================================================
-void CField_Builder::AutoCreateBlockDash()
+void CField_Builder::GenerateBlock()
 {
 	// 生成座標計算用 ((方角 + 扇形幅の角度)の場所が生成ポイント)
 	float fDirection = m_pSyncPlayer->GetDirection();	// プレイヤーの現在の方角をコピー
@@ -477,12 +482,13 @@ void CField_Builder::PrintDebug()
 	// ノルム確認用
 	Vec3 Norm = m_pSyncPlayer->GetPosTarget() - m_pSyncPlayer->GetPos();
 
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Field Builder Data")) {
 		ImGui::Text("DestroyBlock:%d", m_nCntDestroyBlock);
 		ImGui::Text("CountJump:%d", m_ActionData.nCntJump);
 		ImGui::Text("CountDash:%d", m_ActionData.nCntDash);
-		ImGui::Text("FieldType:%d", m_FiledType);
+		ImGui::Text("FieldType:%s", typeid(m_upFieldType).name());
 		ImGui::Text("Cross:%f", fCross);
 		ImGui::Text("Norm:%f", Norm.x * Norm.x + Norm.z * Norm.z);
 		ImGui::End();

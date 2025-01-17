@@ -11,6 +11,7 @@
 //****************************************************
 // 前方宣言
 //****************************************************
+class CField_Type;
 class CPlayer;
 class CFan;
 
@@ -56,17 +57,6 @@ private:
 		int nCntSlash;	// 攻撃した回数
 	};
 
-	//****************************************************
-	// フィールドタイプの定義
-	//****************************************************
-	enum class FIELD_TYPE : WORD
-	{
-		NORMAL, // 普通
-		JUMP,	// ジャンプ
-		DASH,	// ダッシュ
-		MAX
-	};
-
 	// <special function>
 	CField_Builder();	// コンストラクタ
 	~CField_Builder();	// デストラクタ
@@ -77,19 +67,19 @@ private:
 	void	UpdateFan();						// 扇形の更新
 	void	UpdateBuilder();					// ビルダーの更新
 	void	BranchFieldType();					// フィールドタイプ分岐
-	void	AutoCreateItem();					// アイテムの自動生成
-	void	AutoCreateBlockDash();				// ダッシュタイプのブロック自動生成
+	void	GenerateItem();						// アイテムの自動生成
+	void	GenerateBlock();					// /* 変更予定 */
 	bool	DetectNearBlock(D3DXVECTOR3 Pos);	// 隣接し合うブロックを検出
 	void	DestroyCheck();						// 破壊判定
 	void	DestroyAllBlock();					// 全ブロックの削除
 	void	PrintDebug();						// デバッグ表示
 
 	// <data>
-	ActionData	   m_ActionData;		// アクションデータ
-	int			   m_nCntDestroyBlock;	// ブロックの破壊数
-	FIELD_TYPE	   m_FiledType;			/* 変更予定 */
-	const CPlayer* m_pSyncPlayer;		// プレイヤーのポインタ
-	CFan*		   m_pFan;				// 扇形範囲
+	std::unique_ptr<CField_Type> m_upFieldType;			// フィールドタイプ
+	ActionData					 m_ActionData;			// アクションデータ
+	int							 m_nCntDestroyBlock;	// ブロックの破壊数
+	const CPlayer*				 m_pSyncPlayer;			// プレイヤーのポインタ
+	CFan*						 m_pFan;				// 扇形範囲
 };
 
 #endif // _FIELD_BUILEDER_H_
