@@ -20,7 +20,7 @@ public:
 	virtual ~CField_Type();	// デストラクタ
 
 	// <function>
-	virtual void Update() = 0;	// 更新処理
+	virtual void GenerateBlock(float) = 0;	// ブロック発生
 };
 
 #endif // _FIELD_TYPE_H_

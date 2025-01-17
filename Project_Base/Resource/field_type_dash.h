@@ -25,7 +25,7 @@ public:
 	~CField_Type_Dash() override;	// デストラクタ
 
 	// <function>
-	void Update() override;	// 更新処理
+	void GenerateBlock(float) override;	// 更新処理
 
 	// <static function>
 	static CField_Type_Dash* Create();	// 生成

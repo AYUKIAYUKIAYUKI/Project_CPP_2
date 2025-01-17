@@ -25,10 +25,15 @@ public:
 	~CField_Type_Normal() override;	// デストラクタ
 
 	// <function>
-	void Update() override;	// 更新処理
+	void GenerateBlock(float) override;	// 更新処理
 
 	// <static function>
 	static CField_Type_Normal* Create();	// 生成
+
+private:
+
+	// <fuction>
+	bool DetectNearBlock(D3DXVECTOR3);	// 近接しているブロックを検出
 };
 
 #endif // _FIELD_TYPE_NORMAL_H_

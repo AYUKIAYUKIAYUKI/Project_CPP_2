@@ -10,6 +10,14 @@
 //****************************************************
 #include "field_type_normal.h"
 
+#include "field_manager.h"
+#include "block.h"
+
+//****************************************************
+// usingディレクティブ
+//****************************************************
+using namespace abbr;
+
 //============================================================================
 // 
 // publicメンバ
@@ -35,9 +43,28 @@ CField_Type_Normal::~CField_Type_Normal()
 //============================================================================
 // 更新処理
 //============================================================================
-void CField_Type_Normal::Update()
+void CField_Type_Normal::GenerateBlock(float fEdgeDirection)
 {
+	// 新しい座標・向きを用意
+	Vec3 NewPos = VEC3_INIT, NewRot = VEC3_INIT;
 
+	// 生成用の座標を決定
+	NewPos.x = cosf(fEdgeDirection) * CField_Manager::FIELD_RADIUS;
+	NewPos.y = fabsf(utility::GetRandomValue<float>());
+	NewPos.z = sinf(fEdgeDirection) * CField_Manager::FIELD_RADIUS;
+
+	// 近接しているブロックを検出し、形成条件に反していたら生成しない
+	//if (!DetectNearBlock(NewPos))
+	if (DetectNearBlock(NewPos))
+	{
+		return;
+	}
+
+	// 向きを決定
+	NewRot.y = atan2f(-NewPos.x, -NewPos.z);
+
+	// ブロックを生成
+	CBlock::Create(NewPos, NewRot);
 }
 
 //============================================================================
@@ -54,4 +81,24 @@ CField_Type_Normal* CField_Type_Normal::Create()
 	}
 
 	return pNewInstance;
+}
+
+//============================================================================
+// 
+// privateメンバ
+// 
+//============================================================================
+
+//============================================================================
+// 近接しているブロックを検出
+//============================================================================
+bool CField_Type_Normal::DetectNearBlock(D3DXVECTOR3 NewPos)
+{
+	/* この時の形成条件に反していたら */
+	if (0)
+	{
+		return false;
+	}
+
+	return true;
 }
