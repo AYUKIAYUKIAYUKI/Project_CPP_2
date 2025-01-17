@@ -147,6 +147,7 @@ void CObject_Billboard::Update()
 	SetMtxWorld();
 
 #if 0	/* íœ—\’è */
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Alpha Blend")) {
 		ImGui::InputInt("op", &op);

@@ -91,6 +91,7 @@ void CFlyer::Update()
 	CEnemy::Update();
 
 #if 0
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("PosY")) {
 		ImGui::Text("%f", GetPos().y);

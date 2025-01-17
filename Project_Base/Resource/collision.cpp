@@ -196,6 +196,7 @@ int collision::GetCylinderToAABB(const Vec3& SelfOldPos, const Vec3& SelfNowPos,
 {
 #ifdef _DEBUG
 	// ウィンドウを表示
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("[GetCylinderToAABB] UpdateInfo"))
 	{

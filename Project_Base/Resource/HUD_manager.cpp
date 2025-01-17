@@ -295,6 +295,7 @@ void CHUD_Manager::Uninit()
 void CHUD_Manager::ParamControl()
 {
 #if 0 // 座標確認
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Pos Edit")) {
 		Vec3 Pos = m_pMapSymbol->GetPos();
@@ -307,6 +308,7 @@ void CHUD_Manager::ParamControl()
 #endif
 
 #if 1 // カラー確認
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Color Edit")) {
 		XCol ColTarget = m_pMapSymbolItem->GetColTarget();

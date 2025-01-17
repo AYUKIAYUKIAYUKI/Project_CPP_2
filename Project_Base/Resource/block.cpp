@@ -95,6 +95,7 @@ void CBlock::Uninit()
 void CBlock::Update()
 {
 #if 0
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Block Param"))
 	{
@@ -123,6 +124,7 @@ void CBlock::Update()
 
 #if 0
 #ifdef _DEBUG
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Block Param"))
 	{

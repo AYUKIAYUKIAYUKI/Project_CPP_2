@@ -124,6 +124,7 @@ void CItem::Update()
 
 #if 1
 #ifdef _DEBUG
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Item Param"))
 	{
@@ -138,6 +139,7 @@ void CItem::Update()
 
 #ifdef _DEBUG
 #if 0	/* ステンシルテストの設定変更 */
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Sstencil - Only Item"))
 	{

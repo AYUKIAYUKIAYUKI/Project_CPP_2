@@ -994,6 +994,7 @@ void CField_Manager::NotifySceneTransition()
 //============================================================================
 void CField_Manager::PrintDebug()
 {
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Field Manager Data")) {
 		ImGui::Text("Phase:%d", m_nPhase);
@@ -1001,6 +1002,7 @@ void CField_Manager::PrintDebug()
 	}
 
 #if 1	// フェーズスキップ
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Skip Phase")) {
 		if (ImGui::Button("Skip to 5")) {
@@ -1011,6 +1013,7 @@ void CField_Manager::PrintDebug()
 #endif
 
 #if 0	// 初期配置ブロックの調整
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("InitBlock Edit")) {
 		if (!pAdjusrInitBlock)

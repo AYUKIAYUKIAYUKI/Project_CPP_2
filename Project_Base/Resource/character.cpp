@@ -123,6 +123,7 @@ bool CCharacter::CheckFacingSide()
 	float fCross = (CharacterPosVec.x * FacingVec.z) - (CharacterPosVec.z * FacingVec.x);
 
 #if 0 // 値確認用
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Test")) {
 		ImGui::Text("cross:%f", fCross);

@@ -147,6 +147,7 @@ void CCamera::SetAppearBoss()
 {
 #ifdef _DEBUG
 	static float a = 0.0f, b = 0.0f;
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Boss View"))
 	{
@@ -291,6 +292,7 @@ void CCamera::BranchViewMode()
 {
 #ifdef _DEBUG 
 	// ビューモード選択用ウィンドウを表示
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("VeiwMode"))
 	{

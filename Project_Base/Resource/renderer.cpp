@@ -55,6 +55,7 @@ void CRenderer::Update()
 
 #ifdef _DEBUG
 #if 1 // テキストサイズの調整
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("DT Edit")) {
 		ImGui::DragFloat("fSizeCoef", &fSizeCoef, 0.001f, 0.0f, 100.0f);
@@ -63,6 +64,7 @@ void CRenderer::Update()
 #endif
 
 #if 0 // フォグの調整
+	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Fog Edit")) {
 		ImGui::InputFloat("fStart", &m_fFogStart);
