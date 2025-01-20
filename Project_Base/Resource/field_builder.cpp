@@ -5,6 +5,8 @@
 // 
 //============================================================================
 
+float fTest = 2.0f;
+
 //****************************************************
 // インクルードファイル
 //****************************************************
@@ -56,6 +58,14 @@ void CField_Builder::Update()
 	UpdateBuilder();
 
 #ifdef _DEBUG
+	ImGui::SetNextWindowSize({ -1, -1 });
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Test")) {
+		ImGui::InputFloat("fefsasefasf", &fTest);
+		ImGui::Text("Norm:%f", CField_Type::GetAreaNorm() * fTest);
+		ImGui::End();
+	}
+
 	// デバッグ表示
 	PrintDebug();
 #endif // _DEBUG

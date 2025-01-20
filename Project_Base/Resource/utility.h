@@ -67,6 +67,10 @@ namespace utility
 	// 乱数生成
 	template <typename T> static T GetRandomValue();
 
+	// 任意のの倍数に丸める
+	template <typename T> static T RoundToAnyMultiple(T, int);
+	template <typename T> static T RoundToAnyMultiple(T, int, int);
+
 	// ダウンキャスト
 	template <typename T1, typename T2> static T1* DownCast(T2* pBase);
 	template <typename T1, typename T2> static T1* DownCast(T1* pDest, T2* pBase);
@@ -92,6 +96,34 @@ template <typename T> T utility::GetRandomValue()
 
 	// 整数を指定された型にキャスト
 	return static_cast<T>(nRandom);
+}
+
+//============================================================================
+// 任意の倍数に丸める
+//============================================================================
+template <typename T> T utility::RoundToAnyMultiple(T Num, int nDivisor)
+{
+	// 余計な部分を切り捨てるため一度商を出す
+	int Quotient = Num / nDivisor;
+
+	// 任意の倍数に変換する
+	int Multiple = Quotient * nDivisor;
+
+	return static_cast<T>(Multiple);
+}
+
+//============================================================================
+// 任意の倍数に丸める
+//============================================================================
+template <typename T> T utility::RoundToAnyMultiple(T Num, int nDivisor, int nAdjust)
+{
+	// 余計な部分を切り捨てるため一度商を出す
+	int Quotient = (Num + nAdjust) / nDivisor;
+
+	// 任意の倍数に変換する
+	int Multiple = Quotient * nDivisor;
+
+	return static_cast<T>(Multiple);
 }
 
 //============================================================================
