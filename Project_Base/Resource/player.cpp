@@ -23,6 +23,7 @@
 //****************************************************
 // プリプロセッサディレクティブ
 //****************************************************
+#define SWITCH_HITCHECK_METHOD 1			// 当たり判定の方法を変更（0->旧式、 1->新式）
 #define SHOW_NORMALIZED_POSITION_HITCHECK 0	// 正規化座標での当たり判定を表示
 
 //****************************************************
@@ -340,6 +341,44 @@ void CPlayer::AdjustHeight()
 //============================================================================
 void CPlayer::HitCheck()
 {
+#if SWITCH_HITCHECK_METHOD
+	// 通常優先度のオブジェクトを取得
+	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
+
+	while (pObj != nullptr)
+	{
+		// ブロックタイプのオブジェクトを取得
+		if (pObj->GetType() == CObject::TYPE::BLOCK)
+		{
+			// オブジェクトをブロックタグにダウンキャスト
+			CBlock* pBlock = utility::DownCast<CBlock, CObject>(pObj);
+
+			// ブロックとプレイヤーの距離の差を出す
+			Vec3
+				Norm = pBlock->GetPos() - GetPosTarget(),
+				OldNorm = pBlock->GetPos() - GetPos();
+
+			// ブロックと自身の半径・高さを足して引き下がるべき長さを出す
+			float
+				fWidth = pBlock->GetModel()->Size.x + GetRadius(),
+				fHeight = pBlock->GetModel()->Size.y + GetHeight();
+
+			if (Norm.x * Norm.x + Norm.z * Norm.z < fWidth * fWidth &&
+				Norm.y * Norm.y < fHeight * fHeight)
+			{ // 高さが同じくらい、かつある程度隣接しているブロックがあれば引き下がる
+
+				// 衝突前の座標から、当たる直前となる方角を出す
+				SetDirectionTarget(atan2f(GetPos().z, GetPos().x));
+
+				// 衝突寸前の方角から目標座標を割り出す
+				AutoSetPosTarget();
+			}
+		}
+
+		// 次のオブジェクトへ
+		pObj = pObj->GetNext();
+	}
+#else // SWITCH_HITCHECK_METHOD
 	// 衝突の有無を記録
 	bool bDetect = false;
 
@@ -512,4 +551,5 @@ void CPlayer::HitCheck()
 		//m_pBndCylinder->SetCol({ 1.0f, 1.0f, 1.0f, 0.5f });
 #endif // _DEBUG
 	}
+#endif // SWiTCH_HITCHECK_METHOD
 }
