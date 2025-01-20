@@ -12,6 +12,7 @@
 // インクルードファイル
 //****************************************************
 #include "field_type.h"
+#include "X_manager.h"
 
 //****************************************************
 // フィールドタイプ-ノーマルクラス
@@ -33,7 +34,10 @@ public:
 private:
 
 	// <fuction>
-	bool DetectNearBlock(D3DXVECTOR3);	// 近接しているブロックを検出
+	bool DetectLayoutSafety(CX_Manager::TYPE, D3DXVECTOR3);	// 配置の安全性を検出
+
+	// <data>
+	CX_Manager::TYPE m_LastModel;	// 最後のモデル
 };
 
 #endif // _FIELD_TYPE_NORMAL_H_
