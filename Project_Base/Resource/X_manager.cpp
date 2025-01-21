@@ -334,6 +334,18 @@ D3DXVECTOR3 CX_Manager::LoadSize(std::string filename)
 	// ファイルを閉じる
 	ModelFile.close();
 
+	if (filename == "Data\\MODEL\\ENVIRONMENT\\normal.x" ||
+		filename == "Data\\MODEL\\ENVIRONMENT\\side.x" ||
+		filename == "Data\\MODEL\\ENVIRONMENT\\tall.x")
+	{
+		// サイズをキリの良い数値に丸める
+		ResultMax = {
+			utility::RoundToAnyMultiple<float>(ResultMax.x, 5, 2),
+			utility::RoundToAnyMultiple<float>(ResultMax.y, 5, 2),
+			utility::RoundToAnyMultiple<float>(ResultMax.z, 5, 2)
+		};
+	}
+
 	return ResultMax;
 }
 
