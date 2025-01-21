@@ -65,6 +65,24 @@ void CField_Type_Normal::GenerateBlock(float fEdgeDirection)
 		// ②高さはキリの良い数値になるよう調整
 		NewPos.y = fabsf(utility::GetRandomValue<float>());
 		NewPos.y = utility::RoundToAnyMultiple<float>(NewPos.y, 20, 9);
+
+		{ // ③ブロックのタイプに応じさらに少し調整
+
+			// 占有範囲をコピー
+			float fRangeHeight = CField_Type::BLOCK_RANGE.z;
+
+			// 縦長のブロック以外は範囲半減
+			if (Type != CX_Manager::TYPE::BLOTALL)
+			{
+				fRangeHeight *= 0.5f;
+			}
+
+			// ブロックが地面に埋まってしまわないよう下限を設定
+			if (NewPos.y < fRangeHeight)
+			{
+				NewPos.y = fRangeHeight;
+			}
+		}
 	}
 
 	// アイテムとの重複を検出
