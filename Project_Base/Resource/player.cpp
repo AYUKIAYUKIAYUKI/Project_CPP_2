@@ -363,9 +363,37 @@ void CPlayer::HitCheck()
 				fWidth = pBlock->GetModel()->Size.x + GetRadius(),
 				fHeight = pBlock->GetModel()->Size.y + GetHeight();
 
-			if (Norm.x * Norm.x + Norm.z * Norm.z < fWidth * fWidth &&
+			// 条件に応じて押し出し方向を変更
+			if (OldNorm.x * OldNorm.x + OldNorm.z * OldNorm.z < fWidth * fWidth &&
+				Norm.x * Norm.x + Norm.z * Norm.z < fWidth * fWidth &&
 				Norm.y * Norm.y < fHeight * fHeight)
-			{ // 高さが同じくらい、かつある程度隣接しているブロックがあれば引き下がる
+			{ // 高さが同じくらい、かつ既にサイドの範囲には入り込んでいる場合は上下の判定
+
+				// 押し戻す高さをコピー
+				float fEitherHeight = fHeight;
+
+				// Y軸方向の加速度を初期化
+				SetVelY(0.0f);
+
+				// 上下どちらにいたかを判定
+				if (pBlock->GetPos().y > GetPos().y)
+				{ // ブロックより下側にいたら
+
+					// 押し戻す高さも反転
+					fEitherHeight *= -1.0f;
+				}
+
+				// 新しい目標座標を作成
+				Vec3 NewPosTarget = { GetPosTarget().x,
+						pBlock->GetPos().y + fEitherHeight,
+						GetPosTarget().z };
+
+				// 目標座標を反映
+				SetPosTarget(NewPosTarget);
+			}
+			else if (Norm.x * Norm.x + Norm.z * Norm.z < fWidth * fWidth &&
+				Norm.y * Norm.y < fHeight * fHeight)
+			{ // 高さが同じくらい、かつサイドの範囲に衝突予定のブロックがあれば引き下がる
 
 				// 衝突前の座標から、当たる直前となる方角を出す
 				SetDirectionTarget(atan2f(GetPos().z, GetPos().x));
