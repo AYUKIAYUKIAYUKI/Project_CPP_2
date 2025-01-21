@@ -14,6 +14,7 @@ extern float fTest;
 #include "field_type_normal.h"
 
 #include "field_manager.h"
+#include "item.h"
 #include "block.h"
 
 //****************************************************
@@ -63,11 +64,17 @@ void CField_Type_Normal::GenerateBlock(float fEdgeDirection)
 
 		// ②高さはキリの良い数値になるよう調整
 		NewPos.y = fabsf(utility::GetRandomValue<float>());
-		NewPos.y = utility::RoundToAnyMultiple<float>(NewPos.y, 10, 5);
+		NewPos.y = utility::RoundToAnyMultiple<float>(NewPos.y, 20, 9);
 	}
 
-	// 配置の安全性を検出、条件に反しているなら生成しない
-	if (!DetectLayoutSafety(Type, NewPos))
+	// アイテムとの重複を検出
+	if (DetectOverlapItem(NewPos))
+	{
+		return;
+	}
+
+	// ブロックとの重複を検出
+	if (DetectOverlapBlock(Type, NewPos))
 	{
 		return;
 	}
@@ -107,9 +114,38 @@ CField_Type_Normal* CField_Type_Normal::Create()
 //============================================================================
 
 //============================================================================
-// 配置の安全性を検出
+// アイテムとの重複を検出
 //============================================================================
-bool CField_Type_Normal::DetectLayoutSafety(CX_Manager::TYPE SelfType, D3DXVECTOR3 SelfPos)
+bool CField_Type_Normal::DetectOverlapItem(D3DXVECTOR3 SelfPos)
+{
+	// アイテムタイプのオブジェクトを取得
+	CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
+
+	if (pObj)
+	{
+		// オブジェクトをアイテムクラスにダウンキャスト
+		CItem* pItem = nullptr;
+		pItem = utility::DownCast(pItem, pObj);
+
+		// アイテムとの距離の差を作成
+		const Vec3& Distance = pItem->GetPos() - SelfPos;
+
+		// アイテムにブロックが接近してしまっていたら
+		if (Distance.x * Distance.x + Distance.y * Distance.y + Distance.z * Distance.z <= CField_Type::GetAreaNorm() * 1.5f)
+		{
+			// 重複している、このブロックを生成しない
+			return true;
+		}
+	}
+
+	// 条件通過
+	return false;
+}
+
+//============================================================================
+// ブロックとの重複を検出
+//============================================================================
+bool CField_Type_Normal::DetectOverlapBlock(CX_Manager::TYPE SelfType, D3DXVECTOR3 SelfPos)
 {
 	// 通常優先度のオブジェクトを取得
 	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
@@ -132,9 +168,11 @@ bool CField_Type_Normal::DetectLayoutSafety(CX_Manager::TYPE SelfType, D3DXVECTO
 			float
 				DistanceNorm = (Distance.x * Distance.x + Distance.y * Distance.y + Distance.z * Distance.z);	// 距離の差の大きさ
 
+			// 他のブロックとの距離がある程度近ければ条件を満たさない
 			if (DistanceNorm <= CField_Type::GetAreaNorm() * fTest)
 			{
-				return false;
+				// 重複している、このブロックを生成しない
+				return true;
 			}
 		}
 
@@ -142,5 +180,6 @@ bool CField_Type_Normal::DetectLayoutSafety(CX_Manager::TYPE SelfType, D3DXVECTO
 		pObj = pObj->GetNext();
 	}
 
-	return true;
+	// 条件通過
+	return false;
 }

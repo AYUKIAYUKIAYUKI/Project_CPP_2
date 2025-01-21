@@ -103,8 +103,11 @@ template <typename T> T utility::GetRandomValue()
 //============================================================================
 template <typename T> T utility::RoundToAnyMultiple(T Num, int nDivisor)
 {
+	// 整数値に変換
+	int nNum = static_cast<int>(Num);
+
 	// 余計な部分を切り捨てるため一度商を出す
-	int Quotient = Num / nDivisor;
+	int Quotient = nNum / nDivisor;
 
 	// 任意の倍数に変換する
 	int Multiple = Quotient * nDivisor;
@@ -117,8 +120,11 @@ template <typename T> T utility::RoundToAnyMultiple(T Num, int nDivisor)
 //============================================================================
 template <typename T> T utility::RoundToAnyMultiple(T Num, int nDivisor, int nAdjust)
 {
+	// 整数値に変換
+	int nNum = static_cast<int>(Num);
+
 	// 余計な部分を切り捨てるため一度商を出す
-	int Quotient = (Num + nAdjust) / nDivisor;
+	int Quotient = (nNum + nAdjust) / nDivisor;
 
 	// 任意の倍数に変換する
 	int Multiple = Quotient * nDivisor;

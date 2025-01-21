@@ -34,7 +34,8 @@ public:
 private:
 
 	// <fuction>
-	bool DetectLayoutSafety(CX_Manager::TYPE, D3DXVECTOR3);	// 配置の安全性を検出
+	bool DetectOverlapItem(D3DXVECTOR3);					// アイテムとの重複を検出
+	bool DetectOverlapBlock(CX_Manager::TYPE, D3DXVECTOR3);	// ブロックの重複を検出
 
 	// <data>
 	CX_Manager::TYPE m_LastModel;	// 最後のモデル
