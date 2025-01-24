@@ -16,8 +16,8 @@
 //****************************************************
 // 前方宣言
 //****************************************************
-class CObject_TextMesh;
 class CMotion_Set;
+class CObject_PopUp;
 
 //****************************************************
 // リザルトクラス
@@ -46,9 +46,9 @@ private:
 	~CResult() override;	// デストラクタ
 
 	// <Data>
-	D3DXVECTOR3  m_Path;			// パス
-	CMotion_Set* m_pFakePlayer;		// フェイクプレイヤー
-	CObject_TextMesh* m_pTextMesh;	// テキスト
+	D3DXVECTOR3	   m_Path;			// パス
+	CMotion_Set*   m_pFakePlayer;	// フェイクプレイヤー
+	CObject_PopUp* m_pPopUpWindow;	// ポップアップウィンドウ
 };
 
 #endif // _RESULT_H_

@@ -9,10 +9,11 @@
 // インクルードファイル
 //****************************************************
 #include "result.h"
+#include "motion_set.h"
+#include "object_PopUp.h"
+
 #include "manager.h"
 #include "title.h"
-#include "object_TextMesh.h"
-#include "motion_set.h"
 
 //============================================================================
 // 
@@ -28,6 +29,7 @@ void CResult::Update()
 	// 基底クラスの更新処理
 	CScene::Update();
 
+	// フェイクプレイヤーの調整
 #if 0
 	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
@@ -49,31 +51,25 @@ void CResult::Update()
 	}
 #endif
 
+	// ポップアップウィンドウの調整
 #if 0
 	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("Text"))
+	if (ImGui::Begin("PopUpWindow"))
 	{
-		D3DXVECTOR3 Pos = m_pTextMesh->GetPos();
-		ImGui::DragFloat("Pos:x", &Pos.x);
-		ImGui::DragFloat("Pos:y", &Pos.y);
-		ImGui::DragFloat("Pos:z", &Pos.z);
-		m_pTextMesh->SetPos(Pos);
-		//m_pTextMesh->SetPosTarget(Pos);
-
-		//D3DXVECTOR3 Rot = m_pText->GetRot();
-		//ImGui::DragFloat("Rot:x", &Rot.x);
-		//ImGui::DragFloat("Rot:y", &Rot.y);
-		//ImGui::DragFloat("Rot:z", &Rot.z);
-		//m_pText->SetRot(Rot);
-		//m_pText->SetRotTarget(Rot);
-
-		D3DXVECTOR3 Size = m_pTextMesh->GetMeshSize();
+		// サイズ
+		D3DXVECTOR3 Size = m_pPopUpWindow->GetSize();
 		ImGui::DragFloat("Size:x", &Size.x);
 		ImGui::DragFloat("Size:y", &Size.y);
 		ImGui::DragFloat("Size:z", &Size.z);
-		m_pTextMesh->SetMeshSize(Size);
-		//m_pText->SetSizeTarget(Size);
+		m_pPopUpWindow->SetSize(Size);
+	
+		// 座標
+		D3DXVECTOR3 Pos = m_pPopUpWindow->GetPos();
+		ImGui::DragFloat("Pos:x", &Pos.x);
+		ImGui::DragFloat("Pos:y", &Pos.y);
+		ImGui::DragFloat("Pos:z", &Pos.z);
+		m_pPopUpWindow->SetPos(Pos);
 
 		ImGui::End();
 	}
@@ -144,7 +140,7 @@ CResult* CResult::Create()
 CResult::CResult() :
 	m_Path{ 0.0f, 0.0f, 0.0f },
 	m_pFakePlayer{ nullptr },
-	m_pTextMesh{ nullptr }
+	m_pPopUpWindow{ nullptr }
 {
 
 }
@@ -178,10 +174,10 @@ HRESULT CResult::Init()
 	m_pFakePlayer->SetNowMotion(1);
 	m_pFakePlayer->SetRot(utility::JsonConvertToVec3(FakePlayerParam["Rot"]));
 	m_Path = utility::JsonConvertToVec3(FakePlayerParam["Pos"]);
-	m_pFakePlayer->SetPos({ 0.0f, -1000.0f, 0.0f });
+	m_pFakePlayer->SetPos({ 0.0f, -1024.0f, 0.0f });
 
-	// テキストの生成
-	m_pTextMesh = CObject_TextMesh::Create(utility::OpenJsonFile("Data\\JSON\\TEXTMESH\\result.json"));
+	// ポップアップウィンドウの生成
+	m_pPopUpWindow = CObject_PopUp::Create(utility::OpenJsonFile("Data\\JSON\\POPUP\\resultwindow.json"));
 
 	return S_OK;
 }
@@ -198,11 +194,11 @@ void CResult::Uninit()
 		m_pFakePlayer = nullptr;
 	}
 
-	// テキストメッシュの破棄
-	if (m_pTextMesh != nullptr)
+	// ポップアップウィンドウの破棄
+	if (m_pPopUpWindow != nullptr)
 	{
-		m_pTextMesh->SetRelease();
-		m_pTextMesh = nullptr;
+		m_pPopUpWindow->SetRelease();
+		m_pPopUpWindow = nullptr;
 	}
 }
 

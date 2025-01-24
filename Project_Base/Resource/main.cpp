@@ -22,7 +22,7 @@
 // マクロ定義
 //****************************************************
 #define CLASS_NAME	"WindowClass"		// ウィンドウクラスの名前
-#define WINDOW_NAME	"Project_C++_2"		// ウィンドウの名前
+#define WINDOW_NAME	"ハッピーターン！"		// ウィンドウの名前
 
 // メモリリーク検出用
 #define _CRTDBG_MAP_ALLOC

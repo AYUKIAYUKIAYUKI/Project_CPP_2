@@ -16,6 +16,10 @@ extern float fTest;
 #include "field_manager.h"
 #include "item.h"
 #include "block.h"
+#include "enemy.h"
+#include "monster.h"
+#include "ghost.h"
+#include "flyer.h"
 
 //****************************************************
 // usingディレクティブ
