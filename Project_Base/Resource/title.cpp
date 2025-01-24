@@ -243,7 +243,13 @@ void CTitle::UpdateEnvironment()
 		else	
 		{ // カメラの引きが完了したら
 
-			if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
+			// コントローラーを取得
+			CInputPad* pPad = CManager::GetPad();
+
+			// 次のシーンへ
+			if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN) ||
+				pPad->GetTrigger(CInputPad::JOYKEY::A) ||
+				pPad->GetTrigger(CInputPad::JOYKEY::START))
 			{
 				// HUDマネージャーの生成
 				CHUD_Manager::Create();

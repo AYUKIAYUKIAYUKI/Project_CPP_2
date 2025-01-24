@@ -78,8 +78,13 @@ void CResult::Update()
 	// フェイクプレイヤーの更新
 	UpdateFakePlayer();
 
+	// コントローラーを取得
+	CInputPad* pPad = CManager::GetPad();
+
 	// 次のシーンへ
-	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
+	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN) ||
+		pPad->GetTrigger(CInputPad::JOYKEY::A) ||
+		pPad->GetTrigger(CInputPad::JOYKEY::START))
 	{
 		To_Next();
 	}
