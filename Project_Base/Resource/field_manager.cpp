@@ -891,17 +891,6 @@ void CField_Manager::UpdatePhase()
 			m_pPopUp = nullptr;
 		}
 
-		//{ // アイテムオブジェクトを取得
-		//	CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
-
-		//	// アイテムオブジェクトが発見出来たら
-		//	if (pObj)
-		//	{
-		//		// このオブジェクトに破棄予約
-		//		pObj->SetRelease();
-		//	}
-		//}
-
 		break;
 
 		// 2週目以降はこのフェーズ
@@ -998,6 +987,22 @@ void CField_Manager::AppearBossEvent()
 
 	// BGMを遷移
 	CSound::GetInstance()->Transition(CSound::LABEL::FILEDBGM, CSound::LABEL::BOSSBGM);
+
+	/* 一時的にボス登場イベント時にアイテムを強制削除 */
+#if SAFE
+
+	{ // アイテムオブジェクトを取得
+		CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
+
+		// アイテムオブジェクトが発見出来たら
+		if (pObj)
+		{
+			// このオブジェクトに破棄予約
+			pObj->SetRelease();
+		}
+	}
+
+#endif
 }
 
 //============================================================================
