@@ -66,6 +66,7 @@ public:
 	bool		GetPress(JOYKEY Key);	// プレス情報取得
 	bool		GetTrigger(JOYKEY Key);	// トリガー情報取得
 	bool		GetRelease(JOYKEY Key);	// リリース情報取得
+	bool		GetDepthTriggerR();		// 右トリガーボタンの取得
 	JOYSTICK	GetJoyStickL();			// 左スティックの傾き取得
 	JOYSTICK	GetJoyStickR();			// 右スティックの傾き取得
 

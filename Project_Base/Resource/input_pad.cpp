@@ -104,6 +104,7 @@ void CInputPad::Update()
 
 		// パッドのトリガー情報を保存
 		m_aKeyStateTrigger.Gamepad.wButtons = ~m_aKeyState.Gamepad.wButtons & StateJoypad.Gamepad.wButtons;
+		m_aKeyStateTrigger.Gamepad.bRightTrigger = ~m_aKeyState.Gamepad.bRightTrigger & StateJoypad.Gamepad.bRightTrigger;
 		
 #if 0 // パッドのプレス情報を保存
 		// ボタンのみ
@@ -137,6 +138,14 @@ bool CInputPad::GetTrigger(JOYKEY Key)
 bool CInputPad::GetRelease(JOYKEY Key)
 {
 	return (m_aKeyStateRelease.Gamepad.wButtons & (0x01 << static_cast<int>(Key))) ? true : false;
+}
+
+//============================================================
+// 右トリガーボタンの入力を取得
+//============================================================
+bool CInputPad::GetDepthTriggerR()
+{
+	return (m_aKeyStateTrigger.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
 }
 
 //============================================================================

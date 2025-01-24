@@ -243,6 +243,8 @@ void CField_Builder::UpdateBuilder()
 		return;
 
 	// フィールドタイプの分岐
+	/* 一時的に手動で行うものとなります */
+#ifdef _DEBUG
 	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Branch")) {
@@ -251,6 +253,7 @@ void CField_Builder::UpdateBuilder()
 		}
 		ImGui::End();
 	}
+#endif // _DEBUG
 
 	// アイテムの自動生成
 	GenerateItem();

@@ -198,7 +198,7 @@ bool CPlayer_State_Default::Control()
 		To_Jump();
 		return true;
 	}
-	else if (pMouse->GetTrigger(0) || pPad->GetTrigger(CInputPad::JOYKEY::Y))
+	else if (pMouse->GetTrigger(0) || pPad->GetTrigger(CInputPad::JOYKEY::Y) || pPad->GetDepthTriggerR())
 	{
 		// aŒ‚ó‘Ô‚Ö
 		To_Slash();
