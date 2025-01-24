@@ -34,7 +34,7 @@ float fTest = 2.0f;
 #include "boots.h"
 
 /* 修正用 */
-#define SAFE 0
+#define SAFE 1
 
 //****************************************************
 // usingディレクティブ
@@ -429,7 +429,7 @@ void CField_Builder::DestroyCheck()
 				{
 #if SAFE
 					// 銅像を振動モーションに変更
-					m_pStatue->SetNowMotion(0);
+					CField_Manager::GetInstance()->AAABBB();
 #endif // SAFE
 
 					// 全ブロックを破壊

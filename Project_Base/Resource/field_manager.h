@@ -46,6 +46,7 @@ public:
 	void Update();								// 更新処理
 	void Draw();								// 描画処理
 	bool AdjustPosToFieldSize(CObject* pObj);	// 座標をフィールドサイズに調整
+	void AAABBB();	// あああ
 
 	// <getter>
 	CField_Builder* const GetFieldBuilder() const;	// フィールドビルダーの取得

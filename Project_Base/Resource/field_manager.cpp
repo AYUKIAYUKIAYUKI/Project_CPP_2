@@ -155,6 +155,15 @@ bool CField_Manager::AdjustPosToFieldSize(CObject* pObj)
 }
 
 //============================================================================
+// におふぇいおふぃおあ
+//============================================================================
+void CField_Manager::AAABBB()
+{
+	// 銅像を振動モーションに変更
+	m_pStatue->SetNowMotion(0);
+}
+
+//============================================================================
 // フィールドビルダーの取得
 //============================================================================
 CField_Builder* const CField_Manager::GetFieldBuilder() const
@@ -882,16 +891,16 @@ void CField_Manager::UpdatePhase()
 			m_pPopUp = nullptr;
 		}
 
-		{ // アイテムオブジェクトを取得
-			CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
+		//{ // アイテムオブジェクトを取得
+		//	CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
 
-			// アイテムオブジェクトが発見出来たら
-			if (pObj)
-			{
-				// このオブジェクトに破棄予約
-				pObj->SetRelease();
-			}
-		}
+		//	// アイテムオブジェクトが発見出来たら
+		//	if (pObj)
+		//	{
+		//		// このオブジェクトに破棄予約
+		//		pObj->SetRelease();
+		//	}
+		//}
 
 		break;
 
