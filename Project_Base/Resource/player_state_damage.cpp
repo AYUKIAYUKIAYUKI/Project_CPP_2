@@ -10,8 +10,9 @@
 //****************************************************
 #include "player_state_damage.h"
 #include "player_state_default.h"
-#include "sound.h"
+
 #include "manager.h"
+#include "sound.h"
 #include "field_manager.h"
 
 //****************************************************
@@ -53,9 +54,15 @@ void CPlayer_State_Damage::Update()
 {
 	// プレイヤーステートクラスの更新処理
 	CPlayer_State::Update();
-
+	
 	// 重力加速
 	m_pCharacter->SetVelY(m_pCharacter->GetVelY() + CField_Manager::FIELD_GRAVITY);
+
+	// カメラを取得
+	CCamera* pCamera = CManager::GetManager()->GetCamera();
+
+	// 振動を設定
+	pCamera->SetVibration(0.003f);
 
 	// ダメージモーションが終了したら
 	if (m_pCharacter->GetStopState())
