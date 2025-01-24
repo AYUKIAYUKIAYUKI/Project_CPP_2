@@ -10,6 +10,7 @@
 //****************************************************
 #include "field_manager.h"
 #include "field_builder.h"
+#include "field_type.h"
 #include "object_HUD.h"
 #include "object_PopUp.h"
 #include "motion_set.h"
@@ -37,7 +38,7 @@ namespace
 }
 
 /* 修正用 */
-#define SAFE 0
+#define SAFE 1
 
 //****************************************************
 // usingディレクティブ
@@ -790,8 +791,11 @@ void CField_Manager::UpdatePhase()
 				// アイテムクラスにダウンキャスト
 				CItem* pItem = utility::DownCast<CItem, CObject>(pObj);
 
+				Vec3 Distance = m_pSyncPlayer->GetPos() - pItem->GetPos();
+				float fDistanceNorm = Distance.x * Distance.x + Distance.z * Distance.z;
+
 				// アイテムに接近したら
-				if (m_pFan->DetectInFanRange(pItem->GetPos()))
+				if (fDistanceNorm <= CField_Type::GetAreaNorm())
 				{
 					// 消滅設定
 					if (m_pPopUp)
@@ -870,6 +874,24 @@ void CField_Manager::UpdatePhase()
 
 		// 周回判定を出す
 		m_bRetry = true;
+
+		// ポップアップに消滅設定
+		if (m_pPopUp)
+		{
+			m_pPopUp->SetDisappear();
+			m_pPopUp = nullptr;
+		}
+
+		{ // アイテムオブジェクトを取得
+			CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
+
+			// アイテムオブジェクトが発見出来たら
+			if (pObj)
+			{
+				// このオブジェクトに破棄予約
+				pObj->SetRelease();
+			}
+		}
 
 		break;
 
