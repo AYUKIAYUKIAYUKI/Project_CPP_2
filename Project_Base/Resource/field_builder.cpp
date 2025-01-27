@@ -409,8 +409,11 @@ void CField_Builder::DestroyCheck()
 
 	while (pObj != nullptr)
 	{
-		// ブロックタイプのオブジェクトなら
-		if (pObj->GetType() == CObject::TYPE::BLOCK)
+		// タイプをコピー
+		const CObject::TYPE& Type = pObj->GetType();
+
+		// タイプに応じて破棄の詳細を分岐
+		if (Type == CObject::TYPE::BLOCK)
 		{
 			// オブジェクトをブロックタグにダウンキャスト
 			CBlock* pBlock = utility::DownCast<CBlock, CObject>(pObj);
@@ -438,6 +441,18 @@ void CField_Builder::DestroyCheck()
 					// 処理を強制終了
 					return;
 				}
+			}
+		}
+		else if (Type == CObject::TYPE::ENEMY)
+		{
+			// オブジェクトをエネミークラスにダウンキャスト
+			CEnemy* pEnemy = utility::DownCast<CEnemy, CObject>(pObj);
+
+			// 扇形の範囲外に出ていたら
+			if (!m_pFan->DetectInFanRange(pEnemy->GetPos()))
+			{
+				// 敵を破棄
+				pEnemy->SetRelease();
 			}
 		}
 

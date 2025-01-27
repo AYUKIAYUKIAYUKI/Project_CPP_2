@@ -248,7 +248,7 @@ void CField_Type_Normal::DetectGapForSetEnemy(float test)
 				float fHeight = pAnyBlock->GetPos().y;
 
 				// このブロックの高さを確認
-				if (fHeight >= 30.0f &&
+				if (fHeight >= 40.0f &&
 					fHeight <= 70.0f)
 				{
 					/* モンスターを仮に生成 */

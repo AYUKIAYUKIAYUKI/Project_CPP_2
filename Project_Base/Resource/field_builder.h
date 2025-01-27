@@ -68,7 +68,6 @@ private:
 	void	UpdateBuilder();					// ビルダーの更新
 	void	BranchFieldType();					// フィールドタイプ分岐
 	void	GenerateItem();						// アイテムの自動生成
-	//void	GenerateBlock();
 	bool	DetectNearBlock(D3DXVECTOR3 Pos);	// 隣接し合うブロックを検出
 	void	DestroyCheck();						// 破壊判定
 	void	DestroyAllBlock();					// 全ブロックの削除
