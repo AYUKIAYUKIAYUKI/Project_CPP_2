@@ -14,8 +14,10 @@ extern float fTest;
 #include "field_type_normal.h"
 
 #include "field_manager.h"
+#include "field_builder.h"
 #include "item.h"
 #include "block.h"
+#include "bright.h"
 #include "enemy.h"
 #include "monster.h"
 #include "ghost.h"
@@ -111,6 +113,19 @@ void CField_Type_Normal::GenerateBlock(float fEdgeDirection)
 
 	// 最後に生成したモデルタイプを保持
 	m_LastModel = Type;
+
+#if 0
+	// このブロックの生成後に、敵を配置できる隙間を検出
+	DetectGapForSetEnemy(NewPos.y);
+#else 
+	// エネミーが存在していなければ
+	//if (!CObject::FindSpecificObject(CObject::TYPE::ENEMY))
+	if(CField_Manager::GetInstance()->GetFieldBuilder()->GetCntDestroyBlock() % 10 == 0)
+	{
+		// 隙間に敵を生成
+		DetectGapForSetEnemy(0.0f);
+	}
+#endif
 }
 
 //============================================================================
@@ -204,4 +219,49 @@ bool CField_Type_Normal::DetectOverlapBlock(CX_Manager::TYPE SelfType, D3DXVECTO
 
 	// 条件通過
 	return false;
+}
+
+//============================================================================
+// エネミーが生成出来そうな隙間を検出
+//============================================================================
+void CField_Type_Normal::DetectGapForSetEnemy(float test)
+{
+	// 通常優先度のオブジェクトを取得
+	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
+
+	while (pObj != nullptr)
+	{
+		// ブロックタイプのオブジェクトのとき
+		if (pObj->GetType() == CObject::TYPE::BLOCK)
+		{
+			// オブジェクトをブロッククラスにダウンキャスト
+			CBlock* pAnyBlock = nullptr;
+			pAnyBlock = utility::DownCast(pAnyBlock, pObj);
+
+			// このブロックのモデルタイプを取得
+			const CX_Manager::TYPE& Type = pAnyBlock->GetModelType();
+
+			// 横長ブロックだった場合
+			if (Type == CX_Manager::TYPE::BLOSIDE)
+			{
+				// ブロックの高さをコピー
+				float fHeight = pAnyBlock->GetPos().y;
+
+				// このブロックの高さを確認
+				if (fHeight >= 30.0f &&
+					fHeight <= 70.0f)
+				{
+					/* モンスターを仮に生成 */
+					CBright::Generate(utility::DirectionConvertVec3(
+						atan2f(pAnyBlock->GetPos().z, pAnyBlock->GetPos().x),
+						fHeight - 20.0f,
+						CField_Manager::FIELD_RADIUS),
+						CBright::CREATETYPE::MONSTER);
+				}
+			}
+		}
+
+		// 次のオブジェクトへ
+		pObj = pObj->GetNext();
+	}
 }

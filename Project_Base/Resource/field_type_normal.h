@@ -36,6 +36,7 @@ private:
 	// <fuction>
 	bool DetectOverlapItem(D3DXVECTOR3);					// アイテムとの重複を検出
 	bool DetectOverlapBlock(CX_Manager::TYPE, D3DXVECTOR3);	// ブロックの重複を検出
+	void DetectGapForSetEnemy(float);						// エネミーが生成出来そうな隙間を検出
 
 	// <data>
 	CX_Manager::TYPE m_LastModel;	// 最後のモデル
