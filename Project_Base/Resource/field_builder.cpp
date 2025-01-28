@@ -5,9 +5,6 @@
 // 
 //============================================================================
 
-/* ブロックの密度を操作する係数 */
-float fTest = 2.0f;
-
 //****************************************************
 // インクルードファイル
 //****************************************************
@@ -37,9 +34,27 @@ float fTest = 2.0f;
 #define SAFE 1
 
 //****************************************************
+// 無名名前空間を定義
+//****************************************************
+namespace
+{
+	// ビルダーの更新を一時停止
+	bool bStopBuilder = false;
+
+	// ブロック編集用ウィンドウの表示
+	bool bShowBlockEditWindow = false;
+
+	// 編集用ブロック
+	CBlock* pEditBlock = nullptr;
+}
+
+//****************************************************
 // usingディレクティブ
 //****************************************************
 using namespace abbr;
+
+/* デバッグ用 -> ブロックの密集度合 */
+float fBlockDensity = 2.0f;
 
 //============================================================================
 // 
@@ -55,18 +70,13 @@ void CField_Builder::Update()
 	// 扇形範囲の更新
 	UpdateFan();
 
-	// ビルダーの更新
-	UpdateBuilder();
-
-#ifdef _DEBUG
-	ImGui::SetNextWindowSize({ -1, -1 });
-	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("Test")) {
-		ImGui::InputFloat("fefsasefasf", &fTest);
-		ImGui::Text("Norm:%f", CField_Type::GetAreaNorm() * fTest);
-		ImGui::End();
+	if (!bStopBuilder)
+	{
+		// ビルダーの更新
+		UpdateBuilder();
 	}
 
+#ifdef _DEBUG
 	// デバッグ表示
 	PrintDebug();
 #endif // _DEBUG
@@ -497,6 +507,7 @@ void CField_Builder::PrintDebug()
 	// ノルム確認用
 	Vec3 Norm = m_pSyncPlayer->GetPosTarget() - m_pSyncPlayer->GetPos();
 
+	// アクションデータの表示
 	ImGui::SetNextWindowSize({ -1, -1 });
 	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Field Builder Data")) {
@@ -507,5 +518,154 @@ void CField_Builder::PrintDebug()
 		ImGui::Text("Cross:%f", fCross);
 		ImGui::Text("Norm:%f", Norm.x * Norm.x + Norm.z * Norm.z);
 		ImGui::End();
+	}
+
+	// 操作
+	ImGui::SetNextWindowSize({ -1, -1 });
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Control")) {
+
+		// ビルダーの更新を停止
+		ImGui::Checkbox("StopBuilder", &bStopBuilder);
+
+		// ブロック編集用のウィンドウの表示
+		ImGui::Checkbox("ShowBlockEditWindow", &bShowBlockEditWindow);
+
+		// アイテムを削除
+		if (ImGui::Button("Delete All Item"))
+		{
+			auto p = CObject::FindSpecificObject(CObject::TYPE::ITEM);
+			
+			if (p)
+			{
+				p->SetRelease();
+			}
+		}
+
+		// ブロックを全て削除
+		if (ImGui::Button("Delete All Block"))
+		{
+			DestroyAllBlock();
+		}
+
+		// エネミーを全て削除
+		if (ImGui::Button("Delete All Enemy"))
+		{
+			// 通常レイヤーのオブジェクトを取得
+			CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
+
+			while (pObj != nullptr)
+			{
+				//　エネミータイプのオブジェクトなら
+				if (pObj->GetType() == CObject::TYPE::ENEMY)
+				{
+					// そのまま破棄予約
+					pObj->SetRelease();
+				}
+
+				// 次のオブジェクトへ
+				pObj = pObj->GetNext();
+			}
+		}
+
+		// ブロックの密集度合を変更
+		ImGui::InputFloat("Density", &fBlockDensity);
+		ImGui::Text("Area:%f", CField_Type::GetAreaNorm() * fBlockDensity);
+
+		ImGui::End();
+	}
+
+	// 操作
+	if (bStopBuilder && bShowBlockEditWindow) {
+		ImGui::SetNextWindowSize({ -1, -1 });
+		ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+		if (ImGui::Begin("Block Edit")) {
+
+			// 新しいブロックを作成
+			if (!pEditBlock)
+			{
+				if (ImGui::Button("AddBlock"))
+				{
+					pEditBlock = CBlock::Create(VEC3_INIT, VEC3_INIT);
+				}
+			}
+
+			// 編集用ブロックが存在していれば
+			if (pEditBlock) {
+
+				{ // ブロックモデルの変更
+
+					// ブロックタイプをコピー
+					CX_Manager::TYPE Type = pEditBlock->GetModelType();
+
+					// 表示
+					ImGui::Text("Type: %d", static_cast<WORD>(Type));
+					ImGui::SameLine();
+
+					// タイプを変更
+					if (ImGui::Button("++## Type") && Type != CX_Manager::TYPE::BLOTALL)
+					{
+						Type = static_cast<CX_Manager::TYPE>(Type + 1);
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("--## Type") && Type != CX_Manager::TYPE::BLONORMAL)
+					{
+						Type = static_cast<CX_Manager::TYPE>(Type - 1);
+					}
+
+					// タイプの変更を反映
+					pEditBlock->BindModel(Type);
+
+					// サイズも調整
+					auto pModel = pEditBlock->GetModel();
+					pEditBlock->SetSize(pModel->Size);
+				}
+
+				{ // 方角の編集
+
+					// 座標を取得
+					Vec3 Pos = pEditBlock->GetPos();
+
+					// 座標を方角に変換
+					float fDirection = utility::Vec3ConvertDirection(Pos);
+
+					// 方角を変更
+					ImGui::DragFloat("Direction", &fDirection, 0.001f, -D3DX_PI, D3DX_PI);
+
+					// 新しい方角から適切な向きを作成
+					float fRotY = fDirection + D3DX_PI * -0.5f;
+
+					// 方角の変更を反映
+					pEditBlock->SetPos(utility::DirectionConvertVec3(fDirection, Pos.y, CField_Manager::FIELD_RADIUS));
+					pEditBlock->SetRot({ 0.0f, fRotY, 0.0f });
+				}
+
+				{ // 高さの編集
+
+					// 座標を取得
+					Vec3 Pos = pEditBlock->GetPos();
+
+					// 表示
+					ImGui::Text("Height: %.1f", Pos.y);
+					ImGui::SameLine();
+
+					// 高さを変更
+					if (ImGui::Button("++"))
+					{
+						Pos.y += 20.0f;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("--"))
+					{
+						Pos.y += -20.0f;
+					}
+
+					// 高さの変更を反映
+					pEditBlock->SetPos(Pos);
+				}
+			}
+
+			ImGui::End();
+		}
 	}
 }

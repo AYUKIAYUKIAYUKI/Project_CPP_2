@@ -5,9 +5,6 @@
 //
 //============================================================================
 
-/* デバッグ用 */
-extern float fTest;
-
 //****************************************************
 // インクルードファイル
 //****************************************************
@@ -28,6 +25,9 @@ extern float fTest;
 // usingディレクティブ
 //****************************************************
 using namespace abbr;
+
+/* デバッグ用 - ブロックの密集度合 */
+extern float fBlockDensity;
 
 //============================================================================
 // 
@@ -202,7 +202,7 @@ bool CField_Type_Normal::DetectOverlapBlock(CX_Manager::TYPE SelfType, D3DXVECTO
 				DistanceNorm = (Distance.x * Distance.x + Distance.y * Distance.y + Distance.z * Distance.z);	// 距離の差の大きさ
 
 			// 他のブロックとの距離がある程度近ければ条件を満たさない
-			if (DistanceNorm <= CField_Type::GetAreaNorm() * fTest)
+			if (DistanceNorm <= CField_Type::GetAreaNorm() * fBlockDensity)
 			{
 				// 重複している、このブロックを生成しない
 				return true;
@@ -287,7 +287,7 @@ void CField_Type_Normal::DetectGapForSetEnemy()
 				float fHeight = pAnyBlock->GetPos().y;
 
 				// このブロックの高さが適しているか剪定
-				if (fHeight >= 40.0f &&
+				if (fHeight >= 50.0f &&
 					fHeight <= 70.0f)
 				{
 					// 距離の差を割り出す
