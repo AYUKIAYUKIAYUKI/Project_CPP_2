@@ -15,6 +15,7 @@ extern float fTest;
 
 #include "field_manager.h"
 #include "field_builder.h"
+#include "player.h"
 #include "item.h"
 #include "block.h"
 #include "bright.h"
@@ -118,13 +119,8 @@ void CField_Type_Normal::GenerateBlock(float fEdgeDirection)
 	// このブロックの生成後に、敵を配置できる隙間を検出
 	DetectGapForSetEnemy(NewPos.y);
 #else 
-	// エネミーが存在していなければ
-	//if (!CObject::FindSpecificObject(CObject::TYPE::ENEMY))
-	if(CField_Manager::GetInstance()->GetFieldBuilder()->GetCntDestroyBlock() % 10 == 0)
-	{
-		// 隙間に敵を生成
-		DetectGapForSetEnemy(0.0f);
-	}
+	// 隙間に敵を生成
+	DetectGapForSetEnemy();
 #endif
 }
 
@@ -224,10 +220,53 @@ bool CField_Type_Normal::DetectOverlapBlock(CX_Manager::TYPE SelfType, D3DXVECTO
 //============================================================================
 // エネミーが生成出来そうな隙間を検出
 //============================================================================
-void CField_Type_Normal::DetectGapForSetEnemy(float test)
+void CField_Type_Normal::DetectGapForSetEnemy()
 {
+	/*
+		To Do
+		エネミータイプを検索してモンスタークラスが無いときのみ横長ブロックの真下に一体生成
+	*/
+
 	// 通常優先度のオブジェクトを取得
 	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
+
+	while (pObj != nullptr)
+	{
+		// このオブジェクトのタイプをコピー
+		const CObject::TYPE Type = pObj->GetType();
+
+		// 閃光タイプかエネミータイプのオブジェクトが存在していたら
+		if (Type == CObject::TYPE::BRIGHT ||
+			Type == CObject::TYPE::ENEMY)
+		{
+			// 敵を生成せず終了
+			return;
+		}
+
+		// 次のオブジェクトへ
+		pObj = pObj->GetNext();
+	}
+
+	// プレイヤータイプのオブジェクトを取得
+	pObj = CObject::FindSpecificObject(CObject::TYPE::PLAYER);
+
+	// 取得失敗で終了
+	if (!pObj)
+	{
+		return;
+	}
+
+	// プレイヤークラスにダウンキャスト
+	const CPlayer* pPlayer = utility::DownCast<CPlayer, CObject>(pObj);
+
+	// 適所の座標を保持しておく
+	Vec3 HoldBestPos = VEC3_INIT;
+
+	// 距離の差の大きさを保持しておく
+	float fDistanceNorm = 0.0f;
+
+	// 通常優先度のオブジェクトを取得
+	pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
 
 	while (pObj != nullptr)
 	{
@@ -247,16 +286,26 @@ void CField_Type_Normal::DetectGapForSetEnemy(float test)
 				// ブロックの高さをコピー
 				float fHeight = pAnyBlock->GetPos().y;
 
-				// このブロックの高さを確認
+				// このブロックの高さが適しているか剪定
 				if (fHeight >= 40.0f &&
 					fHeight <= 70.0f)
 				{
-					/* モンスターを仮に生成 */
-					CBright::Generate(utility::DirectionConvertVec3(
-						atan2f(pAnyBlock->GetPos().z, pAnyBlock->GetPos().x),
-						fHeight - 20.0f,
-						CField_Manager::FIELD_RADIUS),
-						CBright::CREATETYPE::MONSTER);
+					// 距離の差を割り出す
+					Vec3 Distance = pAnyBlock->GetPos() - pPlayer->GetPos();
+
+					// 大きさを割り出す
+					float fNorm = Distance.x * Distance.x + Distance.z * Distance.z;
+
+					// より離れた場所にある場合
+					if (fNorm > fDistanceNorm)
+					{
+						// その大きさを保持
+						fDistanceNorm = fNorm;
+
+						// 適所の座標を更新
+						HoldBestPos = { pAnyBlock->GetPos() };
+						HoldBestPos.y += -20.0f;
+					}
 				}
 			}
 		}
@@ -264,4 +313,7 @@ void CField_Type_Normal::DetectGapForSetEnemy(float test)
 		// 次のオブジェクトへ
 		pObj = pObj->GetNext();
 	}
+
+	// モンスターを生成
+	CBright::Generate(HoldBestPos, CBright::CREATETYPE::MONSTER);
 }

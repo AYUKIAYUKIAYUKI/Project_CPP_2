@@ -41,9 +41,10 @@ public:
 		ONLYTEXT,	// テキストのみ
 		PLAYER,		// プレイヤー
 		BOSS,		// ボス
-		ENEMY,		// エネミー
-		BLOCK,		// ブロック
 		ITEM,		// アイテム
+		BLOCK,		// ブロック
+		BRIGHT,		// 閃光
+		ENEMY,		// エネミー
 		LATEDRAW,	// 後描画対応
 		MAX
 	};

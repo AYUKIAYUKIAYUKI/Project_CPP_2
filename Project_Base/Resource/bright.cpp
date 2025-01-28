@@ -138,6 +138,9 @@ void CBright::Create(D3DXVECTOR3 Pos, CREATETYPE Type)
 		assert(false && "閃光の生成に失敗");
 	}
 
+	// オブジェクトに閃光タイプを設定
+	pNewInstance->SetType(CObject::TYPE::BRIGHT);
+
 	// 閃光の初期設定
 	pNewInstance->Init();
 
