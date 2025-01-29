@@ -37,7 +37,7 @@ public:
 	void IncrementCntSlash();	// 攻撃した回数のインクリメント
 
 	// <getter>
-	int GetCntDestroyBlock() ;	// ブロックの破壊数を取得
+	int GetCntDestroyBlock();	// ブロックの破壊数を取得
 
 	// <setter>
 	void SetSyncPlayer(const CPlayer* const pPlayer);	// プレイヤーをセット

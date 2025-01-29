@@ -115,13 +115,12 @@ void CField_Type_Normal::GenerateBlock(float fEdgeDirection)
 	// 最後に生成したモデルタイプを保持
 	m_LastModel = Type;
 
-#if 0
-	// このブロックの生成後に、敵を配置できる隙間を検出
-	DetectGapForSetEnemy(NewPos.y);
-#else 
-	// 隙間に敵を生成
-	DetectGapForSetEnemy();
-#endif
+	// ブロックの破壊量が一定数に達していると
+	if (CField_Manager::GetInstance()->GetFieldBuilder()->GetCntDestroyBlock() % 10 == 0)
+	{
+		// 隙間に敵を生成
+		DetectGapForSetEnemy();
+	}
 }
 
 //============================================================================
@@ -223,7 +222,6 @@ bool CField_Type_Normal::DetectOverlapBlock(CX_Manager::TYPE SelfType, D3DXVECTO
 void CField_Type_Normal::DetectGapForSetEnemy()
 {
 	/*
-		To Do
 		エネミータイプを検索してモンスタークラスが無いときのみ横長ブロックの真下に一体生成
 	*/
 
@@ -235,12 +233,22 @@ void CField_Type_Normal::DetectGapForSetEnemy()
 		// このオブジェクトのタイプをコピー
 		const CObject::TYPE Type = pObj->GetType();
 
-		// 閃光タイプかエネミータイプのオブジェクトが存在していたら
-		if (Type == CObject::TYPE::BRIGHT ||
-			Type == CObject::TYPE::ENEMY)
+		// 閃光タイプのオブジェクトが存在していたら
+		if (Type == CObject::TYPE::BRIGHT)
 		{
 			// 敵を生成せず終了
 			return;
+		}
+
+		// エネミータイプのオブジェクトが存在していたら
+		if (Type == CObject::TYPE::ENEMY)
+		{
+			// クラスを確認し、モンスターだった場合
+			if (typeid(*pObj) == typeid(CMonster))
+			{
+				// 敵を生成せず終了
+				return;
+			}
 		}
 
 		// 次のオブジェクトへ
