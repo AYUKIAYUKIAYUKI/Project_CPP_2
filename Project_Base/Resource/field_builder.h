@@ -29,12 +29,13 @@ public:
 	CField_Builder& operator=(CField_Builder&&) = delete;		// ムーブ代入演算子
 
 	// <function>
-	void Release();				// 解放
-	void Update();				// 更新処理
-	void Draw();				// 描画処理
-	void IncrementCntJump();	// ジャンプした回数のインクリメント
-	void IncrementCntDash();	// ダッシュした回数のインクリメント
-	void IncrementCntSlash();	// 攻撃した回数のインクリメント
+	void Release();						// 解放
+	void Update();						// 更新処理
+	void Draw();						// 描画処理
+	void IncrementCntJump();			// ジャンプした回数のインクリメント
+	void IncrementCntDash();			// ダッシュした回数のインクリメント
+	void IncrementCntSlash();			// 攻撃した回数のインクリメント
+	bool DetectInFanRange(D3DXVECTOR3);	// 扇形範囲内に存在しているか判定
 
 	// <getter>
 	int GetCntDestroyBlock();	// ブロックの破壊数を取得

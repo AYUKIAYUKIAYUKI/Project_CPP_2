@@ -182,6 +182,9 @@ bool CField_Type_Normal::DetectOverlapBlock(CX_Manager::TYPE SelfType, D3DXVECTO
 	// アイテムの下に足場が存在しているか判別
 	bool bBlockUnderItem = false;
 
+	// アイテムが扇形範囲内に存在しているか判別
+	bool bInFanRange = false;
+
 	// アイテムタイプのオブジェクトを取得
 	CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
 
@@ -194,10 +197,19 @@ bool CField_Type_Normal::DetectOverlapBlock(CX_Manager::TYPE SelfType, D3DXVECTO
 		pItem = utility::DownCast(pItem, pObj);
 	}
 
-	// アイテムの座標をコピーし、キリの良い場所にアイテムの場所仮で固定する
+	// ①アイテムの座標をコピー
 	Vec3 ItemPos = pItem->GetPos();
-	ItemPos.y += -40.0f;
-	ItemPos.y = utility::RoundToAnyMultiple<float>(ItemPos.y, 20, 9);
+
+	// ②アイテムが扇形範囲内に存在するか判定
+	if (CField_Manager::GetInstance()->GetFieldBuilder()->DetectInFanRange(ItemPos))
+	{
+		// ③範囲内にアイテムがあることを記録
+		bInFanRange = true;
+
+		// ④キリの良い場所にアイテムの場所仮で固定する
+		ItemPos.y += -50.0f;
+		ItemPos.y = utility::RoundToAnyMultiple<float>(ItemPos.y, 20, 9);
+	}
 
 	// 通常優先度のオブジェクトを取得
 	pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
@@ -238,8 +250,8 @@ bool CField_Type_Normal::DetectOverlapBlock(CX_Manager::TYPE SelfType, D3DXVECTO
 		pObj = pObj->GetNext();
 	}
 
-	// 全てのブロックを確認した後、アイテムの足場が存在していなければ
-	if (!bBlockUnderItem)
+	// ⑤全てのブロックの中に足場となるものが存在せず、かつアイテムが扇形範囲内に収まっているとき
+	if (!bBlockUnderItem && bInFanRange)
 	{
 		// 新しいを用意
 		Vec3 NewRot = VEC3_INIT;

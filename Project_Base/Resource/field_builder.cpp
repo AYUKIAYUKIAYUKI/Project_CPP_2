@@ -118,6 +118,14 @@ void CField_Builder::IncrementCntSlash()
 }
 
 //============================================================================
+// 扇形範囲内に存在しているか判定
+//============================================================================
+bool CField_Builder::DetectInFanRange(D3DXVECTOR3 Pos)
+{
+	return m_pFan->DetectInFanRange(Pos);
+}
+
+//============================================================================
 // ブロックの破壊数を取得
 //============================================================================
 int CField_Builder::GetCntDestroyBlock()
@@ -359,11 +367,8 @@ void CField_Builder::GenerateItem()
 	} while (m_pFan->DetectInFanRange(pItem->GetPos()));
 
 	// Y座標をランダムに設定
-	float fHeight = fabsf(utility::GetRandomValue<float>());
-	if (fHeight >= 125.0f)
-	{
-		fHeight = 125.0f;
-	}
+	float fHeight = 50.0f + fabsf(utility::GetRandomValue<float>());
+	fHeight = utility::RoundToAnyMultiple<float>(fHeight, 20, 9);
 	pItem->SetPosY(fHeight);
 
 	// 描画前に一度更新
