@@ -179,8 +179,28 @@ bool CField_Type_Normal::DetectOverlapItem(D3DXVECTOR3 SelfPos)
 //============================================================================
 bool CField_Type_Normal::DetectOverlapBlock(CX_Manager::TYPE SelfType, D3DXVECTOR3 SelfPos)
 {
+	// アイテムの下に足場が存在しているか判別
+	bool bBlockUnderItem = false;
+
+	// アイテムタイプのオブジェクトを取得
+	CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
+
+	// アイテムクラスのポインタを用意
+	CItem* pItem = nullptr;
+
+	if (pObj)
+	{
+		// オブジェクトをアイテムクラスにダウンキャスト
+		pItem = utility::DownCast(pItem, pObj);
+	}
+
+	// アイテムの座標をコピーし、キリの良い場所にアイテムの場所仮で固定する
+	Vec3 ItemPos = pItem->GetPos();
+	ItemPos.y += -40.0f;
+	ItemPos.y = utility::RoundToAnyMultiple<float>(ItemPos.y, 20, 9);
+
 	// 通常優先度のオブジェクトを取得
-	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
+	pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
 
 	while (pObj != nullptr)
 	{
@@ -206,10 +226,31 @@ bool CField_Type_Normal::DetectOverlapBlock(CX_Manager::TYPE SelfType, D3DXVECTO
 				// 重複している、このブロックを生成しない
 				return true;
 			}
+
+			// アイテムの足場となるブロックが存在しているなら
+			if (ItemPos == pOther->GetPos())
+			{
+				bBlockUnderItem = true;
+			}
 		}
 
 		// 次のオブジェクトへ
 		pObj = pObj->GetNext();
+	}
+
+	// 全てのブロックを確認した後、アイテムの足場が存在していなければ
+	if (!bBlockUnderItem)
+	{
+		// 新しいを用意
+		Vec3 NewRot = VEC3_INIT;
+
+		// 向きを決定
+		NewRot.y = atan2f(-ItemPos.x, -ItemPos.z);
+
+		// ブロックを生成し、ブロックモデルを変更する
+		CBlock* pBlock = CBlock::Create(ItemPos, NewRot);	// ブロックのインスタンス生成
+		pBlock->BindModel(CX_Manager::TYPE::BLOSIDE);		// モデルを割り当て
+		pBlock->SetSize(pBlock->GetModel()->Size);			// バウンディングサイズを揃える
 	}
 
 	// 条件通過
