@@ -207,7 +207,7 @@ bool CField_Type_Normal::DetectOverlapBlock(CX_Manager::TYPE SelfType, D3DXVECTO
 		bInFanRange = true;
 
 		// ④キリの良い場所にアイテムの場所仮で固定する
-		ItemPos.y += -50.0f;
+		ItemPos.y += -40.0f;
 		ItemPos.y = utility::RoundToAnyMultiple<float>(ItemPos.y, 20, 9);
 	}
 
