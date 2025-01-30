@@ -44,7 +44,7 @@ CPlayer_State_Slash::CPlayer_State_Slash() :
 	m_SlashType{ SLASH_TYPE::LEFT },
 	m_pBndSlash{ std::make_unique<CBounding_Sphere>() }
 {
-	// アクションデータのジャンプした回数をインクリメント
+	// アクションデータの斬撃した回数をインクリメント
 	CField_Manager::GetInstance()->GetFieldBuilder()->IncrementCntSlash();
 
 	// 斬撃のバウンディングのサイズを設定

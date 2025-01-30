@@ -163,7 +163,7 @@ bool CField_Type_Normal::DetectOverlapItem(D3DXVECTOR3 SelfPos)
 		const Vec3& Distance = pItem->GetPos() - SelfPos;
 
 		// アイテムにブロックが接近してしまっていたら
-		if (Distance.x * Distance.x + Distance.y * Distance.y + Distance.z * Distance.z <= CField_Type::GetAreaNorm() * 1.5f)
+		if (Distance.x * Distance.x + Distance.y * Distance.y + Distance.z * Distance.z <= CField_Type::GetAreaNorm() * 3.0f)
 		{
 			// 重複している、このブロックを生成しない
 			return true;
