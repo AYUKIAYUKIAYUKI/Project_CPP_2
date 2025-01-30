@@ -144,7 +144,7 @@ void CPlayer_State_Slash::Update()
 	if (pPlayer->IsEnabledPowerStone())
 	{
 		// ‰ŠúˆÊ’u‚ð‚¸‚ç‚·
-		Vec3 InitPos = m_pCharacter->GetPos();
+		Vec3 InitPos = PlayerFacing;
 		InitPos += {
 			utility::GetRandomValue<float>() * 0.075f,
 			utility::GetRandomValue<float>() * 0.05f,

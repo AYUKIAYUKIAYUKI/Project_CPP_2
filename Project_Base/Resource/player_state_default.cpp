@@ -121,6 +121,12 @@ void CPlayer_State_Default::To_Slash()
 		// 再攻撃までのキャストカウントを設定
 		m_nCntSlashCast = CPlayer_State_Slash::MAX_SLASH_CAST;
 
+		if (m_pCharacter->GetVelY() == 0.0f)
+		{
+			// 軽く浮き上がる
+			m_pCharacter->SetVelY(0.5f);
+		}
+
 		SetNextState(DBG_NEW CPlayer_State_Slash());
 	}
 }
