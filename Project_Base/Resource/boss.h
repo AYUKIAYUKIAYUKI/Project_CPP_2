@@ -33,13 +33,15 @@ public:
 	{
 		HOLDCENTER = 0,	// 中央で待機
 		DIRECTATTACK,	// 体当たり
+		WALLATTACK,		// 壁作り
+		SUMMONENEMY,	// 敵召喚
 		DAMAGEBACK,		// ダメージ喰らい
 		DEADEND,		// 死亡
 		MAX
 	};
 	
 	/// <summary> ボスの最大体力 </summary>
-	static constexpr int MAX_LIFE = 3;
+	static constexpr int MAX_LIFE = 5;
 
 	/// <summary> 目標値への補間強度 </summary>
 	static constexpr float CORRECT_COEF = 0.1f;
@@ -70,6 +72,8 @@ private:
 	void BranchAction();	// 行動分岐
 	void HoldCenter();		// 中心で待機
 	void DirectAttack();	// 体当たり
+	void WallAttack();		// 壁作り
+	void SummonEnemy();		// 敵召喚
 	void DamageBack();		// ダメージ喰らい
 	void DeadEnd();			// 死亡
 	bool HitCheck();		// 衝突検出

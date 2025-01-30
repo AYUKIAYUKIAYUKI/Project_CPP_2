@@ -1064,13 +1064,12 @@ void CField_Manager::PrintDebug()
 	}
 #endif
 
-#if 0	// ボスを呼び出す
+#if 1	// ボスを呼び出す
 	if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT) &&
 		CManager::GetKeyboard()->GetTrigger(DIK_SPACE))
 	{
-		m_nCntDestroyBlock = MAX_DESTROY_BLOCK;
+		m_nPhase = 11;
 		m_pStatue->SetNowMotion(0);
-		DestroyAllBlock();
 	}
 #endif
 }

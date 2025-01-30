@@ -14,12 +14,20 @@
 #include "renderer.h"
 #include "sound.h"
 #include "field_manager.h"
+#include "field_builder.h"
 #include "object_parts.h"
 #include "collision.h"
+
 #include "player.h"
 #include "sparks.h"
 #include "scene.h"
 #include "game.h"
+
+#include "bright.h"
+#include "enemy.h"
+#include "monster.h"
+#include "ghost.h"
+#include "flyer.h"
 
 //****************************************************
 // usingディレクティブ
@@ -239,11 +247,23 @@ void CBoss::SetNextAction()
 		// 行動キャストをリセット
 		m_nCntActionCast = 0;
 
-		// ランダムに行動をセット
-		switch (1)
+		// ランダムに数値を抽選
+		int nRand = rand() % 3;
+
+		// 行動をセット
+		switch (nRand)
 		{
-		case 1:
+		case 0:
 			m_ActionType = ACTION::DIRECTATTACK;
+			break;
+
+		case 1:
+			//m_ActionType = ACTION::WALLATTACK;
+			m_ActionType = ACTION::SUMMONENEMY;
+			break;
+
+		case 2:
+			m_ActionType = ACTION::SUMMONENEMY;
 			break;
 
 		default:	// 例外
@@ -278,6 +298,16 @@ void CBoss::BranchAction()
 			// 体当たり
 		case ACTION::DIRECTATTACK:
 			DirectAttack();
+			break;
+
+			// 壁づくり
+		case ACTION::WALLATTACK:
+			WallAttack();
+			break;
+
+			// 敵召喚
+		case ACTION::SUMMONENEMY:
+			SummonEnemy();
 			break;
 
 			// ダメージ喰らい
@@ -411,6 +441,123 @@ void CBoss::DirectAttack()
 
 		// 1ダメージと衝撃力を与える
 		pPlayer->SetDamage(-1, fImpact);
+	}
+}
+
+//============================================================================
+// 壁作り
+//============================================================================
+void CBoss::WallAttack()
+{
+	// 継続期間をインクリメント
+	++m_nDuration;
+
+	// カメラ距離・俯瞰度合いを強制変更
+	{
+		CCamera* pCamera = CManager::GetManager()->GetCamera();
+		float fDinstance = pCamera->GetDistance(), fUpAdjust = pCamera->GetUpAdjust();
+		fDinstance += (450.0f - fDinstance) * 0.1f;
+		fUpAdjust += (150.0f - fUpAdjust) * 0.05f;
+		pCamera->SetDistance(fDinstance);
+		pCamera->SetUpAdjust(fUpAdjust);
+	}
+}
+
+//============================================================================
+// 敵召喚
+//============================================================================
+void CBoss::SummonEnemy()
+{
+	if (GetNowMotion() != 2)
+	{
+		// ボスがブルブルモーションに変更
+		SetNowMotion(2);
+
+		// 敵を大量生成
+		for (WORD wCntLoop = 0; wCntLoop < 3; ++wCntLoop)
+		{
+			// 初期位置
+			Vec3 InitPos = VEC3_INIT;
+
+#if 1
+			do
+			{
+				// 扇形範囲内に収まるように方角をランダム決定
+				float fRand = fabsf(utility::GetRandomValue<float>()) * 0.01f;
+				InitPos = utility::DirectionConvertVec3(D3DX_PI * fRand, 10.0f + fabsf(utility::GetRandomValue<float>()) * 0.25f, CField_Manager::FIELD_RADIUS);
+
+				// 範囲外で再抽選
+			} while (!CField_Manager::GetInstance()->GetFieldBuilder()->DetectInFanRange(InitPos));
+#else
+			// プレイヤーの方角を取得
+			CPlayer* pPlayer = nullptr;
+			pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+			if (pPlayer)
+			{
+				float fRand = utility::GetRandomValue<float>() * 0.005f;
+				InitPos = utility::DirectionConvertVec3(pPlayer->GetDirection() + fRand, 10.0f + (45.0f * fabsf(fRand)), CField_Manager::FIELD_RADIUS);
+			}
+#endif
+
+			// ランダムに数値を抽選
+			CBright::CREATETYPE Type = CBright::CREATETYPE::NONE;
+			int nRand = rand() % 2;
+
+			if (nRand == 0)
+			{
+				Type = CBright::CREATETYPE::MONSTER;
+			}
+			else
+			{
+				Type = CBright::CREATETYPE::GHOST;
+			}
+
+			// その場所に、モンスターかゴーストを生成
+			CBright::Generate(InitPos, Type);
+		}
+	}
+
+	// プレイヤーの方向を見続ける
+	CPlayer* pPlayer = nullptr;
+	pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+	if (pPlayer)
+	{
+		Vec3 Rot = VEC3_INIT, Pos = pPlayer->GetPos();
+		Rot.y = atan2f(-Pos.x, -Pos.z);
+		SetRotTarget(Rot);
+	}
+
+	// カメラ距離・俯瞰度合いを強制変更
+	{
+		CCamera* pCamera = CManager::GetManager()->GetCamera();
+		float fDinstance = pCamera->GetDistance(), fUpAdjust = pCamera->GetUpAdjust();
+		fDinstance += (175.0f - fDinstance) * 0.1f;
+		fUpAdjust += (50.0f - fUpAdjust) * 0.05f;
+		pCamera->SetDistance(fDinstance);
+		pCamera->SetUpAdjust(fUpAdjust);
+	}
+
+	// 火の粉を猛発生させる
+	for (WORD wCntLoop = 0; wCntLoop < 2; ++wCntLoop)
+	{
+		CSparks::FuryGenerate();
+	}
+
+	// エネミータイプのオブジェクトを取得
+	CObject* pObjEnemy = CObject::FindSpecificObject(CObject::TYPE::ENEMY);
+	CObject* pObjBright = CObject::FindSpecificObject(CObject::TYPE::BRIGHT);
+
+	// エネミーの掃討を確認したら
+	if (!pObjEnemy && !pObjBright)
+	{
+		// 継続期間をリセット
+		m_nDuration = 0;
+
+		// 中央待機に戻る
+		m_ActionType = ACTION::HOLDCENTER;
+
+		// 待機モーションに戻す
+		SetNowMotion(1);
 	}
 }
 
