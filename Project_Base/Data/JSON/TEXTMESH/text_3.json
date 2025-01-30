@@ -1,7 +1,7 @@
 ﻿{
 	"Text": "先に進めない…？\n#\n#戻って道を確認してみよう",
 	"TextSpeed": 5,
-	"TextDelay": -90,
+	"TextDelay": -45,
 	"InitTextDelay": -70,
 	"Timer": -1,
 	"TextSize": [ 1375.0, 800.0 ],
