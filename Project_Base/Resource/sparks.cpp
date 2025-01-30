@@ -10,7 +10,12 @@
 //****************************************************
 #include "sparks.h"
 
-namespace {
+//****************************************************
+// 無名名前空間を定義
+//****************************************************
+namespace
+{
+	/* 共通的にパラメータ編集を行うための変数 */
 	float n_fCoef = 0.0f;
 	int n_nDuration = 0;
 	float n_fWaveCoef = 0.0f;
@@ -358,7 +363,7 @@ void CSparks::PointCreate(D3DXVECTOR3 Pos)
 
 	// 各種パラメータ設定
 	pNewInstance->BindTex(static_cast<CTexture_Manager::TYPE>(TextureType));					// テクスチャ
-	pNewInstance->SetCorrectionCoef(static_cast<float>(fCoef));									// 補正係数
+	pNewInstance->SetCorrectionCoef(fCoef);														// 補正係数
 	pNewInstance->SetSizeTarget(Vec3(SizeTarget[0], SizeTarget[1], SizeTarget[2]));				// 目標サイズ
 	pNewInstance->SetPos(pNewInstance->m_InitPos);												// 座標
 	pNewInstance->SetPosTarget(pNewInstance->m_InitPos);										// 目標座標
@@ -373,7 +378,57 @@ void CSparks::PointCreate(D3DXVECTOR3 Pos)
 //============================================================================
 void CSparks::ScreenCreate(D3DXVECTOR3 Pos)
 {
+	// 火の粉を生成
+	CSparks* pNewInstance = DBG_NEW CSparks();
 
+	// 生成失敗
+	if (!pNewInstance)
+	{
+		assert(false && "火の粉の生成に失敗");
+	}
+
+	// 火の粉の初期設定
+	pNewInstance->Init();
+
+	// パラメータをコピー
+#if 1
+	auto const& TextureType = m_InitParam["TextureType"];
+	auto const& CorrectionCoef = m_InitParam["ScreenCorrectionCoef"];
+	auto const& SizeTarget = m_InitParam["SizeTarget"];
+	auto const& ColTarget = m_InitParam["FuryColTarget"];
+	auto const& MaxDuration = m_InitParam["ScreenMaxDuration"];
+	auto const& WaveCoef = m_InitParam["ScreenWaveCoef"];
+	auto const& AdderY = m_InitParam["ScreenAdderY"];
+#else
+	auto const& TextureType = m_InitParam["TextureType"];
+	auto const& CorrectionCoef = n_fCoef;
+	auto const& SizeTarget = m_InitParam["SizeTarget"];
+	auto const& ColTarget = m_InitParam["FuryColTarget"];
+	auto const& MaxDuration = n_nDuration;
+	auto const& WaveCoef = n_fWaveCoef;
+	auto const& AdderY = n_fAdderY;
+#endif
+
+	// 範囲指定用にオフセット作成
+	float fOffset = static_cast<float>(m_InitParam["PointCorrectionCoef"]);
+
+	// 指定された場所を基準にランダムな座標を作成
+	pNewInstance->m_InitPos = {
+		Pos.x + utility::GetRandomValue<float>() * fOffset,
+		Pos.y + fabsf(utility::GetRandomValue<float>()) * fOffset,
+		Pos.z + utility::GetRandomValue<float>() * fOffset
+	};
+
+	// 各種パラメータ設定
+	pNewInstance->BindTex(static_cast<CTexture_Manager::TYPE>(TextureType));					// テクスチャ
+	pNewInstance->SetCorrectionCoef(static_cast<float>(CorrectionCoef));						// 補正係数
+	pNewInstance->SetSizeTarget(Vec3(SizeTarget[0], SizeTarget[1], SizeTarget[2]));				// 目標サイズ
+	pNewInstance->SetPos(pNewInstance->m_InitPos);												// 座標
+	pNewInstance->SetPosTarget(pNewInstance->m_InitPos);										// 目標座標
+	pNewInstance->SetColTarget(XCol(ColTarget[0], ColTarget[1], ColTarget[2], ColTarget[3]));	// 目標色
+	pNewInstance->SetMaxDuration(static_cast<int>(MaxDuration));								// 最大期間
+	pNewInstance->m_fWaveCoef = static_cast<float>(WaveCoef);									// 波打ち強度
+	pNewInstance->m_fAdderY = static_cast<float>(AdderY);										// 上昇量
 }
 
 //============================================================================

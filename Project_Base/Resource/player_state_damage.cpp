@@ -14,6 +14,7 @@
 #include "manager.h"
 #include "sound.h"
 #include "field_manager.h"
+#include "sparks.h"
 
 //****************************************************
 // usingディレクティブ
@@ -57,6 +58,9 @@ void CPlayer_State_Damage::Update()
 	
 	// 重力加速
 	m_pCharacter->SetVelY(m_pCharacter->GetVelY() + CField_Manager::FIELD_GRAVITY);
+
+	// 火の粉を画面発生
+	CSparks::ScreenGenerate(m_pCharacter->GetPos());
 
 	// カメラを取得
 	CCamera* pCamera = CManager::GetManager()->GetCamera();

@@ -173,6 +173,11 @@ void CPlayer::Update()
 		ImGui::Text("VelY:%.1f", GetVelY());
 		ImGui::Text("Life:%d", GetLife());
 		ImGui::Text("Motion:%d", GetNowMotion());
+		static bool bInfinityLife = false;
+		if (ImGui::Checkbox("InfinityLife", &bInfinityLife))
+		{
+			SetLife(MAX_LIFE);
+		}
 		ImGui::End();
 	}
 #endif	// _DEBUG

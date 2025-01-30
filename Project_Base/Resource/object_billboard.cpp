@@ -101,7 +101,7 @@ void CObject_Billboard::Update()
 	VERTEX_3D* pVtx = nullptr;
 
 	// 頂点バッファをロック
-	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
+ 	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 
 	// 頂点座標の設定
 	pVtx[0].pos = {
