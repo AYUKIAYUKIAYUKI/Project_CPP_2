@@ -328,7 +328,7 @@ void CSparks::PointCreate(D3DXVECTOR3 Pos)
 	pNewInstance->Init();
 
 	// パラメータをコピー
-#if 0
+#if 1
 	auto const& TextureType = m_InitParam["TextureType"];
 	auto const& CorrectionCoef = m_InitParam["PointCorrectionCoef"];
 	auto const& SizeTarget = m_InitParam["PointSizeTarget"];
