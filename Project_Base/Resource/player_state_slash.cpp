@@ -102,7 +102,7 @@ void CPlayer_State_Slash::Update()
 	}
 	else if (bFaceSide && pKeyBoard->GetPress(DIK_D))
 	{ // 右向きで右入力中
-			
+
 		// 反動低減
 		fImpact *= 0.25f;
 	}
@@ -134,6 +134,15 @@ void CPlayer_State_Slash::Update()
 
 	// 斬撃バウンディングの中心点を設定
 	m_pBndSlash->SetCenterPos(PlayerFacing);
+
+	// キャラクターのポインタをプレイヤークラスにダウンキャスト
+	CPlayer* pPlayer = utility::DownCast<CPlayer, CCharacter>(m_pCharacter);
+
+	// 弾岩が有効化されていたら
+	if (pPlayer->IsEnabledPowerStone())
+	{
+
+	}
 
 	// 星座エフェクトを発生
 	CConstellation::GenerateSpread(PlayerFacing);

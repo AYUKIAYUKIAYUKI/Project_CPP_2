@@ -240,6 +240,7 @@
       <Filter>&lt;Stage&gt;\&lt;Builder&gt;</Filter>
     </ClCompile>
     <ClCompile Include="Resource\powerstone.cpp" />
+    <ClCompile Include="Resource\stone.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -484,6 +485,7 @@
       <Filter>&lt;Stage&gt;\&lt;Builder&gt;</Filter>
     </ClInclude>
     <ClInclude Include="Resource\powerstone.h" />
+    <ClInclude Include="Resource\stone.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Object&gt;">
