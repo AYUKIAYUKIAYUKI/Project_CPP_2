@@ -163,8 +163,8 @@ void CPlayer_State_Jump::To_Slash()
 		// 再攻撃までのキャストカウントを設定
 		m_nCntSlashCast = CPlayer_State_Slash::MAX_SLASH_CAST;
 
-		// 軽くふわっと浮き上がるような加速度を強制発生
-		m_pCharacter->SetVelY(1.0f);
+		// 軽く空中にとどまる程度の加速度を強制発生
+		m_pCharacter->SetVelY(0.5f);
 
 		SetNextState(DBG_NEW CPlayer_State_Slash());
 	}

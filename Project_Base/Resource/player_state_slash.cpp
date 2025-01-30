@@ -77,27 +77,60 @@ void CPlayer_State_Slash::Update()
 	// プレイヤーステートクラスの更新処理
 	CPlayer_State::Update();
 
-	// プレイヤーの向いている方向のベクトルを作成
+	// 入力取得用
+	CInputKeyboard* pKeyBoard = CManager::GetManager()->GetKeyboard();
+	CInputPad* pPad = CManager::GetManager()->GetPad();
+
+	// ①反動の衝撃量を作成
+	float fImpact = -0.001f;
+
+	// ②左右どちらを向いているか判別
+	bool bFaceSide = m_pCharacter->CheckFacingSide();
+
+	// ③反動を付ける方向を決定
+	if (!bFaceSide)
+	{
+		fImpact *= -1.0f;
+	}
+
+	// ④入力方向に応じて反動量を少し変化
+	if (bFaceSide && pKeyBoard->GetPress(DIK_A))
+	{ // 右向きで左入力中
+
+		// 反動増大
+		fImpact *= 1.5f;
+	}
+	else if (bFaceSide && pKeyBoard->GetPress(DIK_D))
+	{ // 右向きで右入力中
+			
+		// 反動低減
+		fImpact *= 0.25f;
+	}
+	else if (!bFaceSide && pKeyBoard->GetPress(DIK_A))
+	{ // 左向きで左入力中
+
+		// 反動低減
+		fImpact *= 0.25f;
+	}
+	else if (!bFaceSide && pKeyBoard->GetPress(DIK_D))
+	{ // 左向きで右入力中
+
+		// 反動増大
+		fImpact *= 1.5f;
+	}
+
+	// ⑤反動で後退
+	float fNewDirectionTarget = m_pCharacter->GetDirectionTarget();
+	fNewDirectionTarget += fImpact;
+	m_pCharacter->SetDirectionTarget(fNewDirectionTarget);
+
+	// 向いている方向のベクトルを作成
 	Vec3 PlayerFacing =
 	{
 		m_pCharacter->GetPos().x + -sinf(m_pCharacter->GetRot().y) * 11.0f,
 		m_pCharacter->GetPos().y + 4.0f,
 		m_pCharacter->GetPos().z + -cosf(m_pCharacter->GetRot().y) * 11.0f
 	};
-
-	// 反動の衝撃量を作成
-	float fImpact = -0.001f;
-
-	// 向いている方向を左右で判別
-	bool bFaceSide = m_pCharacter->CheckFacingSide();
-
-	// お互いの位置関係に合わせて吹き飛ばす方角を変更
-	if (!bFaceSide) fImpact *= -1.0f;
-
-	// プレイヤーが反動で後退
-	float fNewDirectionTarget = m_pCharacter->GetDirectionTarget();
-	fNewDirectionTarget += fImpact;
-	m_pCharacter->SetDirectionTarget(fNewDirectionTarget);
 
 	// 斬撃バウンディングの中心点を設定
 	m_pBndSlash->SetCenterPos(PlayerFacing);
