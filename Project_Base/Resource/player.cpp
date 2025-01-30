@@ -45,7 +45,8 @@ CPlayer::CPlayer() :
 	m_pBndCylinder{ DBG_NEW CBounding_Cylinder() },
 	m_pState{ nullptr },
 	m_bEnableWings{ false },
-	m_bEnableBoots{ false }
+	m_bEnableBoots{ false },
+	m_bEnablePowerStone{ false }
 {
 
 }
@@ -239,6 +240,14 @@ void CPlayer::EnableBoots()
 }
 
 //============================================================================
+// ’eŠâ‚ğ—LŒø‰»
+//============================================================================
+void CPlayer::EnablePowerStone()
+{
+	m_bEnablePowerStone = true;
+}
+
+//============================================================================
 // ”¼Œa‚ğæ“¾
 //============================================================================
 float CPlayer::GetRadius() const
@@ -285,6 +294,14 @@ bool CPlayer::IsEnabledWings() const
 bool CPlayer::IsEnabledBoots() const
 {
 	return m_bEnableBoots;
+}
+
+//============================================================================
+// ’eŠâ‚Ì—LŒøó‘Ô‚ğæ“¾
+//============================================================================
+bool CPlayer::IsEnabledPowerStone() const
+{
+	return m_bEnablePowerStone;
 }
 
 //============================================================================

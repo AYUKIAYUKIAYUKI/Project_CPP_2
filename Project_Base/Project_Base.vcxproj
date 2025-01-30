@@ -89,6 +89,7 @@
     <ClCompile Include="Resource\player_state_jump.cpp" />
     <ClCompile Include="Resource\player_state_slash.cpp" />
     <ClCompile Include="Resource\player_state_wall.cpp" />
+    <ClCompile Include="Resource\powerstone.cpp" />
     <ClCompile Include="Resource\quadratic_bezier.cpp" />
     <ClCompile Include="resource\renderer.cpp" />
     <ClCompile Include="Resource\render_box.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="Resource\player_state_jump.h" />
     <ClInclude Include="Resource\player_state_slash.h" />
     <ClInclude Include="Resource\player_state_wall.h" />
+    <ClInclude Include="Resource\powerstone.h" />
     <ClInclude Include="Resource\quadratic_bezier.h" />
     <ClInclude Include="resource\renderer.h" />
     <ClInclude Include="Resource\render_box.h" />

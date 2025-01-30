@@ -29,6 +29,7 @@
 #include "life.h"
 #include "wings.h"
 #include "boots.h"
+#include "powerstone.h"
 
 /* 修正用 */
 #define SAFE 1
@@ -348,8 +349,13 @@ void CField_Builder::GenerateItem()
 	}
 	else if (!m_pSyncPlayer->IsEnabledBoots())
 	{
-		// が有効化されていなければブーツを生成
+		// 失踪が有効化されていなければブーツを生成
 		pItem = CBoots::Create();
+	}
+	else if (!m_pSyncPlayer->IsEnabledPowerStone())
+	{
+		// 弾岩が有効化されていなければパワーストーンを生成
+		pItem = CPowerStone::Create();
 	}
 	
 	// 効果付与アイテムが何も生成されていないなら

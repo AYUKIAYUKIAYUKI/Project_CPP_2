@@ -239,6 +239,7 @@
     <ClCompile Include="Resource\field_type_normal.cpp">
       <Filter>&lt;Stage&gt;\&lt;Builder&gt;</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\powerstone.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource\mask_rectangle.h" />
@@ -482,6 +483,7 @@
     <ClInclude Include="Resource\field_type_normal.h">
       <Filter>&lt;Stage&gt;\&lt;Builder&gt;</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\powerstone.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="&lt;Object&gt;">

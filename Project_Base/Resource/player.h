@@ -47,6 +47,7 @@ public:
 	void	SetDamage(int nDamage, float fImpact);	// ダメージを受ける
 	void	EnableWings();		// 浮遊を有効化
 	void	EnableBoots();		// 疾走を有効化
+	void	EnablePowerStone();	// 弾岩を有効化
 
 	// <getter>
 	float GetRadius() const;								// 半径を取得
@@ -55,6 +56,7 @@ public:
 	const CPlayer_State* const GetNowState() const;			// 現在のステートを取得
 	bool  IsEnabledWings() const;							// 浮遊の有効状態を取得
 	bool  IsEnabledBoots() const;							// 疾走の有効状態を取得
+	bool  IsEnabledPowerStone() const;						// 弾岩の有効状態を取得
 
 	// <static function>
 	static CPlayer* Create();	// 生成
@@ -66,10 +68,11 @@ private:
 	void HitCheck();				// 当たり判定
 
 	// <data>
-	CBounding_Cylinder*	m_pBndCylinder;	// 円柱バウンディング
-	CPlayer_State*		m_pState;		// ステート
-	bool				m_bEnableWings;	// 浮遊の有効状態
-	bool				m_bEnableBoots;	// 疾走の有効状態
+	CBounding_Cylinder*	m_pBndCylinder;			// 円柱バウンディング
+	CPlayer_State*		m_pState;				// ステート
+	bool				m_bEnableWings;			// 浮遊の有効状態
+	bool				m_bEnableBoots;			// 疾走の有効状態
+	bool				m_bEnablePowerStone;	// 弾岩の有効状態
 };
 
 #endif // _PLAYER_H_
