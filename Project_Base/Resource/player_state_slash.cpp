@@ -48,7 +48,7 @@ CPlayer_State_Slash::CPlayer_State_Slash() :
 	CField_Manager::GetInstance()->GetFieldBuilder()->IncrementCntSlash();
 
 	// 斬撃のバウンディングのサイズを設定
-	m_pBndSlash->SetRadius(5.0f);
+	m_pBndSlash->SetRadius(6.0f);
 
 	// 斬撃モーションを再生
 	m_pCharacter->SetNowMotion(5);
@@ -127,9 +127,9 @@ void CPlayer_State_Slash::Update()
 	// 向いている方向のベクトルを作成
 	Vec3 PlayerFacing =
 	{
-		m_pCharacter->GetPos().x + -sinf(m_pCharacter->GetRot().y) * 11.0f,
-		m_pCharacter->GetPos().y + 4.0f,
-		m_pCharacter->GetPos().z + -cosf(m_pCharacter->GetRot().y) * 11.0f
+		m_pCharacter->GetPos().x + -sinf(m_pCharacter->GetRot().y) * 12.0f,
+		m_pCharacter->GetPos().y + 3.5f,
+		m_pCharacter->GetPos().z + -cosf(m_pCharacter->GetRot().y) * 12.0f
 	};
 
 	// 斬撃バウンディングの中心点を設定
