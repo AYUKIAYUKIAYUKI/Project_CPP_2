@@ -10,6 +10,13 @@
 //****************************************************
 #include "sparks.h"
 
+namespace {
+	float n_fCoef = 0.0f;
+	int n_nDuration = 0;
+	float n_fWaveCoef = 0.0f;
+	float n_fAdderY = 0.0f;
+}
+
 //****************************************************
 // usingディレクティブ
 //****************************************************
@@ -155,6 +162,22 @@ void CSparks::AreaGenerate(D3DXVECTOR3 Pos)
 }
 
 //============================================================================
+// 集中発生
+//============================================================================
+void CSparks::PointGenerate(D3DXVECTOR3 Pos)
+{
+	PointCreate(Pos);
+}
+
+//============================================================================
+// 画面発生
+//============================================================================
+void CSparks::ScreenGenerate(D3DXVECTOR3 Pos)
+{
+	ScreenCreate(Pos);
+}
+
+//============================================================================
 // 猛発生
 //============================================================================
 void CSparks::FuryGenerate()
@@ -172,6 +195,25 @@ void CSparks::FuryGenerate()
 		FuryCreate();
 	}
 }
+
+#ifdef _DEBUG
+//============================================================================
+#include "flyer.h"
+//============================================================================
+void CSparks::EditInitParam()
+{
+	ImGui::SetNextWindowSize({ -1, -1 });
+	ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("aaabbbccc")) {
+		ImGui::InputFloat("Coef", &n_fCoef);
+		ImGui::InputInt("Duration", &n_nDuration);
+		ImGui::InputFloat("Wave", &n_fWaveCoef);
+		ImGui::InputFloat("Adder", &n_fAdderY);
+		if (ImGui::Button("Add Flyer")) { auto p = CFlyer::Create(); p->SetDirection(-D3DX_PI * 0.5f); p->AdjustInitDirection(50.0f); }
+		ImGui::End();
+	}
+}
+#endif // _DEBUG
 
 //============================================================================
 // 
@@ -266,6 +308,72 @@ void CSparks::AreaCreate(D3DXVECTOR3 Pos)
 	pNewInstance->SetMaxDuration(static_cast<int>(MaxDuration));								// 最大期間
 	pNewInstance->m_fWaveCoef = static_cast<float>(WaveCoef);									// 波打ち強度
 	pNewInstance->m_fAdderY = static_cast<float>(AdderY);										// 上昇量
+}
+
+//============================================================================
+// 集中生成
+//============================================================================
+void CSparks::PointCreate(D3DXVECTOR3 Pos)
+{
+	// 火の粉を生成
+	CSparks* pNewInstance = DBG_NEW CSparks();
+
+	// 生成失敗
+	if (!pNewInstance)
+	{
+		assert(false && "火の粉の生成に失敗");
+	}
+
+	// 火の粉の初期設定
+	pNewInstance->Init();
+
+	// パラメータをコピー
+#if 0
+	auto const& TextureType = m_InitParam["TextureType"];
+	auto const& CorrectionCoef = m_InitParam["PointCorrectionCoef"];
+	auto const& SizeTarget = m_InitParam["PointSizeTarget"];
+	auto const& ColTarget = m_InitParam["PointColTarget"];
+	auto const& MaxDuration = m_InitParam["PointMaxDuration"];
+	auto const& WaveCoef = m_InitParam["PointWaveCoef"];
+	auto const& AdderY = m_InitParam["PointAdderY"];
+#else
+	auto const& TextureType = m_InitParam["TextureType"];
+	auto const& CorrectionCoef = n_fCoef;
+	auto const& SizeTarget = m_InitParam["PointSizeTarget"];
+	auto const& ColTarget = m_InitParam["PointColTarget"];
+	auto const& MaxDuration = n_nDuration;
+	auto const& WaveCoef = n_fWaveCoef;
+	auto const& AdderY = n_fAdderY;
+#endif
+
+	// 先行してキャスト
+	float fCoef = static_cast<float>(CorrectionCoef);
+
+	// 指定された場所を基準にランダムな座標を作成
+	pNewInstance->m_InitPos = {
+		Pos.x + utility::GetRandomValue<float>() * fCoef,
+		Pos.y + fabsf(utility::GetRandomValue<float>()) * fCoef,
+		Pos.z + utility::GetRandomValue<float>() * fCoef
+	};
+
+	// 各種パラメータ設定
+	pNewInstance->BindTex(static_cast<CTexture_Manager::TYPE>(TextureType));					// テクスチャ
+	pNewInstance->SetCorrectionCoef(static_cast<float>(fCoef));									// 補正係数
+	pNewInstance->SetSizeTarget(Vec3(SizeTarget[0], SizeTarget[1], SizeTarget[2]));				// 目標サイズ
+	pNewInstance->SetPos(pNewInstance->m_InitPos);												// 座標
+	pNewInstance->SetPosTarget(pNewInstance->m_InitPos);										// 目標座標
+	pNewInstance->SetColTarget(XCol(ColTarget[0], ColTarget[1], ColTarget[2], ColTarget[3]));	// 目標色
+	pNewInstance->SetMaxDuration(static_cast<int>(MaxDuration));								// 最大期間
+	pNewInstance->m_fWaveCoef = static_cast<float>(WaveCoef);									// 波打ち強度
+	pNewInstance->m_fAdderY = static_cast<float>(AdderY);										// 上昇量
+}
+
+//============================================================================
+// 画面生成
+//============================================================================
+void CSparks::ScreenCreate(D3DXVECTOR3 Pos)
+{
+
 }
 
 //============================================================================

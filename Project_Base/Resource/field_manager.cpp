@@ -927,6 +927,10 @@ void CField_Manager::UpdateEnvironment()
 {
 	// ‰Î‚Ì•²‚ğ¶¬
 	CSparks::AutoGenerate();
+
+#ifdef _DEBUG
+	CSparks::EditInitParam();
+#endif // _DEBUG
 }
 
 //============================================================================

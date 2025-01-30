@@ -9,9 +9,10 @@
 // インクルードファイル
 //****************************************************
 #include "flyer.h"
-#include "sound.h"
 
+#include "sound.h"
 #include "player.h"
+#include "sparks.h"
 
 //****************************************************
 // usingディレクティブ
@@ -281,6 +282,9 @@ void CFlyer::DeadEnd()
 		// 消滅SEを鳴らす
 		CSound::GetInstance()->Play(CSound::LABEL::DISAPPEAR);
 	}
+
+	// 火の粉を集中発生
+	CSparks::PointGenerate(GetPos());
 
 	// 死亡モーションの再生が終了したら
 	if (GetStopState())

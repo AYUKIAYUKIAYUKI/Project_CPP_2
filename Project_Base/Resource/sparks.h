@@ -31,15 +31,23 @@ public:
 	void	Draw() override;	// •`‰æˆ—
 
 	// <static function>
-	static void AutoGenerate();					// ©“®”­¶
-	static void AreaGenerate(D3DXVECTOR3 Pos);	// ‹ÇŠ”­¶
-	static void FuryGenerate();					// –Ò”­¶
+	static void AutoGenerate();						// ©“®”­¶
+	static void AreaGenerate(D3DXVECTOR3 Pos);		// ‹ÇŠ”­¶
+	static void PointGenerate(D3DXVECTOR3 Pos);		// W’†”­¶
+	static void ScreenGenerate(D3DXVECTOR3 Pos);	// ‰æ–Ê”­¶
+	static void FuryGenerate();						// –Ò”­¶
+
+#ifdef _DEBUG
+	static void EditInitParam();
+#endif // _DEBUG
 
 private:
 
 	// <static fuction>
 	static void AutoCreate();					// ©“®¶¬
 	static void AreaCreate(D3DXVECTOR3 Pos);	// ‹ÇŠ¶¬
+	static void PointCreate(D3DXVECTOR3 Pos);	// W’†”­¶
+	static void ScreenCreate(D3DXVECTOR3 Pos);	// ‰æ–Ê”­¶
 	static void FuryCreate();					// –Ò¶¬
 
 	// <data>

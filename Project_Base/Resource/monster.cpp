@@ -9,11 +9,12 @@
 // インクルードファイル
 //****************************************************
 #include "monster.h"
-#include "sound.h"
 
+#include "sound.h"
 #include "field_manager.h"
 #include "player.h"
 #include "block.h"
+#include "sparks.h"
 
 //****************************************************
 // usingディレクティブ
@@ -402,6 +403,9 @@ void CMonster::DeadEnd()
 		// 消滅SEを鳴らす
 		CSound::GetInstance()->Play(CSound::LABEL::DISAPPEAR);
 	}
+
+	// 火の粉を集中発生
+	CSparks::PointGenerate(GetPos());
 
 	// 死亡モーションの再生が終了したら
 	if (GetStopState())
