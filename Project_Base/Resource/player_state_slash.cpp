@@ -12,6 +12,7 @@
 #include "bright.h"
 #include "player_state_default.h"
 #include "player_state_damage.h"
+
 #include "manager.h"
 #include "sound.h"
 #include "collision.h"
@@ -21,6 +22,7 @@
 #include "enemy.h"
 #include "monster.h"
 #include "boss.h"
+#include "stone.h"
 
 // アクションデータ用
 #include "field_builder.h"
@@ -141,7 +143,19 @@ void CPlayer_State_Slash::Update()
 	// 弾岩が有効化されていたら
 	if (pPlayer->IsEnabledPowerStone())
 	{
+		// 初期位置をずらす
+		Vec3 InitPos = m_pCharacter->GetPos();
+		InitPos += {
+			utility::GetRandomValue<float>() * 0.075f,
+			utility::GetRandomValue<float>() * 0.05f,
+			utility::GetRandomValue<float>() * 0.075f
+		};
 
+		// 飛ばす方向を攻撃方向にする
+		Vec3 Way = PlayerFacing - m_pCharacter->GetPos();
+		Way.y = 0.0f;
+
+		CStone::Create(InitPos, Way * 0.15f);
 	}
 
 	// 星座エフェクトを発生

@@ -46,7 +46,7 @@ CPlayer::CPlayer() :
 	m_pState{ nullptr },
 	m_bEnableWings{ false },
 	m_bEnableBoots{ false },
-	m_bEnablePowerStone{ false }
+	m_bEnablePowerStone{ true }
 {
 
 }

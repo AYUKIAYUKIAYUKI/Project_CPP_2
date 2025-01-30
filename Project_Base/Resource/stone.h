@@ -39,9 +39,12 @@ public:
 	float GetRadius() const override;	// ”¼Œa‚ğæ“¾
 	void SetRadius(float fRadius);		// ”¼Œa‚ğİ’è
 
-	static CStone* Create(D3DXVECTOR3);	// ¶¬
+	static CStone* Create(D3DXVECTOR3 InitPos, D3DXVECTOR3 Accel);	// ¶¬
 
 private:
+
+	// ‘Ø‹óŠÔ
+	static const int WAIT_DURATION = 30;
 
 	// <function>
 	void HitCheckEnemy();	// “G‚Æ‚ÌÚG‚ğŒŸo

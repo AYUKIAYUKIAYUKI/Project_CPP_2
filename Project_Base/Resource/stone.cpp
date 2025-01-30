@@ -84,8 +84,11 @@ void CStone::Uninit()
 //============================================================================
 void CStone::Update()
 {
-	{ // 移動
+	++m_nDuration;
 
+	// 移動
+	if (m_nDuration > WAIT_DURATION)
+	{
 		// 座標を取得
 		Vec3 Pos = GetPos();
 		Pos += m_Accel;
@@ -98,36 +101,47 @@ void CStone::Update()
 	// 敵との当たり判定
 	HitCheckEnemy();
 
-	{ // 縮小
-	
-		// サイズを取得
-		Vec3 Scale = GetScale();
+	if (m_nDuration > WAIT_DURATION)
+	{
+		{ // 縮小
 
-		// 減少量
-		float fAdjust = 0.01f;
+			// スケールを取得
+			Vec3 Scale = GetScale();
 
-		// スケール減少
-		Scale = {
-			Scale.x - fAdjust,
-			Scale.y - fAdjust,
-			Scale.z - fAdjust
-		};
+			// 減少量
+			float fAdjust = 0.0075f;
 
-		// 下限を設定
-		if (Scale. x < 0.0f)
-		{
-			Scale = VEC3_INIT;
+			// スケール減少
+			Scale = {
+				Scale.x - fAdjust,
+				Scale.y - fAdjust,
+				Scale.z - fAdjust
+			};
 
-			SetRelease();
+			// 半径を更新
+			SetRadius(Scale.x * 7.5f);
+
+			// 下限を設定
+			if (Scale.x < 0.15f)
+			{
+				Scale = VEC3_INIT;
+
+				SetRelease();
+			}
+
+			SetScale(Scale);
 		}
-	}
 
-	{ // 回転
+		{ // 回転
 
-		// 向きを取得
-		Vec3 Rot = GetRot();
-		Rot.y += 0.001f;
-		SetRot(Rot);
+			float fCoef = fabsf(utility::GetRandomValue<float>() * 0.005f);
+
+			// 向きを取得
+			Vec3 Rot = GetRot();
+			Rot.x += fCoef;
+			Rot.y += fCoef;
+			SetRot(Rot);
+		}
 	}
 
 	// Xオブジェクトクラスの更新処理
@@ -162,7 +176,7 @@ void CStone::SetRadius(float fRadius)
 //============================================================================
 // 生成
 //============================================================================
-CStone* CStone::Create(D3DXVECTOR3 Accel)
+CStone* CStone::Create(D3DXVECTOR3 InitPos, D3DXVECTOR3 Accel)
 {
 	// インスタンスを生成
 	CStone* pNewInstance = DBG_NEW CStone();
@@ -176,8 +190,18 @@ CStone* CStone::Create(D3DXVECTOR3 Accel)
 	// モデルをセット
 	pNewInstance->BindModel(CX_Manager::TYPE::POWERSTONE);
 
-	// 半径を設定
-	pNewInstance->SetRadius(2.5f);
+	// 初期スケール
+	pNewInstance->SetScale({ 0.4f, 0.4f, 0.4f });
+
+	// 初期向きを設定
+	float fCoef = fabsf(utility::GetRandomValue<float>());
+	Vec3 Rot = pNewInstance->GetRot();
+	Rot.x += fCoef;
+	Rot.y += fCoef;
+	pNewInstance->SetRot(Rot);
+
+	// 初期位置を設定
+	pNewInstance->SetPos(InitPos);
 
 	// 推進力をセット
 	pNewInstance->m_Accel = Accel;
