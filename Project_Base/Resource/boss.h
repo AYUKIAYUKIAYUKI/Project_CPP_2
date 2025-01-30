@@ -41,7 +41,7 @@ public:
 	};
 	
 	/// <summary> ボスの最大体力 </summary>
-	static constexpr int MAX_LIFE = 5;
+	static constexpr int MAX_LIFE = 7;
 
 	/// <summary> 目標値への補間強度 </summary>
 	static constexpr float CORRECT_COEF = 0.1f;

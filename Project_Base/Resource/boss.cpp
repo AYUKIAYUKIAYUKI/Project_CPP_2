@@ -23,6 +23,8 @@
 #include "scene.h"
 #include "game.h"
 
+#include "field_type.h"
+#include "block.h"
 #include "bright.h"
 #include "enemy.h"
 #include "monster.h"
@@ -264,6 +266,7 @@ void CBoss::SetNextAction()
 
 		case 2:
 			m_ActionType = ACTION::SUMMONENEMY;
+
 			break;
 
 		default:	// 例外
@@ -456,10 +459,175 @@ void CBoss::WallAttack()
 	{
 		CCamera* pCamera = CManager::GetManager()->GetCamera();
 		float fDinstance = pCamera->GetDistance(), fUpAdjust = pCamera->GetUpAdjust();
-		fDinstance += (450.0f - fDinstance) * 0.1f;
-		fUpAdjust += (150.0f - fUpAdjust) * 0.05f;
+		fDinstance += (300.0f - fDinstance) * 0.1f;
+		fUpAdjust += (100.0f - fUpAdjust) * 0.05f;
 		pCamera->SetDistance(fDinstance);
 		pCamera->SetUpAdjust(fUpAdjust);
+	}
+
+	// ブロックのモデルタイプを事前に選出
+	CX_Manager::TYPE Type = CX_Manager::TYPE::BLONORMAL + (rand() % 3);
+
+	{ // 生成用の座標を決定
+
+		// プレイヤーを取得
+		CPlayer* pPlayer = nullptr;
+		pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+
+		// プレイヤーの目標座標へのベクトルを作成
+		Vec3 Norm = pPlayer->GetPosTarget() - pPlayer->GetPos();
+
+		// プレイヤーがある程度移動していることを検知した時のみ
+		if (Norm.x * Norm.x + Norm.z * Norm.z > 0.1f)
+		{
+			// 生成座標計算用 ((方角 + 扇形幅の角度)の場所が生成ポイント)
+			float fDirection = pPlayer->GetDirection();		// プレイヤーの現在の方角をコピー
+			//float fRange = m_pFan->GetRange();			// 扇形範囲の幅をコピー
+			float fRange = 0.5f;
+			Vec3  NewPos = VEC3_INIT, NewRot = VEC3_INIT;	// ブロック用の座標・向きを作成
+
+			// 現在座標と目標座標に対し原点からの方向ベクトルを作成
+			Vec3 OldVec = pPlayer->GetPos() - VEC3_INIT, NewVec = pPlayer->GetPosTarget() - VEC3_INIT;
+			D3DXVec3Normalize(&OldVec, &OldVec);
+			D3DXVec3Normalize(&NewVec, &NewVec);
+
+			// 2本の方向ベクトルの外積を作成
+			float fCross = (OldVec.x * NewVec.z) - (OldVec.z * NewVec.x);
+
+			// 左に移動している場合角度を反転させる
+			if (fCross < 0.0f)
+				fRange = -fRange;
+
+			// ①左右の場所は境界線の位置に
+			NewPos.x = cosf(fRange + fDirection) * CField_Manager::FIELD_RADIUS;
+			NewPos.z = sinf(fRange + fDirection) * CField_Manager::FIELD_RADIUS;
+
+			// ②高さはランダム
+			NewPos.y = fabsf(utility::GetRandomValue<float>());
+
+			/**/
+			bool bSafe = true;
+#if 1
+			{
+				// 通常優先度のオブジェクトを取得
+				CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
+
+				while (pObj != nullptr)
+				{
+					// ブロックタイプのオブジェクトのとき
+					if (pObj->GetType() == CObject::TYPE::BLOCK)
+					{
+						// オブジェクトをブロッククラスにダウンキャスト
+						CBlock* pOther = nullptr;
+						pOther = utility::DownCast(pOther, pObj);
+
+						// 必要な情報を用意
+						const CX_Manager::TYPE&
+							OtherType = pOther->GetModelType();	// 対象のモデルタイプを取得
+						const Vec3&
+							Distance = pOther->GetPos() - NewPos,	// お互いの距離の差
+							OtherSize = pOther->GetSize();			// 対象のサイズ
+						float
+							DistanceNorm = (Distance.x * Distance.x + Distance.y * Distance.y + Distance.z * Distance.z);	// 距離の差の大きさ
+
+						// 他のブロックとの距離がある程度近ければ条件を満たさない
+						if (DistanceNorm <= CField_Type::GetAreaNorm() * 0.1f)
+						{
+							// 重複している、このブロックを生成しない
+							bSafe = false;
+
+							break;
+						}
+					}
+
+					// 次のオブジェクトへ
+					pObj = pObj->GetNext();
+				}
+			}
+#endif
+
+			if (bSafe)
+			{
+				// 向きを決定
+				NewRot.y = atan2f(-NewPos.x, -NewPos.z);
+
+				// ブロックを生成し、ブロックモデルを変更する
+				CBlock* pBlock = CBlock::Create(NewPos, NewRot);	// ブロックのインスタンス生成
+				pBlock->BindModel(Type);							// モデルを割り当て
+				pBlock->SetSize(pBlock->GetModel()->Size);			// バウンディングサイズを揃える
+			}
+		}
+	}
+
+	// 通常レイヤーのオブジェクトを取得
+	CObject* pObj = CObject::GetTopObject(CObject::LAYER::DEFAULT);
+
+	while (pObj != nullptr)
+	{
+		if (pObj->GetType() == CObject::TYPE::BLOCK)
+		{
+			// オブジェクトをブロックタグにダウンキャスト
+			CBlock* pBlock = utility::DownCast<CBlock, CObject>(pObj);
+
+			// 対象物へのベクトルを出す
+			Vec3 OtherVec = pBlock->GetPos() - VEC3_INIT;
+
+			// 対象物へのベクトルを正規化
+			D3DXVec3Normalize(&OtherVec, &OtherVec);
+
+			// プレイヤーを取得
+			CPlayer* pPlayer = nullptr;
+			pPlayer = utility::DownCast(pPlayer, CObject::FindSpecificObject(CObject::TYPE::PLAYER));
+
+			// プレイヤーの目標座標へのベクトルを作成
+			Vec3 Norm = pPlayer->GetPosTarget() - pPlayer->GetPos();
+
+			// 生成座標計算用 ((方角 + 扇形幅の角度)の場所が生成ポイント)
+			float fDirection = pPlayer->GetDirection();		// プレイヤーの現在の方角をコピー
+			float fRange = 0.45f;
+			Vec3  NewPos = VEC3_INIT, NewRot = VEC3_INIT;	// ブロック用の座標・向きを作成
+			
+			// 現在座標と目標座標に対し原点からの方向ベクトルを作成
+			Vec3 OldVec = pPlayer->GetPos() - VEC3_INIT, NewVec = pPlayer->GetPosTarget() - VEC3_INIT;
+			D3DXVec3Normalize(&OldVec, &OldVec);
+			D3DXVec3Normalize(&NewVec, &NewVec);
+
+			// 2本の方向ベクトルの外積を作成
+			float fCross = (OldVec.x * NewVec.z) - (OldVec.z * NewVec.x);
+
+			// 左に移動している場合角度を反転させる
+			if (fCross < 0.0f)
+				fRange = -fRange;
+
+			// 方角に合わせて範囲分の方向ベクトルを2本作成
+			Vec3 DirVec[2] = {};
+			DirVec[0] = { cosf(fDirection + fRange), 0, sinf(fDirection + fRange) };
+			DirVec[1] = { cosf(fDirection - fRange), 0, sinf(fDirection - fRange) };
+
+			// 片方の扇形方向のベクトルと対象物への方向ベクトルの外積を作成
+			float fCross1 = DirVec[0].x * OtherVec.z - DirVec[0].z * OtherVec.x;
+
+			// この時点で1つ目の方向ベクトルとの外積結果が正の角度なら範囲外
+			if (fCross1 > 0.0f)
+			{
+				continue;
+			}
+
+			// もう片方の外積も作成
+			float fCross2 = DirVec[1].x * OtherVec.z - DirVec[1].z * OtherVec.x;
+
+			// 2つ目の方向ベクトルとの外積結果が負の角度なら範囲外
+			if (fCross2 < 0.0f)
+			{
+				continue;
+			}
+
+			// 条件を満たしていれば扇形の範囲内、このブロックは破棄
+			pBlock->SetRelease();
+		}
+
+		// 次のオブジェクトを取得
+		pObj = pObj->GetNext();
 	}
 }
 
@@ -531,7 +699,7 @@ void CBoss::SummonEnemy()
 	{
 		CCamera* pCamera = CManager::GetManager()->GetCamera();
 		float fDinstance = pCamera->GetDistance(), fUpAdjust = pCamera->GetUpAdjust();
-		fDinstance += (175.0f - fDinstance) * 0.1f;
+		fDinstance += (200.0f - fDinstance) * 0.1f;
 		fUpAdjust += (50.0f - fUpAdjust) * 0.05f;
 		pCamera->SetDistance(fDinstance);
 		pCamera->SetUpAdjust(fUpAdjust);
