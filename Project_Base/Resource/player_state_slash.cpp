@@ -79,10 +79,6 @@ void CPlayer_State_Slash::Update()
 	// プレイヤーステートクラスの更新処理
 	CPlayer_State::Update();
 
-	// 入力取得用
-	CInputKeyboard* pKeyBoard = CManager::GetManager()->GetKeyboard();
-	CInputPad* pPad = CManager::GetManager()->GetPad();
-
 	// ①反動の衝撃量を作成
 	float fImpact = -0.001f;
 
@@ -94,6 +90,11 @@ void CPlayer_State_Slash::Update()
 	{
 		fImpact *= -1.0f;
 	}
+
+#if 0
+	// 入力取得用
+	CInputKeyboard* pKeyBoard = CManager::GetManager()->GetKeyboard();
+	CInputPad* pPad = CManager::GetManager()->GetPad();
 
 	// ④入力方向に応じて反動量を少し変化
 	if (bFaceSide && pKeyBoard->GetPress(DIK_A))
@@ -120,6 +121,7 @@ void CPlayer_State_Slash::Update()
 		// 反動増大
 		fImpact *= 1.5f;
 	}
+#endif
 
 	// ⑤反動で後退
 	float fNewDirectionTarget = m_pCharacter->GetDirectionTarget();

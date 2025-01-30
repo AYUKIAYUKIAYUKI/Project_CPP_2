@@ -142,6 +142,23 @@ void CPlayer_State_Dash::Update()
 	// 目標座標をダッシュ方向に増加
 	SetPosToFacing();
 
+#if 0
+	// 入力取得用
+	CInputMouse* pMouse = CManager::GetManager()->GetMouse();
+	CInputPad* pPad = CManager::GetManager()->GetPad();
+
+	// ダッシュ入力をやめていたら
+	if (m_nDuration > 10)
+	{
+		if (!pMouse->GetPress(1) ||
+			!pPad->GetPress(CInputPad::JOYKEY::X))
+		{
+			// 通常状態へ
+			To_Default();
+		}
+	}
+#endif
+
 	// 継続期間が最大に到達で
 	if (m_pCharacter->GetStopState())
 	{
@@ -195,11 +212,11 @@ void CPlayer_State_Dash::SetPosToFacing()
 	// 設定されている移動方向に方角を増加
 	if (m_bDirection)
 	{
-		fDirectionTarget += m_pCharacter->GetMoveSpeed() * 1.5f;
+		fDirectionTarget += m_pCharacter->GetMoveSpeed() * 1.35f;
 	}
 	else
 	{
-		fDirectionTarget += m_pCharacter->GetMoveSpeed() * -1.5f;
+		fDirectionTarget += m_pCharacter->GetMoveSpeed() * -1.35f;
 	}
 
 	// 目標方角を反映

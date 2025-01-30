@@ -44,7 +44,7 @@ public:
 private:
 
 	// ‘Ø‹óŠÔ
-	static const int WAIT_DURATION = 30;
+	static const int WAIT_DURATION = 35;
 
 	// <function>
 	void HitCheckEnemy();	// “G‚Æ‚ÌÚG‚ğŒŸo

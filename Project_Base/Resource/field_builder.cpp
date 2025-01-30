@@ -55,7 +55,7 @@ namespace
 using namespace abbr;
 
 /* デバッグ用 -> ブロックの密集度合 */
-float fBlockDensity = 2.0f;
+float fBlockDensity = 2.5f;
 
 //============================================================================
 // 
