@@ -161,6 +161,13 @@ void CField_Manager::AAABBB()
 {
 	// 銅像を振動モーションに変更
 	m_pStatue->SetNowMotion(0);
+
+	// 消滅設定
+	if (m_pPopUp)
+	{
+		m_pPopUp->SetDisappear();
+		m_pPopUp = nullptr;
+	}
 }
 
 //============================================================================
@@ -521,12 +528,14 @@ void CField_Manager::Uninit()
 //============================================================================
 void CField_Manager::UpdatePhase()
 {
+#if 0
 	// 2週目なら
 	if (m_bRetry && m_nPhase == 0)
 	{
 		// 初回のフェーズを変更
 		m_nPhase = 11;
 	}
+#endif
 
 	/* ブロックの破壊量を取得 */
 	const int nCntDestroyBlock = m_pFieldBuilder->GetCntDestroyBlock();
@@ -749,7 +758,7 @@ void CField_Manager::UpdatePhase()
 			m_pPopUp->SetPosTarget(PosTarget);				// 目標座標をセット
 		}
 
-		{// アイテムオブジェクトを取得
+		{ // アイテムオブジェクトを取得
 			CObject* pObj = CObject::FindSpecificObject(CObject::TYPE::ITEM);
 
 			// アイテムオブジェクトが消えていたら
@@ -884,12 +893,12 @@ void CField_Manager::UpdatePhase()
 		// 周回判定を出す
 		m_bRetry = true;
 
-		// ポップアップに消滅設定
-		if (m_pPopUp)
-		{
-			m_pPopUp->SetDisappear();
-			m_pPopUp = nullptr;
-		}
+		//// ポップアップに消滅設定
+		//if (m_pPopUp)
+		//{
+		//	m_pPopUp->SetDisappear();
+		//	m_pPopUp = nullptr;
+		//}
 
 		break;
 
