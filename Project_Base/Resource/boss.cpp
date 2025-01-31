@@ -224,7 +224,7 @@ CBoss* CBoss::Create()
 	pNewInstance->SetMotion(LAYER::DEFAULT, utility::OpenJsonFile("Data\\JSON\\CHARACTER\\BOSS\\pumpkin_motion.json"));
 
 	// 半径を設定
-	pNewInstance->m_pBndCylinder->SetRadius(105.0f);
+	pNewInstance->m_pBndCylinder->SetRadius(100.0f);
 
 	// 高さを設定
 	pNewInstance->m_pBndCylinder->SetHeight(60.0f);
@@ -260,13 +260,11 @@ void CBoss::SetNextAction()
 			break;
 
 		case 1:
-			//m_ActionType = ACTION::WALLATTACK;
 			m_ActionType = ACTION::SUMMONENEMY;
 			break;
 
 		case 2:
-			m_ActionType = ACTION::SUMMONENEMY;
-
+			m_ActionType = ACTION::DIRECTATTACK;
 			break;
 
 		default:	// 例外
@@ -378,14 +376,29 @@ void CBoss::DirectAttack()
 	// 継続期間をインクリメント
 	++m_nDuration;
 
-	// カメラ距離・俯瞰度合いを強制変更
+	if (m_nDuration <= 120)
 	{
-		CCamera* pCamera = CManager::GetManager()->GetCamera();
-		float fDinstance = pCamera->GetDistance(), fUpAdjust = pCamera->GetUpAdjust();
-		fDinstance += (450.0f - fDinstance) * 0.1f;
-		fUpAdjust += (150.0f - fUpAdjust) * 0.05f;
-		pCamera->SetDistance(fDinstance);
-		pCamera->SetUpAdjust(fUpAdjust);
+		// カメラ距離・俯瞰度合いを強制変更
+		{
+			CCamera* pCamera = CManager::GetManager()->GetCamera();
+			float fDinstance = pCamera->GetDistance(), fUpAdjust = pCamera->GetUpAdjust();
+			fDinstance += (450.0f - fDinstance) * 0.1f;
+			fUpAdjust += (150.0f - fUpAdjust) * 0.05f;
+			pCamera->SetDistance(fDinstance);
+			pCamera->SetUpAdjust(fUpAdjust);
+		}
+	}
+	else
+	{
+		// カメラ距離・俯瞰度合いを強制変更
+		{
+			CCamera* pCamera = CManager::GetManager()->GetCamera();
+			float fDinstance = pCamera->GetDistance(), fUpAdjust = pCamera->GetUpAdjust();
+			fDinstance += (250.0f - fDinstance) * 0.1f;
+			fUpAdjust += (75.0f - fUpAdjust) * 0.05f;
+			pCamera->SetDistance(fDinstance);
+			pCamera->SetUpAdjust(fUpAdjust);
+		}
 	}
 
 	// 1.5秒時点で
@@ -405,8 +418,8 @@ void CBoss::DirectAttack()
 		CSound::GetInstance()->Play(CSound::LABEL::BATK);
 	}
 
-	// 3秒時点で
-	if (m_nDuration == 180)
+	// 4秒時点で
+	if (m_nDuration == 240)
 	{
 		// 継続期間をリセット
 		m_nDuration = 0;
@@ -699,8 +712,8 @@ void CBoss::SummonEnemy()
 	{
 		CCamera* pCamera = CManager::GetManager()->GetCamera();
 		float fDinstance = pCamera->GetDistance(), fUpAdjust = pCamera->GetUpAdjust();
-		fDinstance += (200.0f - fDinstance) * 0.1f;
-		fUpAdjust += (50.0f - fUpAdjust) * 0.05f;
+		fDinstance += (450.0f - fDinstance) * 0.1f;
+		fUpAdjust += (150.0f - fUpAdjust) * 0.05f;
 		pCamera->SetDistance(fDinstance);
 		pCamera->SetUpAdjust(fUpAdjust);
 	}

@@ -121,6 +121,28 @@ void CField_Type_Normal::GenerateBlock(float fEdgeDirection)
 		// 隙間に敵を生成
 		DetectGapForSetEnemy();
 	}
+
+	if (CField_Manager::GetInstance()->GetFieldBuilder()->GetCntDestroyBlock() % 30 == 0)
+	{
+		// 初期位置
+		Vec3 InitPos = VEC3_INIT;
+
+		// ゴーストを生成
+		for (WORD wCntLoop = 0; wCntLoop < 3; ++wCntLoop)
+		{
+			do
+			{
+				// 扇形範囲内に収まるように方角をランダム決定
+				float fRand = fabsf(utility::GetRandomValue<float>()) * 0.01f;
+				InitPos = utility::DirectionConvertVec3(D3DX_PI * fRand, 10.0f + fabsf(utility::GetRandomValue<float>()) * 0.25f, CField_Manager::FIELD_RADIUS);
+
+				// 範囲外で再抽選
+			} while (!CField_Manager::GetInstance()->GetFieldBuilder()->DetectInFanRange(InitPos));
+		}
+
+		// その場所に、ゴーストを生成
+		CBright::Generate(InitPos, CBright::CREATETYPE::GHOST);
+	}
 }
 
 //============================================================================
